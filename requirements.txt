@@ -1,0 +1,4 @@
+django
+psycopg2
+argon2-cffi
+django-environ
