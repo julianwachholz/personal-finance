@@ -4,3 +4,4 @@ argon2-cffi
 django-environ
 python-dateutil
 django-money
+django-mptt

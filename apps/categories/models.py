@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from mptt.models import MPTTModel, TreeForeignKey
 
 
-class Category(models.Model):
+class Category(MPTTModel):
     """
     A category classifies budgets or transactions.
 
@@ -12,16 +13,23 @@ class Category(models.Model):
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 
-    icon = models.CharField(verbose_name=_("icon"), max_length=100)
+    icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
 
-    pos = models.PositiveSmallIntegerField(default=0, db_index=True)
-
-    parent = models.ForeignKey(to="self", on_delete=models.CASCADE)
+    parent = TreeForeignKey(
+        to="self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
 
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
-        ordering = ("user", "pos", "name")
+        ordering = ("user", "name")
+
+    class MPTTMeta:
+        order_insertion_by = ["name"]
 
     def __str__(self):
         return self.name
