@@ -8,14 +8,14 @@ class Budget(models.Model):
 
     """
 
-    name = models.CharField(verbose_name=_('name'), max_length=100)
+    name = models.CharField(verbose_name=_("name"), max_length=100)
 
-    user = models.ForeignKey(to='auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = _('budget')
-        verbose_name_plural = _('budgets')
-        ordering = ('name', 'user')
+        verbose_name = _("budget")
+        verbose_name_plural = _("budgets")
+        ordering = ("name", "user")
 
     def __str__(self):
         return self.name
