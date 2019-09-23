@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mptt",
+    "colorfield",
     "apps.categories",
     "apps.accounts",
     "apps.transactions",

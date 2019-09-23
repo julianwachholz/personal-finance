@@ -1,3 +1,4 @@
+from colorfield.fields import ColorField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
@@ -16,6 +17,7 @@ class Category(MPTTModel):
     icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
 
     parent = TreeForeignKey(
+        verbose_name=_("parent"),
         to="self",
         on_delete=models.CASCADE,
         null=True,
@@ -23,10 +25,14 @@ class Category(MPTTModel):
         related_name="children",
     )
 
+    color = ColorField(verbose_name=_("color"), blank=True)
+
+    is_expense = models.BooleanField(verbose_name=_("is an expense?"), default=True)
+
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
-        ordering = ("user", "name")
+        # ordering = ("user", "name")
 
     class MPTTMeta:
         order_insertion_by = ["name"]
