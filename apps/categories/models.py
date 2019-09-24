@@ -32,10 +32,12 @@ class Category(MPTTModel):
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
-        # ordering = ("user", "name")
 
     class MPTTMeta:
         order_insertion_by = ["name"]
 
     def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return f"<Category(user={self.user!r}, name={self.name!r}, parent={self.parent!r})>"
