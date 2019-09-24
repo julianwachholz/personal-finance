@@ -5,4 +5,5 @@ from .models import Account
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "institution", "user", "balance")
+    list_filter = ("user",)

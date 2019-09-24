@@ -11,7 +11,9 @@ class Account(models.Model):
 
     name = models.CharField(verbose_name=_("name"), max_length=100)
 
-    institution = models.CharField(verbose_name=_("institution"), max_length=100)
+    institution = models.CharField(
+        verbose_name=_("institution"), max_length=100, blank=True
+    )
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 
@@ -20,16 +22,17 @@ class Account(models.Model):
         max_digits=10,
         decimal_places=2,
         currency_field_name="currency",
+        default=0,
     )
 
-    icon = models.CharField(verbose_name=_("icon"), max_length=100)
+    icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
 
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     class Meta:
         verbose_name = _("account")
         verbose_name_plural = _("accounts")
-        ordering = ("institution", "pos", "name")
+        ordering = ("user", "pos", "name")
 
     def __str__(self):
         return self.name

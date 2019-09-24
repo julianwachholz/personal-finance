@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mptt",
+    "djmoney",
     "colorfield",
     "apps.categories",
     "apps.accounts",
@@ -120,3 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = "/static/"
+
+
+# App settings
+
+# django-money
+
+DEFAULT_CURRENCY = "USD"
