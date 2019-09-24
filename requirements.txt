@@ -6,3 +6,4 @@ python-dateutil
 django-money
 django-mptt
 django-colorfield
+django-countries
