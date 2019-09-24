@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "mptt",
     "djmoney",
+    "django_countries",
     "colorfield",
     "apps.categories",
     "apps.accounts",
