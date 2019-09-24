@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "djmoney",
     "django_countries",
     "colorfield",
+    "apps.taxdata",
     "apps.categories",
     "apps.accounts",
     "apps.transactions",
