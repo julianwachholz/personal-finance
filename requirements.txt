@@ -7,3 +7,4 @@ django-money
 django-mptt
 django-colorfield
 django-countries
+data-wizard

@@ -19,4 +19,5 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("categories/", include("apps.categories.urls")),
+    path("datawizard/", include('data_wizard.urls')),
 ]

@@ -3,20 +3,22 @@ from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
 from djmoney.models.fields import CurrencyField
 
+LEVEL_FEDERAL = "federal"
+LEVEL_STATE = "state"
+LEVEL_COUNTY = "county"
+LEVEL_MUNICIPALITY = "municipality"
+LEVEL_CHOICES = (
+    (LEVEL_FEDERAL, _("federal")),
+    (LEVEL_STATE, _("state")),
+    (LEVEL_COUNTY, _("county")),
+    (LEVEL_MUNICIPALITY, _("municipality")),
+)
+
 
 class Tax(models.Model):
     """
     A tax rate for a jurisdiction and level.
     """
-
-    LEVEL_FEDERAL = "federal"
-    LEVEL_STATE = "state"
-    LEVEL_COUNTY = "county"
-    LEVEL_CHOICES = (
-        (LEVEL_FEDERAL, _("federal")),
-        (LEVEL_STATE, _("state")),
-        (LEVEL_COUNTY, _("county")),
-    )
 
     TYPE_INCOME = "income"
     TYPE_WEALTH = "wealth"
@@ -55,7 +57,8 @@ class Tax(models.Model):
         help_text=_("Tariff target demographic, e.g. single households."),
     )
 
-    valid_year = models.PositiveSmallIntegerField(verbose_name=_("valid year"))
+    valid_from = models.DateField(blank=True, null=True)
+    valid_until = models.DateField(blank=True, null=True)
 
     tax_type = models.CharField(
         verbose_name=_("tax type"), max_length=100, choices=TYPE_CHOICES
@@ -67,7 +70,7 @@ class Tax(models.Model):
         ordering = ("country", "level", "tax_type")
 
     def __str__(self):
-        return self.name
+        return f'{self.name} [{self.valid_from}]'
 
 
 class TaxRate(models.Model):
@@ -76,6 +79,7 @@ class TaxRate(models.Model):
     """
 
     tax = models.ForeignKey(to=Tax, on_delete=models.CASCADE, related_name="rates")
+
     bracket = models.DecimalField(
         verbose_name=_("bracket"), max_digits=10, decimal_places=2
     )
@@ -93,6 +97,9 @@ class TaxRate(models.Model):
         verbose_name = _("tax level")
         verbose_name_plural = _("tax levels")
         ordering = ("bracket",)
+        unique_together = (
+            ('tax', 'bracket'),
+        )
 
 
 class TaxDeduction(models.Model):
@@ -137,3 +144,39 @@ class TaxDeduction(models.Model):
     class Meta:
         verbose_name = _("tax deduction")
         verbose_name_plural = _("tax deductions")
+
+
+class TaxBase(models.Model):
+    """
+    A taxation base.
+
+    """
+    country = CountryField()
+
+    level = models.CharField(
+        verbose_name=_("tax base level"), max_length=50, choices=LEVEL_CHOICES
+    )
+
+    state = models.CharField(
+        verbose_name=_("state / region"),
+        max_length=50,
+        help_text=_("State or region this tax rate is valid in."),
+        blank=True,
+    )
+
+    name = models.CharField(verbose_name=_("name"), max_length=100)
+    variant = models.CharField(verbose_name=_("variant"), max_length=100, blank=True)
+    variant2 = models.CharField(verbose_name=_("variant 2"), max_length=100, blank=True)
+
+    valid_from = models.DateField()
+    valid_until = models.DateField(blank=True, null=True)
+
+    percentage = models.PositiveSmallIntegerField(verbose_name=_("taxation base percentage"), default=100)
+
+    class Meta:
+        verbose_name = _("tax base")
+        verbose_name_plural = _("tax bases")
+        ordering = ("name",)
+
+    def __str__(self):
+        return f'{self.name} [{self.valid_from.year}]'

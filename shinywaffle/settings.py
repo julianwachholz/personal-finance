@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "djmoney",
     "django_countries",
     "colorfield",
+    "data_wizard",
+    "data_wizard.sources",
     "apps.taxdata",
     "apps.categories",
     "apps.accounts",
@@ -124,9 +126,17 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+MEDIA_ROOT = BASE_DIR("media")
+MEDIA_URL = "/media/"
+
 
 # App settings
 
 # django-money
 
 DEFAULT_CURRENCY = "USD"
+
+# data-wizard
+# DATA_WIZARD = {
+#     'BACKEND': 'data_wizard.backends.threading',
+# }
