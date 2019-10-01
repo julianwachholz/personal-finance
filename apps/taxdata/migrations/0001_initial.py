@@ -10,84 +10,267 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Tax',
+            name="Tax",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('country', django_countries.fields.CountryField(max_length=2)),
-                ('currency', djmoney.models.fields.CurrencyField(default='USD', max_length=3)),
-                ('level', models.CharField(choices=[('federal', 'federal'), ('state', 'state'), ('county', 'county'), ('municipality', 'municipality')], max_length=50, verbose_name='tax level')),
-                ('state', models.CharField(blank=True, help_text='State or region this tax rate is valid in.', max_length=50, verbose_name='state / region')),
-                ('key', models.CharField(max_length=100, verbose_name='identifier')),
-                ('name', models.CharField(max_length=100, verbose_name='name')),
-                ('tariff', models.CharField(blank=True, help_text='Tariff target demographic, e.g. single households.', max_length=100, verbose_name='tariff')),
-                ('tax_type', models.CharField(choices=[('income', 'income tax'), ('wealth', 'wealth tax'), ('capital gains', 'capital gains tax'), ('withholding', 'withholding tax'), ('other', 'other tax')], max_length=100, verbose_name='tax type')),
-                ('valid_from', models.DateField(blank=True, null=True)),
-                ('valid_until', models.DateField(blank=True, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("country", django_countries.fields.CountryField(max_length=2)),
+                (
+                    "currency",
+                    djmoney.models.fields.CurrencyField(default="USD", max_length=3),
+                ),
+                (
+                    "level",
+                    models.CharField(
+                        choices=[
+                            ("federal", "federal"),
+                            ("state", "state"),
+                            ("county", "county"),
+                            ("municipality", "municipality"),
+                        ],
+                        max_length=50,
+                        verbose_name="tax level",
+                    ),
+                ),
+                (
+                    "state",
+                    models.CharField(
+                        blank=True,
+                        help_text="State or region this tax rate is valid in.",
+                        max_length=50,
+                        verbose_name="state / region",
+                    ),
+                ),
+                ("key", models.CharField(max_length=100, verbose_name="identifier")),
+                ("name", models.CharField(max_length=100, verbose_name="name")),
+                (
+                    "tariff",
+                    models.CharField(
+                        blank=True,
+                        help_text="Tariff target demographic, e.g. single households.",
+                        max_length=100,
+                        verbose_name="tariff",
+                    ),
+                ),
+                (
+                    "tax_type",
+                    models.CharField(
+                        choices=[
+                            ("income", "income tax"),
+                            ("wealth", "wealth tax"),
+                            ("capital gains", "capital gains tax"),
+                            ("withholding", "withholding tax"),
+                            ("other", "other tax"),
+                        ],
+                        max_length=100,
+                        verbose_name="tax type",
+                    ),
+                ),
+                ("valid_from", models.DateField(blank=True, null=True)),
+                ("valid_until", models.DateField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'tax',
-                'verbose_name_plural': 'taxes',
-                'ordering': ('country', 'level', 'tax_type'),
+                "verbose_name": "tax",
+                "verbose_name_plural": "taxes",
+                "ordering": ("country", "level", "tax_type"),
             },
         ),
         migrations.CreateModel(
-            name='TaxDeduction',
+            name="TaxDeduction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('key', models.CharField(max_length=100, verbose_name='identifier')),
-                ('name', models.CharField(max_length=100, verbose_name='name')),
-                ('description', models.CharField(blank=True, max_length=300, verbose_name='description')),
-                ('min_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='min. amount')),
-                ('max_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='max. amount')),
-                ('fix_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='fixed amount')),
-                ('has_multiplier', models.BooleanField(default=False, help_text='Multiply the fixed amount by a certain multiplier.', verbose_name='has multiplier?')),
-                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='deductions', to='taxdata.Tax')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("key", models.CharField(max_length=100, verbose_name="identifier")),
+                ("name", models.CharField(max_length=100, verbose_name="name")),
+                (
+                    "description",
+                    models.CharField(
+                        blank=True, max_length=300, verbose_name="description"
+                    ),
+                ),
+                (
+                    "min_amount",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="min. amount",
+                    ),
+                ),
+                (
+                    "max_amount",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="max. amount",
+                    ),
+                ),
+                (
+                    "fix_amount",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=10,
+                        null=True,
+                        verbose_name="fixed amount",
+                    ),
+                ),
+                (
+                    "has_multiplier",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Multiply the fixed amount by a certain multiplier.",
+                        verbose_name="has multiplier?",
+                    ),
+                ),
+                (
+                    "tax",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="deductions",
+                        to="taxdata.Tax",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'tax deduction',
-                'verbose_name_plural': 'tax deductions',
+                "verbose_name": "tax deduction",
+                "verbose_name_plural": "tax deductions",
             },
         ),
         migrations.CreateModel(
-            name='TaxRate',
+            name="TaxRate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bracket', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='bracket')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='amount')),
-                ('increment', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='increment')),
-                ('increment_amount', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='increment amount')),
-                ('tax', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='rates', to='taxdata.Tax')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "bracket",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name="bracket"
+                    ),
+                ),
+                (
+                    "amount",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name="amount"
+                    ),
+                ),
+                (
+                    "increment",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name="increment"
+                    ),
+                ),
+                (
+                    "increment_amount",
+                    models.DecimalField(
+                        decimal_places=2, max_digits=10, verbose_name="increment amount"
+                    ),
+                ),
+                (
+                    "tax",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="rates",
+                        to="taxdata.Tax",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'tax level',
-                'verbose_name_plural': 'tax levels',
-                'ordering': ('bracket',),
-                'unique_together': {('tax', 'bracket')},
+                "verbose_name": "tax level",
+                "verbose_name_plural": "tax levels",
+                "ordering": ("bracket",),
+                "unique_together": {("tax", "bracket")},
             },
         ),
         migrations.CreateModel(
-            name='TaxBase',
+            name="TaxBase",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('country', django_countries.fields.CountryField(max_length=2)),
-                ('level', models.CharField(choices=[('federal', 'federal'), ('state', 'state'), ('county', 'county'), ('municipality', 'municipality')], max_length=50, verbose_name='tax base level')),
-                ('state', models.CharField(blank=True, help_text='State or region this tax rate is valid in.', max_length=50, verbose_name='state / region')),
-                ('name', models.CharField(max_length=100, verbose_name='name')),
-                ('variant', models.CharField(blank=True, max_length=100, verbose_name='variant')),
-                ('valid_from', models.DateField(default=datetime.date(2019, 9, 26))),
-                ('valid_until', models.DateField(blank=True, null=True)),
-                ('percentage', models.PositiveSmallIntegerField(default=100, verbose_name='taxation base percentage')),
-                ('variant2', models.CharField(blank=True, max_length=100, verbose_name='variant 2')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("country", django_countries.fields.CountryField(max_length=2)),
+                (
+                    "level",
+                    models.CharField(
+                        choices=[
+                            ("federal", "federal"),
+                            ("state", "state"),
+                            ("county", "county"),
+                            ("municipality", "municipality"),
+                        ],
+                        max_length=50,
+                        verbose_name="tax base level",
+                    ),
+                ),
+                (
+                    "state",
+                    models.CharField(
+                        blank=True,
+                        help_text="State or region this tax rate is valid in.",
+                        max_length=50,
+                        verbose_name="state / region",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="name")),
+                (
+                    "variant",
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name="variant"
+                    ),
+                ),
+                ("valid_from", models.DateField(default=datetime.date(2019, 9, 26))),
+                ("valid_until", models.DateField(blank=True, null=True)),
+                (
+                    "percentage",
+                    models.PositiveSmallIntegerField(
+                        default=100, verbose_name="taxation base percentage"
+                    ),
+                ),
+                (
+                    "variant2",
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name="variant 2"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'tax base',
-                'verbose_name_plural': 'tax bases',
-                'ordering': ('name',),
+                "verbose_name": "tax base",
+                "verbose_name_plural": "tax bases",
+                "ordering": ("name",),
             },
         ),
     ]

@@ -70,7 +70,7 @@ class Tax(models.Model):
         ordering = ("country", "level", "tax_type")
 
     def __str__(self):
-        return f'{self.name} [{self.valid_from}]'
+        return f"{self.name} [{self.valid_from}]"
 
 
 class TaxRate(models.Model):
@@ -97,9 +97,7 @@ class TaxRate(models.Model):
         verbose_name = _("tax level")
         verbose_name_plural = _("tax levels")
         ordering = ("bracket",)
-        unique_together = (
-            ('tax', 'bracket'),
-        )
+        unique_together = (("tax", "bracket"),)
 
 
 class TaxDeduction(models.Model):
@@ -151,6 +149,7 @@ class TaxBase(models.Model):
     A taxation base.
 
     """
+
     country = CountryField()
 
     level = models.CharField(
@@ -171,7 +170,9 @@ class TaxBase(models.Model):
     valid_from = models.DateField()
     valid_until = models.DateField(blank=True, null=True)
 
-    percentage = models.PositiveSmallIntegerField(verbose_name=_("taxation base percentage"), default=100)
+    percentage = models.PositiveSmallIntegerField(
+        verbose_name=_("taxation base percentage"), default=100
+    )
 
     class Meta:
         verbose_name = _("tax base")
@@ -179,4 +180,4 @@ class TaxBase(models.Model):
         ordering = ("name",)
 
     def __str__(self):
-        return f'{self.name} [{self.valid_from.year}]'
+        return f"{self.name} [{self.valid_from.year}]"

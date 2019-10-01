@@ -15,13 +15,30 @@ class TaxDeductionInline(admin.StackedInline):
 
 @admin.register(Tax)
 class TaxAdmin(admin.ModelAdmin):
-    list_display = ("name", "valid_from", "valid_until", "tariff", "country", "level", "state", "tax_type")
+    list_display = (
+        "name",
+        "valid_from",
+        "valid_until",
+        "tariff",
+        "country",
+        "level",
+        "state",
+        "tax_type",
+    )
     list_filter = (("country", admin.AllValuesFieldListFilter), "tax_type")
     inlines = (TaxRateInline, TaxDeductionInline)
 
 
 @admin.register(TaxBase)
 class TaxBaseAdmin(admin.ModelAdmin):
-    list_display = ("name", "variant", "country", "state", "valid_from", "valid_until", "percentage")
+    list_display = (
+        "name",
+        "variant",
+        "country",
+        "state",
+        "valid_from",
+        "valid_until",
+        "percentage",
+    )
     list_filter = (("country", admin.AllValuesFieldListFilter), "state", "variant")
     search_fields = ("name",)

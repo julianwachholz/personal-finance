@@ -8,28 +8,35 @@ import mptt.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('categories', '0001_initial'),
-    ]
+    dependencies = [("categories", "0001_initial")]
 
     operations = [
         migrations.AlterModelOptions(
-            name='category',
-            options={'verbose_name': 'category', 'verbose_name_plural': 'categories'},
+            name="category",
+            options={"verbose_name": "category", "verbose_name_plural": "categories"},
         ),
         migrations.AddField(
-            model_name='category',
-            name='color',
-            field=colorfield.fields.ColorField(blank=True, max_length=18, verbose_name='color'),
+            model_name="category",
+            name="color",
+            field=colorfield.fields.ColorField(
+                blank=True, max_length=18, verbose_name="color"
+            ),
         ),
         migrations.AddField(
-            model_name='category',
-            name='is_expense',
-            field=models.BooleanField(default=True, verbose_name='is an expense?'),
+            model_name="category",
+            name="is_expense",
+            field=models.BooleanField(default=True, verbose_name="is an expense?"),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='parent',
-            field=mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='categories.Category', verbose_name='parent'),
+            model_name="category",
+            name="parent",
+            field=mptt.fields.TreeForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="children",
+                to="categories.Category",
+                verbose_name="parent",
+            ),
         ),
     ]
