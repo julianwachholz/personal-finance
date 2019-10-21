@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('taxdata', '0001_initial'),
-    ]
+    dependencies = [("taxdata", "0001_initial")]
 
     operations = [
         migrations.AlterField(
-            model_name='taxbase',
-            name='valid_from',
-            field=models.DateField(),
-        ),
+            model_name="taxbase", name="valid_from", field=models.DateField()
+        )
     ]

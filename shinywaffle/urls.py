@@ -20,4 +20,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("categories/", include("apps.categories.urls")),
     path("datawizard/", include("data_wizard.urls")),
+    path("tax/", include("apps.taxdata.urls")),
 ]
