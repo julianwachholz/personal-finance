@@ -15,7 +15,9 @@ class Account(models.Model):
         verbose_name=_("institution"), max_length=100, blank=True
     )
 
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to="auth.User", on_delete=models.CASCADE, related_name="accounts"
+    )
 
     balance = MoneyField(
         verbose_name=_("balance"),

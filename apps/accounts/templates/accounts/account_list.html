@@ -1,0 +1,7 @@
+<dl>
+    {% for account in account_list %}
+    <dt>{{ account }}</dt>
+    <dd>{{ account.balance }}</dd>
+    {% endfor %}
+</dl>
+<p>Total {{ total_balance }}</p>
