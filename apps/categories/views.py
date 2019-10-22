@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import Category
 
 
-def categories_list(request):
+def category_list(request):
     categories = Category.objects.all()
     items = serializers.serialize(
         "json", categories, fields=("parent", "name", "icon", "color", "is_expense")
