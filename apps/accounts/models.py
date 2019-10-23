@@ -31,6 +31,13 @@ class Account(models.Model):
 
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
 
+    is_default_debit = models.BooleanField(
+        verbose_name=_("is default debit (expense) account?"), default=False
+    )
+    is_default_credit = models.BooleanField(
+        verbose_name=_("is default credit (income) account?"), default=False
+    )
+
     class Meta:
         verbose_name = _("account")
         verbose_name_plural = _("accounts")
