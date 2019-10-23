@@ -1,23 +1,55 @@
 from dateutil.rrule import FR, MO, SA, SU, TH, TU, WE
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from djmoney.models.fields import MoneyField
 
 
-class AbstractTransaction:
+class AbstractTransaction(models.Model):
     """
     Abstract base transaction.
 
     """
 
-    account = models.ForeignKey(to="accounts.Account", on_delete=models.CASCADE)
-
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
-
-    amount = models.DecimalField(
-        verbose_name=_("amount"), max_digits=10, decimal_places=2
+    account = models.ForeignKey(
+        to="accounts.Account", on_delete=models.CASCADE, related_name="%(class)ss"
     )
 
+    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE, related_name="+")
+
+    category = models.ForeignKey(
+        to="categories.Category",
+        on_delete=models.PROTECT,
+        related_name="%(class)ss",
+        blank=True,
+        null=True,
+    )
+
+    payee = models.ForeignKey(
+        to="payees.Payee",
+        on_delete=models.PROTECT,
+        related_name="%(class)ss",
+        blank=True,
+        null=True,
+    )
+
+    tags = models.ManyToManyField(to="tags.Tag", blank=True)
+
+    amount = MoneyField(verbose_name=_("amount"), max_digits=10, decimal_places=2)
+
     text = models.CharField(verbose_name=_("text"), max_length=500, blank=True)
+
+    reference = models.CharField(
+        verbose_name=_("reference"), max_length=500, blank=True
+    )
+
+    class Meta:
+        abstract = True
+
+    def is_credit(self):
+        return self.amount > 0
+
+    def is_debit(self):
+        return not self.is_credit()
 
 
 class Transaction(AbstractTransaction):
