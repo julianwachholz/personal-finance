@@ -27,8 +27,6 @@ class Category(MPTTModel):
 
     color = ColorField(verbose_name=_("color"), blank=True)
 
-    is_expense = models.BooleanField(verbose_name=_("is an expense?"), default=True)
-
     class Meta:
         verbose_name = _("category")
         verbose_name_plural = _("categories")
