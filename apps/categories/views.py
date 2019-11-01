@@ -1,12 +1,13 @@
-from django.core import serializers
-from django.http import HttpResponse
+from rest_framework import viewsets
 
 from .models import Category
+from .serializers import CategorySerializer
 
 
-def category_list(request):
-    categories = Category.objects.all()
-    items = serializers.serialize(
-        "json", categories, fields=("parent", "name", "icon", "color", "is_expense")
-    )
-    return HttpResponse(items, content_type="application/json")
+class CategoryViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows categories to be viewed or edited.
+    """
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

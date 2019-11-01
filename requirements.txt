@@ -8,3 +8,5 @@ django-mptt
 django-colorfield
 django-countries
 data-wizard
+djangorestframework
+django-filter
