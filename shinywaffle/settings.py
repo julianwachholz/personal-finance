@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "data_wizard",
     "data_wizard.sources",
     "apps.taxdata",
+    "apps.settings",
     "apps.categories",
     "apps.payees",
     "apps.tags",
