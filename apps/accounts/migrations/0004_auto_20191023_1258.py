@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_auto_20191022_1322'),
+        ("accounts", "0003_auto_20191022_1322"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
-            name='is_default_credit',
-            field=models.BooleanField(default=False, verbose_name='is default credit (income) account?'),
+            model_name="account",
+            name="is_default_credit",
+            field=models.BooleanField(
+                default=False, verbose_name="is default credit (income) account?"
+            ),
         ),
         migrations.AddField(
-            model_name='account',
-            name='is_default_debit',
-            field=models.BooleanField(default=False, verbose_name='is default debit (expense) account?'),
+            model_name="account",
+            name="is_default_debit",
+            field=models.BooleanField(
+                default=False, verbose_name="is default debit (expense) account?"
+            ),
         ),
     ]
