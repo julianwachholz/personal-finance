@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import CurrencyField
@@ -9,7 +10,7 @@ class Settings(models.Model):
 
     """
 
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+    user = models.OneToOneField(to="auth.User", on_delete=models.CASCADE)
 
     default_currency = CurrencyField()
 
@@ -39,3 +40,16 @@ class Settings(models.Model):
 
     def __str__(self):
         return f"Settings for {self.user}"
+
+    def clean(self):
+        errors = {}
+        if (
+            self.default_credit_account
+            and self.user != self.default_credit_account.user
+        ):
+            errors["default_credit_account"] = _("Account doesn't belong to same user.")
+        if self.default_debit_account and self.user != self.default_debit_account.user:
+            errors["default_debit_account"] = _("Account doesn't belong to same user.")
+
+        if errors:
+            raise ValidationError(errors)
