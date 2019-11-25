@@ -20,11 +20,7 @@ class Account(models.Model):
     )
 
     balance = MoneyField(
-        verbose_name=_("balance"),
-        max_digits=10,
-        decimal_places=2,
-        currency_field_name="currency",
-        default=0,
+        verbose_name=_("balance"), max_digits=10, decimal_places=2, default=0,
     )
 
     icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
