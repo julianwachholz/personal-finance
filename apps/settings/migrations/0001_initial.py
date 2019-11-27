@@ -12,23 +12,60 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('accounts', '0005_auto_20191101_0941'),
+        ("accounts", "0005_auto_20191101_0941"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Settings',
+            name="Settings",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('default_currency', djmoney.models.fields.CurrencyField(default='USD', max_length=3)),
-                ('date_format', models.CharField(blank=True, max_length=100, verbose_name='date format')),
-                ('default_credit_account', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='accounts.Account')),
-                ('default_debit_account', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='accounts.Account')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "default_currency",
+                    djmoney.models.fields.CurrencyField(default="USD", max_length=3),
+                ),
+                (
+                    "date_format",
+                    models.CharField(
+                        blank=True, max_length=100, verbose_name="date format"
+                    ),
+                ),
+                (
+                    "default_credit_account",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="accounts.Account",
+                    ),
+                ),
+                (
+                    "default_debit_account",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to="accounts.Account",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            options={
-                'verbose_name': 'settings',
-                'verbose_name_plural': 'settings',
-            },
+            options={"verbose_name": "settings", "verbose_name_plural": "settings",},
         ),
     ]

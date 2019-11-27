@@ -8,18 +8,21 @@ import djmoney.models.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0005_auto_20191101_0941'),
+        ("accounts", "0005_auto_20191101_0941"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='account',
-            old_name='currency',
-            new_name='balance_currency',
+            model_name="account", old_name="currency", new_name="balance_currency",
         ),
         migrations.AlterField(
-            model_name='account',
-            name='balance',
-            field=djmoney.models.fields.MoneyField(decimal_places=2, default=Decimal('0'), max_digits=10, verbose_name='balance'),
+            model_name="account",
+            name="balance",
+            field=djmoney.models.fields.MoneyField(
+                decimal_places=2,
+                default=Decimal("0"),
+                max_digits=10,
+                verbose_name="balance",
+            ),
         ),
     ]
