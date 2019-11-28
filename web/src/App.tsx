@@ -1,9 +1,10 @@
 import "antd/dist/antd.css";
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import AppLayout from "./components/layout/Layout";
 import Dashboard from "./modules/dashboard/Dashboard";
+import NotFound from "./modules/error/NotFound";
 import Transactions from "./modules/transactions/Transactions";
 
 const App: React.FC = () => (
@@ -14,10 +15,9 @@ const App: React.FC = () => (
       <Route path="/reports" render={() => "Reports"} />
       <Route path="/accounts" render={() => "Accounts"} />
       <Route path="/budgets" render={() => "Budgets"} />
-      <Route path="/settings/categories" render={() => "Categories"} />
-      <Route path="/settings/tags" render={() => "Tags"} />
-      <Route path="/settings/options" render={() => "Options"} />
-      <Route path="/settings/user" render={() => "Profile"} />
+      <Route path="/settings" render={() => "Settings"} />
+      <Route exact path="/404" component={NotFound} />
+      <Route render={() => <Redirect to="/404" />} />
     </Switch>
   </AppLayout>
 );
