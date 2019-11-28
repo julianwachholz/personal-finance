@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
+from apps.accounts.views import AccountViewSet
 from apps.categories.views import CategoryViewSet
 
 router = routers.DefaultRouter()
 router.register(r"categories", CategoryViewSet)
+router.register(r"accounts", AccountViewSet, basename="account")
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -11,3 +11,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    filterset_fields = ["parent"]
+    search_fields = ["name", "parent__name"]
+    ordering_fields = ["name"]

@@ -1,0 +1,13 @@
+.money {
+  white-space: nowrap;
+
+  .amount {
+    font-variant: tabular-nums;
+  }
+  .amount:after {
+    content: " ";
+  }
+  .currency {
+    opacity: 0.8;
+  }
+}
