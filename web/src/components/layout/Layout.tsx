@@ -8,7 +8,7 @@ const { Sider, Content, Footer } = Layout;
 
 const AppLayout: React.FC = props => (
   <Layout>
-    <Sider collapsible>
+    <Sider collapsible theme="light">
       <MainMenu />
     </Sider>
     <Layout>

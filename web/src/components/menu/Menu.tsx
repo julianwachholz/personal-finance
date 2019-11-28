@@ -1,6 +1,7 @@
 import { Icon, Menu } from "antd";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import "./Menu.scss";
 
 const { Item, SubMenu } = Menu;
 
@@ -98,7 +99,7 @@ const MainMenu: React.FC = () => {
   return (
     <Menu
       mode="inline"
-      theme="dark"
+      theme="light"
       selectedKeys={[pathname]}
       defaultOpenKeys={subpaths}
     >
