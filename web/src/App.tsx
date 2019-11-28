@@ -11,6 +11,13 @@ const App: React.FC = () => (
     <Switch>
       <Route exact path="/" component={Dashboard} />
       <Route path="/transactions" component={Transactions} />
+      <Route path="/reports" render={() => "Reports"} />
+      <Route path="/accounts" render={() => "Accounts"} />
+      <Route path="/budgets" render={() => "Budgets"} />
+      <Route path="/settings/categories" render={() => "Categories"} />
+      <Route path="/settings/tags" render={() => "Tags"} />
+      <Route path="/settings/options" render={() => "Options"} />
+      <Route path="/settings/user" render={() => "Profile"} />
     </Switch>
   </AppLayout>
 );

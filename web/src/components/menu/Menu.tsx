@@ -1,57 +1,110 @@
 import { Icon, Menu } from "antd";
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const { Item, SubMenu } = Menu;
 
-const MainMenu: React.FC = () => (
-  <Menu mode="inline" theme="dark">
-    <Item key="home">
-      <Icon type="pie-chart" />
-      <span>Dashboard</span>
-    </Item>
-    <Item key="transactions">
-      <Icon type="history" />
-      <span>Transactions</span>
-    </Item>
-    <Item key="reports">
-      <Icon type="line-chart" />
-      <span>Reports</span>
-    </Item>
-    <Item key="accounts">
-      <Icon type="bank" />
-      <span>Accounts</span>
-    </Item>
-    <Item key="budgets">
-      <Icon type="project" rotate={180} />
-      <span>Budgets</span>
-    </Item>
+interface IMenuItem {
+  path: string;
+  icon: string | React.ReactElement;
+  text: string;
+  items?: IMenuItem[];
+}
+
+const menuItems: IMenuItem[] = [
+  {
+    path: "/",
+    icon: "pie-chart",
+    text: "Dashboard"
+  },
+  {
+    path: "/transactions",
+    icon: "history",
+    text: "Transactions"
+  },
+  {
+    path: "/reports",
+    icon: "line-chart",
+    text: "Reports"
+  },
+  {
+    path: "/accounts",
+    icon: "bank",
+    text: "Accounts"
+  },
+  {
+    path: "/budgets",
+    icon: <Icon type="project" rotate={180} />,
+    text: "Budgets"
+  },
+  {
+    path: "/settings",
+    icon: "setting",
+    text: "Settings",
+    items: [
+      {
+        path: "/settings/categories",
+        icon: "folder",
+        text: "Categories"
+      },
+      {
+        path: "/settings/tags",
+        icon: "tags",
+        text: "Tags"
+      },
+      {
+        path: "/settings/options",
+        icon: "tool",
+        text: "Options"
+      },
+      {
+        path: "/settings/user",
+        icon: "user",
+        text: "Profile"
+      }
+    ]
+  }
+];
+
+const renderIcon = (icon: string | React.ReactElement) =>
+  typeof icon === "string" ? <Icon type={icon} /> : icon;
+
+const renderItem = (item: IMenuItem) =>
+  item.items ? (
     <SubMenu
-      key="settings"
+      key={item.path}
       title={
         <>
-          <Icon type="setting" />
-          <span>Settings</span>
+          {renderIcon(item.icon)}
+          <span>{item.text}</span>
         </>
       }
     >
-      <Item key="settings.categories">
-        <Icon type="folder" />
-        <span>Categories</span>
-      </Item>
-      <Item key="settings.tags">
-        <Icon type="tags" />
-        <span>Tags</span>
-      </Item>
-      <Item key="settings.options">
-        <Icon type="tool" />
-        <span>Options</span>
-      </Item>
-      <Item key="settings.user">
-        <Icon type="user" />
-        <span>Profile</span>
-      </Item>
+      {item.items.map(renderItem)}
     </SubMenu>
-  </Menu>
-);
+  ) : (
+    <Item key={item.path}>
+      <Link to={item.path}>
+        {renderIcon(item.icon)}
+        <span>{item.text}</span>
+      </Link>
+    </Item>
+  );
+
+const MainMenu: React.FC = () => {
+  const { pathname } = useLocation();
+  const subpaths = pathname.split("/").map(p => `/${p}`);
+
+  return (
+    <Menu
+      mode="inline"
+      theme="dark"
+      selectedKeys={[pathname]}
+      defaultOpenKeys={subpaths}
+    >
+      {menuItems.map(renderItem)}
+    </Menu>
+  );
+};
 
 export default MainMenu;
