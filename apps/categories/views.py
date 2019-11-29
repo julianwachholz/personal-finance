@@ -1,7 +1,8 @@
 from rest_framework import viewsets
+from mptt.utils import get_cached_trees
 
 from .models import Category
-from .serializers import CategorySerializer
+from .serializers import CategorySerializer, NestedCategorySerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -14,3 +15,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
     filterset_fields = ["parent"]
     search_fields = ["name", "parent__name"]
     ordering_fields = ["name"]
+
+
+class CategoryTreeViewSet(CategoryViewSet):
+    """
+    Get a tree structure of your categories.
+    """
+
+    queryset = Category.objects.root_nodes()
+    read_only = True
+    serializer_class = NestedCategorySerializer
