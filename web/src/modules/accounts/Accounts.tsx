@@ -55,7 +55,7 @@ const getColumnSearchProps = (
       <div style={{ padding: 8 }}>
         <Input
           ref={node => (searchInput = node)}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search accounts`}
           value={selectedKeys[0]}
           onChange={e =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -95,7 +95,7 @@ const getColumnSearchProps = (
 const Accounts: React.FC = () => {
   const [page, setPage] = useState(1);
   const [ordering, setOrdering] = useState();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState();
 
   const { data, isLoading, error } = useQuery(
     ["Accounts", { page, ordering, search }],
@@ -105,45 +105,50 @@ const Accounts: React.FC = () => {
     return <h1>Error</h1>;
   }
   return (
-    <Table
-      dataSource={data && data.results}
-      loading={isLoading}
-      pagination={{
-        position: "both",
-        current: page,
-        pageSize: 10,
-        total: data && data.count
-      }}
-      rowKey="pk"
-      onChange={(pagination, filters, sorter) => {
-        setPage(pagination.current || 1);
-        setOrdering(
-          sorter.order &&
-            `${sorter.order === "ascend" ? "" : "-"}${sorter.field}`
-        );
-      }}
-    >
-      <Column
-        title="Name"
-        dataIndex="name"
-        {...getColumnSearchProps("name", setSearch)}
-      />
-      <Column title="Institution" dataIndex="institution" />
-      <Column
-        title="Balance"
-        dataIndex="balance"
-        align="right"
-        sorter
-        render={(balance, account: any) => (
-          <Money amount={balance} currency={account.balance_currency} />
-        )}
-      />
-      <Column
-        render={(_, account: any) => (
-          <Link to={`/accounts/${account.pk}`}>Edit</Link>
-        )}
-      />
-    </Table>
+    <>
+      <div style={{ float: "left" }}>
+        <Input placeholder="Search" />
+      </div>
+      <Table
+        dataSource={data && data.results}
+        loading={isLoading}
+        pagination={{
+          position: "both",
+          current: page,
+          pageSize: 10,
+          total: data && data.count
+        }}
+        rowKey="pk"
+        onChange={(pagination, filters, sorter) => {
+          setPage(pagination.current || 1);
+          setOrdering(
+            sorter.order &&
+              `${sorter.order === "ascend" ? "" : "-"}${sorter.field}`
+          );
+        }}
+      >
+        <Column
+          title="Name"
+          dataIndex="name"
+          {...getColumnSearchProps("name", setSearch)}
+        />
+        <Column title="Institution" dataIndex="institution" />
+        <Column
+          title="Balance"
+          dataIndex="balance"
+          align="right"
+          sorter
+          render={(balance, account: any) => (
+            <Money amount={balance} currency={account.balance_currency} />
+          )}
+        />
+        <Column
+          render={(_, account: any) => (
+            <Link to={`/accounts/${account.pk}`}>Edit</Link>
+          )}
+        />
+      </Table>
+    </>
   );
 };
 

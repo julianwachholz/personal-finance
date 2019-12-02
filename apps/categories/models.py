@@ -35,7 +35,12 @@ class Category(MPTTModel):
         order_insertion_by = ["name"]
 
     def __str__(self):
-        return self.name
+        return f"{self.get_icon()} {self.name}"
 
     def __repr__(self):
-        return f"<Category(user={self.user!r}, name={self.name!r}, parent={self.parent!r})>"
+        return f"<Category(user={self.user!r}, name={str(self)!r}, parent={self.parent!r})>"
+
+    def get_icon(self):
+        if not self.icon and self.parent:
+            return self.parent.icon
+        return self.icon

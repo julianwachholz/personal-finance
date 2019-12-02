@@ -1,42 +1,39 @@
 import { Table } from "antd";
-import React, { useState } from "react";
-import { useQuery } from "react-query";
+import React from "react";
+import ItemTable, { FetchItems } from "../base/ItemTable";
 
 const { Column } = Table;
 
-const fetchCategories = async ({ page }: { page: number }) => {
-  const response = await fetch(`/api/categories/?page=${page}`);
+const fetchCategories: FetchItems = async ({
+  page,
+  pageSize,
+  ordering,
+  search
+}) => {
+  let url = `/api/categories/?page=${page}`;
+  if (pageSize) {
+    url += `&page_size=${pageSize}`;
+  }
+  if (ordering) {
+    url += `&ordering=${ordering}`;
+  }
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
+  }
+  const response = await fetch(url);
   const data = await response.json();
   return data;
 };
 
-const Categories: React.FC = () => {
-  const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useQuery(
-    ["Categories", { page }],
-    fetchCategories
-  );
-  if (error) {
-    return <h1>Error</h1>;
-  }
-  return (
-    <Table
-      dataSource={data && data.results}
-      loading={isLoading}
-      pagination={{
-        position: "both",
-        current: page,
-        pageSize: 10,
-        total: data && data.count
-      }}
-      rowKey="pk"
-      onChange={pagination => {
-        setPage(pagination.current || 1);
-      }}
-    >
-      <Column title="Name" dataIndex="name" />
-    </Table>
-  );
-};
+const Categories: React.FC = () => (
+  <ItemTable itemName="Categories" fetchItems={fetchCategories}>
+    <Column
+      title="Name"
+      dataIndex="name"
+      sorter
+      render={(name, category: any) => `${category.get_icon} ${name}`}
+    />
+  </ItemTable>
+);
 
 export default Categories;
