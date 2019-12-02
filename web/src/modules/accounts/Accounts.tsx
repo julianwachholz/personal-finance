@@ -1,6 +1,6 @@
 import { Button, Icon, Input, Table } from "antd";
 import { FilterDropdownProps } from "antd/lib/table";
-import React, { useState } from "react";
+import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import Money from "../../components/data/Money";
@@ -10,42 +10,95 @@ const { Column } = Table;
 interface IFetchAccountsParams {
   page: number;
   ordering?: string;
+  search?: string;
 }
 
-const fetchAccounts = async ({ page, ordering }: IFetchAccountsParams) => {
+const fetchAccounts = async ({
+  page,
+  ordering,
+  search
+}: IFetchAccountsParams) => {
   let url = `/api/accounts/?page=${page}`;
   if (ordering) {
     url += `&ordering=${ordering}`;
+  }
+  if (search) {
+    url += `&search=${encodeURIComponent(search)}`;
   }
   const response = await fetch(url);
   const data = await response.json();
   return data;
 };
 
-const getColumnSearchProps = (dataIndex: string) => ({
-  filterDropdown: ({
-    setSelectedKeys,
-    selectedKeys,
-    confirm,
-    clearFilters
-  }: FilterDropdownProps) => (
-    <div style={{ padding: 8 }}>
-      <Input placeholder={`Search ${dataIndex}`} />
-      <Button icon="search" type="primary">
-        Search
-      </Button>
-    </div>
-  ),
-  filterIcon: (filtered: boolean) => (
-    <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-  )
-});
+const getColumnSearchProps = (
+  dataIndex: string,
+  setValue: (value: string) => void
+) => {
+  let searchInput: Input | null;
+
+  const handleSearch = (selectedKeys: ReactText[] | string[], confirm: any) => {
+    confirm();
+    setValue(selectedKeys[0] as string);
+  };
+  const handleReset = (clearFilters: (selectedKeys: string[]) => void) => {
+    clearFilters([]);
+    setValue("");
+  };
+
+  return {
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters
+    }: Required<FilterDropdownProps>) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => (searchInput = node)}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          onClick={() => handleSearch(selectedKeys, confirm)}
+          icon="search"
+          type="primary"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilterDropdownVisibleChange: (visible: boolean) => {
+      if (visible) {
+        setTimeout(() => searchInput!.select());
+      }
+    }
+  };
+};
 
 const Accounts: React.FC = () => {
   const [page, setPage] = useState(1);
   const [ordering, setOrdering] = useState();
+  const [search, setSearch] = useState("");
+
   const { data, isLoading, error } = useQuery(
-    ["Accounts", { page, ordering }],
+    ["Accounts", { page, ordering, search }],
     fetchAccounts
   );
   if (error) {
@@ -70,7 +123,11 @@ const Accounts: React.FC = () => {
         );
       }}
     >
-      <Column title="Name" dataIndex="name" {...getColumnSearchProps("name")} />
+      <Column
+        title="Name"
+        dataIndex="name"
+        {...getColumnSearchProps("name", setSearch)}
+      />
       <Column title="Institution" dataIndex="institution" />
       <Column
         title="Balance"
