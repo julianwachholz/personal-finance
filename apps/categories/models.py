@@ -44,3 +44,8 @@ class Category(MPTTModel):
         if not self.icon and self.parent:
             return self.parent.icon
         return self.icon
+
+    def get_color(self):
+        if not self.color and self.parent:
+            return self.parent.color
+        return self.color

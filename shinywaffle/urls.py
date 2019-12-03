@@ -19,9 +19,11 @@ from django.urls import include, path
 from rest_framework import routers
 
 from apps.accounts.views import AccountViewSet
-from apps.categories.views import CategoryViewSet, CategoryTreeViewSet
+from apps.categories.views import CategoryTreeViewSet, CategoryViewSet
+from apps.tags.views import TagViewSet
 
 router = routers.DefaultRouter()
+router.register(r"tags", TagViewSet)
 router.register(r"categories/tree", CategoryTreeViewSet, basename="categories/tree")
 router.register(r"categories", CategoryViewSet)
 router.register(r"accounts", AccountViewSet, basename="account")
@@ -36,4 +38,4 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns = [path("__debug__/", include(debug_toolbar.urls)),] + urlpatterns
+    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns

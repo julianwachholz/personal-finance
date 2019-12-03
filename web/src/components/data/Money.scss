@@ -3,6 +3,7 @@
 
   .amount {
     font-variant: tabular-nums;
+    font-feature-settings: "tnum";
   }
   .amount:after {
     content: " ";

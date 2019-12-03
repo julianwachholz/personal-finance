@@ -1,10 +1,15 @@
-from django.core import serializers
-from django.http import HttpResponse
+from rest_framework import viewsets
 
 from .models import Tag
+from .serializers import TagSerializer
 
 
-def tag_list(request):
-    tags = Tag.objects.all()
-    items = serializers.serialize("json", tags, fields=("name",))
-    return HttpResponse(items, content_type="application/json")
+class TagViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows tags to be viewed or edited.
+    """
+
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    search_fields = ["name"]
+    ordering_fields = ["name"]

@@ -6,7 +6,7 @@ from .models import Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["pk", "name", "get_icon", "icon", "color", "parent"]
+        fields = ["pk", "name", "get_icon", "icon", "get_color", "color", "parent"]
 
 
 class RecursiveSerializer(serializers.Serializer):
@@ -20,4 +20,4 @@ class NestedCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["pk", "name", "icon", "color", "children"]
+        fields = ["pk", "name", "get_icon", "get_color", "children"]

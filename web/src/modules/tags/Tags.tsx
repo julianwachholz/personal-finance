@@ -5,13 +5,8 @@ import ItemTable, { FetchItems } from "../base/ItemTable";
 
 const { Column } = Table;
 
-const fetchCategories: FetchItems = async ({
-  page,
-  pageSize,
-  ordering,
-  search
-}) => {
-  let url = `/api/categories/?page=${page}`;
+const fetchTags: FetchItems = async ({ page, pageSize, ordering, search }) => {
+  let url = `/api/tags/?page=${page}`;
   if (pageSize) {
     url += `&page_size=${pageSize}`;
   }
@@ -26,20 +21,15 @@ const fetchCategories: FetchItems = async ({
   return data;
 };
 
-const Categories: React.FC = () => (
-  <ItemTable itemName="Categories" fetchItems={fetchCategories}>
-    <Column
-      title="Name"
-      dataIndex="name"
-      sorter
-      render={(name, category: any) => `${category.get_icon} ${name}`}
-    />
+const Tags: React.FC = () => (
+  <ItemTable itemName="Tags" fetchItems={fetchTags}>
+    <Column title="Name" dataIndex="name" sorter render={name => `#${name}`} />
     <Column
       title="Color"
-      dataIndex="get_color"
+      dataIndex="color"
       render={value => <Color value={value} />}
     />
   </ItemTable>
 );
 
-export default Categories;
+export default Tags;
