@@ -69,11 +69,13 @@ const getColumnSearchProps = (
 interface IItemTableProps {
   itemName: string;
   fetchItems: FetchItems;
+  pagination?: boolean;
 }
 
 const ItemTable: React.FC<IItemTableProps> = ({
   itemName,
   fetchItems,
+  pagination = true,
   children
 }) => {
   const [page, setPage] = useState(1);
@@ -92,19 +94,23 @@ const ItemTable: React.FC<IItemTableProps> = ({
     <Table
       dataSource={data && data.results}
       loading={isLoading}
-      pagination={{
-        position: "both",
-        current: page,
-        pageSize,
-        showSizeChanger: true,
-        pageSizeOptions: ["10", "25", "50", "100"],
-        onShowSizeChange: (current, size) => {
-          setPageSize(size);
-        },
-        showTotal: (total, range) =>
-          `${range[0]}-${range[1]} of ${total} ${itemName}`,
-        total: data && data.count
-      }}
+      pagination={
+        pagination
+          ? {
+              position: "both",
+              current: page,
+              pageSize,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "25", "50", "100"],
+              onShowSizeChange: (current, size) => {
+                setPageSize(size);
+              },
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} ${itemName}`,
+              total: data && data.count
+            }
+          : false
+      }
       rowKey="pk"
       onChange={(pagination, filters, sorter) => {
         setPage(pagination.current || 1);

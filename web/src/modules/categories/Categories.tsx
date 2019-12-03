@@ -7,7 +7,11 @@ import ItemTable from "../base/ItemTable";
 const { Column } = Table;
 
 const Categories: React.FC = () => (
-  <ItemTable itemName="Categories" fetchItems={fetchCategories}>
+  <ItemTable
+    itemName="Categories"
+    fetchItems={fetchCategories}
+    pagination={false}
+  >
     <Column
       title="Name"
       dataIndex="name"

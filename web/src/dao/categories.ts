@@ -1,3 +1,3 @@
 import { makeFetchItems } from "./base";
 
-export const fetchCategories = makeFetchItems("categories");
+export const fetchCategories = makeFetchItems("categories/tree");

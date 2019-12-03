@@ -19,12 +19,11 @@ from django.urls import include, path
 from rest_framework import routers
 
 from apps.accounts.views import AccountViewSet
-from apps.categories.views import CategoryTreeViewSet, CategoryViewSet
+from apps.categories.views import CategoryViewSet
 from apps.tags.views import TagViewSet
 
 router = routers.DefaultRouter()
 router.register(r"tags", TagViewSet, basename="tags")
-router.register(r"categories/tree", CategoryTreeViewSet, basename="categories/tree")
 router.register(r"categories", CategoryViewSet, basename="categories")
 router.register(r"accounts", AccountViewSet, basename="accounts")
 

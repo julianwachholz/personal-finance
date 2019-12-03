@@ -20,9 +20,16 @@ class RecursiveSerializer(serializers.Serializer):
         return serializer.data
 
 
-class NestedCategorySerializer(serializers.ModelSerializer):
-    children = RecursiveSerializer(many=True, read_only=True)
+class CategoryTreeSerializer(CategorySerializer):
+    children = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ["pk", "name", "get_icon", "get_color", "children"]
+        fields = ["pk", "label", "children"]
+
+    def get_children(self, obj):
+        children = obj.get_children()
+        if not children:
+            return None
+        serializer = CategoryTreeSerializer(children, many=True, context=self.context)
+        return serializer.data
