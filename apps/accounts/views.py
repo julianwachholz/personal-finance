@@ -1,7 +1,5 @@
 from django.db import models
 from django.views.generic import ListView
-from djmoney.forms.fields import MoneyField
-from djmoney.money import Money
 from rest_framework import viewsets
 
 from .serializers import AccountSerializer
@@ -26,7 +24,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     filterset_fields = ["balance_currency"]
     search_fields = ["name", "institution"]
-    ordering_fields = ["name", "balance"]
+    ordering_fields = ["name", "institution", "balance"]
 
     def get_queryset(self):
         return self.request.user.accounts.all()

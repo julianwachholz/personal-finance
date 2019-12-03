@@ -33,7 +33,7 @@ class Account(models.Model):
         ordering = ("user", "pos", "name")
 
     def __str__(self):
-        return self.name
+        return f"{self.icon} {self.name}"
 
     def __repr__(self):
         return f"<Account(user={self.user!r}, name={self.name!r}, institution={self.institution!r}, balance={self.balance!r})>"

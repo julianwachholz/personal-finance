@@ -4,9 +4,14 @@ from .models import Category
 
 
 class CategorySerializer(serializers.ModelSerializer):
+
+    label = serializers.CharField(source="__str__", read_only=True)
+    icon = serializers.CharField(source="get_icon", read_only=True)
+    color = serializers.CharField(source="get_color", read_only=True)
+
     class Meta:
         model = Category
-        fields = ["pk", "name", "get_icon", "icon", "get_color", "color", "parent"]
+        fields = ["pk", "label", "name", "icon", "color", "parent"]
 
 
 class RecursiveSerializer(serializers.Serializer):

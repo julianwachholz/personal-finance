@@ -23,10 +23,10 @@ from apps.categories.views import CategoryTreeViewSet, CategoryViewSet
 from apps.tags.views import TagViewSet
 
 router = routers.DefaultRouter()
-router.register(r"tags", TagViewSet)
+router.register(r"tags", TagViewSet, basename="tags")
 router.register(r"categories/tree", CategoryTreeViewSet, basename="categories/tree")
-router.register(r"categories", CategoryViewSet)
-router.register(r"accounts", AccountViewSet, basename="account")
+router.register(r"categories", CategoryViewSet, basename="categories")
+router.register(r"accounts", AccountViewSet, basename="accounts")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
