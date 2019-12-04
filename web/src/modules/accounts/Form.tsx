@@ -1,18 +1,29 @@
-import { Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import React from "react";
 
 interface IFormProps extends FormComponentProps {
-  initial?: any;
+  data?: any;
+  onSave: (values: any) => void;
 }
 
-const AccountFormComponent: React.FC<IFormProps> = ({ initial, form }) => {
+const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
+  const onSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        onSave(values);
+      }
+    });
+  };
+
   return (
-    <Form layout="horizontal" onSubmit={() => console.log("submit")}>
+    <Form layout="horizontal" onSubmit={onSubmit}>
       <Form.Item label="Name">
         <Input.Group compact>
           {form.getFieldDecorator("icon", {
-            initialValue: initial && initial.icon
+            initialValue: data && data.icon
           })(
             <Input
               placeholder="💵"
@@ -20,23 +31,23 @@ const AccountFormComponent: React.FC<IFormProps> = ({ initial, form }) => {
             />
           )}
           {form.getFieldDecorator("name", {
-            initialValue: initial && initial.name,
+            initialValue: data && data.name,
             rules: [{ required: true }]
           })(<Input placeholder="Checking" style={{ width: "90%" }} />)}
         </Input.Group>
       </Form.Item>
       <Form.Item label="Institution">
         {form.getFieldDecorator("institution", {
-          initialValue: initial && initial.institution
+          initialValue: data && data.institution
         })(<Input placeholder="Example Credit Union" />)}
       </Form.Item>
       <Form.Item label="Balance">
         <Input.Group compact>
           {form.getFieldDecorator("balance", {
-            initialValue: initial && initial.balance
+            initialValue: data && data.balance
           })(<Input placeholder="0.00" style={{ width: "90%" }} />)}
           {form.getFieldDecorator("balance_currency", {
-            initialValue: initial && initial.balance_currency
+            initialValue: data && data.balance_currency
           })(
             <Input
               placeholder="USD"
@@ -44,6 +55,11 @@ const AccountFormComponent: React.FC<IFormProps> = ({ initial, form }) => {
             />
           )}
         </Input.Group>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          Save Account
+        </Button>
       </Form.Item>
     </Form>
   );

@@ -1,8 +1,8 @@
-import { Spin } from "antd";
+import { message, Spin } from "antd";
 import React from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { RouteComponentProps } from "react-router";
-import { fetchAccount } from "../../dao/accounts";
+import { fetchAccount, putAccount } from "../../dao/accounts";
 import AccountForm from "./Form";
 
 interface IDetailParams {
@@ -11,16 +11,34 @@ interface IDetailParams {
 const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
   match
 }) => {
+  const pk = parseInt(match.params.pk, 10);
+
   const { data, isLoading, error } = useQuery(
-    ["Account", { pk: parseInt(match.params.pk, 10) }],
+    ["Account", { pk }],
     fetchAccount
   );
+
+  const [mutate] = useMutation(putAccount, {
+    refetchQueries: ["Accounts", ["Account", { pk }]]
+  });
 
   if (isLoading) {
     return <Spin />;
   }
 
-  return <AccountForm initial={data} />;
+  return (
+    <AccountForm
+      data={data}
+      onSave={async data => {
+        try {
+          await mutate({ pk, ...data });
+          message.success("Account updated!");
+        } catch (e) {
+          message.error("Account update failed!");
+        }
+      }}
+    />
+  );
 };
 
 export default AccountEdit;

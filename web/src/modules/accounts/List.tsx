@@ -28,9 +28,8 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
       )}
     />
     <Column
-      render={(_, account: any) => (
-        <Link to={`/accounts/${account.pk}`}>Edit</Link>
-      )}
+      dataIndex="pk"
+      render={pk => <Link to={`/accounts/${pk}/edit`}>Edit</Link>}
     />
   </ItemTable>
 );

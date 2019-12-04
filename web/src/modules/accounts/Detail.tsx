@@ -1,7 +1,7 @@
-import { Descriptions, Spin, Statistic } from "antd";
+import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
 import { useQuery } from "react-query";
-import { RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { fetchAccount } from "../../dao/accounts";
 
 const { Item } = Descriptions;
@@ -29,6 +29,9 @@ const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
         precision={2}
         suffix={account.balance_currency}
       />
+      <Link to={`${match.url}/edit`}>
+        <Button type="primary">Edit Account</Button>
+      </Link>
     </>
   ) : (
     <Spin />

@@ -38,10 +38,26 @@ type FetchItem = (options: IFetchItemOptions) => Promise<any>;
 
 export const makeFetchItem = (basename: string) => {
   const fetchItem: FetchItem = async ({ pk }) => {
-    let url = `/api/${basename}/${pk}/`;
+    const url = `/api/${basename}/${pk}/`;
     const response = await fetch(url);
     const data = await response.json();
     return data;
   };
   return fetchItem;
+};
+
+export const makePutItem = (basename: string) => {
+  const putItem = async (data: any) => {
+    const url = `/api/${basename}/${data.pk}/`;
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data)
+    });
+    const responseData = await response.json();
+    return responseData;
+  };
+  return putItem;
 };
