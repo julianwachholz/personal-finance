@@ -92,6 +92,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "shinywaffle.wsgi.application"
 
+SESSION_COOKIE_SAMESITE = "strict"
+CSRF_COOKIE_SAMESITE = "strict"
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

@@ -29,8 +29,14 @@ django-debug-toolbar = "^2.1"
 [tool.black]
 exclude ='''
 (
-  migrations
-  node_modules
+  /(
+    | \.git
+    | \.pytest_cache
+    | build
+    | dist
+    | web/node_modules
+    | .*\/migrations
+  )/
 )
 '''
 
