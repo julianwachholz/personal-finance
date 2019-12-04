@@ -1,18 +1,20 @@
 import { Table } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
 import { fetchAccounts } from "../../dao/accounts";
 import ItemTable from "../base/ItemTable";
 
 const { Column } = Table;
 
-const Accounts: React.FC = () => (
+const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
   <ItemTable itemName="Accounts" fetchItems={fetchAccounts}>
     <Column
       title="Name"
       dataIndex="name"
-      render={(name, account: any) => account.label}
+      render={(name, account: any) => (
+        <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>
+      )}
       sorter
     />
     <Column title="Institution" dataIndex="institution" sorter />

@@ -30,3 +30,18 @@ export const makeFetchItems = (basename: string) => {
 
   return fetchItems;
 };
+
+interface IFetchItemOptions {
+  pk: number;
+}
+type FetchItem = (options: IFetchItemOptions) => Promise<any>;
+
+export const makeFetchItem = (basename: string) => {
+  const fetchItem: FetchItem = async ({ pk }) => {
+    let url = `/api/${basename}/${pk}/`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  };
+  return fetchItem;
+};

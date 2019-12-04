@@ -3,7 +3,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import AppLayout from "./components/layout/Layout";
-import Accounts from "./modules/accounts/Accounts";
+import Accounts from "./modules/accounts";
 import Dashboard from "./modules/dashboard/Dashboard";
 import NotFound from "./modules/error/NotFound";
 import Settings from "./modules/settings/Settings";

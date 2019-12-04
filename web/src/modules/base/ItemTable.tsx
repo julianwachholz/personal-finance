@@ -90,6 +90,7 @@ const ItemTable: React.FC<IItemTableProps> = ({
   if (error) {
     return <h1>Error</h1>;
   }
+
   return (
     <Table
       dataSource={data && data.results}
