@@ -92,8 +92,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "shinywaffle.wsgi.application"
 
-SESSION_COOKIE_SAMESITE = "strict"
-CSRF_COOKIE_SAMESITE = "strict"
+SESSION_COOKIE_SAMESITE = "lax"
+CSRF_COOKIE_SAMESITE = "lax"
+CSRF_USE_SESSIONS = True
 
 
 # Database
@@ -127,7 +128,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication"
+        "shinywaffle.authentication.CSRFExemptSessionAuthentication"
     ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_PAGINATION_CLASS": "shinywaffle.pagination.ControllablePageNumberPagination",

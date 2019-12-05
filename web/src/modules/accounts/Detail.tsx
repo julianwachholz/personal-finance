@@ -29,7 +29,7 @@ const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
         precision={2}
         suffix={account.balance_currency}
       />
-      <Link to={`${match.url}/edit`}>
+      <Link to={`${match.path}/edit`}>
         <Button type="primary">Edit Account</Button>
       </Link>
     </>

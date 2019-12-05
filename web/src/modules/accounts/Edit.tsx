@@ -19,10 +19,10 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
   );
 
   const [mutate] = useMutation(putAccount, {
-    refetchQueries: ["Accounts", ["Account", { pk }]]
+    refetchQueries: ["Accounts"]
   });
 
-  if (isLoading) {
+  if (!data || isLoading) {
     return <Spin />;
   }
 
@@ -31,7 +31,7 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
       data={data}
       onSave={async data => {
         try {
-          await mutate({ pk, ...data });
+          await mutate({ pk, ...data }, { updateQuery: ["Account", { pk }] });
           message.success("Account updated!");
         } catch (e) {
           message.error("Account update failed!");

@@ -1,9 +1,10 @@
 import { Button, Form, Input } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import React from "react";
+import { IAccount } from "../../dao/accounts";
 
 interface IFormProps extends FormComponentProps {
-  data?: any;
+  data?: IAccount;
   onSave: (values: any) => void;
 }
 

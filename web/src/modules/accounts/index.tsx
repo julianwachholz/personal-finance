@@ -7,10 +7,10 @@ import Accounts from "./List";
 
 const Module: React.FC<RouteComponentProps> = ({ match }) => (
   <Switch>
-    <Route exact path={match.url} component={Accounts} />
-    <Route path={`${match.url}/new`} component={AccountCreate} />
-    <Route path={`${match.url}/:pk/edit`} component={AccountEdit} />
-    <Route path={`${match.url}/:pk`} component={Account} />
+    <Route path={`${match.path}/new`} component={AccountCreate} />
+    <Route path={`${match.path}/:pk/edit`} component={AccountEdit} />
+    <Route path={`${match.path}/:pk`} component={Account} />
+    <Route path={match.path} component={Accounts} />
   </Switch>
 );
 

@@ -2,7 +2,7 @@ import { Button, Icon, Input, Table } from "antd";
 import { FilterDropdownProps } from "antd/lib/table";
 import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
-import { FetchItems } from "../../dao/base";
+import { FetchItems, IModel } from "../../dao/base";
 
 const getColumnSearchProps = (
   dataIndex: string,
@@ -66,13 +66,13 @@ const getColumnSearchProps = (
   };
 };
 
-interface IItemTableProps {
+interface IItemTableProps<T extends IModel> {
   itemName: string;
-  fetchItems: FetchItems;
+  fetchItems: FetchItems<T>;
   pagination?: boolean;
 }
 
-const ItemTable: React.FC<IItemTableProps> = ({
+const ItemTable: React.FC<IItemTableProps<any>> = ({
   itemName,
   fetchItems,
   pagination = true,
@@ -87,13 +87,17 @@ const ItemTable: React.FC<IItemTableProps> = ({
     [itemName, { page, pageSize, ordering, search }],
     fetchItems
   );
+
   if (error) {
     return <h1>Error</h1>;
   }
 
+  const total = data ? data.count : NaN;
+  const results = data ? data.results : [];
+
   return (
     <Table
-      dataSource={data && data.results}
+      dataSource={results}
       loading={isLoading}
       pagination={
         pagination
@@ -108,7 +112,7 @@ const ItemTable: React.FC<IItemTableProps> = ({
               },
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} ${itemName}`,
-              total: data && data.count
+              total
             }
           : false
       }
