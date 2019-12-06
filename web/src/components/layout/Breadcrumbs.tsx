@@ -1,6 +1,6 @@
 import { Breadcrumb, Icon } from "antd";
 import React from "react";
-import { QueryResult } from "react-query";
+import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
@@ -69,10 +69,11 @@ const Breadcrumbs: React.FC = () => {
     );
   });
 
+  const isFetching = useIsFetching();
   items.unshift(
     <Breadcrumb.Item key="/">
       <Link to="/">
-        <Icon type="home" />
+        <Icon type={isFetching ? "loading" : "home"} />
       </Link>
     </Breadcrumb.Item>
   );
