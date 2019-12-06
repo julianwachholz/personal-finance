@@ -1,6 +1,7 @@
 import { Input, InputNumber, Select } from "antd";
 import React from "react";
 import { IMoney } from "../data/Money";
+import "./MoneyInput.scss";
 
 interface IMoneyInputProps {
   value?: IMoney;
@@ -21,6 +22,7 @@ const MoneyInput: React.FC<IMoneyInputProps> = React.forwardRef(
     return (
       <Input.Group compact>
         <InputNumber
+          className="input-money"
           ref={ref as any}
           autoFocus={props.autoFocus}
           min={0}
