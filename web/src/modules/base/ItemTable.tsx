@@ -81,10 +81,11 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [ordering, setOrdering] = useState();
+  const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
 
   const { data, isLoading, error } = useQuery(
-    [itemName, { page, pageSize, ordering, search }],
+    [itemName, { page, pageSize, ordering, filters, search }],
     fetchItems
   );
 
@@ -119,6 +120,7 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
       rowKey="pk"
       onChange={(pagination, filters, sorter) => {
         setPage(pagination.current || 1);
+        setFilters(Object.values(filters).flat() || []);
         setOrdering(
           sorter.order &&
             `${sorter.order === "ascend" ? "" : "-"}${sorter.field}`

@@ -1,8 +1,7 @@
 import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
-import { useQuery } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { fetchAccount } from "../../dao/accounts";
+import { useAccount } from "../../dao/accounts";
 
 const { Item } = Descriptions;
 
@@ -11,10 +10,7 @@ interface IDetailParams {
 }
 
 const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
-  const { data: account } = useQuery(
-    ["Account", { pk: parseInt(match.params.pk, 10) }],
-    fetchAccount
-  );
+  const { data: account } = useAccount(match.params.pk);
 
   return account ? (
     <>
@@ -29,7 +25,7 @@ const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
         precision={2}
         suffix={account.balance_currency}
       />
-      <Link to={`${match.path}/edit`}>
+      <Link to={`${match.url}/edit`}>
         <Button type="primary">Edit Account</Button>
       </Link>
     </>

@@ -1,3 +1,4 @@
+import { useQuery } from "react-query";
 import {
   makeDeleteItem,
   makeFetchItem,
@@ -27,3 +28,11 @@ export const postAccount = makePostItem<IAccount>("accounts");
 export const putAccount = makePutItem<IAccount>("accounts");
 
 export const deleteAccount = makeDeleteItem<IAccount>("accounts");
+
+export const useAccount = (pk: number | string) => {
+  if (typeof pk === "string") {
+    pk = parseInt(pk, 10);
+  }
+  const query = useQuery(["Account", { pk }], fetchAccount);
+  return query;
+};

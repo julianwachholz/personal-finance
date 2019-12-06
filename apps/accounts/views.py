@@ -1,19 +1,19 @@
-from django.db import models
-from django.views.generic import ListView
+from django_filters import rest_framework as filters
+from djmoney.models.fields import CURRENCY_CHOICES
 from rest_framework import viewsets
 
+from .models import Account
 from .serializers import AccountSerializer
 
 
-class AccountListView(ListView):
-    def get_queryset(self):
-        return self.request.user.accounts.all()
+class AccountFilterSet(filters.FilterSet):
+    currency = filters.MultipleChoiceFilter(
+        field_name="balance_currency", choices=CURRENCY_CHOICES
+    )
 
-    def total_balance(self):
-        return self.request.user.accounts.aggregate(models.Sum("balance"))
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(total_balance=self.total_balance(), **kwargs)
+    class Meta:
+        model = Account
+        fields = ("currency",)
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -22,7 +22,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = AccountSerializer
-    filterset_fields = ["balance_currency"]
+    filterset_class = AccountFilterSet
     search_fields = ["name", "institution"]
     ordering_fields = ["name", "institution", "balance"]
 

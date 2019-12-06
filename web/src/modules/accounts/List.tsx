@@ -13,7 +13,7 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
       title="Name"
       dataIndex="name"
       render={(name, account: IAccount) => (
-        <Link to={`${match.path}/${account.pk}`}>{account.label}</Link>
+        <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>
       )}
       sorter
     />
@@ -23,13 +23,20 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
       dataIndex="balance"
       align="right"
       sorter
+      filters={[
+        { text: "SFr.", value: "currency=CHF" },
+        { text: "€", value: "currency=EUR" },
+        { text: "US$", value: "currency=USD" }
+      ]}
       render={(balance, account: IAccount) => (
-        <Money amount={balance} currency={account.balance_currency} />
+        <Money
+          value={{ amount: balance, currency: account.balance_currency }}
+        />
       )}
     />
     <Column
       dataIndex="pk"
-      render={pk => <Link to={`${match.path}/${pk}/edit`}>Edit</Link>}
+      render={pk => <Link to={`${match.url}/${pk}/edit`}>Edit</Link>}
     />
   </ItemTable>
 );

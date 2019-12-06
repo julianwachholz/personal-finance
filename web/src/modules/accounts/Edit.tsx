@@ -1,8 +1,8 @@
 import { message, Spin } from "antd";
 import React from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
-import { fetchAccount, putAccount } from "../../dao/accounts";
+import { putAccount, useAccount } from "../../dao/accounts";
 import AccountForm from "./Form";
 
 interface IDetailParams {
@@ -12,11 +12,7 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
   match
 }) => {
   const pk = parseInt(match.params.pk, 10);
-
-  const { data, isLoading, error } = useQuery(
-    ["Account", { pk }],
-    fetchAccount
-  );
+  const { data, isLoading } = useAccount(pk);
 
   const [mutate] = useMutation(putAccount, {
     refetchQueries: ["Accounts"]

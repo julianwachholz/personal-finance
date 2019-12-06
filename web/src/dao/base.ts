@@ -2,6 +2,7 @@ interface IFetchItemsOptions {
   page: number;
   pageSize?: number;
   ordering?: string;
+  filters?: string[];
   search?: string;
 }
 
@@ -23,6 +24,7 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
     page,
     pageSize,
     ordering,
+    filters,
     search
   }) => {
     let url = `/api/${basename}/?page=${page}`;
@@ -31,6 +33,9 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
     }
     if (ordering) {
       url += `&ordering=${ordering}`;
+    }
+    if (filters) {
+      url += `&${filters.join("&")}`;
     }
     if (search) {
       url += `&search=${encodeURIComponent(search)}`;
