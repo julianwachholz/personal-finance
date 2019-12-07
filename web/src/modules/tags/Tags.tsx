@@ -2,19 +2,19 @@ import { Table } from "antd";
 import React from "react";
 import Color from "../../components/data/Color";
 import { fetchTags } from "../../dao/tags";
-import ItemTable from "../base/ItemTable";
+import BaseList from "../base/BaseList";
 
 const { Column } = Table;
 
 const Tags: React.FC = () => (
-  <ItemTable itemName="Tags" fetchItems={fetchTags}>
+  <BaseList itemName="Tags" fetchItems={fetchTags}>
     <Column title="Name" dataIndex="name" sorter render={name => `#${name}`} />
     <Column
       title="Color"
       dataIndex="color"
       render={value => <Color value={value} />}
     />
-  </ItemTable>
+  </BaseList>
 );
 
 export default Tags;

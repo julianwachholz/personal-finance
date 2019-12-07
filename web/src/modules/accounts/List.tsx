@@ -3,12 +3,12 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
 import { fetchAccounts, IAccount } from "../../dao/accounts";
-import ItemTable from "../base/ItemTable";
+import BaseList, { getColumnSearchProps } from "../base/BaseList";
 
 const { Column } = Table;
 
 const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
-  <ItemTable itemName="Accounts" fetchItems={fetchAccounts}>
+  <BaseList itemName="Accounts" fetchItems={fetchAccounts}>
     <Column
       title="Name"
       dataIndex="name"
@@ -16,6 +16,7 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
         <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>
       )}
       sorter
+      {...getColumnSearchProps()}
     />
     <Column title="Institution" dataIndex="institution" sorter />
     <Column
@@ -38,7 +39,7 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
       dataIndex="pk"
       render={pk => <Link to={`${match.url}/${pk}/edit`}>Edit</Link>}
     />
-  </ItemTable>
+  </BaseList>
 );
 
 export default Accounts;
