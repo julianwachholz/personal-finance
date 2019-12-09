@@ -11,10 +11,12 @@ const Categories: React.FC = () => {
 
   return (
     <BaseList
-      itemName="Categories"
+      itemName="Category"
+      itemNamePlural="Categories"
       fetchItems={useTree ? fetchCategoryTree : fetchCategories}
       pagination={false}
       showSearch={false}
+      extraActions={false}
     >
       <Column
         title="Name"

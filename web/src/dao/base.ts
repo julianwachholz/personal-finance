@@ -1,3 +1,5 @@
+import { useQuery } from "react-query";
+
 interface IFetchItemsOptions {
   page: number;
   pageSize?: number;
@@ -68,6 +70,20 @@ export const makeFetchItem = <T extends IModel>(basename: string) => {
   };
   return fetchItem;
 };
+
+
+export const makeUseItem = <T extends IModel>(basename: string) => {
+  const fetchItem = makeFetchItem<T>(basename);
+  const useItem = (pk: number | string) => {
+    if (typeof pk === 'string') {
+      pk = parseInt(pk, 10)
+    }
+    const query = useQuery([`use_${basename}`, { pk }], fetchItem);
+    return query;
+  };
+  return useItem;
+};
+
 
 type PostItem<T extends IModel> = (data: T) => Promise<T>;
 

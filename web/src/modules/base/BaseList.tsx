@@ -1,21 +1,19 @@
 import {
   Button,
+  Dropdown,
   Icon,
   Input,
-  Table,
+  Menu,
   PageHeader,
   Pagination,
-  Menu,
-  Dropdown,
-  Row,
-  Col
+  Table
 } from "antd";
 import { FilterDropdownProps } from "antd/lib/table";
 import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
 import { FetchItems, IModel } from "../../dao/base";
 import "./BaseList.scss";
-import { Link } from "react-router-dom";
 
 export const getColumnSearchProps = (onChange?: (value: string) => void) => {
   let searchInput: Input | null;
@@ -92,16 +90,22 @@ const mapFilters = (filters: Record<string | number | symbol, string[]>) => {
 
 interface IItemTableProps<T extends IModel> {
   itemName: string;
+  itemNamePlural: string;
   fetchItems: FetchItems<T>;
   pagination?: boolean;
   showSearch?: boolean;
+  actions?: React.ReactElement[];
+  extraActions?: boolean | React.ReactElement[];
 }
 
 const ItemTable: React.FC<IItemTableProps<any>> = ({
   itemName,
+  itemNamePlural,
   fetchItems,
   pagination = true,
   showSearch = true,
+  actions = [],
+  extraActions = true,
   children
 }) => {
   const [total, setTotal] = useState(0);
@@ -112,7 +116,7 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
   const [search, setSearch] = useState();
 
   const { data, isLoading, error } = useQuery(
-    [itemName, { page, pageSize, ordering, filters, search }],
+    [itemNamePlural, { page, pageSize, ordering, filters, search }],
     fetchItems
   );
 
@@ -125,20 +129,28 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
     return <h1>Error</h1>;
   }
 
-  const actions = (
-    <Menu>
-      <Menu.Item>
-        <Link to="#">Import</Link>
-      </Menu.Item>
-      <Menu.Item>
-        <Link to="#">Export</Link>
-      </Menu.Item>
-    </Menu>
-  );
+  const extraActionMenu =
+    extraActions === false ? null : extraActions === true ? (
+      <Menu>
+        <Menu.Item>
+          <Link to="#">Import</Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link to="#">Export</Link>
+        </Menu.Item>
+      </Menu>
+    ) : (
+      <Menu>
+        {extraActions.map((action, i) => (
+          <Menu.Item key={i}>{action}</Menu.Item>
+        ))}
+      </Menu>
+    );
 
   const pager = pagination ? (
     <Pagination
       total={total}
+      showLessItems
       current={page}
       onChange={current => {
         setPage(current);
@@ -152,7 +164,9 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
         setPageSize(size);
       }}
       showTotal={(total, range) =>
-        `${range[0]}-${range[1]} of ${total} ${itemName}`
+        total === 1
+          ? `Showing only ${itemName}`
+          : `${range[0]}-${range[1]} of ${total} ${itemNamePlural}`
       }
     />
   ) : null;
@@ -160,14 +174,14 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
   return (
     <div className="module module-list">
       <PageHeader
-        title={itemName}
+        title={itemNamePlural}
         extra={[
-          <Dropdown key="more" overlay={actions}>
-            <Button icon="down">Actions</Button>
-          </Dropdown>,
-          <Button key="create" type="primary">
-            Create {itemName}
-          </Button>
+          extraActionMenu ? (
+            <Dropdown key="more" overlay={extraActionMenu}>
+              <Button icon="down">Actions</Button>
+            </Dropdown>
+          ) : null,
+          ...actions
         ]}
       />
       {showSearch ? (

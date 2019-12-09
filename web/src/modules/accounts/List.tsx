@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, Button } from "antd";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
@@ -8,7 +8,16 @@ import BaseList, { getColumnSearchProps } from "../base/BaseList";
 const { Column } = Table;
 
 const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
-  <BaseList itemName="Accounts" fetchItems={fetchAccounts}>
+  <BaseList
+    itemName="Account"
+    itemNamePlural="Accounts"
+    fetchItems={fetchAccounts}
+    actions={[
+      <Link key="create" to={`${match.url}/create`}>
+        <Button type="primary">Create Account</Button>
+      </Link>
+    ]}
+  >
     <Column
       title="Name"
       dataIndex="name"

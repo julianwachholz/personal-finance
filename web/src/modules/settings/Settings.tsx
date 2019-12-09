@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, RouteComponentProps, Switch } from "react-router";
-import Categories from "../categories/Categories";
-import Tags from "../tags/Tags";
+import Categories from "../categories/List";
+import Tags from "../tags";
 
 const Settings: React.FC<RouteComponentProps> = ({ match }) => (
   <Switch>

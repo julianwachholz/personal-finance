@@ -5,13 +5,14 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import useDebounce from "../../utils/debounce";
+import { useTag } from "../../dao/tags";
 
 type BreadcrumbFunc = (...args: string[]) => string;
 
 type BreadcrumbMatch = [RegExp, string | BreadcrumbFunc];
 
 const useLabel = ({ data }: QueryResult<any, any>) => {
-  return (data && data.name) || "...";
+  return (data && data.label) || "...";
 };
 
 const breadcrumbs: BreadcrumbMatch[] = [
@@ -26,7 +27,7 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/settings\/categories\/?$/, "Categories"],
   [/^\/settings\/categories\/(\d+)\/?$/, "$Category"],
   [/^\/settings\/tags\/?$/, "Tags"],
-  [/^\/settings\/tags\/(\d+)\/?$/, "$Tag"]
+  [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))]
 ];
 
 interface ICrumbProps {

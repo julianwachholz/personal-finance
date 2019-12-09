@@ -5,6 +5,6 @@ from .models import Account
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ("__str__", "institution", "user", "balance")
+    list_display = ("__str__", "icon", "institution", "user", "balance")
     list_filter = ("user",)
     search_fields = ("name", "institution")
