@@ -45,8 +45,10 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
       )}
     />
     <Column
-      dataIndex="pk"
-      render={pk => <Link to={`${match.url}/${pk}/edit`}>Edit</Link>}
+      align="right"
+      render={account => (
+        <Link to={`${match.url}/${account.pk}/edit`}>Edit</Link>
+      )}
     />
   </BaseList>
 );

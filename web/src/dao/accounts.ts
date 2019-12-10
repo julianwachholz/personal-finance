@@ -1,4 +1,10 @@
-import { makeDeleteItem, makeFetchItems, makePostItem, makePutItem, makeUseItem } from "./base";
+import {
+  makeDeleteItem,
+  makeFetchItems,
+  makePostItem,
+  makePutItem,
+  makeUseItem
+} from "./base";
 
 export interface IAccount {
   pk: number;

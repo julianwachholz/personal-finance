@@ -71,19 +71,17 @@ export const makeFetchItem = <T extends IModel>(basename: string) => {
   return fetchItem;
 };
 
-
 export const makeUseItem = <T extends IModel>(basename: string) => {
   const fetchItem = makeFetchItem<T>(basename);
   const useItem = (pk: number | string) => {
-    if (typeof pk === 'string') {
-      pk = parseInt(pk, 10)
+    if (typeof pk === "string") {
+      pk = parseInt(pk, 10);
     }
     const query = useQuery([`use_${basename}`, { pk }], fetchItem);
     return query;
   };
   return useItem;
 };
-
 
 type PostItem<T extends IModel> = (data: T) => Promise<T>;
 
@@ -127,7 +125,7 @@ export const makePutItem = <T extends IModel>(basename: string) => {
   return putItem;
 };
 
-type DeleteItem<T extends IModel> = (data: T) => Promise<any>;
+type DeleteItem<T extends IModel> = (data: T) => Promise<void>;
 
 export const makeDeleteItem = <T extends IModel>(basename: string) => {
   const deleteItem: DeleteItem<T> = async ({ pk }) => {
@@ -138,8 +136,6 @@ export const makeDeleteItem = <T extends IModel>(basename: string) => {
     if (!response.ok) {
       throw new Error("response not ok");
     }
-    const responseData = await response.json();
-    return responseData;
   };
   return deleteItem;
 };
