@@ -2,6 +2,7 @@ import { Button, Form, Input } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import React from "react";
 import { ITag } from "../../dao/tags";
+import ColorInput from "../../components/form/ColorInput";
 
 interface IFormProps extends FormComponentProps {
   data?: ITag;
@@ -35,9 +36,7 @@ const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
       <Form.Item label="Color">
         {form.getFieldDecorator("color", {
           initialValue: data && data.color
-        })(
-          <Input type="color" placeholder="#ff99aa" style={{ width: "50%" }} />
-        )}
+        })(<ColorInput style={{ width: "50%" }} />)}
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
