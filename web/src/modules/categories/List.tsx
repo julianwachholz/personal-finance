@@ -1,12 +1,13 @@
 import { Table } from "antd";
 import React, { useState } from "react";
+import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import { fetchCategories, fetchCategoryTree } from "../../dao/categories";
-import BaseList, { getColumnSearchProps } from "../base/BaseList";
+import BaseList from "../base/BaseList";
 
 const { Column } = Table;
 
-const Categories: React.FC = () => {
+const Categories: React.FC<RouteComponentProps> = ({ match }) => {
   const [useTree, setUseTree] = useState(true);
 
   return (
@@ -15,16 +16,15 @@ const Categories: React.FC = () => {
       itemNamePlural="Categories"
       fetchItems={useTree ? fetchCategoryTree : fetchCategories}
       pagination={false}
-      showSearch={false}
       extraActions={false}
+      onSearch={search => setUseTree(!search)}
     >
       <Column
         title="Name"
         dataIndex="name"
-        render={(name, category: any) => category.label}
-        {...getColumnSearchProps(value => {
-          setUseTree(!value);
-        })}
+        render={(name, category: any) => (
+          <Link to={`${match.url}/${category.pk}`}>{category.label}</Link>
+        )}
       />
       <Column
         title="Color"

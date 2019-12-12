@@ -25,7 +25,7 @@ class CategoryTreeSerializer(CategorySerializer):
 
     class Meta:
         model = Category
-        fields = ["pk", "label", "children"]
+        fields = ["pk", "label", "color", "children"]
 
     def get_children(self, obj):
         children = obj.get_children()

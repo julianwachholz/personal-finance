@@ -4,8 +4,9 @@ import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
-import useDebounce from "../../utils/debounce";
+import { useCategory } from "../../dao/categories";
 import { useTag } from "../../dao/tags";
+import useDebounce from "../../utils/debounce";
 
 type BreadcrumbFunc = (...args: string[]) => string;
 
@@ -25,9 +26,12 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/budgets\/?$/, "Budgets"],
   [/^\/settings\/?$/, "Settings"],
   [/^\/settings\/categories\/?$/, "Categories"],
-  [/^\/settings\/categories\/(\d+)\/?$/, "$Category"],
+  [/^\/settings\/categories\/(\d+)\/?$/, pk => useLabel(useCategory(pk))],
   [/^\/settings\/tags\/?$/, "Tags"],
-  [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))]
+  [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))],
+
+  [/\/create\/?$/, "Create"],
+  [/\/edit\/?$/, "Edit"]
 ];
 
 interface ICrumbProps {

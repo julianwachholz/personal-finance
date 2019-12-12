@@ -13,7 +13,7 @@ import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { FetchItems, IModel } from "../../dao/base";
-import "./BaseList.scss";
+import "./BaseModule.scss";
 
 export const getColumnSearchProps = (onChange?: (value: string) => void) => {
   let searchInput: Input | null;
@@ -88,22 +88,24 @@ const mapFilters = (filters: Record<string | number | symbol, string[]>) => {
   return filterValues;
 };
 
-interface IItemTableProps<T extends IModel> {
+interface IListProps<T extends IModel> {
   itemName: string;
   itemNamePlural: string;
   fetchItems: FetchItems<T>;
   pagination?: boolean;
   showSearch?: boolean;
+  onSearch?: (search?: string) => void;
   actions?: React.ReactElement[];
   extraActions?: boolean | React.ReactElement[];
 }
 
-const ItemTable: React.FC<IItemTableProps<any>> = ({
+const BaseList: React.FC<IListProps<any>> = ({
   itemName,
   itemNamePlural,
   fetchItems,
   pagination = true,
   showSearch = true,
+  onSearch = () => {},
   actions = [],
   extraActions = true,
   children
@@ -190,6 +192,7 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
           enterButton
           onSearch={value => {
             setSearch(value);
+            onSearch(value);
           }}
         />
       ) : null}
@@ -199,8 +202,7 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
         loading={isLoading}
         rowKey="pk"
         pagination={false}
-        onChange={(pagination, filters, sorter) => {
-          setPage(pagination.current || 1);
+        onChange={(_pagination, filters, sorter) => {
           setFilters(mapFilters(filters));
           setOrdering(
             sorter.order &&
@@ -214,4 +216,4 @@ const ItemTable: React.FC<IItemTableProps<any>> = ({
   );
 };
 
-export default ItemTable;
+export default BaseList;

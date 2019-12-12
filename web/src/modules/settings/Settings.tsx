@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, RouteComponentProps, Switch } from "react-router";
-import Categories from "../categories/List";
+import Categories from "../categories";
 import Tags from "../tags";
 
 const Settings: React.FC<RouteComponentProps> = ({ match }) => (

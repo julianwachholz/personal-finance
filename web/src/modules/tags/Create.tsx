@@ -1,25 +1,33 @@
-import React from "react";
-import TagForm from "./Form";
-import { useMutation } from "react-query";
-import { postTag } from "../../dao/tags";
 import { message } from "antd";
+import React from "react";
+import { setQueryData, useMutation } from "react-query";
+import { useHistory } from "react-router";
+import { postTag } from "../../dao/tags";
+import BaseModule from "../base/BaseModule";
+import TagForm from "./Form";
 
 const TagCreate: React.FC = () => {
   const [mutate] = useMutation(postTag, {
     refetchQueries: ["Tags"]
   });
+  const history = useHistory();
 
   return (
-    <TagForm
-      onSave={async data => {
-        try {
-          await mutate(data);
-          message.success("Tag created!");
-        } catch (e) {
-          message.error("Tag create failed!");
-        }
-      }}
-    />
+    <BaseModule title="Create Tag">
+      <TagForm
+        onSave={async data => {
+          try {
+            const tag = await mutate(data);
+            setQueryData(["Tag", { pk: tag.pk }], tag);
+            message.success("Tag created!");
+            history.push(`/settings/tags/${tag.pk}`);
+          } catch (e) {
+            message.error("Tag create failed!");
+          }
+        }}
+      />
+    </BaseModule>
   );
 };
+
 export default TagCreate;

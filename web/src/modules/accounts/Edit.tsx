@@ -3,6 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
 import { putAccount, useAccount } from "../../dao/accounts";
+import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
 interface IDetailParams {
@@ -23,17 +24,19 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
   }
 
   return (
-    <AccountForm
-      data={data}
-      onSave={async data => {
-        try {
-          await mutate({ pk, ...data }, { updateQuery: ["Account", { pk }] });
-          message.success("Account updated!");
-        } catch (e) {
-          message.error("Account update failed!");
-        }
-      }}
-    />
+    <BaseModule title={`Edit ${data.label}`}>
+      <AccountForm
+        data={data}
+        onSave={async data => {
+          try {
+            await mutate({ pk, ...data }, { updateQuery: ["Account", { pk }] });
+            message.success("Account updated!");
+          } catch (e) {
+            message.error("Account update failed!");
+          }
+        }}
+      />
+    </BaseModule>
   );
 };
 

@@ -1,8 +1,8 @@
 import { Button, Form, Input } from "antd";
 import { FormComponentProps } from "antd/lib/form";
-import React from "react";
-import { ITag } from "../../dao/tags";
+import React, { useState } from "react";
 import ColorInput from "../../components/form/ColorInput";
+import { ITag } from "../../dao/tags";
 
 interface IFormProps extends FormComponentProps {
   data?: ITag;
@@ -10,8 +10,11 @@ interface IFormProps extends FormComponentProps {
 }
 
 const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
+  const [submitting, setSubmitting] = useState(false);
+
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    setSubmitting(true);
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -39,7 +42,7 @@ const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
         })(<ColorInput style={{ width: "50%" }} />)}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={submitting}>
           Save Tag
         </Button>
       </Form.Item>

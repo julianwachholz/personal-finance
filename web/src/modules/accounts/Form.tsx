@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { FormComponentProps } from "antd/lib/form";
-import React from "react";
+import React, { useState } from "react";
 import MoneyInput from "../../components/form/MoneyInput";
 import { IAccount } from "../../dao/accounts";
 
@@ -10,8 +10,10 @@ interface IFormProps extends FormComponentProps {
 }
 
 const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
+  const [submitting, setSubmitting] = useState(false);
   const onSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    setSubmitting(true);
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -61,7 +63,7 @@ const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
         })(<MoneyInput />)}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={submitting}>
           Save Account
         </Button>
       </Form.Item>
