@@ -1,15 +1,12 @@
 import { PageHeader } from "antd";
+import { PageHeaderProps } from "antd/lib/page-header";
 import React from "react";
 import "./BaseModule.scss";
 
-interface ICreateProps {
-  title: string;
-}
-
-const BaseModule: React.FC<ICreateProps> = props => (
+const BaseModule: React.FC<PageHeaderProps> = ({ children, ...props }) => (
   <div className="module">
-    <PageHeader title={props.title} />
-    {props.children}
+    <PageHeader {...props} />
+    {children}
   </div>
 );
 

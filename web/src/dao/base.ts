@@ -53,6 +53,15 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
   return fetchItems;
 };
 
+export const makeUseItems = <T extends IModel>(basename: string) => {
+  const fetchItems = makeFetchItems<T>(basename);
+  const useItems = (options: IFetchItemsOptions) => {
+    const query = useQuery([`use_items_${basename}`, options], fetchItems);
+    return query;
+  };
+  return useItems;
+};
+
 interface IFetchItemOptions {
   pk: number;
 }
@@ -77,7 +86,7 @@ export const makeUseItem = <T extends IModel>(basename: string) => {
     if (typeof pk === "string") {
       pk = parseInt(pk, 10);
     }
-    const query = useQuery([`use_${basename}`, { pk }], fetchItem);
+    const query = useQuery([`use_item_${basename}`, { pk }], fetchItem);
     return query;
   };
   return useItem;

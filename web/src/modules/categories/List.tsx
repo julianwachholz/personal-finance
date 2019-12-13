@@ -17,6 +17,11 @@ const Categories: React.FC<RouteComponentProps> = ({ match }) => {
       fetchItems={useTree ? fetchCategoryTree : fetchCategories}
       pagination={false}
       extraActions={false}
+      actions={[
+        <Link key="view" className="ant-btn" to={`${match.url}/tree`}>
+          Tree View
+        </Link>
+      ]}
       onSearch={search => setUseTree(!search)}
     >
       <Column
