@@ -29,6 +29,9 @@ const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
       <Link to={`${match.url}/edit`}>
         <Button type="primary">Edit Account</Button>
       </Link>
+      <Link to={`${match.url}/delete`}>
+        <Button type="danger">Delete Account</Button>
+      </Link>
     </BaseModule>
   ) : (
     <Spin />

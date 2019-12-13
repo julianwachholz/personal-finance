@@ -7,7 +7,7 @@ interface ICreateProps {
 }
 
 const BaseModule: React.FC<ICreateProps> = props => (
-  <div className="module module-form">
+  <div className="module">
     <PageHeader title={props.title} />
     {props.children}
   </div>

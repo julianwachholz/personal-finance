@@ -31,7 +31,8 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))],
 
   [/\/create\/?$/, "Create"],
-  [/\/edit\/?$/, "Edit"]
+  [/\/edit\/?$/, "Edit"],
+  [/\/delete\/?$/, "Delete"]
 ];
 
 interface ICrumbProps {

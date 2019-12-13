@@ -1,6 +1,7 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import MoneyInput from "../../components/form/MoneyInput";
 import { IAccount } from "../../dao/accounts";
 
@@ -23,6 +24,8 @@ const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
           balance_currency: values.balance.currency
         };
         onSave(newData);
+      } else {
+        setSubmitting(false);
       }
     });
   };
@@ -66,6 +69,9 @@ const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
         <Button type="primary" htmlType="submit" loading={submitting}>
           Save Account
         </Button>
+        <Link to={(data && `/accounts/${data.pk}`) || `/accounts`}>
+          <Button>Discard</Button>
+        </Link>
       </Form.Item>
     </Form>
   );

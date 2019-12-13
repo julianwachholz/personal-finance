@@ -50,12 +50,8 @@ const Tags: React.FC<RouteComponentProps> = ({ match }) => {
               okButtonProps={{ type: "danger" }}
               placement="left"
               onConfirm={async () => {
-                try {
-                  await doDeleteTag(tag);
-                  message.info(`Tag "${tag.label}" deleted.`);
-                } catch (e) {
-                  message.error("Failed to delete tag!");
-                }
+                await doDeleteTag(tag);
+                message.info(`Tag "${tag.label}" deleted.`);
               }}
             >
               <Button type="link">Delete</Button>

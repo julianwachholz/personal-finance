@@ -1,15 +1,33 @@
+import { message } from "antd";
 import React from "react";
+import { setQueryData, useMutation } from "react-query";
+import { useHistory } from "react-router";
+import { postAccount } from "../../dao/accounts";
 import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
-const AccountCreate: React.FC = () => (
-  <BaseModule title="Create Account">
-    <AccountForm
-      onSave={() => {
-        console.log("o hai");
-      }}
-    />
-  </BaseModule>
-);
+const AccountCreate: React.FC = () => {
+  const [mutate] = useMutation(postAccount, {
+    refetchQueries: ["Accounts"]
+  });
+  const history = useHistory();
+
+  return (
+    <BaseModule title="Create Account">
+      <AccountForm
+        onSave={async data => {
+          try {
+            const tag = await mutate(data);
+            setQueryData(["Account", { pk: tag.pk }], tag);
+            message.success("Account created!");
+            history.push(`/accounts/${tag.pk}`);
+          } catch (e) {
+            message.error("Account creation failed!");
+          }
+        }}
+      />
+    </BaseModule>
+  );
+};
 
 export default AccountCreate;

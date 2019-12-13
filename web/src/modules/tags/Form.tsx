@@ -22,6 +22,8 @@ const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
           ...values
         };
         onSave(newData);
+      } else {
+        setSubmitting(false);
       }
     });
   };
