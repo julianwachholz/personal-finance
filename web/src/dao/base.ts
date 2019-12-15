@@ -56,7 +56,7 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
 export const makeUseItems = <T extends IModel>(basename: string) => {
   const fetchItems = makeFetchItems<T>(basename);
   const useItems = (options: IFetchItemsOptions) => {
-    const query = useQuery([`use_items_${basename}`, options], fetchItems);
+    const query = useQuery([`items/${basename}`, options], fetchItems);
     return query;
   };
   return useItems;
@@ -86,7 +86,7 @@ export const makeUseItem = <T extends IModel>(basename: string) => {
     if (typeof pk === "string") {
       pk = parseInt(pk, 10);
     }
-    const query = useQuery([`use_item_${basename}`, { pk }], fetchItem);
+    const query = useQuery([`item/${basename}`, { pk }], fetchItem);
     return query;
   };
   return useItem;
@@ -147,4 +147,28 @@ export const makeDeleteItem = <T extends IModel>(basename: string) => {
     }
   };
   return deleteItem;
+};
+
+type PostAction<T extends { pk: number }> = (params: T) => Promise<any>;
+
+export const makePostAction = <T extends { pk: number }>(
+  basename: string,
+  action: string
+) => {
+  const postAction: PostAction<T> = async ({ pk, ...params }) => {
+    const url = `/api/${basename}/${pk}/${action}/`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(params)
+    });
+    if (!response.ok) {
+      throw new Error("response not ok");
+    }
+    const responseData = await response.json();
+    return responseData;
+  };
+  return postAction;
 };

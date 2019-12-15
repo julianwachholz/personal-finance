@@ -34,3 +34,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
         categories = self.get_queryset().get_cached_trees()
         serializer = CategoryTreeSerializer(categories, many=True)
         return Response({"count": len(serializer.data), "results": serializer.data})
+
+    @action(detail=True, methods=["post"])
+    def move_to(self, request, pk, **kwargs):
+        target_pk = request.data["target_pk"]
+        position = request.data["position"]
+        node = self.get_queryset().get(pk=pk)
+        target = self.get_queryset().get(pk=target_pk)
+        try:
+            node.move_to(target, position)
+        except:
+            return Response({"status": "fail"})
+        return Response({"status": "ok"})

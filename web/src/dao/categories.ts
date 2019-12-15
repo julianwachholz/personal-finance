@@ -1,6 +1,7 @@
 import {
   makeDeleteItem,
   makeFetchItems,
+  makePostAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -16,6 +17,16 @@ export interface ICategory {
   readonly label: string;
 }
 
+export const fetchCategories = makeFetchItems<ICategory>("categories");
+
+export const postCategory = makePostItem<ICategory>("categories");
+
+export const putCategory = makePutItem<ICategory>("categories");
+
+export const deleteCategory = makeDeleteItem<ICategory>("categories");
+
+export const useCategory = makeUseItem<ICategory>("categories");
+
 export interface ITreeCategory extends ICategory {
   readonly children: ITreeCategory[];
 }
@@ -26,12 +37,15 @@ export const fetchCategoryTree = makeFetchItems<ITreeCategory>(
 
 export const useCategoryTree = makeUseItems<ITreeCategory>("categories/tree");
 
-export const fetchCategories = makeFetchItems<ICategory>("categories");
+export type MovePosition = "first-child" | "last-child" | "left" | "right";
 
-export const postCategory = makePostItem<ICategory>("categories");
+export interface IMoveCategory {
+  pk: number;
+  target_pk: number;
+  position: MovePosition;
+}
 
-export const putCategory = makePutItem<ICategory>("categories");
-
-export const deleteCategory = makeDeleteItem<ICategory>("categories");
-
-export const useCategory = makeUseItem<ICategory>("categories");
+export const moveCategory = makePostAction<IMoveCategory>(
+  "categories",
+  "move_to"
+);
