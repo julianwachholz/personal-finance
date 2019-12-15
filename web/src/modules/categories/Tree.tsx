@@ -1,6 +1,6 @@
-import { Spin, Tree } from "antd";
+import { Button, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent } from "antd/lib/tree/Tree";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import {
@@ -18,6 +18,7 @@ const CategoryTree: React.FC<RouteComponentProps> = () => {
   const [moveNode] = useMutation(moveCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   const onDrop = (info: AntTreeNodeDropEvent) => {
     const dropKey = parseInt(info.node.props.eventKey!, 10);
@@ -41,27 +42,49 @@ const CategoryTree: React.FC<RouteComponentProps> = () => {
     return <Spin />;
   }
 
+  const keysWithChildren: string[] = [];
+
   const renderNode = (category: ITreeCategory) => {
+    const props = {
+      key: category.pk.toString(),
+      title: category.label
+    };
     if (category.children && category.children.length) {
-      return (
-        <Node key={category.pk.toString()} title={category.label}>
-          {category.children.map(renderNode)}
-        </Node>
-      );
+      keysWithChildren.push(props.key);
+      return <Node {...props}>{category.children.map(renderNode)}</Node>;
     }
-    return <Node key={category.pk.toString()} title={category.label} />;
+    return <Node {...props} />;
   };
 
   return (
     <BaseModule
       title="Categories"
       extra={[
+        <Button key="expand" onClick={() => setExpandedKeys(keysWithChildren)}>
+          Expand All
+        </Button>,
+        <Button
+          key="collapse"
+          onClick={() => {
+            setExpandedKeys([]);
+          }}
+        >
+          Collapse All
+        </Button>,
         <Link key="view" to="/settings/categories" className="ant-btn">
           List View
         </Link>
       ]}
     >
-      <Tree draggable onDrop={onDrop}>
+      <Tree
+        draggable
+        expandedKeys={expandedKeys}
+        onExpand={setExpandedKeys}
+        onDrop={onDrop}
+        onSelect={selectedKeys => {
+          console.log(`onSelect ${selectedKeys}`);
+        }}
+      >
         {data.results.map(renderNode)}
       </Tree>
     </BaseModule>
