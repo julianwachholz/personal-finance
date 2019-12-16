@@ -29,6 +29,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Category.objects.filter(user=self.request.user)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     @action(detail=False)
     def tree(self, request, **kwargs):
         categories = self.get_queryset().get_cached_trees()

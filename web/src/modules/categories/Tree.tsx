@@ -13,7 +13,7 @@ import BaseModule from "../base/BaseModule";
 
 const { TreeNode: Node } = Tree;
 
-const CategoryTree: React.FC<RouteComponentProps> = () => {
+const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
   const { data } = useCategoryTree({ page: 1 });
   const [moveNode] = useMutation(moveCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
@@ -73,7 +73,10 @@ const CategoryTree: React.FC<RouteComponentProps> = () => {
         </Button>,
         <Link key="view" to="/settings/categories" className="ant-btn">
           List View
-        </Link>
+        </Link>,
+        <Button key="create" type="primary">
+          <Link to={`/settings/categories/create`}>Create Category</Link>
+        </Button>
       ]}
     >
       <Tree
@@ -82,7 +85,7 @@ const CategoryTree: React.FC<RouteComponentProps> = () => {
         onExpand={setExpandedKeys}
         onDrop={onDrop}
         onSelect={selectedKeys => {
-          console.log(`onSelect ${selectedKeys}`);
+          history.push(`/settings/categories/${selectedKeys[0]}`);
         }}
       >
         {data.results.map(renderNode)}

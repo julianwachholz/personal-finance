@@ -8,7 +8,7 @@ import TagForm from "./Form";
 
 const TagCreate: React.FC = () => {
   const [mutate] = useMutation(postTag, {
-    refetchQueries: ["Tags"]
+    refetchQueries: ["items/tags"]
   });
   const history = useHistory();
 
@@ -18,7 +18,7 @@ const TagCreate: React.FC = () => {
         onSave={async data => {
           try {
             const tag = await mutate(data);
-            setQueryData(["Tag", { pk: tag.pk }], tag);
+            setQueryData(["item/tags", { pk: tag.pk }], tag);
             message.success("Tag created!");
             history.push(`/settings/tags/${tag.pk}`);
           } catch (e) {

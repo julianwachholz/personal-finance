@@ -7,7 +7,7 @@ import { IAccount } from "../../dao/accounts";
 
 interface IFormProps extends FormComponentProps {
   data?: IAccount;
-  onSave: (values: any) => void;
+  onSave: (values: IAccount) => void;
 }
 
 const AccountFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {

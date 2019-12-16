@@ -16,7 +16,7 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
   const { data, isLoading } = useAccount(pk);
 
   const [mutate] = useMutation(putAccount, {
-    refetchQueries: ["Accounts"]
+    refetchQueries: ["items/accounts"]
   });
   const history = useHistory();
 
@@ -30,7 +30,10 @@ const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
         data={data}
         onSave={async data => {
           try {
-            await mutate({ pk, ...data }, { updateQuery: ["Account", { pk }] });
+            await mutate(
+              { pk, ...data },
+              { updateQuery: ["item/accounts", { pk }] }
+            );
             message.success("Account updated!");
             history.push(`/accounts/${pk}`);
           } catch (e) {

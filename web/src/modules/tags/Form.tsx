@@ -6,7 +6,7 @@ import { ITag } from "../../dao/tags";
 
 interface IFormProps extends FormComponentProps {
   data?: ITag;
-  onSave: (values: any) => void;
+  onSave: (values: ITag) => void;
 }
 
 const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {

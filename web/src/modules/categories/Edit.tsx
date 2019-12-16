@@ -2,19 +2,21 @@ import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
-import { putTag, useTag } from "../../dao/tags";
+import { putCategory, useCategory } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
-import TagForm from "./Form";
+import CategoryForm from "./Form";
 
 interface IDetailParams {
   pk: string;
 }
-const TagEdit: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
+const CategoryEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
+  match
+}) => {
   const pk = parseInt(match.params.pk, 10);
-  const { data, isLoading } = useTag(pk);
+  const { data, isLoading } = useCategory(pk);
 
-  const [mutate] = useMutation(putTag, {
-    refetchQueries: ["items/tags"]
+  const [mutate] = useMutation(putCategory, {
+    refetchQueries: ["items/categories", "items/categories/tree"]
   });
   const history = useHistory();
 
@@ -24,18 +26,18 @@ const TagEdit: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
 
   return (
     <BaseModule title={`Edit ${data.label}`}>
-      <TagForm
+      <CategoryForm
         data={data}
         onSave={async data => {
           try {
             await mutate(
               { pk, ...data },
-              { updateQuery: ["item/tags", { pk }] }
+              { updateQuery: ["item/categories", { pk }] }
             );
-            message.success("Tag updated!");
-            history.push(`/settings/tags/${pk}`);
+            message.success("Category updated!");
+            history.push(`/settings/categories/${pk}`);
           } catch (e) {
-            message.error("Tag update failed!");
+            message.error("Category update failed!");
           }
         }}
       />
@@ -43,4 +45,4 @@ const TagEdit: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
   );
 };
 
-export default TagEdit;
+export default CategoryEdit;

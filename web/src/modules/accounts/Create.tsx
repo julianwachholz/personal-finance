@@ -8,7 +8,7 @@ import AccountForm from "./Form";
 
 const AccountCreate: React.FC = () => {
   const [mutate] = useMutation(postAccount, {
-    refetchQueries: ["Accounts"]
+    refetchQueries: ["items/accounts"]
   });
   const history = useHistory();
 
@@ -18,7 +18,7 @@ const AccountCreate: React.FC = () => {
         onSave={async data => {
           try {
             const tag = await mutate(data);
-            setQueryData(["Account", { pk: tag.pk }], tag);
+            setQueryData(["item/accounts", { pk: tag.pk }], tag);
             message.success("Account created!");
             history.push(`/accounts/${tag.pk}`);
           } catch (e) {

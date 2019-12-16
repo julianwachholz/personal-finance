@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import React, { useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
@@ -20,7 +20,10 @@ const Categories: React.FC<RouteComponentProps> = ({ match }) => {
       actions={[
         <Link key="view" className="ant-btn" to={`${match.url}/tree`}>
           Tree View
-        </Link>
+        </Link>,
+        <Button key="create" type="primary">
+          <Link to={`${match.url}/create`}>Create Category</Link>
+        </Button>
       ]}
       onSearch={search => setUseTree(!search)}
     >
@@ -35,6 +38,12 @@ const Categories: React.FC<RouteComponentProps> = ({ match }) => {
         title="Color"
         dataIndex="color"
         render={value => <Color value={value} />}
+      />
+      <Column
+        align="right"
+        render={category => (
+          <Link to={`${match.url}/${category.pk}/edit`}>Edit</Link>
+        )}
       />
     </BaseList>
   );
