@@ -14,7 +14,7 @@ const ColorInput: React.FC<InputProps> = React.forwardRef(
         onChange={e => {
           onChange(e);
         }}
-        addonBefore={value}
+        addonBefore={value || "#------"}
         {...props}
       />
     );

@@ -1,57 +1,54 @@
 import { Button, Form, Input } from "antd";
-import { FormComponentProps } from "antd/lib/form";
+import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import ColorInput from "../../components/form/ColorInput";
 import { ITag } from "../../dao/tags";
 
-interface IFormProps extends FormComponentProps {
+interface IFormProps {
   data?: ITag;
   onSave: (values: ITag) => void;
 }
 
-const TagFormComponent: React.FC<IFormProps> = ({ data, form, onSave }) => {
+const TagForm: React.FC<IFormProps> = ({ data, onSave }) => {
+  const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
 
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const onSubmit = async (values: any) => {
     setSubmitting(true);
-
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        const newData = {
-          ...values
-        };
-        onSave(newData);
-      } else {
-        setSubmitting(false);
-      }
-    });
+    try {
+      await form.validateFields();
+    } catch (e) {
+      setSubmitting(false);
+      debugger;
+      return;
+    }
+    const newData = {
+      ...values
+    };
+    onSave(newData);
   };
 
   return (
-    <Form layout="horizontal" onSubmit={onSubmit}>
-      <Form.Item label="Name">
-        {form.getFieldDecorator("name", {
-          initialValue: data && data.name,
-          rules: [{ required: true }]
-        })(
-          <Input placeholder="personal" prefix="#" style={{ width: "50%" }} />
-        )}
+    <Form layout="vertical" onFinish={onSubmit} initialValues={data}>
+      <Form.Item name="name" label="Name" required>
+        <Input placeholder="personal" prefix="#" />
       </Form.Item>
-      <Form.Item label="Color">
-        {form.getFieldDecorator("color", {
-          initialValue: data && data.color
-        })(<ColorInput style={{ width: "50%" }} />)}
+      <Form.Item name="color" label="Color">
+        <ColorInput />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" loading={submitting}>
-          Save Tag
-        </Button>
+        <>
+          <Button type="primary" htmlType="submit" loading={submitting}>
+            Save Tag
+          </Button>
+          <Link to={(data && `/settings/tags/${data.pk}`) || `/settings/tags`}>
+            <Button>Discard</Button>
+          </Link>
+        </>
       </Form.Item>
     </Form>
   );
 };
-
-const TagForm = Form.create<IFormProps>()(TagFormComponent);
 
 export default TagForm;

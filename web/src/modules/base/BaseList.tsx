@@ -1,83 +1,29 @@
+import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
   Dropdown,
-  Icon,
   Input,
   Menu,
   PageHeader,
   Pagination,
   Table
 } from "antd";
-import { FilterDropdownProps } from "antd/lib/table";
+import { ColumnsType } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { FetchItems, IModel } from "../../dao/base";
 import "./BaseModule.scss";
 
-export const getColumnSearchProps = (onChange?: (value: string) => void) => {
-  let searchInput: Input | null;
-
-  const handleSearch = (selectedKeys: ReactText[] | string[], confirm: any) => {
-    confirm();
-    onChange && onChange(selectedKeys[0] as string);
-  };
-  const handleReset = (clearFilters: (selectedKeys: string[]) => void) => {
-    clearFilters([]);
-    onChange && onChange("");
-  };
-
-  return {
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters
-    }: Required<FilterDropdownProps>) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={node => (searchInput = node)}
-          placeholder={`Search`}
-          value={selectedKeys[0]}
-          onChange={e =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => handleSearch(selectedKeys, confirm)}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          onClick={() => handleSearch(selectedKeys, confirm)}
-          icon="search"
-          type="primary"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => handleReset(clearFilters)}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
-    ),
-    onFilterDropdownVisibleChange: (visible: boolean) => {
-      if (visible) {
-        setTimeout(() => searchInput!.select());
-      }
-    }
-  };
-};
-
-const mapFilters = (filters: Record<string | number | symbol, string[]>) => {
+const mapFilters = (filters: Record<string, ReactText[] | null>) => {
   const filterValues: string[] = [];
   Object.keys(filters).forEach(k => {
-    filters[k].forEach(v => {
+    const values = filters[k];
+    if (!values) {
+      return;
+    }
+    values.forEach(v => {
+      v = v.toString();
       if (v.includes("=")) {
         filterValues.push(v);
       } else {
@@ -92,6 +38,7 @@ interface IListProps<T extends IModel> {
   itemName: string;
   itemNamePlural: string;
   fetchItems: FetchItems<T>;
+  columns: ColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
   onSearch?: (search?: string) => void;
@@ -103,6 +50,7 @@ const BaseList: React.FC<IListProps<any>> = ({
   itemName,
   itemNamePlural,
   fetchItems,
+  columns,
   pagination = true,
   showSearch = true,
   onSearch = () => {},
@@ -180,7 +128,7 @@ const BaseList: React.FC<IListProps<any>> = ({
         extra={[
           extraActionMenu ? (
             <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon="down">Actions</Button>
+              <Button icon={<DownOutlined />}>Actions</Button>
             </Dropdown>
           ) : null,
           ...actions
@@ -199,19 +147,21 @@ const BaseList: React.FC<IListProps<any>> = ({
       {pager}
       <Table
         dataSource={(data && data.results) || []}
+        columns={columns}
         loading={isLoading}
         rowKey="pk"
         pagination={false}
         onChange={(_pagination, filters, sorter) => {
           setFilters(mapFilters(filters));
+          if (!Array.isArray(sorter)) {
+            sorter = [sorter];
+          }
           setOrdering(
-            sorter.order &&
-              `${sorter.order === "ascend" ? "" : "-"}${sorter.field}`
+            sorter[0].order &&
+              `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
           );
         }}
-      >
-        {children}
-      </Table>
+      />
     </div>
   );
 };

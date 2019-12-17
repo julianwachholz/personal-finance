@@ -1,4 +1,9 @@
-import { Breadcrumb, Icon } from "antd";
+import {
+  HomeOutlined,
+  LoadingOutlined,
+  RightOutlined
+} from "@ant-design/icons";
+import { Breadcrumb } from "antd";
 import React from "react";
 import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
@@ -81,13 +86,11 @@ const Breadcrumbs: React.FC = () => {
 
   items.unshift(
     <Breadcrumb.Item key="/">
-      <Link to="/">
-        <Icon type={spinning ? "loading" : "home"} />
-      </Link>
+      <Link to="/">{spinning ? <LoadingOutlined /> : <HomeOutlined />}</Link>
     </Breadcrumb.Item>
   );
 
-  return <Breadcrumb separator={<Icon type="right" />}>{items}</Breadcrumb>;
+  return <Breadcrumb separator={<RightOutlined />}>{items}</Breadcrumb>;
 };
 
 export default Breadcrumbs;

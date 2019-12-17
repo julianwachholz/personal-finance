@@ -1,46 +1,37 @@
-import { Button, Divider, message, Popconfirm, Table } from "antd";
+import { Button, Divider, message, Popconfirm } from "antd";
+import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
-import { deleteTag, fetchTags } from "../../dao/tags";
+import { deleteTag, fetchTags, ITag } from "../../dao/tags";
 import BaseList from "../base/BaseList";
-
-const { Column } = Table;
 
 const Tags: React.FC<RouteComponentProps> = ({ match }) => {
   const [doDeleteTag] = useMutation(deleteTag, {
     refetchQueries: ["Tags"]
   });
 
-  return (
-    <BaseList
-      itemName="Tag"
-      itemNamePlural="Tags"
-      fetchItems={fetchTags}
-      extraActions={[<Link to="#">Example</Link>]}
-      actions={[
-        <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Tag</Link>
-        </Button>
-      ]}
-    >
-      <Column
-        title="Name"
-        dataIndex="name"
-        sorter
-        render={(name, tag: any) => (
-          <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>
-        )}
-      />
-      <Column
-        title="Color"
-        dataIndex="color"
-        render={value => <Color value={value} />}
-      />
-      <Column
-        align="right"
-        render={tag => (
+  const columns: ColumnsType<ITag> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      sorter: true,
+      render(name, tag) {
+        return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
+      }
+    },
+    {
+      title: "Color",
+      dataIndex: "color",
+      render(value) {
+        return <Color value={value} />;
+      }
+    },
+    {
+      align: "right",
+      render(_, tag) {
+        return (
           <>
             <Link to={`${match.url}/${tag.pk}/edit`}>Edit</Link>
             <Divider type="vertical" />
@@ -57,9 +48,24 @@ const Tags: React.FC<RouteComponentProps> = ({ match }) => {
               <Button type="link">Delete</Button>
             </Popconfirm>
           </>
-        )}
-      />
-    </BaseList>
+        );
+      }
+    }
+  ];
+
+  return (
+    <BaseList
+      itemName="Tag"
+      itemNamePlural="Tags"
+      fetchItems={fetchTags}
+      columns={columns}
+      extraActions={[<Link to="#">Example</Link>]}
+      actions={[
+        <Button key="create" type="primary">
+          <Link to={`${match.url}/create`}>Create Tag</Link>
+        </Button>
+      ]}
+    />
   );
 };
 

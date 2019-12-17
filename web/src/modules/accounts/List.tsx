@@ -1,56 +1,65 @@
-import { Table, Button } from "antd";
+import { Button } from "antd";
+import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
 import { fetchAccounts, IAccount } from "../../dao/accounts";
-import BaseList, { getColumnSearchProps } from "../base/BaseList";
+import BaseList from "../base/BaseList";
 
-const { Column } = Table;
-
-const Accounts: React.FC<RouteComponentProps> = ({ match }) => (
-  <BaseList
-    itemName="Account"
-    itemNamePlural="Accounts"
-    fetchItems={fetchAccounts}
-    actions={[
-      <Link key="create" to={`${match.url}/create`}>
-        <Button type="primary">Create Account</Button>
-      </Link>
-    ]}
-  >
-    <Column
-      title="Name"
-      dataIndex="name"
-      render={(name, account: IAccount) => (
-        <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>
-      )}
-      sorter
-      {...getColumnSearchProps()}
-    />
-    <Column title="Institution" dataIndex="institution" sorter />
-    <Column
-      title="Balance"
-      dataIndex="balance"
-      align="right"
-      sorter
-      filters={[
+const Accounts: React.FC<RouteComponentProps> = ({ match }) => {
+  const columns: ColumnsType<IAccount> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      sorter: true,
+      render(_, account) {
+        return <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>;
+      }
+    },
+    {
+      title: "Institution",
+      dataIndex: "institution",
+      sorter: true
+    },
+    {
+      title: "Balance",
+      dataIndex: "balance",
+      align: "right",
+      sorter: true,
+      filters: [
         { text: "SFr.", value: "currency=CHF" },
         { text: "€", value: "currency=EUR" },
         { text: "US$", value: "currency=USD" }
+      ],
+      render(balance, account) {
+        return (
+          <Money
+            value={{ amount: balance, currency: account.balance_currency }}
+          />
+        );
+      }
+    },
+    {
+      align: "right",
+      render(_, account) {
+        return <Link to={`${match.url}/${account.pk}/edit`}>Edit</Link>;
+      }
+    }
+  ];
+
+  return (
+    <BaseList
+      itemName="Account"
+      itemNamePlural="Accounts"
+      fetchItems={fetchAccounts}
+      columns={columns}
+      actions={[
+        <Link key="create" to={`${match.url}/create`}>
+          <Button type="primary">Create Account</Button>
+        </Link>
       ]}
-      render={(balance, account: IAccount) => (
-        <Money
-          value={{ amount: balance, currency: account.balance_currency }}
-        />
-      )}
     />
-    <Column
-      align="right"
-      render={account => (
-        <Link to={`${match.url}/${account.pk}/edit`}>Edit</Link>
-      )}
-    />
-  </BaseList>
-);
+  );
+};
 
 export default Accounts;

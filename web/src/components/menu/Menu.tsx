@@ -1,4 +1,16 @@
-import { Icon, Menu } from "antd";
+import {
+  BankOutlined,
+  FolderOutlined,
+  HistoryOutlined,
+  LineChartOutlined,
+  PieChartOutlined,
+  ProjectOutlined,
+  SettingOutlined,
+  TagOutlined,
+  ToolOutlined,
+  UserOutlined
+} from "@ant-design/icons";
+import { Menu } from "antd";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Menu.scss";
@@ -7,7 +19,7 @@ const { Item, SubMenu } = Menu;
 
 interface IMenuItem {
   path: string;
-  icon: string | React.ReactElement;
+  icon: React.ReactElement;
   text: string;
   items?: IMenuItem[];
 }
@@ -15,60 +27,57 @@ interface IMenuItem {
 const menuItems: IMenuItem[] = [
   {
     path: "/",
-    icon: "pie-chart",
+    icon: <PieChartOutlined />,
     text: "Dashboard"
   },
   {
     path: "/transactions",
-    icon: "history",
+    icon: <HistoryOutlined />,
     text: "Transactions"
   },
   {
     path: "/reports",
-    icon: "line-chart",
+    icon: <LineChartOutlined />,
     text: "Reports"
   },
   {
     path: "/accounts",
-    icon: "bank",
+    icon: <BankOutlined />,
     text: "Accounts"
   },
   {
     path: "/budgets",
-    icon: <Icon type="project" rotate={180} />,
+    icon: <ProjectOutlined rotate={180} />,
     text: "Budgets"
   },
   {
     path: "/settings",
-    icon: "setting",
+    icon: <SettingOutlined />,
     text: "Settings",
     items: [
       {
         path: "/settings/categories",
-        icon: "folder",
+        icon: <FolderOutlined />,
         text: "Categories"
       },
       {
         path: "/settings/tags",
-        icon: "tags",
+        icon: <TagOutlined />,
         text: "Tags"
       },
       {
         path: "/settings/options",
-        icon: "tool",
+        icon: <ToolOutlined />,
         text: "Options"
       },
       {
         path: "/settings/user",
-        icon: "user",
+        icon: <UserOutlined />,
         text: "Profile"
       }
     ]
   }
 ];
-
-const renderIcon = (icon: string | React.ReactElement) =>
-  typeof icon === "string" ? <Icon type={icon} /> : icon;
 
 const renderItem = (item: IMenuItem) =>
   item.items ? (
@@ -76,7 +85,7 @@ const renderItem = (item: IMenuItem) =>
       key={item.path}
       title={
         <>
-          {renderIcon(item.icon)}
+          {item.icon}
           <span>{item.text}</span>
         </>
       }
@@ -86,7 +95,7 @@ const renderItem = (item: IMenuItem) =>
   ) : (
     <Item key={item.path}>
       <Link to={item.path}>
-        {renderIcon(item.icon)}
+        {item.icon}
         <span>{item.text}</span>
       </Link>
     </Item>

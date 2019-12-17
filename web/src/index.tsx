@@ -11,7 +11,9 @@ const AppWrapper: React.FC = () => (
   </BrowserRouter>
 );
 
-ReactDOM.render(<AppWrapper />, document.getElementById("root"));
+const rootEl = document.getElementById("root");
+const root = ReactDOM.createRoot(rootEl!);
+root.render(<AppWrapper />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

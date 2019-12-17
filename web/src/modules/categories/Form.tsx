@@ -1,6 +1,6 @@
-import { Button, Col, Form, Icon, Input, Row, Select, TreeSelect } from "antd";
-import { FormComponentProps } from "antd/lib/form";
-import React, { useState } from "react";
+import { Button, Col, Form, Input, Row, Select, TreeSelect } from "antd";
+import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import ColorInput from "../../components/form/ColorInput";
 import {
   ICategory,
@@ -11,129 +11,127 @@ import {
 const { TreeNode: Node } = TreeSelect;
 const { Option } = Select;
 
-interface IFormProps extends FormComponentProps {
+interface IFormProps {
   data?: ICategory;
   onSave: (values: ICategory) => void;
 }
 
-const CategoryFormComponent: React.FC<IFormProps> = ({
-  data,
-  form,
-  onSave
-}) => {
+const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
+  const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [position, setPosition] = useState("first-child");
   const { data: categoryTree, isLoading } = useCategoryTree({ page: 1 });
 
-  const onSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const onSubmit = async (values: any) => {
     setSubmitting(true);
-
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        const newData = {
-          ...values
-        };
-        onSave(newData);
-      } else {
-        setSubmitting(false);
-      }
-    });
-  };
-
-  const renderNode = (category: ITreeCategory) => {
-    const props = {
-      key: category.pk.toString(),
-      value: category.pk.toString(),
-      title: category.label
-    };
-
-    if (category.children && category.children.length) {
-      return <Node {...props}>{category.children.map(renderNode)}</Node>;
+    try {
+      await form.validateFields();
+    } catch (e) {
+      setSubmitting(false);
+      debugger;
+      return;
     }
-    return <Node {...props} />;
+    const newData = {
+      ...values
+    };
+    onSave(newData);
   };
+
+  const treeData = useMemo(() => {
+    console.info("useMemo(treeData)");
+    const renderNode = (category: ITreeCategory) => {
+      const props = {
+        key: category.pk.toString(),
+        value: category.pk.toString(),
+        title: category.label,
+        searchIndex: category.label.toLowerCase()
+      };
+
+      if (category.children && category.children.length) {
+        return <Node {...props}>{category.children.map(renderNode)}</Node>;
+      }
+      return <Node {...props} />;
+    };
+    if (categoryTree) {
+      return categoryTree.results.map(renderNode);
+    }
+  }, [categoryTree]);
 
   return (
-    <Form layout="horizontal" onSubmit={onSubmit}>
+    <Form
+      layout="vertical"
+      onFinish={onSubmit}
+      initialValues={{ position: "first-child", ...data }}
+    >
       <Row gutter={16}>
         <Col span={2}>
-          <Form.Item label="Icon">
-            {form.getFieldDecorator("icon", {
-              initialValue: data && data.icon
-            })(<Input placeholder="📗" style={{ textAlign: "center" }} />)}
+          <Form.Item name="icon" label="Icon">
+            <Input placeholder="📗" style={{ textAlign: "center" }} />
           </Form.Item>
         </Col>
-        <Col span={10}>
-          <Form.Item label="Name">
-            {form.getFieldDecorator("name", {
-              initialValue: data && data.name,
-              rules: [{ required: true }]
-            })(<Input placeholder="Ledger" style={{ width: "90%" }} />)}
+        <Col span={22}>
+          <Form.Item name="name" label="Name" required>
+            <Input placeholder="Ledger" />
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item label="Color">
-        {form.getFieldDecorator("color", {
-          initialValue: data && data.color
-        })(<ColorInput style={{ width: "50%" }} />)}
+      <Form.Item name="color" label="Color">
+        <ColorInput />
       </Form.Item>
       {!data && (
         <Row gutter={16}>
           <Col span={6}>
-            <Form.Item label="Position">
-              {form.getFieldDecorator("position", {
-                initialValue: "first-child",
-                rules: [{ required: true }]
-              })(
-                <Select onChange={setPosition}>
-                  <Option value="first-child">Top of</Option>
-                  <Option value="last-child">Bottom of</Option>
-                  <Option value="left">Before</Option>
-                  <Option value="right">After</Option>
-                </Select>
-              )}
+            <Form.Item name="position" label="Position" required>
+              <Select onChange={value => setPosition(value as string)}>
+                <Option value="first-child">Top of</Option>
+                <Option value="last-child">Bottom of</Option>
+                <Option value="left">Before</Option>
+                <Option value="right">After</Option>
+              </Select>
             </Form.Item>
           </Col>
           <Col span={18}>
             <Form.Item
+              name="target"
               label={
                 ["left", "right"].includes(position) ? "Neighbor" : "Parent"
               }
+              required
             >
-              {form.getFieldDecorator("target", {
-                rules: [{ required: true }]
-              })(
-                <TreeSelect
-                  showSearch
-                  dropdownStyle={{ maxHeight: 300 }}
-                  searchPlaceholder="Search Category"
-                  filterTreeNode={(search, node) => {
-                    return node.props.title
-                      .toLowerCase()
-                      .includes(search.toLowerCase());
-                  }}
-                  style={{ width: "50%" }}
-                  placeholder="Select where to insert the new Category"
-                  suffixIcon={isLoading ? <Icon type="loading" /> : undefined}
-                  disabled={isLoading}
-                >
-                  {categoryTree && categoryTree.results.map(renderNode)}
-                </TreeSelect>
-              )}
+              <TreeSelect
+                showSearch
+                dropdownStyle={{ maxHeight: 300 }}
+                searchPlaceholder="Search Category"
+                filterTreeNode={(search, node: any) =>
+                  node.props.searchIndex.includes(search.toLowerCase())
+                }
+                placeholder="Select where to insert the new Category"
+                // TODO suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
+                disabled={isLoading}
+              >
+                {treeData}
+              </TreeSelect>
             </Form.Item>
           </Col>
         </Row>
       )}
       <Form.Item>
-        <Button type="primary" htmlType="submit" loading={submitting}>
-          Save Category
-        </Button>
+        <>
+          <Button type="primary" htmlType="submit" loading={submitting}>
+            Save Category
+          </Button>
+          <Link
+            to={
+              (data && `/settings/categories/${data.pk}`) ||
+              `/settings/categories`
+            }
+          >
+            <Button>Discard</Button>
+          </Link>
+        </>
       </Form.Item>
     </Form>
   );
 };
-
-const CategoryForm = Form.create<IFormProps>()(CategoryFormComponent);
 
 export default CategoryForm;
