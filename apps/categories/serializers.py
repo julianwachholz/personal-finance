@@ -60,6 +60,12 @@ class CategoryTreeSerializer(CategorySerializer):
         model = Category
         fields = ["pk", "label", "color", "children"]
 
+    def to_representation(self, category):
+        rep = super().to_representation(category)
+        if rep["children"] is None:
+            rep.pop("children")
+        return rep
+
     def get_children(self, obj):
         children = obj.get_children()
         if not children:
