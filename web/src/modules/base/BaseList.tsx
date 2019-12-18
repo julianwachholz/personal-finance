@@ -55,8 +55,7 @@ const BaseList: React.FC<IListProps<any>> = ({
   showSearch = true,
   onSearch = () => {},
   actions = [],
-  extraActions = true,
-  children
+  extraActions = true
 }) => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -76,7 +75,7 @@ const BaseList: React.FC<IListProps<any>> = ({
   }
 
   if (error) {
-    return <h1>Error</h1>;
+    return <h1>Error: {error}</h1>;
   }
 
   const extraActionMenu =
@@ -146,7 +145,7 @@ const BaseList: React.FC<IListProps<any>> = ({
       ) : null}
       {pager}
       <Table
-        dataSource={(data && data.results) || []}
+        dataSource={data?.results ?? []}
         columns={columns}
         loading={isLoading}
         rowKey="pk"

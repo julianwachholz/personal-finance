@@ -17,8 +17,8 @@ type BreadcrumbFunc = (...args: string[]) => string;
 
 type BreadcrumbMatch = [RegExp, string | BreadcrumbFunc];
 
-const useLabel = ({ data }: QueryResult<any, any>) => {
-  return (data && data.label) || "...";
+const useLabel = ({ data }: QueryResult<any, any>): string => {
+  return data?.label || "...";
 };
 
 const breadcrumbs: BreadcrumbMatch[] = [

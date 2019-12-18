@@ -34,7 +34,7 @@ const Money: React.FC<IMoneyProps> = ({
     let decimal = cells[4] || "";
     int = int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator);
 
-    if (typeof precision === "number") {
+    if (precision) {
       decimal = padEnd(decimal, precision, "0").slice(0, precision);
     }
     if (decimal) {

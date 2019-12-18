@@ -63,7 +63,7 @@ const AccountForm: React.FC<IFormProps> = ({ data, onSave }) => {
           <Button type="primary" htmlType="submit" loading={submitting}>
             Save Account
           </Button>
-          <Link to={(data && `/accounts/${data.pk}`) || `/accounts`}>
+          <Link to={(data && `/accounts/${data.pk}`) ?? `/accounts`}>
             <Button>Discard</Button>
           </Link>
         </>

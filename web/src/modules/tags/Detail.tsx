@@ -11,7 +11,7 @@ interface IDetailParams {
 }
 
 const Tag: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
-  const { data: tag } = useTag(match.params.pk);
+  const { data: tag, isLoading, error } = useTag(match.params.pk);
 
   return tag ? (
     <BaseModule title={tag.label}>
@@ -25,7 +25,7 @@ const Tag: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
       </Link>
     </BaseModule>
   ) : (
-    <Spin />
+    <Spin spinning={isLoading}>{error?.toString()}</Spin>
   );
 };
 

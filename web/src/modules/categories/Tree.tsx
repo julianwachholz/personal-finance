@@ -14,7 +14,7 @@ import BaseModule from "../base/BaseModule";
 const { TreeNode: Node } = Tree;
 
 const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
-  const { data } = useCategoryTree({ page: 1 });
+  const { data, isLoading } = useCategoryTree({ page: 1 });
   const [moveNode] = useMutation(moveCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
@@ -38,7 +38,7 @@ const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
     moveNode({ pk: dragKey, target_pk: dropKey, position });
   };
 
-  if (!data) {
+  if (!data || isLoading) {
     return <Spin />;
   }
 
@@ -49,7 +49,7 @@ const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
       key: category.pk.toString(),
       title: category.label
     };
-    if (category.children && category.children.length) {
+    if (category.children?.length) {
       keysWithChildren.push(props.key);
       return <Node {...props}>{category.children.map(renderNode)}</Node>;
     }

@@ -38,7 +38,6 @@ const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
   };
 
   const treeData = useMemo(() => {
-    console.info("useMemo(treeData)");
     const renderNode = (category: ITreeCategory) => {
       const props = {
         key: category.pk.toString(),
@@ -47,7 +46,7 @@ const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
         searchIndex: category.label.toLowerCase()
       };
 
-      if (category.children && category.children.length) {
+      if (category.children?.length) {
         return <Node {...props}>{category.children.map(renderNode)}</Node>;
       }
       return <Node {...props} />;
@@ -122,7 +121,7 @@ const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
           </Button>
           <Link
             to={
-              (data && `/settings/categories/${data.pk}`) ||
+              (data && `/settings/categories/${data.pk}`) ??
               `/settings/categories`
             }
           >

@@ -44,7 +44,7 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
     }
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
     const data = await response.json();
     return data;
@@ -69,10 +69,13 @@ type FetchItem<T extends IModel> = (options: IFetchItemOptions) => Promise<T>;
 
 export const makeFetchItem = <T extends IModel>(basename: string) => {
   const fetchItem: FetchItem<T> = async ({ pk }) => {
+    if (isNaN(pk)) {
+      throw new Error("Invalid ID");
+    }
     const url = `/api/${basename}/${pk}/`;
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
     const data = await response.json();
     return data;
@@ -105,7 +108,7 @@ export const makePostItem = <T extends IModel>(basename: string) => {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
     const responseData = await response.json();
     return responseData;
@@ -126,7 +129,7 @@ export const makePutItem = <T extends IModel>(basename: string) => {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
     const responseData = await response.json();
     return responseData;
@@ -143,7 +146,7 @@ export const makeDeleteItem = <T extends IModel>(basename: string) => {
       method: "DELETE"
     });
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
   };
   return deleteItem;
@@ -165,7 +168,7 @@ export const makePostAction = <T extends { pk: number }>(
       body: JSON.stringify(params)
     });
     if (!response.ok) {
-      throw new Error("response not ok");
+      throw new Error(response.statusText);
     }
     const responseData = await response.json();
     return responseData;

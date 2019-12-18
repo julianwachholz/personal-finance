@@ -12,7 +12,7 @@ interface IDetailParams {
 }
 
 const Category: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
-  const { data: category } = useCategory(match.params.pk);
+  const { data: category, isLoading, error } = useCategory(match.params.pk);
 
   return category ? (
     <BaseModule title={category.label}>
@@ -29,7 +29,7 @@ const Category: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
       </Link>
     </BaseModule>
   ) : (
-    <Spin />
+    <Spin spinning={isLoading}>{error?.toString()}</Spin>
   );
 };
 

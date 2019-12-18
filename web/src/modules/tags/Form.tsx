@@ -42,7 +42,7 @@ const TagForm: React.FC<IFormProps> = ({ data, onSave }) => {
           <Button type="primary" htmlType="submit" loading={submitting}>
             Save Tag
           </Button>
-          <Link to={(data && `/settings/tags/${data.pk}`) || `/settings/tags`}>
+          <Link to={(data && `/settings/tags/${data.pk}`) ?? `/settings/tags`}>
             <Button>Discard</Button>
           </Link>
         </>

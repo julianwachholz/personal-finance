@@ -29,7 +29,7 @@ export const useCategory = makeUseItem<ICategory>("categories");
 
 export interface ITreeCategory extends ICategory {
   readonly value: number;
-  readonly children: ITreeCategory[];
+  readonly children?: ITreeCategory[];
 }
 
 export const fetchCategoryTree = makeFetchItems<ITreeCategory>(

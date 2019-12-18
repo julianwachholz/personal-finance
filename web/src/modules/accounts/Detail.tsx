@@ -11,7 +11,7 @@ interface IDetailParams {
 }
 
 const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
-  const { data: account } = useAccount(match.params.pk);
+  const { data: account, isLoading, error } = useAccount(match.params.pk);
 
   return account ? (
     <BaseModule title={account.label}>
@@ -34,7 +34,7 @@ const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
       </Link>
     </BaseModule>
   ) : (
-    <Spin />
+    <Spin spinning={isLoading}>{error?.toString()}</Spin>
   );
 };
 
