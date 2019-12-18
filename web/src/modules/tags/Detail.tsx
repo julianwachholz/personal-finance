@@ -1,4 +1,4 @@
-import { Button, Descriptions, Spin } from "antd";
+import { Button, Descriptions } from "antd";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useTag } from "../../dao/tags";
@@ -11,7 +11,7 @@ interface IDetailParams {
 }
 
 const Tag: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
-  const { data: tag, isLoading, error } = useTag(match.params.pk);
+  const { data: tag } = useTag(match.params.pk);
 
   return tag ? (
     <BaseModule title={tag.label}>
@@ -24,9 +24,7 @@ const Tag: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
         <Button type="primary">Edit Tag</Button>
       </Link>
     </BaseModule>
-  ) : (
-    <Spin spinning={isLoading}>{error?.toString()}</Spin>
-  );
+  ) : null;
 };
 
 export default Tag;

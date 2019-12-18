@@ -1,5 +1,5 @@
-import { Layout } from "antd";
-import React from "react";
+import { Layout, Spin } from "antd";
+import React, { Suspense } from "react";
 import MainMenu from "../menu/Menu";
 import Breadcrumbs from "./Breadcrumbs";
 import "./Layout.scss";
@@ -14,7 +14,11 @@ const AppLayout: React.FC = props => (
     <Layout>
       <Content>
         <Breadcrumbs />
-        <div className="content-container">{props.children}</div>
+        <div className="content-container">
+          <Suspense fallback={<Spin tip="Loading..." />}>
+            {props.children}
+          </Suspense>
+        </div>
       </Content>
       <Footer>🧇 ©{new Date().getFullYear()}</Footer>
     </Layout>

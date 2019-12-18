@@ -4,21 +4,20 @@ import {
   RightOutlined
 } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import React from "react";
+import React, { Suspense, useDeferredValue } from "react";
 import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import { useCategory } from "../../dao/categories";
 import { useTag } from "../../dao/tags";
-import useDebounce from "../../utils/debounce";
 
 type BreadcrumbFunc = (...args: string[]) => string;
 
 type BreadcrumbMatch = [RegExp, string | BreadcrumbFunc];
 
 const useLabel = ({ data }: QueryResult<any, any>): string => {
-  return data?.label || "...";
+  return data?.label;
 };
 
 const breadcrumbs: BreadcrumbMatch[] = [
@@ -76,13 +75,15 @@ const Breadcrumbs: React.FC = () => {
     const url = `/${subpaths.slice(0, i + 1).join("/")}`;
     return (
       <Breadcrumb.Item key={url}>
-        <Crumb url={url} path={path} isLast={i === lastIndex} />
+        <Suspense fallback="...">
+          <Crumb url={url} path={path} isLast={i === lastIndex} />
+        </Suspense>
       </Breadcrumb.Item>
     );
   });
 
   const isFetching = useIsFetching();
-  const spinning = useDebounce(isFetching, 100);
+  const spinning = useDeferredValue(isFetching, { timeoutMs: 200 });
 
   items.unshift(
     <Breadcrumb.Item key="/">

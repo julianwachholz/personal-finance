@@ -66,7 +66,8 @@ const BaseList: React.FC<IListProps<any>> = ({
 
   const { data, isLoading, error } = useQuery(
     [itemNamePlural, { page, pageSize, ordering, filters, search }],
-    fetchItems
+    fetchItems,
+    { suspense: false }
   );
 
   // save total item count in state to prevent pagination jumping around
@@ -75,7 +76,7 @@ const BaseList: React.FC<IListProps<any>> = ({
   }
 
   if (error) {
-    return <h1>Error: {error}</h1>;
+    throw error;
   }
 
   const extraActionMenu =
@@ -113,7 +114,9 @@ const BaseList: React.FC<IListProps<any>> = ({
         setPageSize(size);
       }}
       showTotal={(total, range) =>
-        total === 1
+        total === 0 && isLoading
+          ? ""
+          : total === 1
           ? `Showing only ${itemName}`
           : `${range[0]}-${range[1]} of ${total} ${itemNamePlural}`
       }
