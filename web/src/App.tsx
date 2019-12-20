@@ -6,10 +6,12 @@ import "./App.scss";
 import AppLayout from "./components/layout/Layout";
 import Accounts from "./modules/accounts";
 import Login from "./modules/auth/Login";
+import Budgets from "./modules/budgets";
 import Dashboard from "./modules/dashboard/Dashboard";
 import NotFound from "./modules/error/NotFound";
+import Reports from "./modules/reports";
 import Settings from "./modules/settings/Settings";
-import Transactions from "./modules/transactions/Transactions";
+import Transactions from "./modules/transactions";
 import { useAuth } from "./utils/AuthProvider";
 
 const App: React.FC = () => {
@@ -28,9 +30,9 @@ const App: React.FC = () => {
       <Switch>
         <Route exact path="/" component={Dashboard} />
         <Route path="/transactions" component={Transactions} />
-        <Route path="/reports" render={() => "Reports"} />
+        <Route path="/reports" component={Reports} />
         <Route path="/accounts" component={Accounts} />
-        <Route path="/budgets" render={() => "Budgets"} />
+        <Route path="/budgets" component={Budgets} />
         <Route path="/settings" component={Settings} />
         <Route exact path="/404" component={NotFound} />
         <Route render={() => <Redirect to="/404" />} />

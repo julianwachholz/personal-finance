@@ -75,7 +75,7 @@ const BaseList: React.FC<IListProps<any>> = ({
   }
 
   if (error) {
-    return <h1>Error: {error}</h1>;
+    return <h1>{error.toString()}</h1>;
   }
 
   const extraActionMenu =

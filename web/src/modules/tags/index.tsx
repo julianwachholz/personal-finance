@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, RouteComponentProps, Switch } from "react-router";
-import Tag from "./Detail";
-import Tags from "./List";
-import TagEdit from "./Edit";
 import TagCreate from "./Create";
+import Tag from "./Detail";
+import TagEdit from "./Edit";
+import Tags from "./List";
 
 const Module: React.FC<RouteComponentProps> = ({ match }) => (
   <Switch>
