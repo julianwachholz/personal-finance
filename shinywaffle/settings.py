@@ -10,13 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+from datetime import timedelta
+
 import environ
 
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR('path/...')
 BASE_DIR = environ.Path(__file__) - 2
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
@@ -45,6 +46,9 @@ INSTALLED_APPS = [
     "django_countries",
     "django_filters",
     "rest_framework",
+    "knox",
+    # "rest_auth",
+    # "rest_auth.registration",
     "colorfield",
     "data_wizard",
     "data_wizard.sources",
@@ -102,6 +106,7 @@ CSRF_USE_SESSIONS = True
 
 DATABASES = {"default": env.db()}
 
+
 PASSWORD_HASHERS = [
     # https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
     "django.contrib.auth.hashers.Argon2PasswordHasher",
@@ -127,17 +132,17 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "shinywaffle.authentication.CSRFExemptSessionAuthentication"
-    ],
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "shinywaffle.pagination.ControllablePageNumberPagination",
-    "DEFAULT_FILTER_BACKENDS": [
+    "DEFAULT_FILTER_BACKENDS": (
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
         "django_filters.rest_framework.DjangoFilterBackend",
-    ],
+    ),
 }
+
+REST_KNOX = {"TOKEN_TTL": timedelta(days=7)}
 
 
 # Internationalization

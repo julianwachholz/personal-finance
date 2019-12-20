@@ -18,6 +18,8 @@ djangorestframework = "^3.10"
 python-dateutil = "^2.8"
 data-wizard = "^1.2"
 django-filter = "^2.2"
+django-rest-knox = "^4.1.0"
+django-rest-auth = "^0.9.5"
 
 [tool.poetry.scripts]
 

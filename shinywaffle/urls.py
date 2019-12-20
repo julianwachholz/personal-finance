@@ -30,7 +30,7 @@ router.register(r"accounts", AccountViewSet, basename="accounts")
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("datawizard/", include("data_wizard.urls")),
-    path("api-auth/", include("rest_framework.urls")),
+    path("api/auth/", include("apps.registration.urls")),
     path("api/", include(router.urls)),
 ]
 

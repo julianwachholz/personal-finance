@@ -1,5 +1,29 @@
 import { useQuery } from "react-query";
 
+const authTokenKey = "_auth_token";
+const authTokenExpiryKey = "_auth_token_expiry";
+
+export const setAuthToken = (token: string, expiry: string) => {
+  localStorage.setItem(authTokenKey, token);
+  localStorage.setItem(authTokenExpiryKey, expiry);
+};
+
+const getAuthToken = () => {
+  return localStorage.getItem(authTokenKey);
+};
+
+export const authFetch = (input: RequestInfo, init?: RequestInit) => {
+  const { headers, ...options } = init ?? {};
+  const _init = {
+    ...options,
+    headers: {
+      ...headers,
+      Authorization: `Token ${getAuthToken()}`
+    }
+  };
+  return fetch(input, _init);
+};
+
 interface IFetchItemsOptions {
   page: number;
   pageSize?: number;
@@ -42,7 +66,7 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
     if (search) {
       url += `&search=${encodeURIComponent(search)}`;
     }
-    const response = await fetch(url);
+    const response = await authFetch(url);
     if (!response.ok) {
       throw new Error(response.statusText);
     }
@@ -65,7 +89,9 @@ export const makeUseItems = <T extends IModel>(basename: string) => {
 interface IFetchItemOptions {
   pk: number;
 }
-type FetchItem<T extends IModel> = (options: IFetchItemOptions) => Promise<T>;
+export type FetchItem<T extends IModel> = (
+  options: IFetchItemOptions
+) => Promise<T>;
 
 export const makeFetchItem = <T extends IModel>(basename: string) => {
   const fetchItem: FetchItem<T> = async ({ pk }) => {
@@ -73,7 +99,7 @@ export const makeFetchItem = <T extends IModel>(basename: string) => {
       throw new Error("Invalid ID");
     }
     const url = `/api/${basename}/${pk}/`;
-    const response = await fetch(url);
+    const response = await authFetch(url);
     if (!response.ok) {
       throw new Error(response.statusText);
     }
@@ -100,7 +126,7 @@ type PostItem<T extends IModel> = (data: T) => Promise<T>;
 export const makePostItem = <T extends IModel>(basename: string) => {
   const postItem: PostItem<T> = async data => {
     const url = `/api/${basename}/`;
-    const response = await fetch(url, {
+    const response = await authFetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json"
@@ -121,7 +147,7 @@ type PutItem<T extends IModel> = (data: T) => Promise<T>;
 export const makePutItem = <T extends IModel>(basename: string) => {
   const putItem: PutItem<T> = async data => {
     const url = `/api/${basename}/${data.pk}/`;
-    const response = await fetch(url, {
+    const response = await authFetch(url, {
       method: "PUT",
       headers: {
         "content-type": "application/json"
@@ -142,7 +168,7 @@ type DeleteItem<T extends IModel> = (data: T) => Promise<void>;
 export const makeDeleteItem = <T extends IModel>(basename: string) => {
   const deleteItem: DeleteItem<T> = async ({ pk }) => {
     const url = `/api/${basename}/${pk}/`;
-    const response = await fetch(url, {
+    const response = await authFetch(url, {
       method: "DELETE"
     });
     if (!response.ok) {
@@ -160,7 +186,7 @@ export const makePostAction = <T extends { pk: number }>(
 ) => {
   const postAction: PostAction<T> = async ({ pk, ...params }) => {
     const url = `/api/${basename}/${pk}/${action}/`;
-    const response = await fetch(url, {
+    const response = await authFetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json"

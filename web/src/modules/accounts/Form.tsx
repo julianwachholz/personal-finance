@@ -36,6 +36,7 @@ const AccountForm: React.FC<IFormProps> = ({ data, onSave }) => {
 
   return (
     <Form
+      form={form}
       layout="vertical"
       onFinish={onSubmit}
       initialValues={{ ...data, balance }}

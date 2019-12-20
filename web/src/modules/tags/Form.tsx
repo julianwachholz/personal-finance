@@ -30,7 +30,12 @@ const TagForm: React.FC<IFormProps> = ({ data, onSave }) => {
   };
 
   return (
-    <Form layout="vertical" onFinish={onSubmit} initialValues={data}>
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={onSubmit}
+      initialValues={data}
+    >
       <Form.Item name="name" label="Name" required>
         <Input placeholder="personal" prefix="#" />
       </Form.Item>

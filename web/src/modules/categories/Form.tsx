@@ -58,6 +58,7 @@ const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
 
   return (
     <Form
+      form={form}
       layout="vertical"
       onFinish={onSubmit}
       initialValues={{ position: "first-child", ...data }}
