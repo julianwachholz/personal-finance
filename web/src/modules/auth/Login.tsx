@@ -2,24 +2,21 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
-import { useMutation } from "react-query";
-import { setAuthToken } from "../../dao/base";
-import { postLogin } from "../../dao/user";
+import { useAuth } from "../../utils/AuthProvider";
 
 const Login: React.FC = () => {
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();
-  const [login] = useMutation(postLogin, { refetchQueries: ["user"] });
+  const { login, isLoading } = useAuth();
 
   const onSubmit = async (values: Record<string, string>) => {
     setError(undefined);
     setValidating(true);
     try {
-      const result = await login(values);
-      setAuthToken(result.token, result.expiry);
+      await login(values);
     } catch (e) {
-      setError(e.non_field_errors.join(","));
+      setError(e.non_field_errors[0]);
     }
     setValidating(false);
     form.resetFields();
@@ -51,7 +48,11 @@ const Login: React.FC = () => {
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <>
-            <Button type="primary" htmlType="submit" loading={validating}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={validating || isLoading}
+            >
               Login
             </Button>
             {/* <Link to="/">Forgot password?</Link> */}

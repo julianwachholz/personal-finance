@@ -8,20 +8,24 @@ export const setAuthToken = (token: string, expiry: string) => {
   localStorage.setItem(authTokenExpiryKey, expiry);
 };
 
+export const clearToken = () => {
+  localStorage.removeItem(authTokenKey);
+  localStorage.removeItem(authTokenExpiryKey);
+};
+
 const getAuthToken = () => {
   return localStorage.getItem(authTokenKey);
 };
 
-export const authFetch = (input: RequestInfo, init?: RequestInit) => {
-  const { headers, ...options } = init ?? {};
-  const _init = {
-    ...options,
-    headers: {
-      ...headers,
+export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
+  const token = getAuthToken();
+  if (token) {
+    init.headers = {
+      ...init.headers,
       Authorization: `Token ${getAuthToken()}`
-    }
-  };
-  return fetch(input, _init);
+    };
+  }
+  return fetch(input, init);
 };
 
 interface IFetchItemsOptions {
@@ -89,8 +93,8 @@ export const makeUseItems = <T extends IModel>(basename: string) => {
 interface IFetchItemOptions {
   pk: number;
 }
-export type FetchItem<T extends IModel> = (
-  options: IFetchItemOptions
+export type FetchItem<T extends IModel, O = IFetchItemOptions> = (
+  options: O
 ) => Promise<T>;
 
 export const makeFetchItem = <T extends IModel>(basename: string) => {

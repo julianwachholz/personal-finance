@@ -1,5 +1,5 @@
 import { prefetchQuery, useQuery } from "react-query";
-import { authFetch, FetchItem } from "./base";
+import { authFetch, clearToken, FetchItem } from "./base";
 
 export interface IUser {
   pk: number;
@@ -13,10 +13,13 @@ export interface IUser {
   readonly dateJoined: Date;
 }
 
-const fetchUser: FetchItem<IUser> = async () => {
+const fetchUser: FetchItem<IUser, {}> = async () => {
   const url = `/api/auth/user/`;
   const response = await authFetch(url);
   if (!response.ok) {
+    if (response.status === 401) {
+      return null;
+    }
     throw new Error(response.statusText);
   }
   const data = await response.json();
@@ -49,4 +52,15 @@ export const postLogin = async (params: Record<string, string>) => {
     throw data;
   }
   return data;
+};
+
+export const postLogout = async () => {
+  const url = `/api/auth/logout/`;
+  const response = await authFetch(url, {
+    method: "POST"
+  });
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+  clearToken();
 };

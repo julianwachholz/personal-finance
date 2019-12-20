@@ -16,7 +16,11 @@ const App: React.FC = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <Spin size="large" tip="Authenticating..." />;
+    return (
+      <div className="app-loading">
+        <Spin delay={100} size="large" tip="Loading..." />
+      </div>
+    );
   }
 
   return isAuthenticated ? (
