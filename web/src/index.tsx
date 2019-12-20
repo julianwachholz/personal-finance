@@ -9,20 +9,20 @@ import * as serviceWorker from "./serviceWorker";
 import { SettingsProvider } from "./utils/SettingsProvider";
 
 const ProviderTree = createProviderTreeFromList(
-  [BrowserRouter, {}],
-  [ReactQueryConfigProvider, { suspense: true, staleTime: 100 }],
+  [ReactQueryConfigProvider, { config: { retry: 2, staleTime: 500 } }],
   [SettingsProvider, {}]
 );
 
 const AppWrapper: React.FC = () => (
-  <ProviderTree>
-    <App />
-  </ProviderTree>
+  <BrowserRouter>
+    <ProviderTree>
+      <App />
+    </ProviderTree>
+  </BrowserRouter>
 );
 
 const rootEl = document.getElementById("root");
-const root = ReactDOM.createRoot(rootEl!);
-root.render(<AppWrapper />);
+ReactDOM.render(<AppWrapper />, rootEl);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
