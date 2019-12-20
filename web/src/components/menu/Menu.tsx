@@ -13,6 +13,7 @@ import {
 import { Menu } from "antd";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSettings } from "../../utils/SettingsProvider";
 import "./Menu.scss";
 
 const { Item, SubMenu } = Menu;
@@ -102,13 +103,14 @@ const renderItem = (item: IMenuItem) =>
   );
 
 const MainMenu: React.FC = () => {
+  const { theme } = useSettings();
   const { pathname } = useLocation();
   const subpaths = pathname.split("/").map(p => `/${p}`);
 
   return (
     <Menu
       mode="inline"
-      theme="light"
+      theme={theme}
       selectedKeys={[pathname]}
       defaultOpenKeys={subpaths}
     >

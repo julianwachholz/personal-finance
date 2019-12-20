@@ -1,0 +1,13 @@
+.app--dark {
+  .ant-breadcrumb {
+    svg,
+    span,
+    a {
+      color: rgba(255, 255, 255, 0.65);
+    }
+    a:hover,
+    a:hover svg {
+      color: rgba(255, 255, 255, 0.88);
+    }
+  }
+}

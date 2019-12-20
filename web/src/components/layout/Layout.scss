@@ -19,3 +19,13 @@
     text-align: center;
   }
 }
+
+.ant-layout.app--dark {
+  .ant-layout-footer,
+  .ant-layout {
+    background: darken(rgb(0, 21, 41), 2);
+  }
+  .content-container {
+    background: rgb(0, 21, 41);
+  }
+}

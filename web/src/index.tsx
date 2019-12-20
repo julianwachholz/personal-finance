@@ -1,14 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { createProviderTreeFromList } from "react-provider-tree";
+import { ReactQueryConfigProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+import { SettingsProvider } from "./utils/SettingsProvider";
+
+const ProviderTree = createProviderTreeFromList(
+  [BrowserRouter, {}],
+  [ReactQueryConfigProvider, { suspense: true, staleTime: 100 }],
+  [SettingsProvider, {}]
+);
 
 const AppWrapper: React.FC = () => (
-  <BrowserRouter>
+  <ProviderTree>
     <App />
-  </BrowserRouter>
+  </ProviderTree>
 );
 
 const rootEl = document.getElementById("root");

@@ -12,6 +12,7 @@ import { useAccount } from "../../dao/accounts";
 import { useCategory } from "../../dao/categories";
 import { useTag } from "../../dao/tags";
 import useDebounce from "../../utils/debounce";
+import "./Breadcrumbs.scss";
 
 type BreadcrumbFunc = (...args: string[]) => string;
 

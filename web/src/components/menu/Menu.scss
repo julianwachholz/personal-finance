@@ -1,6 +1,11 @@
 .ant-menu {
   min-height: 100%;
 }
-.ant-layout-sider-trigger {
-  border-right: 1px solid #e8e8e8;
+.app--light {
+  .ant-layout-sider-trigger {
+    border-right: 1px solid #f0f0f0;
+  }
+}
+
+.app--dark {
 }
