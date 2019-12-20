@@ -1,5 +1,6 @@
 from dateutil.rrule import FR, MO, SA, SU, TH, TU, WE
 from django.db import models
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 
@@ -58,7 +59,7 @@ class Transaction(AbstractTransaction):
 
     """
 
-    datetime = models.DateTimeField(verbose_name=_("date / time"), auto_now_add=True)
+    datetime = models.DateTimeField(verbose_name=_("date / time"), default=now)
 
     class Meta:
         verbose_name = _("transaction")
@@ -66,7 +67,7 @@ class Transaction(AbstractTransaction):
         ordering = ("datetime",)
 
     def __str__(self):
-        return f"{self.amount}"
+        return f"{self.datetime.date()} - {self.text}: {self.amount}"
 
 
 class PlannedTransaction(AbstractTransaction):

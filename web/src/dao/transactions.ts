@@ -2,10 +2,10 @@ import { makeFetchItems } from "./base";
 
 export interface ITransaction {
   pk: number;
-  account_id: number;
-  category_id: number;
-  payee_id: number;
-  tag_ids: number[];
+  account: number;
+  category: number;
+  payee: number;
+  tags: number[];
 
   datetime: Date;
 

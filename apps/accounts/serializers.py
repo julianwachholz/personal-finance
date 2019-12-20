@@ -9,7 +9,7 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Account
-        fields = [
+        fields = (
             "pk",
             "label",
             "name",
@@ -18,4 +18,4 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
             "balance_currency",
             "icon",
             "pos",
-        ]
+        )
