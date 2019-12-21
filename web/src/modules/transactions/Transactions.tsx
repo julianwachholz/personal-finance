@@ -1,7 +1,7 @@
 import React from "react";
 import BaseModule from "../base/BaseModule";
 
-const Transactions: React.FC = () => {
+const Transactions = () => {
   return (
     <BaseModule title="Transactions">
       <p>TODO: Transactions</p>

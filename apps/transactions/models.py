@@ -64,7 +64,7 @@ class Transaction(AbstractTransaction):
     class Meta:
         verbose_name = _("transaction")
         verbose_name_plural = _("transactions")
-        ordering = ("datetime",)
+        ordering = ("-datetime",)
 
     def __str__(self):
         return f"{self.datetime.date()} - {self.text}: {self.amount}"

@@ -39,7 +39,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         return Response({"count": len(serializer.data), "results": serializer.data})
 
     @action(detail=True, methods=["post"])
-    def move_to(self, request, pk, **kwargs):
+    def move(self, request, pk, **kwargs):
         target_pk = request.data["target_pk"]
         position = request.data["position"]
         node = self.get_queryset().get(pk=pk)

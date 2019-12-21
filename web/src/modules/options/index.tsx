@@ -1,12 +1,11 @@
 import { Switch, Typography } from "antd";
 import React from "react";
-import { RouteComponentProps } from "react-router";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
 
-const Options: React.FC<RouteComponentProps> = () => {
+const Options = () => {
   const { theme, toggleTheme } = useSettings();
   return (
     <BaseModule title="Options">

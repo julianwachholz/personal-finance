@@ -7,14 +7,14 @@ import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
 
-interface IDeleteParams {
+interface DeleteParams {
   pk: string;
 }
 
-const AccountDelete: React.FC<RouteComponentProps<IDeleteParams>> = ({
+const AccountDelete = ({
   match,
   history
-}) => {
+}: RouteComponentProps<DeleteParams>) => {
   const { data: account } = useAccount(match.params.pk);
   const relatedItems = [
     "Transaction #54342",
@@ -24,7 +24,7 @@ const AccountDelete: React.FC<RouteComponentProps<IDeleteParams>> = ({
   ];
 
   const [mutate] = useMutation(deleteAccount, {
-    refetchQueries: ["Accounts"]
+    refetchQueries: ["items/accounts"]
   });
 
   return account ? (

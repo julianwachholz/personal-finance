@@ -6,7 +6,7 @@ import { postAccount } from "../../dao/accounts";
 import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
-const AccountCreate: React.FC = () => {
+const AccountCreate = () => {
   const [mutate] = useMutation(postAccount, {
     refetchQueries: ["items/accounts"]
   });

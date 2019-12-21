@@ -2,21 +2,17 @@ import { Button, Col, Form, Input, Row, Select, TreeSelect } from "antd";
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ColorInput from "../../components/form/ColorInput";
-import {
-  ICategory,
-  ITreeCategory,
-  useCategoryTree
-} from "../../dao/categories";
+import { Category, TreeCategory, useCategoryTree } from "../../dao/categories";
 
 const { TreeNode: Node } = TreeSelect;
 const { Option } = Select;
 
-interface IFormProps {
-  data?: ICategory;
-  onSave: (values: ICategory) => void;
+interface FormProps {
+  data?: Category;
+  onSave: (values: Category) => void;
 }
 
-const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
+const CategoryForm = ({ data, onSave }: FormProps) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [position, setPosition] = useState("first-child");
@@ -31,14 +27,14 @@ const CategoryForm: React.FC<IFormProps> = ({ data, onSave }) => {
       debugger;
       return;
     }
-    const newData = {
+    const newData: Category = {
       ...values
     };
     onSave(newData);
   };
 
   const treeData = useMemo(() => {
-    const renderNode = (category: ITreeCategory) => {
+    const renderNode = (category: TreeCategory) => {
       const props = {
         key: category.pk.toString(),
         value: category.pk.toString(),

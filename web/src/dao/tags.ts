@@ -1,12 +1,12 @@
 import {
+  makeDeleteItem,
   makeFetchItems,
-  makeUseItem,
-  makePutItem,
   makePostItem,
-  makeDeleteItem
+  makePutItem,
+  makeUseItem
 } from "./base";
 
-export interface ITag {
+export interface Tag {
   pk: number;
   name: string;
   color: string;
@@ -14,12 +14,12 @@ export interface ITag {
   readonly label: string;
 }
 
-export const fetchTags = makeFetchItems<ITag>("tags");
+export const fetchTags = makeFetchItems<Tag>("tags");
 
-export const postTag = makePostItem<ITag>("tags");
+export const postTag = makePostItem<Tag>("tags");
 
-export const putTag = makePutItem<ITag>("tags");
+export const putTag = makePutItem<Tag>("tags");
 
-export const deleteTag = makeDeleteItem<ITag>("tags");
+export const deleteTag = makeDeleteItem<Tag>("tags");
 
-export const useTag = makeUseItem<ITag>("tags");
+export const useTag = makeUseItem<Tag>("tags");

@@ -41,13 +41,13 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/\/delete\/?$/, "Delete"]
 ];
 
-interface ICrumbProps {
+interface CrumbProps {
   url: string;
   path: string;
   isLast?: boolean;
 }
 
-const Crumb: React.FC<ICrumbProps> = ({ url, path, isLast }) => {
+const Crumb = ({ url, path, isLast }: CrumbProps) => {
   let name: string | undefined = undefined;
   const match = breadcrumbs.find(([r]) => r.test(url));
   if (match) {
@@ -68,7 +68,7 @@ const Crumb: React.FC<ICrumbProps> = ({ url, path, isLast }) => {
   return isLast ? <span>{name}</span> : <Link to={url}>{name}</Link>;
 };
 
-const Breadcrumbs: React.FC = () => {
+const Breadcrumbs = () => {
   const { pathname } = useLocation();
   const subpaths = pathname.split("/").filter(Boolean);
   const lastIndex = subpaths.length - 1;

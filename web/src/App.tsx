@@ -14,7 +14,7 @@ import Settings from "./modules/settings/Settings";
 import Transactions from "./modules/transactions";
 import { useAuth } from "./utils/AuthProvider";
 
-const App: React.FC = () => {
+const App = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {

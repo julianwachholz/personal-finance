@@ -7,7 +7,7 @@ import "./Layout.scss";
 
 const { Sider, Content, Footer } = Layout;
 
-const AppLayout: React.FC = props => {
+const AppLayout: React.FC = ({ children }) => {
   const { theme } = useSettings();
   return (
     <Layout className={`app--${theme}`}>
@@ -17,7 +17,7 @@ const AppLayout: React.FC = props => {
       <Layout>
         <Content>
           <Breadcrumbs />
-          <div className="content-container">{props.children}</div>
+          <div className="content-container">{children}</div>
         </Content>
         <Footer>🧇 ©{new Date().getFullYear()}</Footer>
       </Layout>

@@ -4,7 +4,7 @@ import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
 
-const Login: React.FC = () => {
+const Login = () => {
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();

@@ -1,6 +1,6 @@
-import { makeFetchItems } from "./base";
+import { FetchItems, makeFetchItems } from "./base";
 
-export interface ITransaction {
+export interface Transaction {
   pk: number;
   account: number;
   category: number;
@@ -16,4 +16,12 @@ export interface ITransaction {
   reference: string;
 }
 
-export const fetchTransactions = makeFetchItems<ITransaction>("transactions");
+const _fetchTransactions = makeFetchItems<Transaction>("transactions");
+
+export const fetchTransactions: FetchItems<Transaction> = async options => {
+  const data = await _fetchTransactions(options);
+  data.results.map(tx => {
+    tx.datetime = new Date(tx.datetime);
+  });
+  return data;
+};

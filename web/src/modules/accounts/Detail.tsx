@@ -6,11 +6,11 @@ import BaseModule from "../base/BaseModule";
 
 const { Item } = Descriptions;
 
-interface IDetailParams {
+interface DetailParams {
   pk: string;
 }
 
-const Account: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
+const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: account, isLoading, error } = useAccount(match.params.pk);
 
   return account ? (

@@ -1,17 +1,17 @@
 import { Input, InputNumber, Select } from "antd";
 import React from "react";
-import { IMoney } from "../data/Money";
+import { Money } from "../data/Money";
 import "./MoneyInput.scss";
 
-interface IMoneyInputProps {
-  value?: IMoney;
-  onChange?: (value?: Partial<IMoney>) => void;
+interface MoneyInputProps {
+  value?: Money;
+  onChange?: (value?: Partial<Money>) => void;
   autoFocus?: boolean;
 }
 
-const MoneyInput: React.FC<IMoneyInputProps> = React.forwardRef(
-  ({ value, onChange = () => {}, ...props }, ref) => {
-    const triggerChange = (changed: Partial<IMoney>) => {
+const MoneyInput = React.forwardRef(
+  ({ value, onChange = () => {}, ...props }: MoneyInputProps, ref) => {
+    const triggerChange = (changed: Partial<Money>) => {
       if (!changed.amount && !changed.currency) {
         onChange();
       } else {

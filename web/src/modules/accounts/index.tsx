@@ -6,7 +6,7 @@ import Account from "./Detail";
 import AccountEdit from "./Edit";
 import Accounts from "./List";
 
-const Module: React.FC<RouteComponentProps> = ({ match }) => (
+const Module = ({ match }: RouteComponentProps) => (
   <Switch>
     <Route path={`${match.url}/create`} component={AccountCreate} />
     <Route path={`${match.url}/:pk/edit`} component={AccountEdit} />

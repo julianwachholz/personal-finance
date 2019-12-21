@@ -45,11 +45,11 @@ function highContrast(value: string): string {
   }
 }
 
-interface IColorProps {
+interface ColorProps {
   value: string;
 }
 
-const Color: React.FC<IColorProps> = ({ value }) => {
+const Color = ({ value }: ColorProps) => {
   try {
     return (
       <Input

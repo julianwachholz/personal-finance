@@ -7,7 +7,7 @@ import CategoryEdit from "./Edit";
 import Categories from "./List";
 import CategoryTree from "./Tree";
 
-const Module: React.FC<RouteComponentProps> = ({ match }) => (
+const Module = ({ match }: RouteComponentProps) => (
   <Switch>
     <Route path={`${match.url}/create`} component={CategoryCreate} />
     <Route path={`${match.url}/:pk/edit`} component={CategoryEdit} />

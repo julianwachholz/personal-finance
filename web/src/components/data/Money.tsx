@@ -2,13 +2,13 @@ import padEnd from "lodash/padEnd";
 import React from "react";
 import "./Money.scss";
 
-export interface IMoney {
+export interface Money {
   amount: string;
   currency: string;
 }
 
-interface IMoneyProps {
-  value: IMoney;
+interface MoneyProps {
+  value: Money;
   groupSeparator?: string;
   decimalSeparator?: string;
   precision?: number;
@@ -17,12 +17,12 @@ interface IMoneyProps {
 // Parts from:
 // https://github.com/ant-design/ant-design/blob/f7d211fcea4655baf5fe1ad9f1efadc2e158fda5/components/statistic/Number.tsx
 
-const Money: React.FC<IMoneyProps> = ({
+const Money = ({
   value,
   groupSeparator = ",",
   decimalSeparator = ".",
   precision
-}) => {
+}: MoneyProps) => {
   let amount: React.ReactNode;
   const cells = value.amount.match(/^(-?)(\d*)(\.(\d+))?$/);
 

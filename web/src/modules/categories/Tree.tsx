@@ -4,18 +4,18 @@ import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import {
-  ITreeCategory,
   moveCategory,
   MovePosition,
+  TreeCategory,
   useCategoryTree
 } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
 
 const { TreeNode: Node } = Tree;
 
-const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
+const CategoryTree = ({ history }: RouteComponentProps) => {
   const { data, isLoading } = useCategoryTree({ page: 1 });
-  const [moveNode] = useMutation(moveCategory, {
+  const [move] = useMutation(moveCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
@@ -35,7 +35,7 @@ const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
     } else if (dropPosition === 1) {
       position = "right";
     }
-    moveNode({ pk: dragKey, target_pk: dropKey, position });
+    move({ pk: dragKey, target_pk: dropKey, position });
   };
 
   if (!data || isLoading) {
@@ -44,7 +44,7 @@ const CategoryTree: React.FC<RouteComponentProps> = ({ match, history }) => {
 
   const keysWithChildren: string[] = [];
 
-  const renderNode = (category: ITreeCategory) => {
+  const renderNode = (category: TreeCategory) => {
     const props = {
       key: category.pk.toString(),
       title: category.label

@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { clearToken, setAuthToken } from "../dao/base";
-import { IUser, postLogin, postLogout, useUser } from "../dao/user";
+import { postLogin, postLogout, User, useUser } from "../dao/user";
 
 interface AuthContext {
   isLoading: boolean;
   isAuthenticated: boolean;
-  user: IUser | null;
+  user: User | null;
   login: (values: Record<string, string>) => Promise<void>;
   logout: () => Promise<void>;
 }

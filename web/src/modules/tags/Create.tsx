@@ -6,7 +6,7 @@ import { postTag } from "../../dao/tags";
 import BaseModule from "../base/BaseModule";
 import TagForm from "./Form";
 
-const TagCreate: React.FC = () => {
+const TagCreate = () => {
   const [mutate] = useMutation(postTag, {
     refetchQueries: ["items/tags"]
   });

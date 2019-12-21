@@ -6,7 +6,7 @@ import { postCategory } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
 import CategoryForm from "./Form";
 
-const CategoryCreate: React.FC = () => {
+const CategoryCreate = () => {
   const [mutate] = useMutation(postCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });

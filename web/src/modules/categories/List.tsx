@@ -4,16 +4,16 @@ import React, { useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import {
+  Category,
   fetchCategories,
-  fetchCategoryTree,
-  ICategory
+  fetchCategoryTree
 } from "../../dao/categories";
 import BaseList from "../base/BaseList";
 
-const Categories: React.FC<RouteComponentProps> = ({ match }) => {
+const Categories = ({ match }: RouteComponentProps) => {
   const [useTree, setUseTree] = useState(true);
 
-  const columns: ColumnsType<ICategory> = [
+  const columns: ColumnsType<Category> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -37,7 +37,7 @@ const Categories: React.FC<RouteComponentProps> = ({ match }) => {
   ];
 
   return (
-    <BaseList
+    <BaseList<Category>
       itemName="Category"
       itemNamePlural="Categories"
       fetchItems={useTree ? fetchCategoryTree : fetchCategories}

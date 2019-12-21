@@ -3,14 +3,14 @@ import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ColorInput from "../../components/form/ColorInput";
-import { ITag } from "../../dao/tags";
+import { Tag } from "../../dao/tags";
 
-interface IFormProps {
-  data?: ITag;
-  onSave: (values: ITag) => void;
+interface FormProps {
+  data?: Tag;
+  onSave: (values: Tag) => void;
 }
 
-const TagForm: React.FC<IFormProps> = ({ data, onSave }) => {
+const TagForm = ({ data, onSave }: FormProps) => {
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
 

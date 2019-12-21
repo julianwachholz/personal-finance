@@ -1,7 +1,7 @@
 import { prefetchQuery, useQuery } from "react-query";
 import { authFetch, clearToken, FetchItem } from "./base";
 
-export interface IUser {
+export interface User {
   pk: number;
   username: string;
   email?: string;
@@ -13,7 +13,7 @@ export interface IUser {
   readonly dateJoined: Date;
 }
 
-const fetchUser: FetchItem<IUser, {}> = async () => {
+const fetchUser: FetchItem<User, {}> = async () => {
   const url = `/api/auth/user/`;
   const response = await authFetch(url);
   if (!response.ok) {

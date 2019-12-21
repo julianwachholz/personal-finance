@@ -1,12 +1,11 @@
 import { Button, Typography } from "antd";
 import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
 import { useAuth } from "../../utils/AuthProvider";
 import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
 
-const Profile: React.FC<RouteComponentProps> = () => {
+const Profile = () => {
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
 

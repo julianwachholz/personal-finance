@@ -4,7 +4,7 @@ import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   return (
     <BaseModule title="Dashboard">
       <P>TODO: Dashboard</P>

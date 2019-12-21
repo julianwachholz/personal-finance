@@ -3,11 +3,11 @@ import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
-import { fetchAccounts, IAccount } from "../../dao/accounts";
+import { Account, fetchAccounts } from "../../dao/accounts";
 import BaseList from "../base/BaseList";
 
-const Accounts: React.FC<RouteComponentProps> = ({ match }) => {
-  const columns: ColumnsType<IAccount> = [
+const Accounts = ({ match }: RouteComponentProps) => {
+  const columns: ColumnsType<Account> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -48,7 +48,7 @@ const Accounts: React.FC<RouteComponentProps> = ({ match }) => {
   ];
 
   return (
-    <BaseList
+    <BaseList<Account>
       itemName="Account"
       itemNamePlural="Accounts"
       fetchItems={fetchAccounts}

@@ -2,14 +2,14 @@ import { Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import MoneyInput from "../../components/form/MoneyInput";
-import { IAccount } from "../../dao/accounts";
+import { Account } from "../../dao/accounts";
 
-interface IFormProps {
-  data?: IAccount;
-  onSave: (values: IAccount) => Promise<void>;
+interface FormProps {
+  data?: Account;
+  onSave: (values: Account) => Promise<void>;
 }
 
-const AccountForm: React.FC<IFormProps> = ({ data, onSave }) => {
+const AccountForm = ({ data, onSave }: FormProps) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const onSubmit = async (values: any) => {
@@ -21,7 +21,7 @@ const AccountForm: React.FC<IFormProps> = ({ data, onSave }) => {
       debugger;
       return;
     }
-    const newData = {
+    const newData: Account = {
       ...values,
       balance: values.balance.amount,
       balance_currency: values.balance.currency

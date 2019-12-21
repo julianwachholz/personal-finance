@@ -16,7 +16,7 @@ const ProviderTree = createProviderTreeFromList(
   [AuthProvider, {}]
 );
 
-const AppWrapper: React.FC = () => (
+const AppWrapper = () => (
   <BrowserRouter>
     <ProviderTree>
       <App />

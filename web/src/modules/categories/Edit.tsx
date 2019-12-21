@@ -6,12 +6,10 @@ import { putCategory, useCategory } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
 import CategoryForm from "./Form";
 
-interface IDetailParams {
+interface DetailParams {
   pk: string;
 }
-const CategoryEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
-  match
-}) => {
+const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
   const { data, isLoading } = useCategory(pk);
 

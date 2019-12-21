@@ -6,10 +6,11 @@ import { putTag, useTag } from "../../dao/tags";
 import BaseModule from "../base/BaseModule";
 import TagForm from "./Form";
 
-interface IDetailParams {
+interface DetailParams {
   pk: string;
 }
-const TagEdit: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
+
+const TagEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
   const { data, isLoading } = useTag(pk);
 

@@ -4,15 +4,15 @@ import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
-import { deleteTag, fetchTags, ITag } from "../../dao/tags";
+import { deleteTag, fetchTags, Tag } from "../../dao/tags";
 import BaseList from "../base/BaseList";
 
-const Tags: React.FC<RouteComponentProps> = ({ match }) => {
+const Tags = ({ match }: RouteComponentProps) => {
   const [doDeleteTag] = useMutation(deleteTag, {
-    refetchQueries: ["Tags"]
+    refetchQueries: ["items/tags"]
   });
 
-  const columns: ColumnsType<ITag> = [
+  const columns: ColumnsType<Tag> = [
     {
       title: "Name",
       dataIndex: "name",

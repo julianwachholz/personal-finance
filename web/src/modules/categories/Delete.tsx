@@ -7,14 +7,14 @@ import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
 
-interface IDeleteParams {
+interface DeleteParams {
   pk: string;
 }
 
-const CategoryDelete: React.FC<RouteComponentProps<IDeleteParams>> = ({
+const CategoryDelete = ({
   match,
   history
-}) => {
+}: RouteComponentProps<DeleteParams>) => {
   const { data: category } = useCategory(match.params.pk);
   const relatedItems = [
     "Transaction #54342",

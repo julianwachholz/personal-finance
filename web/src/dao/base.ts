@@ -28,7 +28,7 @@ export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
   return fetch(input, init);
 };
 
-interface IFetchItemsOptions {
+interface FetchItemsOptions {
   page: number;
   pageSize?: number;
   ordering?: string;
@@ -36,20 +36,20 @@ interface IFetchItemsOptions {
   search?: string;
 }
 
-export interface IModel {
+export interface Model {
   pk: number;
 }
 
-interface IItems<T extends IModel> {
+interface Items<T extends Model> {
   count: number;
   results: T[];
 }
 
-export type FetchItems<T extends IModel> = (
-  options: IFetchItemsOptions
-) => Promise<IItems<T>>;
+export type FetchItems<T extends Model> = (
+  options: FetchItemsOptions
+) => Promise<Items<T>>;
 
-export const makeFetchItems = <T extends IModel>(basename: string) => {
+export const makeFetchItems = <T extends Model>(basename: string) => {
   const fetchItems: FetchItems<T> = async ({
     page,
     pageSize,
@@ -81,23 +81,23 @@ export const makeFetchItems = <T extends IModel>(basename: string) => {
   return fetchItems;
 };
 
-export const makeUseItems = <T extends IModel>(basename: string) => {
+export const makeUseItems = <T extends Model>(basename: string) => {
   const fetchItems = makeFetchItems<T>(basename);
-  const useItems = (options: IFetchItemsOptions) => {
+  const useItems = (options: FetchItemsOptions) => {
     const query = useQuery([`items/${basename}`, options], fetchItems);
     return query;
   };
   return useItems;
 };
 
-interface IFetchItemOptions {
+interface FetchItemOptions {
   pk: number;
 }
-export type FetchItem<T extends IModel, O = IFetchItemOptions> = (
+export type FetchItem<T extends Model, O = FetchItemOptions> = (
   options: O
 ) => Promise<T>;
 
-export const makeFetchItem = <T extends IModel>(basename: string) => {
+export const makeFetchItem = <T extends Model>(basename: string) => {
   const fetchItem: FetchItem<T> = async ({ pk }) => {
     if (isNaN(pk)) {
       throw new Error("Invalid ID");
@@ -113,7 +113,7 @@ export const makeFetchItem = <T extends IModel>(basename: string) => {
   return fetchItem;
 };
 
-export const makeUseItem = <T extends IModel>(basename: string) => {
+export const makeUseItem = <T extends Model>(basename: string) => {
   const fetchItem = makeFetchItem<T>(basename);
   const useItem = (pk: number | string) => {
     if (typeof pk === "string") {
@@ -125,9 +125,9 @@ export const makeUseItem = <T extends IModel>(basename: string) => {
   return useItem;
 };
 
-type PostItem<T extends IModel> = (data: T) => Promise<T>;
+type PostItem<T extends Model> = (data: T) => Promise<T>;
 
-export const makePostItem = <T extends IModel>(basename: string) => {
+export const makePostItem = <T extends Model>(basename: string) => {
   const postItem: PostItem<T> = async data => {
     const url = `/api/${basename}/`;
     const response = await authFetch(url, {
@@ -146,9 +146,9 @@ export const makePostItem = <T extends IModel>(basename: string) => {
   return postItem;
 };
 
-type PutItem<T extends IModel> = (data: T) => Promise<T>;
+type PutItem<T extends Model> = (data: T) => Promise<T>;
 
-export const makePutItem = <T extends IModel>(basename: string) => {
+export const makePutItem = <T extends Model>(basename: string) => {
   const putItem: PutItem<T> = async data => {
     const url = `/api/${basename}/${data.pk}/`;
     const response = await authFetch(url, {
@@ -167,9 +167,9 @@ export const makePutItem = <T extends IModel>(basename: string) => {
   return putItem;
 };
 
-type DeleteItem<T extends IModel> = (data: T) => Promise<void>;
+type DeleteItem<T extends Model> = (data: T) => Promise<void>;
 
-export const makeDeleteItem = <T extends IModel>(basename: string) => {
+export const makeDeleteItem = <T extends Model>(basename: string) => {
   const deleteItem: DeleteItem<T> = async ({ pk }) => {
     const url = `/api/${basename}/${pk}/`;
     const response = await authFetch(url, {
@@ -182,9 +182,9 @@ export const makeDeleteItem = <T extends IModel>(basename: string) => {
   return deleteItem;
 };
 
-type PostAction<T extends { pk: number }> = (params: T) => Promise<any>;
+type PostAction<T extends Model> = (params: T) => Promise<any>;
 
-export const makePostAction = <T extends { pk: number }>(
+export const makePostAction = <T extends Model>(
   basename: string,
   action: string
 ) => {

@@ -6,12 +6,11 @@ import { putAccount, useAccount } from "../../dao/accounts";
 import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
-interface IDetailParams {
+interface DetailParams {
   pk: string;
 }
-const AccountEdit: React.FC<RouteComponentProps<IDetailParams>> = ({
-  match
-}) => {
+
+const AccountEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
   const { data, isLoading } = useAccount(pk);
 

@@ -18,14 +18,14 @@ import "./Menu.scss";
 
 const { Item, SubMenu } = Menu;
 
-interface IMenuItem {
+interface MenuItem {
   path: string;
   icon: React.ReactElement;
   text: string;
-  items?: IMenuItem[];
+  items?: MenuItem[];
 }
 
-const menuItems: IMenuItem[] = [
+const menuItems: MenuItem[] = [
   {
     path: "/",
     icon: <PieChartOutlined />,
@@ -80,7 +80,7 @@ const menuItems: IMenuItem[] = [
   }
 ];
 
-const renderItem = (item: IMenuItem) =>
+const renderItem = (item: MenuItem) =>
   item.items ? (
     <SubMenu
       key={item.path}
@@ -102,7 +102,7 @@ const renderItem = (item: IMenuItem) =>
     </Item>
   );
 
-const MainMenu: React.FC = () => {
+const MainMenu = () => {
   const { theme } = useSettings();
   const { pathname } = useLocation();
   const subpaths = pathname.split("/").map(p => `/${p}`);

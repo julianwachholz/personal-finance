@@ -5,7 +5,7 @@ import Options from "../options";
 import Profile from "../profile";
 import Tags from "../tags";
 
-const Settings: React.FC<RouteComponentProps> = ({ match }) => (
+const Settings = ({ match }: RouteComponentProps) => (
   <Switch>
     <Route path={`${match.url}/categories`} component={Categories} />
     <Route path={`${match.url}/tags`} component={Tags} />

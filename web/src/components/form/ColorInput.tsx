@@ -3,8 +3,8 @@ import { InputProps } from "antd/lib/input";
 import React from "react";
 import "./ColorInput.scss";
 
-const ColorInput: React.FC<InputProps> = React.forwardRef(
-  ({ value, onChange = () => {}, ...props }, ref) => {
+const ColorInput = React.forwardRef(
+  ({ value, onChange = () => {}, ...props }: InputProps, ref) => {
     return (
       <Input
         type="color"

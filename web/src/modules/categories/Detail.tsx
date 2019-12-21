@@ -7,11 +7,11 @@ import BaseModule from "../base/BaseModule";
 
 const { Item } = Descriptions;
 
-interface IDetailParams {
+interface DetailParams {
   pk: string;
 }
 
-const Category: React.FC<RouteComponentProps<IDetailParams>> = ({ match }) => {
+const Category = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: category, isLoading, error } = useCategory(match.params.pk);
 
   return category ? (

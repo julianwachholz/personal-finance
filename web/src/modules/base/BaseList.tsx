@@ -8,11 +8,11 @@ import {
   Pagination,
   Table
 } from "antd";
-import { ColumnsType } from "antd/lib/table/Table";
+import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { FetchItems, IModel } from "../../dao/base";
+import { FetchItems, Model } from "../../dao/base";
 import "./BaseModule.scss";
 
 const mapFilters = (filters: Record<string, ReactText[] | null>) => {
@@ -34,7 +34,7 @@ const mapFilters = (filters: Record<string, ReactText[] | null>) => {
   return filterValues;
 };
 
-interface IListProps<T extends IModel> {
+interface ListProps<T extends Model> {
   itemName: string;
   itemNamePlural: string;
   fetchItems: FetchItems<T>;
@@ -44,9 +44,10 @@ interface IListProps<T extends IModel> {
   onSearch?: (search?: string) => void;
   actions?: React.ReactElement[];
   extraActions?: boolean | React.ReactElement[];
+  tableProps?: TableProps<T>;
 }
 
-const BaseList: React.FC<IListProps<any>> = ({
+const BaseList = <T extends Model>({
   itemName,
   itemNamePlural,
   fetchItems,
@@ -55,8 +56,9 @@ const BaseList: React.FC<IListProps<any>> = ({
   showSearch = true,
   onSearch = () => {},
   actions = [],
-  extraActions = true
-}) => {
+  extraActions = true,
+  tableProps = {}
+}: ListProps<T>) => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -144,7 +146,7 @@ const BaseList: React.FC<IListProps<any>> = ({
         />
       ) : null}
       {pager}
-      <Table
+      <Table<T>
         dataSource={data?.results ?? []}
         columns={columns}
         loading={isLoading}
@@ -160,6 +162,7 @@ const BaseList: React.FC<IListProps<any>> = ({
               `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
           );
         }}
+        {...tableProps}
       />
     </div>
   );
