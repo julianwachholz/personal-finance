@@ -13,13 +13,15 @@ import Reports from "./modules/reports";
 import Settings from "./modules/settings/Settings";
 import Transactions from "./modules/transactions";
 import { useAuth } from "./utils/AuthProvider";
+import { useSettings } from "./utils/SettingsProvider";
 
 const App = () => {
+  const { theme } = useSettings();
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return (
-      <div className="app-loading">
+      <div className={`app-loading app--${theme}`}>
         <Spin delay={100} size="large" tip="Loading..." />
       </div>
     );
