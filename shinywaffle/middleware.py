@@ -8,6 +8,7 @@ class TimeDelayMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        time.sleep(DELAY)
+        if "/api/" in request.path:
+            time.sleep(DELAY)
         response = self.get_response(request)
         return response
