@@ -105,15 +105,9 @@ const renderItem = (item: MenuItem) =>
 const MainMenu = () => {
   const { theme } = useSettings();
   const { pathname } = useLocation();
-  const subpaths = pathname.split("/").map(p => `/${p}`);
 
   return (
-    <Menu
-      mode="inline"
-      theme={theme}
-      selectedKeys={[pathname]}
-      defaultOpenKeys={subpaths}
-    >
+    <Menu mode="inline" theme={theme} selectedKeys={[pathname]}>
       {menuItems.map(renderItem)}
     </Menu>
   );

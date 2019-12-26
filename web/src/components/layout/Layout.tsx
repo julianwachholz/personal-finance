@@ -8,10 +8,15 @@ import "./Layout.scss";
 const { Sider, Content, Footer } = Layout;
 
 const AppLayout: React.FC = ({ children }) => {
-  const { theme } = useSettings();
+  const { theme, menuCollapsed, toggleMenu } = useSettings();
   return (
     <Layout className={`app--${theme}`}>
-      <Sider collapsible theme={theme}>
+      <Sider
+        collapsible
+        collapsed={menuCollapsed}
+        onCollapse={toggleMenu}
+        theme={theme}
+      >
         <MainMenu />
       </Sider>
       <Layout>

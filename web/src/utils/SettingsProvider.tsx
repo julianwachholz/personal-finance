@@ -14,7 +14,7 @@ type Settings = SettingsValues & SettingsFunctions;
 
 const defaultConfig: SettingsValues = {
   theme: localStorage.getItem("_theme") === "dark" ? "dark" : "light",
-  menuCollapsed: false
+  menuCollapsed: localStorage.getItem("_menu_collapsed") === "true"
 };
 
 const SettingsContext = React.createContext<Settings>(defaultConfig as any);
@@ -36,6 +36,7 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
     setTheme(newTheme);
   };
   const toggleMenu = () => {
+    localStorage.setItem("_menu_collapsed", (!menuCollapsed).toString());
     setMenuCollapsed(!menuCollapsed);
   };
 
