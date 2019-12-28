@@ -10,6 +10,7 @@ import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import { useCategory } from "../../dao/categories";
+import { usePayee } from "../../dao/payees";
 import { useTag } from "../../dao/tags";
 import useDebounce from "../../utils/debounce";
 import "./Breadcrumbs.scss";
@@ -35,6 +36,8 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/settings\/categories\/(\d+)\/?$/, pk => useLabel(useCategory(pk))],
   [/^\/settings\/tags\/?$/, "Tags"],
   [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))],
+  [/^\/settings\/payees\/?$/, "Payees"],
+  [/^\/settings\/payees\/(\d+)\/?$/, pk => useLabel(usePayee(pk))],
 
   [/\/create\/?$/, "Create"],
   [/\/edit\/?$/, "Edit"],

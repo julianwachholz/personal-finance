@@ -10,6 +10,8 @@ class Payee(models.Model):
 
     name = models.CharField(verbose_name=_("name"), max_length=100)
 
+    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+
     class Meta:
         verbose_name = _("payee")
         verbose_name_plural = _("payees")

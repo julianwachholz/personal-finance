@@ -10,6 +10,7 @@ from .models import Category
 class CategoryAdmin(DraggableMPTTAdmin):
     mptt_level_indent = 20
     list_display = ("tree_actions", "indented_title", "icon", "color_display")
+    search_fields = ("name",)
 
     class Media:
         js = (

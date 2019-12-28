@@ -5,4 +5,6 @@ from .models import Payee
 
 @admin.register(Payee)
 class PayeeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("name", "user")
+    search_fields = ("name",)
+    autocomplete_fields = ("user",)

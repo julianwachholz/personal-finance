@@ -7,3 +7,4 @@ from .models import Tag
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name", "user", "color")
     list_filter = ("user",)
+    search_fields = ("name",)

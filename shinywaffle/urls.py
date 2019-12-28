@@ -20,11 +20,13 @@ from rest_framework import routers
 
 from apps.accounts.views import AccountViewSet
 from apps.categories.views import CategoryViewSet
+from apps.payees.views import PayeeViewSet
 from apps.tags.views import TagViewSet
 from apps.transactions.views import TransactionViewSet
 
 router = routers.DefaultRouter()
 router.register(r"tags", TagViewSet, basename="tags")
+router.register(r"payees", PayeeViewSet, basename="payees")
 router.register(r"categories", CategoryViewSet, basename="categories")
 router.register(r"accounts", AccountViewSet, basename="accounts")
 router.register(r"transactions", TransactionViewSet, basename="transactions")

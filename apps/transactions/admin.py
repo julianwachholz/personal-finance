@@ -20,3 +20,5 @@ class TransactionAdmin(admin.ModelAdmin):
         ("Detail", {"fields": ("text", "payee", "tags")}),
         ("Info", {"fields": ("user", "reference")}),
     )
+
+    autocomplete_fields = ("account", "category", "payee", "tags", "user")

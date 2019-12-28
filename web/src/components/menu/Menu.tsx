@@ -67,6 +67,11 @@ const menuItems: MenuItem[] = [
         text: "Tags"
       },
       {
+        path: "/settings/payees",
+        icon: <TagOutlined />,
+        text: "Payees"
+      },
+      {
         path: "/settings/options",
         icon: <ToolOutlined />,
         text: "Options"
@@ -103,11 +108,17 @@ const renderItem = (item: MenuItem) =>
   );
 
 const MainMenu = () => {
-  const { theme } = useSettings();
+  const { theme, menuCollapsed } = useSettings();
   const { pathname } = useLocation();
+  const subpaths = pathname.split("/").map(p => `/${p}`);
 
   return (
-    <Menu mode="inline" theme={theme} selectedKeys={[pathname]}>
+    <Menu
+      mode="inline"
+      theme={theme}
+      selectedKeys={[pathname]}
+      defaultOpenKeys={menuCollapsed ? undefined : subpaths}
+    >
       {menuItems.map(renderItem)}
     </Menu>
   );

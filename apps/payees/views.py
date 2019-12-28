@@ -1,3 +1,20 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from .models import Payee
+from .serializers import PayeeSerializer
+
+
+class PayeeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows payees to be viewed or edited.
+    """
+
+    serializer_class = PayeeSerializer
+    search_fields = ["name"]
+    ordering_fields = ["name"]
+
+    def get_queryset(self):
+        return Payee.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

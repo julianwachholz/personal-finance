@@ -3,46 +3,38 @@ import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import Color from "../../components/data/Color";
-import { deleteTag, fetchTags, Tag } from "../../dao/tags";
+import { deletePayee, fetchPayees, Payee } from "../../dao/payees";
 import BaseList from "../base/BaseList";
 
-const Tags = ({ match }: RouteComponentProps) => {
-  const [doDelete] = useMutation(deleteTag, {
-    refetchQueries: ["items/tags"]
+const Payees = ({ match }: RouteComponentProps) => {
+  const [doDelete] = useMutation(deletePayee, {
+    refetchQueries: ["items/payees"]
   });
 
-  const columns: ColumnsType<Tag> = [
+  const columns: ColumnsType<Payee> = [
     {
       title: "Name",
       dataIndex: "name",
       sorter: true,
       render(name, tag) {
-        return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
-      }
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      render(value) {
-        return <Color value={value} />;
+        return <Link to={`${match.url}/${tag.pk}`}>{name}</Link>;
       }
     },
     {
       align: "right",
-      render(_, tag) {
+      render(_, payee) {
         return (
           <>
-            <Link to={`${match.url}/${tag.pk}/edit`}>Edit</Link>
+            <Link to={`${match.url}/${payee.pk}/edit`}>Edit</Link>
             <Divider type="vertical" />
             <Popconfirm
-              title={`Delete Tag "${tag.label}"?`}
+              title={`Delete Tag "${payee.name}"?`}
               okText="Delete"
               okButtonProps={{ type: "danger" }}
               placement="left"
               onConfirm={async () => {
-                await doDelete(tag);
-                message.info(`Tag "${tag.label}" deleted.`);
+                await doDelete(payee);
+                message.info(`Tag "${payee.name}" deleted.`);
               }}
             >
               <Button type="link">Delete</Button>
@@ -55,19 +47,18 @@ const Tags = ({ match }: RouteComponentProps) => {
 
   return (
     <BaseList
-      itemName="Tag"
-      itemNamePlural="Tags"
-      fetchItems={fetchTags}
+      itemName="Payee"
+      itemNamePlural="Payees"
+      fetchItems={fetchPayees}
       columns={columns}
       tableProps={{ size: "small" }}
-      extraActions={[<Link to="#">Example</Link>]}
       actions={[
         <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Tag</Link>
+          <Link to={`${match.url}/create`}>Create Payee</Link>
         </Button>
       ]}
     />
   );
 };
 
-export default Tags;
+export default Payees;
