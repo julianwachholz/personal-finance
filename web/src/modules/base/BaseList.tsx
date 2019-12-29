@@ -67,7 +67,10 @@ const BaseList = <T extends Model>({
   const [search, setSearch] = useState();
 
   const { data, isLoading, error } = useQuery(
-    [itemNamePlural, { page, pageSize, ordering, filters, search }],
+    [
+      `items/${itemNamePlural.toLowerCase()}`,
+      { page, pageSize, ordering, filters, search }
+    ],
     fetchItems
   );
 
@@ -116,7 +119,7 @@ const BaseList = <T extends Model>({
       }}
       showTotal={(total, range) =>
         total === 1
-          ? `Showing only ${itemName}`
+          ? `1 ${itemName}`
           : `${range[0]}-${range[1]} of ${total} ${itemNamePlural}`
       }
     />
