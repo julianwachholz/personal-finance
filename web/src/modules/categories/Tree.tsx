@@ -1,6 +1,6 @@
-import { Button, Spin, Tree } from "antd";
-import { AntTreeNodeDropEvent } from "antd/lib/tree/Tree";
-import React, { useState } from "react";
+import { Button, Input, Spin, Tree } from "antd";
+import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
+import React, { useMemo, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import BaseModule from "../base/BaseModule";
 const { TreeNode: Node } = Tree;
 
 const CategoryTree = ({ history }: RouteComponentProps) => {
+  const [search, setSearch] = useState();
   const { data, isLoading } = useCategoryTree();
   const [move] = useMutation(moveCategory, {
     refetchQueries: ["items/categories/tree"]
@@ -47,23 +48,29 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
     move({ pk: dragKey, target_pk: dropKey, position });
   };
 
-  if (!data || isLoading) {
-    return <Spin />;
-  }
-
   const keysWithChildren: string[] = [];
 
   const renderNode = (category: TreeCategory) => {
-    const props = {
+    const node: TreeNodeNormal = {
       key: category.pk.toString(),
       title: category.label
     };
     if (category.children?.length) {
-      keysWithChildren.push(props.key);
-      return <Node {...props}>{category.children.map(renderNode)}</Node>;
+      keysWithChildren.push(node.key);
+      node.children = category.children.map(renderNode);
     }
-    return <Node {...props} />;
+    return node;
   };
+
+  const treeData = useMemo(() => {
+    if (data) {
+      return data.results.map(renderNode);
+    }
+  }, [data]);
+
+  if (!data || isLoading) {
+    return <Spin />;
+  }
 
   return (
     <BaseModule
@@ -85,17 +92,33 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
         </Button>
       ]}
     >
+      <Input.Search
+        size="small"
+        placeholder="Filter..."
+        onChange={e => setSearch(e.target.value)}
+        style={{ width: 200 }}
+      />
       <Tree
+        treeData={treeData}
         draggable
         expandedKeys={expandedKeys}
         onExpand={setExpandedKeys}
         onDrop={onDrop}
+        filterTreeNode={node => {
+          if (!search) {
+            return false;
+          }
+          const hl = (node.props.title! as string)
+            .toLowerCase()
+            .includes(search.toLowerCase());
+
+          if (hl) console.log("filterTreeNode", node.props.title, search, hl);
+          return hl;
+        }}
         onSelect={selectedKeys => {
           history.push(`/settings/categories/${selectedKeys[0]}`);
         }}
-      >
-        {data.results.map(renderNode)}
-      </Tree>
+      />
     </BaseModule>
   );
 };
