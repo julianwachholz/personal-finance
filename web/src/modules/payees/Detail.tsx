@@ -14,15 +14,19 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: payee, isLoading, error } = usePayee(match.params.pk);
 
   return payee ? (
-    <BaseModule title={payee.name}>
+    <BaseModule
+      title={payee.name}
+      extra={[
+        <Link key="edit" to={`${match.url}/edit`}>
+          <Button type="primary">Edit Payee</Button>
+        </Link>
+      ]}
+    >
       <Descriptions title="Payee">
         <Item label="ID">{payee.pk}</Item>
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>
       </Descriptions>
-      <Link to={`${match.url}/edit`}>
-        <Button type="primary">Edit Payee</Button>
-      </Link>
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>

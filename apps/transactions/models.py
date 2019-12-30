@@ -21,7 +21,7 @@ class AbstractTransaction(models.Model):
 
     category = TreeForeignKey(
         to="categories.Category",
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         related_name="%(class)ss",
         blank=True,
         null=True,
@@ -29,7 +29,7 @@ class AbstractTransaction(models.Model):
 
     payee = models.ForeignKey(
         to="payees.Payee",
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         related_name="%(class)ss",
         blank=True,
         null=True,
@@ -47,7 +47,7 @@ class AbstractTransaction(models.Model):
 
     related = models.ForeignKey(
         to="self",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         help_text=_("Reverse transaction to a transfer."),
