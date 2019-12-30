@@ -10,7 +10,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = TransactionSerializer
-    search_fields = ("text", "reference")
+    search_fields = ("text", "=reference", "payee__name")
     ordering_fields = ("datetime",)
 
     def get_queryset(self):
