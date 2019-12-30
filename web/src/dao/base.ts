@@ -29,7 +29,7 @@ export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
 };
 
 interface FetchItemsOptions {
-  page: number;
+  page?: number;
   pageSize?: number;
   ordering?: string;
   filters?: string[];
@@ -55,13 +55,8 @@ export type FetchItems<T extends Model> = (
 ) => Promise<Items<T>>;
 
 export const makeFetchItems = <T extends Model>(basename: string) => {
-  const fetchItems: FetchItems<T> = async ({
-    page,
-    pageSize,
-    ordering,
-    filters,
-    search
-  }) => {
+  const fetchItems: FetchItems<T> = async (options = {}) => {
+    const { page, pageSize, ordering, filters, search } = options;
     let url = `/api/${basename}/?page=${page}`;
     if (pageSize) {
       url += `&page_size=${pageSize}`;
@@ -88,7 +83,7 @@ export const makeFetchItems = <T extends Model>(basename: string) => {
 
 export const makeUseItems = <T extends Model>(basename: string) => {
   const fetchItems = makeFetchItems<T>(basename);
-  const useItems = (options: FetchItemsOptions) => {
+  const useItems = (options: FetchItemsOptions = {}) => {
     const query = useQuery([`items/${basename}`, options], fetchItems);
     return query;
   };

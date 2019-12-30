@@ -14,11 +14,20 @@ import BaseModule from "../base/BaseModule";
 const { TreeNode: Node } = Tree;
 
 const CategoryTree = ({ history }: RouteComponentProps) => {
-  const { data, isLoading } = useCategoryTree({ page: 1 });
+  const { data, isLoading } = useCategoryTree();
   const [move] = useMutation(moveCategory, {
-    refetchQueries: ["items/categories", "items/categories/tree"]
+    refetchQueries: ["items/categories/tree"]
   });
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
+  const defaultOpenKeys = JSON.parse(
+    localStorage.getItem("categories_open") ?? "[]"
+  );
+  const [expandedKeys, _setExpandedKeys] = useState<string[]>(defaultOpenKeys);
+
+  const setExpandedKeys = (keys: string[]) => {
+    _setExpandedKeys(keys);
+    localStorage.setItem("categories_open", JSON.stringify(keys));
+  };
 
   const onDrop = (info: AntTreeNodeDropEvent) => {
     const dropKey = parseInt(info.node.props.eventKey!, 10);

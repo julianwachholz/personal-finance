@@ -16,9 +16,9 @@ interface SettingsFunctions {
 type Settings = SettingsValues & SettingsFunctions;
 
 const defaultConfig: SettingsValues = {
-  theme: localStorage.getItem("_theme") === "dark" ? "dark" : "light",
-  menuCollapsed: localStorage.getItem("_menu_collapsed") === "true",
-  tableSize: localStorage.getItem("_table_size") as TableSize
+  theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
+  menuCollapsed: localStorage.getItem("menu_collapsed") === "true",
+  tableSize: localStorage.getItem("table_size") as TableSize
 };
 
 const SettingsContext = React.createContext<Settings>(defaultConfig as any);
@@ -37,15 +37,15 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
-    localStorage.setItem("_theme", newTheme);
+    localStorage.setItem("theme", newTheme);
     setTheme(newTheme);
   };
   const toggleMenu = () => {
-    localStorage.setItem("_menu_collapsed", (!menuCollapsed).toString());
+    localStorage.setItem("menu_collapsed", (!menuCollapsed).toString());
     setMenuCollapsed(!menuCollapsed);
   };
   const setTableSize = (size: TableSize) => {
-    localStorage.setItem("_table_size", size);
+    localStorage.setItem("table_size", size);
     _setTableSize(size);
   };
 

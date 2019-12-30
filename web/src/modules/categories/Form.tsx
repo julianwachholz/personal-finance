@@ -1,10 +1,10 @@
-import { Button, Col, Form, Input, Row, Select, TreeSelect } from "antd";
-import React, { useMemo, useState } from "react";
+import { Button, Col, Form, Input, Row, Select } from "antd";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import CategorySelect from "../../components/form/CategorySelect";
 import ColorInput from "../../components/form/ColorInput";
-import { Category, TreeCategory, useCategoryTree } from "../../dao/categories";
+import { Category } from "../../dao/categories";
 
-const { TreeNode: Node } = TreeSelect;
 const { Option } = Select;
 
 interface FormProps {
@@ -16,7 +16,6 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const [position, setPosition] = useState("first-child");
-  const { data: categoryTree, isLoading } = useCategoryTree({ page: 1 });
 
   const onSubmit = async (values: any) => {
     setSubmitting(true);
@@ -36,25 +35,6 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     }
   };
 
-  const treeData = useMemo(() => {
-    const renderNode = (category: TreeCategory) => {
-      const props = {
-        key: category.pk.toString(),
-        value: category.pk.toString(),
-        title: category.label,
-        searchIndex: category.label.toLowerCase()
-      };
-
-      if (category.children?.length) {
-        return <Node {...props}>{category.children.map(renderNode)}</Node>;
-      }
-      return <Node {...props} />;
-    };
-    if (categoryTree) {
-      return categoryTree.results.map(renderNode);
-    }
-  }, [categoryTree]);
-
   return (
     <Form
       form={form}
@@ -64,7 +44,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     >
       <Row gutter={16}>
         <Col span={2}>
-          <Form.Item name="icon" label="Icon">
+          <Form.Item name="set_icon" label="Icon">
             <Input placeholder="📗" style={{ textAlign: "center" }} />
           </Form.Item>
         </Col>
@@ -78,7 +58,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="color" label="Color">
+      <Form.Item name="set_color" label="Color">
         <ColorInput />
       </Form.Item>
       {!data && (
@@ -101,19 +81,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               }
               rules={[{ required: true, message: "Select target position" }]}
             >
-              <TreeSelect
-                showSearch
-                dropdownStyle={{ maxHeight: 300 }}
-                searchPlaceholder="Search Category"
-                filterTreeNode={(search, node: any) =>
-                  node.props.searchIndex.includes(search.toLowerCase())
-                }
-                placeholder="Select where to insert the new Category"
-                // TODO suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
-                disabled={isLoading}
-              >
-                {treeData}
-              </TreeSelect>
+              <CategorySelect placeholder="Select where to insert the new Category" />
             </Form.Item>
           </Col>
         </Row>

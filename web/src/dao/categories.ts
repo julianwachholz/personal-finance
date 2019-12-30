@@ -17,8 +17,6 @@ export interface Category {
   readonly label: string;
 }
 
-export const fetchCategories = makeFetchItems<Category>("categories");
-
 export const postCategory = makePostItem<Category>("categories");
 
 export const putCategory = makePutItem<Category>("categories");
