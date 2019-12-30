@@ -3,6 +3,7 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import BaseModule from "../base/BaseModule";
+import RelatedTransactions from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -23,10 +24,13 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
       ]}
     >
       <Descriptions title="Payee">
-        <Item label="ID">{payee.pk}</Item>
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>
       </Descriptions>
+      <RelatedTransactions
+        filters={[`payee=${payee.pk}`]}
+        excludeColumns={["payee"]}
+      />
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>
