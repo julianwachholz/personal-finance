@@ -9,7 +9,7 @@ const { Option } = Select;
 
 interface FormProps {
   data?: Category;
-  onSave: (values: Category) => void;
+  onSave: (values: Category) => Promise<void>;
 }
 
 const CategoryForm = ({ data, onSave }: FormProps) => {
@@ -29,7 +29,11 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     const newData: Category = {
       ...values
     };
-    onSave(newData);
+    try {
+      await onSave(newData);
+    } catch (e) {
+      setSubmitting(false);
+    }
   };
 
   const treeData = useMemo(() => {

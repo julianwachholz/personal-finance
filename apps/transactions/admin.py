@@ -23,4 +23,4 @@ class TransactionAdmin(admin.ModelAdmin):
 
     search_fields = ("reference__iexact", "text")
 
-    autocomplete_fields = ("account", "category", "payee", "tags", "user", "related")
+    autocomplete_fields = ("account", "payee", "tags", "user", "related")

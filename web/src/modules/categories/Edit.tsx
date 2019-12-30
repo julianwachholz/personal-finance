@@ -36,6 +36,7 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
             history.push(`/settings/categories/${pk}`);
           } catch (e) {
             message.error("Category update failed!");
+            throw e;
           }
         }}
       />

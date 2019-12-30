@@ -14,10 +14,12 @@ class CategorySerializer(serializers.ModelSerializer):
     set_color = serializers.CharField(source="color", required=False, write_only=True)
 
     position = serializers.ChoiceField(
-        choices=["first-child", "last-child", "left", "right"], write_only=True
+        choices=["first-child", "last-child", "left", "right"],
+        write_only=True,
+        required=False,
     )
     target = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), write_only=True
+        queryset=Category.objects.all(), write_only=True, required=False
     )
 
     class Meta:

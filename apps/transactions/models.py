@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
+from mptt.fields import TreeForeignKey
 
 
 class AbstractTransaction(models.Model):
@@ -18,7 +19,7 @@ class AbstractTransaction(models.Model):
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE, related_name="+")
 
-    category = models.ForeignKey(
+    category = TreeForeignKey(
         to="categories.Category",
         on_delete=models.PROTECT,
         related_name="%(class)ss",
