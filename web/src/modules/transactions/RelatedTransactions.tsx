@@ -5,10 +5,6 @@ import { fetchTransactions, Transaction } from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
 import columns from "./columns";
 
-interface RelatedTransactionsProps {
-  filters: string[];
-}
-
 export const prefetchRelatedTx = (filters: string[]) => {
   prefetchQuery(
     ["items/transactions", { page: 1, filters }],
@@ -17,9 +13,19 @@ export const prefetchRelatedTx = (filters: string[]) => {
   );
 };
 
-const RelatedTransactions = ({ filters }: RelatedTransactionsProps) => {
+interface RelatedTransactionsProps {
+  filters: string[];
+  excludeColumns?: string[];
+}
+
+const RelatedTransactions = ({
+  filters,
+  excludeColumns = []
+}: RelatedTransactionsProps) => {
   const { tableSize } = useSettings();
-  const filteredColumns = columns;
+  const filteredColumns = columns.filter(
+    col => !excludeColumns.includes(col.dataIndex as string)
+  );
 
   const { data, isLoading } = useQuery(
     ["items/transactions", { page: 1, filters }],

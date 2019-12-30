@@ -3,6 +3,7 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import BaseModule from "../base/BaseModule";
+import RelatedTransactions from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -14,11 +15,21 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: account, isLoading, error } = useAccount(match.params.pk);
 
   return account ? (
-    <BaseModule title={account.label}>
+    <BaseModule
+      title={account.label}
+      extra={[
+        <Link key="edit" to={`${match.url}/edit`}>
+          <Button type="primary">Edit Account</Button>
+        </Link>,
+        <Link key="delete" to={`${match.url}/delete`}>
+          <Button type="danger">Delete Account</Button>
+        </Link>
+      ]}
+    >
       <Descriptions title="Account">
-        <Item label="ID">{account.pk}</Item>
         <Item label="Name">{account.name}</Item>
-        <Item label="Bank">{account.institution}</Item>
+        <Item label="Icon">{account.icon}</Item>
+        <Item label="Institution">{account.institution}</Item>
       </Descriptions>
       <Statistic
         title="Balance"
@@ -26,12 +37,10 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         precision={2}
         suffix={account.balance_currency}
       />
-      <Link to={`${match.url}/edit`}>
-        <Button type="primary">Edit Account</Button>
-      </Link>
-      <Link to={`${match.url}/delete`}>
-        <Button type="danger">Delete Account</Button>
-      </Link>
+      <RelatedTransactions
+        filters={[`account=${account.pk}`]}
+        excludeColumns={["account"]}
+      />
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>
