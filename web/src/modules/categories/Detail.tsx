@@ -2,6 +2,7 @@ import { Button, Descriptions, Spin } from "antd";
 import React from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
+import Color from "../../components/data/Color";
 import { useCategory } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions, {
@@ -32,9 +33,18 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
       ]}
     >
       <Descriptions title="Category">
-        <Item label="ID">{category.pk}</Item>
         <Item label="Name">{category.name}</Item>
-        <Item label="Color">{category.color}</Item>
+        <Item label="Icon">{category.icon}</Item>
+        <Item label="Color">
+          <Color value={category.color} />
+        </Item>
+        {category.parent ? (
+          <Item label="Parent">
+            <Link to={`/settings/categories/${category.parent.pk}`}>
+              {category.parent.label}
+            </Link>
+          </Item>
+        ) : null}
       </Descriptions>
       <RelatedTransactions filters={filters} />
     </BaseModule>

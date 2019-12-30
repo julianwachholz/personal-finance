@@ -3,12 +3,20 @@ from rest_framework import serializers
 from .models import Category
 
 
+class ParentCategorySerializer(serializers.ModelSerializer):
+    label = serializers.CharField(source="__str__", read_only=True)
+
+    class Meta:
+        model = Category
+        fields = ("pk", "label")
+
+
 class CategorySerializer(serializers.ModelSerializer):
 
     label = serializers.CharField(source="__str__", read_only=True)
     icon = serializers.CharField(source="get_icon", read_only=True)
     color = serializers.CharField(source="get_color", read_only=True)
-    parent = serializers.PrimaryKeyRelatedField(read_only=True)
+    parent = ParentCategorySerializer(read_only=True)
 
     set_icon = serializers.CharField(source="icon", required=False, write_only=True)
     set_color = serializers.CharField(source="color", required=False, write_only=True)

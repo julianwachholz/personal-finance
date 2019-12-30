@@ -13,7 +13,12 @@ const columns: ColumnsType<Transaction> = [
     sorter: true,
     defaultSortOrder: "descend",
     render(date: Date) {
-      return format(date, "d MMM");
+      const str = format(date, "Pp");
+      return (
+        <time dateTime={str} title={str}>
+          {format(date, "d MMM")}
+        </time>
+      );
     }
   },
   {
@@ -48,6 +53,7 @@ const columns: ColumnsType<Transaction> = [
   {
     title: "Payee",
     dataIndex: "payee",
+    ellipsis: true,
     render(payee: RelatedModel) {
       if (payee)
         return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;
@@ -55,7 +61,8 @@ const columns: ColumnsType<Transaction> = [
   },
   {
     title: "Description",
-    dataIndex: "text"
+    dataIndex: "text",
+    ellipsis: true
   },
   {
     title: "Tags",
