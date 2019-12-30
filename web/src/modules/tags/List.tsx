@@ -59,7 +59,6 @@ const Tags = ({ match }: RouteComponentProps) => {
       itemNamePlural="Tags"
       fetchItems={fetchTags}
       columns={columns}
-      tableProps={{ size: "small" }}
       extraActions={[<Link to="#">Example</Link>]}
       actions={[
         <Button key="create" type="primary">

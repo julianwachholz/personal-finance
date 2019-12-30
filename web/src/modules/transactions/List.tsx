@@ -87,7 +87,6 @@ const Transactions = ({ match }: RouteComponentProps) => {
       itemNamePlural="Transactions"
       fetchItems={fetchTransactions}
       columns={columns}
-      tableProps={{ size: "small" }}
       actions={[
         <Button key="create" type="primary">
           <Link to={`${match.url}/create`}>Create Transaction</Link>

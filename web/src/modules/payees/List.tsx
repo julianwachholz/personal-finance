@@ -60,7 +60,6 @@ const Payees = ({ match }: RouteComponentProps) => {
       itemNamePlural="Payees"
       fetchItems={fetchPayees}
       columns={columns}
-      tableProps={{ size: "small" }}
       actions={[
         <Button key="create" type="primary">
           <Link to={`${match.url}/create`}>Create Payee</Link>

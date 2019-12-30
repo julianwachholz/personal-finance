@@ -13,6 +13,7 @@ import React, { ReactText, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { FetchItems, Model } from "../../dao/base";
+import { useSettings } from "../../utils/SettingsProvider";
 import "./BaseModule.scss";
 
 const mapFilters = (filters: Record<string, ReactText[] | null>) => {
@@ -59,6 +60,7 @@ const BaseList = <T extends Model>({
   extraActions = true,
   tableProps = {}
 }: ListProps<T>) => {
+  const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -165,6 +167,7 @@ const BaseList = <T extends Model>({
               `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
           );
         }}
+        size={tableSize}
         {...tableProps}
       />
     </div>
