@@ -1,4 +1,4 @@
-import { Button, Input, Spin, Tree } from "antd";
+import { Button, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
 import React, { useMemo, useState } from "react";
 import { useMutation } from "react-query";
@@ -14,7 +14,6 @@ import BaseModule from "../base/BaseModule";
 const { TreeNode: Node } = Tree;
 
 const CategoryTree = ({ history }: RouteComponentProps) => {
-  const [search, setSearch] = useState();
   const { data, isLoading } = useCategoryTree();
   const [move] = useMutation(moveCategory, {
     refetchQueries: ["items/categories/tree"]
@@ -92,29 +91,12 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
         </Button>
       ]}
     >
-      <Input.Search
-        size="small"
-        placeholder="Filter..."
-        onChange={e => setSearch(e.target.value)}
-        style={{ width: 200 }}
-      />
       <Tree
         treeData={treeData}
         draggable
         expandedKeys={expandedKeys}
         onExpand={setExpandedKeys}
         onDrop={onDrop}
-        filterTreeNode={node => {
-          if (!search) {
-            return false;
-          }
-          const hl = (node.props.title! as string)
-            .toLowerCase()
-            .includes(search.toLowerCase());
-
-          if (hl) console.log("filterTreeNode", node.props.title, search, hl);
-          return hl;
-        }}
         onSelect={selectedKeys => {
           history.push(`/settings/categories/${selectedKeys[0]}`);
         }}
