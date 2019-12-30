@@ -40,6 +40,11 @@ export interface Model {
   pk: number;
 }
 
+export interface RelatedModel {
+  pk: number;
+  label: string;
+}
+
 interface Items<T extends Model> {
   count: number;
   results: T[];

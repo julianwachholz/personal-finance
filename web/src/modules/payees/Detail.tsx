@@ -18,6 +18,7 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
       <Descriptions title="Payee">
         <Item label="ID">{payee.pk}</Item>
         <Item label="Name">{payee.name}</Item>
+        <Item label="Type">{payee.type}</Item>
       </Descriptions>
       <Link to={`${match.url}/edit`}>
         <Button type="primary">Edit Payee</Button>

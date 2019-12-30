@@ -24,7 +24,6 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
       await form.validateFields();
     } catch (e) {
       setSubmitting(false);
-      debugger;
       return;
     }
     const newData: Category = {

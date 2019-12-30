@@ -6,9 +6,12 @@ import {
   makeUseItem
 } from "./base";
 
+type PayeeType = "business" | "private";
+
 export interface Payee {
   pk: number;
   name: string;
+  type: PayeeType;
 
   readonly label: string;
 }

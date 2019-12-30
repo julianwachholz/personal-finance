@@ -17,8 +17,10 @@ class TransactionAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {"fields": ("datetime", "amount", "account", "category")}),
-        ("Detail", {"fields": ("text", "payee", "tags")}),
+        ("Detail", {"fields": ("text", "related", "payee", "tags")}),
         ("Info", {"fields": ("user", "reference")}),
     )
 
-    autocomplete_fields = ("account", "category", "payee", "tags", "user")
+    search_fields = ("reference__iexact", "text")
+
+    autocomplete_fields = ("account", "category", "payee", "tags", "user", "related")

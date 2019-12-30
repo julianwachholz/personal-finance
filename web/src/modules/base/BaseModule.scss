@@ -23,4 +23,14 @@
   .ant-btn-link {
     padding: 0;
   }
+
+  .ant-table-small {
+    .ant-btn-link {
+      height: auto;
+    }
+    .ant-input {
+      height: auto;
+      padding: 0;
+    }
+  }
 }

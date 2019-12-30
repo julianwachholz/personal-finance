@@ -8,7 +8,18 @@ class Payee(models.Model):
 
     """
 
+    TYPE_BUSINESS = "business"
+    TYPE_PRIVATE = "private"
+    TYPE_CHOICES = (("business", _("business")), ("private", _("private")))
+
     name = models.CharField(verbose_name=_("name"), max_length=100)
+
+    type = models.CharField(
+        verbose_name=_("type"),
+        max_length=100,
+        choices=TYPE_CHOICES,
+        default=TYPE_BUSINESS,
+    )
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 

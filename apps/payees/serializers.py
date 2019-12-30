@@ -8,4 +8,4 @@ class PayeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payee
-        fields = ["pk", "name", "label"]
+        fields = ["pk", "name", "label", "type"]

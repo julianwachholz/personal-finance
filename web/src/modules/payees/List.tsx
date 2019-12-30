@@ -21,6 +21,15 @@ const Payees = ({ match }: RouteComponentProps) => {
       }
     },
     {
+      title: "Type",
+      dataIndex: "type",
+      filterMultiple: false,
+      filters: [
+        { text: "Business", value: "business" },
+        { text: "Private", value: "private" }
+      ]
+    },
+    {
       align: "right",
       render(_, payee) {
         return (

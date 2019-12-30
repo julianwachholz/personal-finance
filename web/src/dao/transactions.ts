@@ -1,16 +1,18 @@
-import { FetchItems, makeFetchItems } from "./base";
+import { FetchItems, makeFetchItems, RelatedModel } from "./base";
 
 export interface Transaction {
   pk: number;
-  account: number;
-  category: number;
-  payee: number;
-  tags: number[];
+  account: RelatedModel;
+  category?: RelatedModel;
+  payee?: RelatedModel;
+  tags: RelatedModel[];
 
   datetime: Date;
 
   amount: string;
   amount_currency: string;
+
+  is_transfer: boolean;
 
   text: string;
   reference: string;

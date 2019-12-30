@@ -1,4 +1,5 @@
 from dateutil.rrule import FR, MO, SA, SU, TH, TU, WE
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -43,14 +44,35 @@ class AbstractTransaction(models.Model):
         verbose_name=_("reference"), max_length=500, blank=True
     )
 
+    related = models.ForeignKey(
+        to="self",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        help_text=_("Reverse transaction to a transfer."),
+    )
+
     class Meta:
         abstract = True
+
+    def clean(self):
+        if self.amount_currency != self.account.balance_currency:
+            self.amount_currency = self.account.balance_currency
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.related and self.related.related != self:
+            self.related.related = self
+            self.related.save()
 
     def is_credit(self):
         return self.amount > 0
 
     def is_debit(self):
         return not self.is_credit()
+
+    def is_transfer(self):
+        return self.related is not None
 
 
 class Transaction(AbstractTransaction):

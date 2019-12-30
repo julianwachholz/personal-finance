@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Radio } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +19,6 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
       await form.validateFields();
     } catch (e) {
       setSubmitting(false);
-      debugger;
       return;
     }
     const newData = {
@@ -33,10 +32,16 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
       form={form}
       layout="vertical"
       onFinish={onSubmit}
-      initialValues={data}
+      initialValues={{ type: "business", ...data }}
     >
-      <Form.Item name="name" label="Name" required>
+      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input placeholder="Acme Co." />
+      </Form.Item>
+      <Form.Item name="type" label="Type">
+        <Radio.Group>
+          <Radio.Button value="business">Business</Radio.Button>
+          <Radio.Button value="private">Private</Radio.Button>
+        </Radio.Group>
       </Form.Item>
       <Form.Item>
         <>
