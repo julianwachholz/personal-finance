@@ -71,9 +71,6 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
         >
           Collapse All
         </Button>,
-        <Link key="view" to="/settings/categories" className="ant-btn">
-          List View
-        </Link>,
         <Button key="create" type="primary">
           <Link to={`/settings/categories/create`}>Create Category</Link>
         </Button>
