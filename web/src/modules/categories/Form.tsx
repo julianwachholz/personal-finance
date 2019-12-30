@@ -65,7 +65,11 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
         <Col span={22}>
-          <Form.Item name="name" label="Name" required>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: "Enter a name" }]}
+          >
             <Input placeholder="Ledger" />
           </Form.Item>
         </Col>
@@ -91,7 +95,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               label={
                 ["left", "right"].includes(position) ? "Neighbor" : "Parent"
               }
-              required
+              rules={[{ required: true, message: "Select target position" }]}
             >
               <TreeSelect
                 showSearch

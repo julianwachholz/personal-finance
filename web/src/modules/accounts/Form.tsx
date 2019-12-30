@@ -47,7 +47,11 @@ const AccountForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
         <Col span={22}>
-          <Form.Item name="name" label="Name" required>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: "Enter a name" }]}
+          >
             <Input placeholder="Checking" />
           </Form.Item>
         </Col>

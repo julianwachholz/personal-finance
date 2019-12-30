@@ -35,7 +35,11 @@ const TagForm = ({ data, onSave }: FormProps) => {
       onFinish={onSubmit}
       initialValues={data}
     >
-      <Form.Item name="name" label="Name" required>
+      <Form.Item
+        name="name"
+        label="Name"
+        rules={[{ required: true, message: "Enter a name" }]}
+      >
         <Input placeholder="personal" prefix="#" />
       </Form.Item>
       <Form.Item name="color" label="Color">

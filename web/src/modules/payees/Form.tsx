@@ -34,7 +34,11 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
       onFinish={onSubmit}
       initialValues={{ type: "business", ...data }}
     >
-      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+      <Form.Item
+        name="name"
+        label="Name"
+        rules={[{ required: true, message: "Enter a name" }]}
+      >
         <Input placeholder="Acme Co." />
       </Form.Item>
       <Form.Item name="type" label="Type">
