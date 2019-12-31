@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Sum
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 
@@ -23,6 +25,10 @@ class Account(models.Model):
         verbose_name=_("balance"), max_digits=10, decimal_places=2, default=0
     )
 
+    initial_date = models.DateTimeField(
+        verbose_name=_("starting balance date"), default=now
+    )
+
     icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
 
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
@@ -37,3 +43,19 @@ class Account(models.Model):
 
     def __repr__(self):
         return f"<Account(user={self.user!r}, name={self.name!r}, institution={self.institution!r}, balance={self.balance!r})>"
+
+    def set_initial_balance(self, amount, save=True):
+        self.initial_date = now()
+        if save:
+            self.save()
+        self.transactions.create(user=self.user, is_initial=True, amount=amount)
+
+    def reconcile(self):
+        """
+        Recalculate the current account balance.
+        """
+        aggregate = self.transactions.filter(datetime__gte=self.initial_date).aggregate(
+            Sum("amount")
+        )
+        self.balance = aggregate["amount__sum"]
+        self.save()

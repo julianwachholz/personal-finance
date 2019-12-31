@@ -36,6 +36,9 @@ const columns: ColumnsType<Transaction> = [
       if (tx.is_transfer) {
         return <em>Transfer</em>;
       }
+      if (tx.is_initial) {
+        return <em>Initial balance</em>;
+      }
       return category ? (
         <Link to={`/settings/categories/${category.pk}`}>{category.label}</Link>
       ) : (

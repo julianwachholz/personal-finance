@@ -84,6 +84,8 @@ class Transaction(AbstractTransaction):
 
     datetime = models.DateTimeField(verbose_name=_("date / time"), default=now)
 
+    is_initial = models.BooleanField(verbose_name=_("initial balance?"), default=False)
+
     class Meta:
         verbose_name = _("transaction")
         verbose_name_plural = _("transactions")

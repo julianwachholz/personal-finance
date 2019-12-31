@@ -10,6 +10,7 @@ interface FormProps {
 }
 
 const AccountForm = ({ data, onSave }: FormProps) => {
+  const [resetBalance, setResetBalance] = useState(false);
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const onSubmit = async (values: any) => {
@@ -20,18 +21,25 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       setSubmitting(false);
       return;
     }
-    const newData: Account = {
-      ...values,
-      balance: values.balance.amount,
-      balance_currency: values.balance.currency
-    };
-    onSave(newData);
+    if (values.balance) {
+      values = {
+        ...values,
+        set_balance: values.balance.amount,
+        set_currency: values.balance.currency
+      };
+    }
+    onSave(values);
   };
 
-  const balance = data && {
-    amount: data.balance,
-    currency: data.balance_currency
-  };
+  const balance = data
+    ? {
+        amount: data.balance,
+        currency: data.currency
+      }
+    : {
+        amount: "0.00",
+        currency: "CHF" // TODO default currency
+      };
 
   return (
     <Form
@@ -59,10 +67,14 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       <Form.Item name="institution" label="Institution">
         <Input placeholder="Example Credit Union" />
       </Form.Item>
-      <Form.Item name="balance" label="Balance" required>
-        <MoneyInput />
-      </Form.Item>
-      <Form.Item>
+      {data?.pk && !resetBalance ? (
+        <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
+      ) : (
+        <Form.Item name="balance" label="Initial Balance" required>
+          <MoneyInput />
+        </Form.Item>
+      )}
+      <Form.Item className="form-actions">
         <>
           <Button type="primary" htmlType="submit" loading={submitting}>
             Save Account

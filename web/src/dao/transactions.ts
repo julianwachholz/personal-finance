@@ -13,6 +13,7 @@ export interface Transaction {
   amount_currency: string;
 
   is_transfer: boolean;
+  is_initial: boolean;
 
   text: string;
   reference: string;

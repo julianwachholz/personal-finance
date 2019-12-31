@@ -35,7 +35,7 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         title="Balance"
         value={account.balance}
         precision={2}
-        suffix={account.balance_currency}
+        suffix={account.currency}
       />
       <RelatedTransactions
         filters={[`account=${account.pk}`]}

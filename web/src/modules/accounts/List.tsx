@@ -33,9 +33,7 @@ const Accounts = ({ match }: RouteComponentProps) => {
       ],
       render(balance, account) {
         return (
-          <Money
-            value={{ amount: balance, currency: account.balance_currency }}
-          />
+          <Money value={{ amount: balance, currency: account.currency }} />
         );
       }
     },

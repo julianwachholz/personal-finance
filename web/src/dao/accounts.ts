@@ -12,7 +12,7 @@ export interface Account {
   icon: string;
   institution: string;
   balance: string;
-  balance_currency: string;
+  currency: string;
   pos: number;
 
   readonly label: string;

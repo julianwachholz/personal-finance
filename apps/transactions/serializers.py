@@ -55,5 +55,6 @@ class TransactionSerializer(serializers.ModelSerializer):
             "tags",
             "text",
             "is_transfer",
+            "is_initial",
             "reference",
         )

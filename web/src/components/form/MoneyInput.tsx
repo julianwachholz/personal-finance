@@ -20,7 +20,7 @@ const MoneyInput = React.forwardRef(
     };
 
     if (!value) {
-      value = { amount: "0", currency: "CHF" };
+      value = { amount: "0", currency: "CHF" }; // @TODO default currency
     }
 
     return (
