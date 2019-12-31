@@ -154,7 +154,7 @@ const makeItemMutation = <T extends Model, RT = T>(
 ) => {
   const mutateItem: MutateItem<T, RT> = async data => {
     const url =
-      method === "POST" ? `/api/${basename}/` : `/api/${basename}/${data.pk}`;
+      method === "POST" ? `/api/${basename}/` : `/api/${basename}/${data.pk}/`;
     const response = await authFetch(url, {
       method,
       headers: {

@@ -36,11 +36,32 @@ class TagSerializer(RelatedSerializer):
         fields = ("pk", "label")
 
 
+class PKField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        request = self.context.get("request", None)
+        queryset = super().get_queryset()
+        if not request:
+            raise Exception("no request")
+            return queryset.none()
+        return queryset.filter(user=request.user)
+
+
 class TransactionSerializer(serializers.ModelSerializer):
-    account = AccountSerializer()
-    category = CategorySerializer()
-    payee = PayeeSerializer()
-    tags = TagSerializer(many=True)
+    account = AccountSerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
+    payee = PayeeSerializer(read_only=True)
+    tags = TagSerializer(read_only=True, many=True)
+
+    set_account = PKField(source="account", queryset=Account.objects, write_only=True)
+    set_category = PKField(
+        source="category", queryset=Category.objects, required=False, write_only=True
+    )
+    set_payee = PKField(
+        source="payee", queryset=Payee.objects, required=False, write_only=True
+    )
+    set_tags = PKField(
+        source="tags", queryset=Tag.objects, required=False, write_only=True
+    )
 
     class Meta:
         model = Transaction
@@ -57,4 +78,8 @@ class TransactionSerializer(serializers.ModelSerializer):
             "is_transfer",
             "is_initial",
             "reference",
+            "set_account",
+            "set_category",
+            "set_payee",
+            "set_tags",
         )

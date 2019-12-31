@@ -1,4 +1,9 @@
-import { makeFetchItems, makeUseItems, ModelWithLabel } from "./base";
+import {
+  makeFetchItems,
+  makePostItem,
+  makeUseItems,
+  ModelWithLabel
+} from "./base";
 
 export interface Transaction {
   pk: number;
@@ -36,3 +41,5 @@ export const useTransactions = makeUseItems<Transaction>(
   mapTx,
   fetchTransactions
 );
+
+export const postTransaction = makePostItem<Transaction>("transactions");
