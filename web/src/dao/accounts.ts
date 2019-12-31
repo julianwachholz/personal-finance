@@ -3,7 +3,8 @@ import {
   makeFetchItems,
   makePostItem,
   makePutItem,
-  makeUseItem
+  makeUseItem,
+  makeUseItems
 } from "./base";
 
 export interface Account {
@@ -19,6 +20,8 @@ export interface Account {
 }
 
 export const fetchAccounts = makeFetchItems<Account>("accounts");
+
+export const useAccounts = makeUseItems<Account>("accounts");
 
 export const postAccount = makePostItem<Account>("accounts");
 

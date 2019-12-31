@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
 import Money from "../../components/data/Money";
-import { RelatedModel } from "../../dao/base";
+import { ModelWithLabel } from "../../dao/base";
 import { Transaction } from "../../dao/transactions";
 
 const columns: ColumnsType<Transaction> = [
@@ -32,7 +32,7 @@ const columns: ColumnsType<Transaction> = [
   {
     title: "Category",
     dataIndex: "category",
-    render(category: RelatedModel, tx) {
+    render(category: ModelWithLabel, tx) {
       if (tx.is_transfer) {
         return <em>Transfer</em>;
       }
@@ -49,7 +49,7 @@ const columns: ColumnsType<Transaction> = [
   {
     title: "Account",
     dataIndex: "account",
-    render(account: RelatedModel) {
+    render(account: ModelWithLabel) {
       return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
     }
   },
@@ -57,7 +57,7 @@ const columns: ColumnsType<Transaction> = [
     title: "Payee",
     dataIndex: "payee",
     ellipsis: true,
-    render(payee: RelatedModel) {
+    render(payee: ModelWithLabel) {
       if (payee)
         return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;
     }
@@ -70,7 +70,7 @@ const columns: ColumnsType<Transaction> = [
   {
     title: "Tags",
     dataIndex: "tags",
-    render(tags: RelatedModel[]) {
+    render(tags: ModelWithLabel[]) {
       return (
         <>
           {tags.map((tag, i) => (

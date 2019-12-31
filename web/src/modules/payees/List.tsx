@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { deletePayee, fetchPayees, Payee } from "../../dao/payees";
+import { deletePayee, Payee, usePayees } from "../../dao/payees";
 import BaseList from "../base/BaseList";
 
 const Payees = ({ match }: RouteComponentProps) => {
@@ -58,7 +58,7 @@ const Payees = ({ match }: RouteComponentProps) => {
     <BaseList
       itemName="Payee"
       itemNamePlural="Payees"
-      fetchItems={fetchPayees}
+      useItems={usePayees}
       columns={columns}
       actions={[
         <Button key="create" type="primary">

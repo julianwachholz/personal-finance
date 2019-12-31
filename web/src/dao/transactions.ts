@@ -1,11 +1,11 @@
-import { FetchItems, makeFetchItems, RelatedModel } from "./base";
+import { makeFetchItems, makeUseItems, ModelWithLabel } from "./base";
 
 export interface Transaction {
   pk: number;
-  account: RelatedModel;
-  category?: RelatedModel;
-  payee?: RelatedModel;
-  tags: RelatedModel[];
+  account: ModelWithLabel;
+  category?: ModelWithLabel;
+  payee?: ModelWithLabel;
+  tags: ModelWithLabel[];
 
   datetime: Date;
 
@@ -17,12 +17,22 @@ export interface Transaction {
 
   text: string;
   reference: string;
+
+  readonly label: string;
 }
 
-const _fetchTransactions = makeFetchItems<Transaction>("transactions");
-
-export const fetchTransactions: FetchItems<Transaction> = async options => {
-  const data = await _fetchTransactions(options);
-  data.results.map(tx => (tx.datetime = new Date(tx.datetime)));
-  return data;
+const mapTx = (tx: Transaction) => {
+  tx.datetime = new Date(tx.datetime);
+  return tx;
 };
+
+export const fetchTransactions = makeFetchItems<Transaction>(
+  "transactions",
+  mapTx
+);
+
+export const useTransactions = makeUseItems<Transaction>(
+  "transactions",
+  mapTx,
+  fetchTransactions
+);

@@ -1,16 +1,16 @@
 import { prefetchQuery, useQuery } from "react-query";
 import { authFetch, clearToken, FetchItem } from "./base";
+import { Settings } from "./settings";
 
 export interface User {
   pk: number;
   username: string;
   email?: string;
-  firstname?: string;
-  lastname?: string;
+  first_name?: string;
+  last_name?: string;
 
-  readonly isActive: boolean;
-  readonly lastLogin: Date;
-  readonly dateJoined: Date;
+  readonly settings: Settings;
+  readonly date_joined: Date;
 }
 
 const fetchUser: FetchItem<User, {}> = async () => {

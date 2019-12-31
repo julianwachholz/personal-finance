@@ -4,7 +4,9 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import { useTag } from "../../dao/tags";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions from "../transactions/RelatedTransactions";
+import RelatedTransactions, {
+  prefetchRelatedTx
+} from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -14,6 +16,8 @@ interface DetailParams {
 
 const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: tag, isLoading, error } = useTag(match.params.pk);
+  const filters = [`tags=${match.params.pk}`];
+  prefetchRelatedTx(filters);
 
   return tag ? (
     <BaseModule
@@ -30,7 +34,7 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
           <Color value={tag.color} />
         </Item>
       </Descriptions>
-      <RelatedTransactions filters={[`tags=${tag.pk}`]} />
+      <RelatedTransactions filters={filters} />
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>

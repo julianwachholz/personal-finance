@@ -3,7 +3,9 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions from "../transactions/RelatedTransactions";
+import RelatedTransactions, {
+  prefetchRelatedTx
+} from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -13,6 +15,8 @@ interface DetailParams {
 
 const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: payee, isLoading, error } = usePayee(match.params.pk);
+  const filters = [`payee=${match.params.pk}`];
+  prefetchRelatedTx(filters);
 
   return payee ? (
     <BaseModule
@@ -27,10 +31,7 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>
       </Descriptions>
-      <RelatedTransactions
-        filters={[`payee=${payee.pk}`]}
-        excludeColumns={["payee"]}
-      />
+      <RelatedTransactions filters={filters} excludeColumns={["payee"]} />
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>

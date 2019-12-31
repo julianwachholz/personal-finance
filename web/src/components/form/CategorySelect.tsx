@@ -29,6 +29,7 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
       return categoryTree.results.map(renderNode);
     }
   }, [categoryTree]);
+
   return (
     <TreeSelect<Category>
       showSearch

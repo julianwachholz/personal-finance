@@ -10,9 +10,8 @@ import {
 } from "antd";
 import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { FetchItems, Model } from "../../dao/base";
+import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import "./BaseModule.scss";
 
@@ -35,10 +34,10 @@ const mapFilters = (filters: Record<string, ReactText[] | null>) => {
   return filterValues;
 };
 
-interface ListProps<T extends Model> {
+interface ListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
-  fetchItems: FetchItems<T>;
+  useItems: UseItems<T>;
   columns: ColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
@@ -48,10 +47,10 @@ interface ListProps<T extends Model> {
   tableProps?: TableProps<T>;
 }
 
-const BaseList = <T extends Model>({
+const BaseList = <T extends ModelWithLabel>({
   itemName,
   itemNamePlural,
-  fetchItems,
+  useItems,
   columns,
   pagination = true,
   showSearch = true,
@@ -68,13 +67,13 @@ const BaseList = <T extends Model>({
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
 
-  const { data, isLoading, error } = useQuery(
-    [
-      `items/${itemNamePlural.toLowerCase()}`,
-      { page, pageSize, ordering, filters, search }
-    ],
-    fetchItems
-  );
+  const { data, isLoading, error } = useItems({
+    page,
+    pageSize,
+    ordering,
+    filters,
+    search
+  });
 
   // save total item count in state to prevent pagination jumping around
   if (data && data.count !== total) {

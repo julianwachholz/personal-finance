@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { QueryResult, useQuery } from "react-query";
 
 const authTokenKey = "_auth_token";
 const authTokenExpiryKey = "_auth_token_expiry";
@@ -40,7 +40,7 @@ export interface Model {
   pk: number;
 }
 
-export interface RelatedModel {
+export interface ModelWithLabel {
   pk: number;
   label: string;
 }
@@ -50,13 +50,16 @@ interface Items<T extends Model> {
   results: T[];
 }
 
-export type FetchItems<T extends Model> = (
+export type FetchItems<T extends ModelWithLabel> = (
   options: FetchItemsOptions
 ) => Promise<Items<T>>;
 
-export const makeFetchItems = <T extends Model>(basename: string) => {
+export const makeFetchItems = <T extends ModelWithLabel>(
+  basename: string,
+  map?: (item: T) => T
+) => {
   const fetchItems: FetchItems<T> = async (options = {}) => {
-    const { page, pageSize, ordering, filters, search } = options;
+    const { page = 1, pageSize, ordering, filters, search } = options;
     let url = `/api/${basename}/?page=${page}`;
     if (pageSize) {
       url += `&page_size=${pageSize}`;
@@ -74,17 +77,31 @@ export const makeFetchItems = <T extends Model>(basename: string) => {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    const data = await response.json();
+    const data: Items<T> = await response.json();
+
+    if (map) {
+      data.results.map(map);
+    }
     return data;
   };
 
   return fetchItems;
 };
 
-export const makeUseItems = <T extends Model>(basename: string) => {
-  const fetchItems = makeFetchItems<T>(basename);
-  const useItems = (options: FetchItemsOptions = {}) => {
-    const query = useQuery([`items/${basename}`, options], fetchItems);
+export type UseItems<T extends ModelWithLabel> = (
+  options?: FetchItemsOptions
+) => QueryResult<Items<T>, FetchItemsOptions>;
+
+export const makeUseItems = <T extends ModelWithLabel>(
+  basename: string,
+  map?: (item: T) => T,
+  fetchItems?: FetchItems<T>
+) => {
+  if (!fetchItems) {
+    fetchItems = makeFetchItems<T>(basename, map);
+  }
+  const useItems: UseItems<T> = (options: FetchItemsOptions = {}) => {
+    const query = useQuery([`items/${basename}`, options], fetchItems!);
     return query;
   };
   return useItems;
@@ -113,9 +130,13 @@ export const makeFetchItem = <T extends Model>(basename: string) => {
   return fetchItem;
 };
 
+type UseItem<T extends Model> = (
+  pk: number | string
+) => QueryResult<T, { pk: number }>;
+
 export const makeUseItem = <T extends Model>(basename: string) => {
   const fetchItem = makeFetchItem<T>(basename);
-  const useItem = (pk: number | string) => {
+  const useItem: UseItem<T> = pk => {
     if (typeof pk === "string") {
       pk = parseInt(pk, 10);
     }
@@ -125,61 +146,44 @@ export const makeUseItem = <T extends Model>(basename: string) => {
   return useItem;
 };
 
-type PostItem<T extends Model> = (data: T) => Promise<T>;
+type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
+
+const makeItemMutation = <T extends Model, RT = T>(
+  basename: string,
+  method: string
+) => {
+  const mutateItem: MutateItem<T, RT> = async data => {
+    const url =
+      method === "POST" ? `/api/${basename}/` : `/api/${basename}/${data.pk}`;
+    const response = await authFetch(url, {
+      method,
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    if (response.status === 204) {
+      return;
+    }
+    const responseData = await response.json();
+    return responseData;
+  };
+  return mutateItem;
+};
 
 export const makePostItem = <T extends Model>(basename: string) => {
-  const postItem: PostItem<T> = async data => {
-    const url = `/api/${basename}/`;
-    const response = await authFetch(url, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const responseData = await response.json();
-    return responseData;
-  };
-  return postItem;
+  return makeItemMutation<T>(basename, "POST");
 };
-
-type PutItem<T extends Model> = (data: T) => Promise<T>;
 
 export const makePutItem = <T extends Model>(basename: string) => {
-  const putItem: PutItem<T> = async data => {
-    const url = `/api/${basename}/${data.pk}/`;
-    const response = await authFetch(url, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const responseData = await response.json();
-    return responseData;
-  };
-  return putItem;
+  return makeItemMutation<T>(basename, "PUT");
 };
 
-type DeleteItem<T extends Model> = (data: T) => Promise<void>;
-
 export const makeDeleteItem = <T extends Model>(basename: string) => {
-  const deleteItem: DeleteItem<T> = async ({ pk }) => {
-    const url = `/api/${basename}/${pk}/`;
-    const response = await authFetch(url, {
-      method: "DELETE"
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-  };
-  return deleteItem;
+  return makeItemMutation<T, void>(basename, "DELETE");
 };
 
 type PostAction<T extends Model> = (params: T) => Promise<any>;

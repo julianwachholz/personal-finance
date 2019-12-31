@@ -6,7 +6,7 @@ from knox.views import LoginView as KnoxLoginView
 from .serializers import LoginSerializer, UserSerializer
 
 
-class UserView(generics.RetrieveAPIView):
+class UserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 
     def get_object(self):

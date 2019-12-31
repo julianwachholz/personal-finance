@@ -1,16 +1,18 @@
 import { Table } from "antd";
 import React from "react";
-import { prefetchQuery, useQuery } from "react-query";
-import { fetchTransactions, Transaction } from "../../dao/transactions";
+import { prefetchQuery } from "react-query";
+import {
+  fetchTransactions,
+  Transaction,
+  useTransactions
+} from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
 import columns from "./columns";
 
 export const prefetchRelatedTx = (filters: string[]) => {
-  prefetchQuery(
-    ["items/transactions", { page: 1, filters }],
-    fetchTransactions,
-    { staleTime: 100 }
-  );
+  prefetchQuery(["items/transactions", { filters }], fetchTransactions, {
+    staleTime: 500
+  });
 };
 
 interface RelatedTransactionsProps {
@@ -27,10 +29,12 @@ const RelatedTransactions = ({
     col => !excludeColumns.includes(col.dataIndex as string)
   );
 
-  const { data, isLoading } = useQuery(
-    ["items/transactions", { page: 1, filters }],
-    fetchTransactions
-  );
+  // const { data, isLoading } = useQuery(
+  //   ["items/transactions", { page: 1, filters }],
+  //   fetchTransactions
+  // );
+
+  const { data, isLoading } = useTransactions({ filters });
 
   return (
     <Table<Transaction>

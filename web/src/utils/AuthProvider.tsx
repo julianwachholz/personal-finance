@@ -2,12 +2,14 @@ import React, { useContext, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { clearToken, setAuthToken } from "../dao/base";
+import { Settings } from "../dao/settings";
 import { postLogin, postLogout, User, useUser } from "../dao/user";
 
 interface AuthContext {
   isLoading: boolean;
   isAuthenticated: boolean;
   user: User | null;
+  settings?: Settings;
   login: (values: Record<string, string>) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -52,6 +54,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         isLoading,
         isAuthenticated,
         user,
+        settings: user?.settings,
         login,
         logout
       }}

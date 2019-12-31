@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from apps.settings.serializers import SettingsSerializer
+
 User = get_user_model()
 
 
@@ -30,11 +32,22 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    date_joined = serializers.DateTimeField(read_only=True)
+    password = serializers.CharField(required=False, write_only=True)
+    settings = SettingsSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ("id", "username", "password")
+        fields = (
+            "id",
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "date_joined",
+            "password",
+            "settings",
+        )
 
     def create(self, validated_data):
         user = User.objects.create_user(

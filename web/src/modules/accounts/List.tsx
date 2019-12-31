@@ -3,7 +3,7 @@ import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
-import { Account, fetchAccounts } from "../../dao/accounts";
+import { Account, useAccounts } from "../../dao/accounts";
 import BaseList from "../base/BaseList";
 
 const Accounts = ({ match }: RouteComponentProps) => {
@@ -49,7 +49,7 @@ const Accounts = ({ match }: RouteComponentProps) => {
     <BaseList<Account>
       itemName="Account"
       itemNamePlural="Accounts"
-      fetchItems={fetchAccounts}
+      useItems={useAccounts}
       columns={columns}
       actions={[
         <Link key="create" to={`${match.url}/create`}>

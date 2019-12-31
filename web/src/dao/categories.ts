@@ -6,7 +6,7 @@ import {
   makePutItem,
   makeUseItem,
   makeUseItems,
-  RelatedModel
+  ModelWithLabel
 } from "./base";
 
 export interface Category {
@@ -14,7 +14,7 @@ export interface Category {
   name: string;
   icon: string;
   color: string;
-  parent?: RelatedModel;
+  parent?: ModelWithLabel;
 
   readonly label: string;
 }

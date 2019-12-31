@@ -4,7 +4,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
-import { deleteTag, fetchTags, Tag } from "../../dao/tags";
+import { deleteTag, Tag, useTags } from "../../dao/tags";
 import BaseList from "../base/BaseList";
 
 const Tags = ({ match }: RouteComponentProps) => {
@@ -57,7 +57,7 @@ const Tags = ({ match }: RouteComponentProps) => {
     <BaseList
       itemName="Tag"
       itemNamePlural="Tags"
-      fetchItems={fetchTags}
+      useItems={useTags}
       columns={columns}
       extraActions={[<Link to="#">Example</Link>]}
       actions={[

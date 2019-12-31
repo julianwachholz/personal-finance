@@ -11,8 +11,6 @@ import {
 } from "../../dao/categories";
 import BaseModule from "../base/BaseModule";
 
-const { TreeNode: Node } = Tree;
-
 const CategoryTree = ({ history }: RouteComponentProps) => {
   const { data, isLoading } = useCategoryTree();
   const [move] = useMutation(moveCategory, {
@@ -47,24 +45,24 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
     move({ pk: dragKey, target_pk: dropKey, position });
   };
 
-  const keysWithChildren: string[] = [];
-
-  const renderNode = (category: TreeCategory) => {
-    const node: TreeNodeNormal = {
-      key: category.pk.toString(),
-      title: category.label
+  const [treeData, keysWithChildren] = useMemo(() => {
+    const keysWithChildren: string[] = [];
+    const renderNode = (category: TreeCategory) => {
+      const node: TreeNodeNormal = {
+        key: category.pk.toString(),
+        title: category.label
+      };
+      if (category.children?.length) {
+        keysWithChildren.push(node.key);
+        node.children = category.children.map(renderNode);
+      }
+      return node;
     };
-    if (category.children?.length) {
-      keysWithChildren.push(node.key);
-      node.children = category.children.map(renderNode);
-    }
-    return node;
-  };
 
-  const treeData = useMemo(() => {
     if (data) {
-      return data.results.map(renderNode);
+      return [data.results.map(renderNode), keysWithChildren];
     }
+    return [undefined, []];
   }, [data]);
 
   if (!data || isLoading) {

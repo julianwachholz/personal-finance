@@ -1,9 +1,9 @@
 import {
   makeDeleteItem,
-  makeFetchItems,
   makePostItem,
   makePutItem,
-  makeUseItem
+  makeUseItem,
+  makeUseItems
 } from "./base";
 
 type PayeeType = "business" | "private";
@@ -16,7 +16,7 @@ export interface Payee {
   readonly label: string;
 }
 
-export const fetchPayees = makeFetchItems<Payee>("payees");
+export const usePayees = makeUseItems<Payee>("payees");
 
 export const postPayee = makePostItem<Payee>("payees");
 

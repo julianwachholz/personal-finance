@@ -1,9 +1,9 @@
 import {
   makeDeleteItem,
-  makeFetchItems,
   makePostItem,
   makePutItem,
-  makeUseItem
+  makeUseItem,
+  makeUseItems
 } from "./base";
 
 export interface Tag {
@@ -14,7 +14,7 @@ export interface Tag {
   readonly label: string;
 }
 
-export const fetchTags = makeFetchItems<Tag>("tags");
+export const useTags = makeUseItems<Tag>("tags");
 
 export const postTag = makePostItem<Tag>("tags");
 

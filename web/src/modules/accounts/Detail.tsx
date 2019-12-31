@@ -3,7 +3,9 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions from "../transactions/RelatedTransactions";
+import RelatedTransactions, {
+  prefetchRelatedTx
+} from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -13,6 +15,8 @@ interface DetailParams {
 
 const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: account, isLoading, error } = useAccount(match.params.pk);
+  const filters = [`account=${match.params.pk}`];
+  prefetchRelatedTx(filters);
 
   return account ? (
     <BaseModule
@@ -37,10 +41,7 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         precision={2}
         suffix={account.currency}
       />
-      <RelatedTransactions
-        filters={[`account=${account.pk}`]}
-        excludeColumns={["account"]}
-      />
+      <RelatedTransactions filters={filters} excludeColumns={["account"]} />
     </BaseModule>
   ) : (
     <Spin spinning={isLoading}>{error?.toString()}</Spin>
