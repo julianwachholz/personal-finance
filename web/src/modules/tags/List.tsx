@@ -5,9 +5,11 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import ColorInput from "../../components/form/ColorInput";
 import { deleteTag, putTag, Tag, useTags } from "../../dao/tags";
+import { useSettings } from "../../utils/SettingsProvider";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
 
 const Tags = ({ match }: RouteComponentProps) => {
+  const { tableSize } = useSettings();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
@@ -19,7 +21,9 @@ const Tags = ({ match }: RouteComponentProps) => {
       dataIndex: "name",
       sorter: true,
       editable: true,
-      formField: <Input autoFocus />,
+      formField: (
+        <Input size={tableSize === "small" ? "small" : "default"} autoFocus />
+      ),
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
       }
@@ -28,9 +32,16 @@ const Tags = ({ match }: RouteComponentProps) => {
       title: "Color",
       dataIndex: "color",
       editable: true,
-      formField: <ColorInput />,
+      formField: (
+        <ColorInput size={tableSize === "small" ? "small" : "default"} />
+      ),
       render(value) {
-        return <Color value={value} />;
+        return (
+          <Color
+            size={tableSize === "small" ? "small" : "default"}
+            value={value}
+          />
+        );
       }
     }
   ];

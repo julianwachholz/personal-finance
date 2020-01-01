@@ -47,14 +47,16 @@ function highContrast(value: string): string {
 
 interface ColorProps {
   value: string;
+  size?: "small" | "default" | "large";
 }
 
-const Color = ({ value }: ColorProps) => {
+const Color = ({ value, size = "default" }: ColorProps) => {
   try {
     return (
       <Input
         readOnly
         value={value}
+        size={size}
         style={{ background: value, color: highContrast(value) }}
         className="color ant-input-disabled"
       />
