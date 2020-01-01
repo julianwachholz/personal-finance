@@ -312,6 +312,12 @@ const BaseList = <T extends ModelWithLabel>({
         form={form}
         component={editable ? undefined : false}
         onFinish={values => saveItem(values as Partial<T>)}
+        onKeyUp={e => {
+          // ESC
+          if (e.keyCode === 27) {
+            cancelEdit();
+          }
+        }}
       >
         <Table<T>
           dataSource={data?.results ?? []}
