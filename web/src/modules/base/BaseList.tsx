@@ -1,19 +1,69 @@
 import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
+  Divider,
   Dropdown,
+  Form,
   Input,
   Menu,
   PageHeader,
   Pagination,
   Table
 } from "antd";
-import { ColumnsType, TableProps } from "antd/lib/table/Table";
-import React, { ReactText, useState } from "react";
+import { ColumnType } from "antd/lib/table/interface";
+import { TableProps } from "antd/lib/table/Table";
+import { FormInstance } from "rc-field-form";
+import React, { HTMLAttributes, ReactText, useState } from "react";
+import { setQueryData } from "react-query";
 import { Link } from "react-router-dom";
-import { ModelWithLabel, UseItems } from "../../dao/base";
+import { Model, ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import "./BaseModule.scss";
+
+type FormField =
+  | React.ReactElement
+  | ((form: FormInstance) => React.ReactElement);
+
+interface EditableColumnType<T> extends ColumnType<T> {
+  editable?: boolean;
+  formName?: string;
+  formField?: FormField;
+}
+
+export type EditableColumnsType<T> = EditableColumnType<T>[];
+
+interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  name: string;
+  field: FormField;
+  item: T;
+  children: React.ReactNode;
+}
+
+const EditableCell: React.FC<any> = <T extends Model>({
+  editing,
+  name,
+  field,
+  item,
+  children,
+  ...props
+}: EditableCellProps<T>) => {
+  return (
+    <td {...props}>
+      {editing ? (
+        <Form.Item
+          noStyle
+          name={name}
+          rules={[{ required: true, message: "Derp" }]}
+        >
+          {field}
+        </Form.Item>
+      ) : (
+        children
+      )}
+    </td>
+  );
+};
 
 const mapFilters = (filters: Record<string, ReactText[] | null>) => {
   const filterValues: string[] = [];
@@ -38,13 +88,16 @@ interface ListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
   useItems: UseItems<T>;
-  columns: ColumnsType<T>;
+  columns: EditableColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
   onSearch?: (search?: string) => void;
   actions?: React.ReactElement[];
   extraActions?: boolean | React.ReactElement[];
+  extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
+  editable?: boolean;
+  onSave?: (item: T) => Promise<T>;
 }
 
 const BaseList = <T extends ModelWithLabel>({
@@ -57,8 +110,14 @@ const BaseList = <T extends ModelWithLabel>({
   onSearch = () => {},
   actions = [],
   extraActions = true,
-  tableProps = {}
+  extraRowActions,
+  tableProps = {},
+  editable = false,
+  onSave
 }: ListProps<T>) => {
+  if (editable && !onSave) {
+    throw new Error("editable list requires onSave callback");
+  }
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -67,13 +126,110 @@ const BaseList = <T extends ModelWithLabel>({
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
 
-  const { data, isLoading, error } = useItems({
+  console.info(`render <BaseList>`);
+
+  // Editable table
+  const [form] = Form.useForm();
+  const [editingItem, setEditingItem] = useState<T>();
+  const [editLoading, setEditLoading] = useState(false);
+  const isEditing = (item: T) => item.pk === editingItem?.pk;
+  const editItem = (item: T) => {
+    const data = { ...item };
+    form.setFieldsValue(data);
+    setEditingItem(data);
+  };
+  const cancelEdit = () => setEditingItem(undefined);
+
+  if (editable || extraRowActions) {
+    columns = [
+      ...columns.map(col => {
+        if (!col.editable) {
+          return col;
+        }
+        return {
+          ...col,
+          onCell: (item: T) => {
+            return {
+              item,
+              name: col.formName ?? col.dataIndex,
+              field: col.formField ?? <Input />,
+              editing: isEditing(item)
+            } as any;
+          }
+        };
+      }),
+      {
+        align: "right",
+        render(_, item, i) {
+          return isEditing(item) ? (
+            <>
+              <Button
+                type="primary"
+                size="small"
+                htmlType="submit"
+                loading={editLoading}
+              >
+                Save
+              </Button>
+              <Button type="link" onClick={() => cancelEdit()}>
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              {editable && (
+                <Button type="link" onClick={() => editItem(item)}>
+                  Edit
+                </Button>
+              )}
+              {extraRowActions &&
+                extraRowActions(item, i).map(action => [
+                  <Divider key={`div-${i}`} type="vertical" />,
+                  action
+                ])}
+            </>
+          );
+        }
+      }
+    ];
+  }
+
+  const components = { body: { cell: EditableCell } };
+
+  const useItemOptions = {
     page,
     pageSize,
     ordering,
     filters,
     search
-  });
+  };
+  const { data, isLoading, error } = useItems(useItemOptions);
+
+  // Save inline editing item
+  const saveItem = async (values: Partial<T>) => {
+    if (!data) {
+      return;
+    }
+    setEditLoading(true);
+    const newValues = {
+      ...editingItem!,
+      ...values
+    };
+    try {
+      const savedItem = await onSave!(newValues);
+
+      // force update current view
+      const i = data.results.findIndex(item => item.pk === savedItem.pk);
+      const newData = { ...data };
+      newData.results[i] = savedItem;
+      await setQueryData(
+        [`items/${itemNamePlural.toLowerCase()}`, useItemOptions],
+        newData
+      );
+      cancelEdit();
+    } catch (e) {}
+    setEditLoading(false);
+  };
 
   // save total item count in state to prevent pagination jumping around
   if (data && data.count !== total) {
@@ -109,14 +265,15 @@ const BaseList = <T extends ModelWithLabel>({
       current={page}
       onChange={current => {
         setPage(current);
+        cancelEdit();
       }}
       pageSize={pageSize}
       showSizeChanger
       pageSizeOptions={["10", "25", "50", "100"]}
-      onShowSizeChange={(current, size) => {
-        const currentFirstIndex = (current - 1) * pageSize + 1;
-        setPage(Math.ceil(currentFirstIndex / size));
+      onShowSizeChange={(_, size) => {
+        setPage(1);
         setPageSize(size);
+        cancelEdit();
       }}
       showTotal={(total, range) =>
         total === 1
@@ -145,30 +302,41 @@ const BaseList = <T extends ModelWithLabel>({
           enterButton
           onSearch={value => {
             setSearch(value);
+            cancelEdit();
             onSearch(value);
           }}
         />
       ) : null}
       {pager}
-      <Table<T>
-        dataSource={data?.results ?? []}
-        columns={columns}
-        loading={isLoading}
-        rowKey="pk"
-        pagination={false}
-        onChange={(_pagination, filters, sorter) => {
-          setFilters(mapFilters(filters));
-          if (!Array.isArray(sorter)) {
-            sorter = [sorter];
-          }
-          setOrdering(
-            sorter[0].order &&
-              `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
-          );
-        }}
-        size={tableSize}
-        {...tableProps}
-      />
+      <Form
+        form={form}
+        component={editable ? undefined : false}
+        onFinish={values => saveItem(values as Partial<T>)}
+      >
+        <Table<T>
+          dataSource={data?.results ?? []}
+          components={components}
+          columns={columns}
+          loading={isLoading}
+          rowKey="pk"
+          pagination={false}
+          tableLayout="fixed"
+          onChange={(_pagination, filters, sorter) => {
+            setFilters(mapFilters(filters));
+            if (!Array.isArray(sorter)) {
+              sorter = [sorter];
+            }
+            setOrdering(
+              sorter[0].order &&
+                `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
+            );
+            setPage(1);
+            cancelEdit();
+          }}
+          size={tableSize}
+          {...tableProps}
+        />
+      </Form>
     </div>
   );
 };

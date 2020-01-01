@@ -16,10 +16,10 @@ export interface Tag {
 
 export const useTags = makeUseItems<Tag>("tags");
 
+export const useTag = makeUseItem<Tag>("tags");
+
 export const postTag = makePostItem<Tag>("tags");
 
 export const putTag = makePutItem<Tag>("tags");
 
 export const deleteTag = makeDeleteItem<Tag>("tags");
-
-export const useTag = makeUseItem<Tag>("tags");
