@@ -86,11 +86,6 @@ const Tags = ({ match }: RouteComponentProps) => {
           <Button type="link">Delete</Button>
         </Popconfirm>
       ]}
-      actions={[
-        <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Tag</Link>
-        </Button>
-      ]}
     />
   );
 };

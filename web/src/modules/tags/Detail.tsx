@@ -1,6 +1,6 @@
-import { Button, Descriptions, Spin } from "antd";
+import { Descriptions, Spin } from "antd";
 import React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import { useTag } from "../../dao/tags";
 import { prefetchTransactions } from "../../dao/transactions";
@@ -19,14 +19,7 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
   prefetchTransactions({ filters });
 
   return tag ? (
-    <BaseModule
-      title={tag.label}
-      extra={[
-        <Link key="edit" to={`${match.url}/edit`}>
-          <Button type="primary">Edit Tag</Button>
-        </Link>
-      ]}
-    >
+    <BaseModule title={tag.label}>
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>
         <Item label="Color">
