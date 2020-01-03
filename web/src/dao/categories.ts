@@ -1,6 +1,5 @@
 import {
   makeDeleteItem,
-  makeFetchItems,
   makePostAction,
   makePostItem,
   makePutItem,
@@ -32,11 +31,9 @@ export interface TreeCategory extends Category {
   readonly children?: TreeCategory[];
 }
 
-export const fetchCategoryTree = makeFetchItems<TreeCategory>(
-  "categories/tree"
-);
-
-export const useCategoryTree = makeUseItems<TreeCategory>("categories/tree");
+export const [useCategoryTree, prefetchCategoryTree] = makeUseItems<
+  TreeCategory
+>("categories/tree");
 
 export type MovePosition = "first-child" | "last-child" | "left" | "right";
 

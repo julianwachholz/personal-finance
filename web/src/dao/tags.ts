@@ -14,7 +14,7 @@ export interface Tag {
   readonly label: string;
 }
 
-export const useTags = makeUseItems<Tag>("tags");
+export const [useTags, prefetchTags] = makeUseItems<Tag>("tags");
 
 export const useTag = makeUseItem<Tag>("tags");
 

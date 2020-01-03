@@ -3,8 +3,12 @@ import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
 import Money from "../../components/data/Money";
+import CategorySelect from "../../components/form/CategorySelect";
 import DatePicker from "../../components/form/DatePicker";
+import ModelSelect from "../../components/form/ModelSelect";
+import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
+import { usePayees } from "../../dao/payees";
 import { Transaction } from "../../dao/transactions";
 import { EditableColumnsType } from "../base/BaseList";
 
@@ -16,7 +20,7 @@ const columns: EditableColumnsType<Transaction> = [
     defaultSortOrder: "descend",
     editable: true,
     width: 130,
-    formField: <DatePicker allowClear={false} />,
+    formField: <DatePicker size="small" allowClear={false} />,
     render(date: Date) {
       if (!date) {
         return;
@@ -34,7 +38,7 @@ const columns: EditableColumnsType<Transaction> = [
     dataIndex: "amount",
     align: "right",
     editable: true,
-    formField: <InputNumber precision={2} />,
+    formField: <InputNumber size="small" autoFocus precision={2} />,
     render(amount: string, tx) {
       return <Money value={{ amount: amount, currency: tx.amount_currency }} />;
     }
@@ -43,6 +47,9 @@ const columns: EditableColumnsType<Transaction> = [
     title: "Category",
     dataIndex: "category",
     editable: true,
+    formName: "set_category",
+    formField: <CategorySelect size="small" />,
+    formValue: (key, value) => ["set_category", value?.pk],
     render(category: ModelWithLabel, tx) {
       if (tx.is_transfer) {
         return <em>Transfer</em>;
@@ -60,7 +67,10 @@ const columns: EditableColumnsType<Transaction> = [
   {
     title: "Account",
     dataIndex: "account",
+    formName: "set_account",
     editable: true,
+    formField: <ModelSelect size="small" useItems={useAccounts} />,
+    formValue: (key, value) => ["set_account", value?.pk],
     render(account: ModelWithLabel) {
       if (!account) {
         return "no";
@@ -73,6 +83,9 @@ const columns: EditableColumnsType<Transaction> = [
     dataIndex: "payee",
     ellipsis: true,
     editable: true,
+    formName: "set_payee",
+    formField: <ModelSelect size="small" useItems={usePayees} />,
+    formValue: (key, value) => ["set_payee", value?.pk],
     render(payee: ModelWithLabel) {
       if (payee)
         return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;

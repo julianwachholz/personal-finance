@@ -29,6 +29,10 @@ interface EditableColumnType<T> extends ColumnType<T> {
   editable?: boolean;
   formName?: string;
   formField?: FormField;
+
+  // Get the form value entry from an existing value
+  formValue?: (key: string, value: any) => [string, any];
+
   rules?: Rule[];
 }
 
@@ -101,6 +105,7 @@ interface ListProps<T extends ModelWithLabel> {
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
   editable?: boolean;
+  isEditable?: (record: T) => boolean;
   onSave?: (item: T) => Promise<T>;
   defaultValues?: Partial<T>;
 }
@@ -118,6 +123,7 @@ const BaseList = <T extends ModelWithLabel>({
   extraRowActions,
   tableProps = {},
   editable = false,
+  isEditable = () => true,
   onSave,
   defaultValues = {}
 }: ListProps<T>) => {
@@ -139,7 +145,18 @@ const BaseList = <T extends ModelWithLabel>({
   const [editLoading, setEditLoading] = useState(false);
   const isEditing = (item: T) => item.pk === editingItem?.pk;
   const editItem = (item: T) => {
-    const data = { ...defaultValues, ...item };
+    const mappedItem = Object.fromEntries(
+      Object.entries(item).map(([key, value]) => {
+        const col = columns.find(
+          c => c.formName === key || c.dataIndex === key
+        );
+        if (col?.formValue) {
+          return col.formValue(key, value);
+        }
+        return [key, value];
+      })
+    );
+    const data = { ...defaultValues, ...mappedItem };
     form.resetFields();
     form.setFieldsValue(data);
     setEditingItem(data);
@@ -161,7 +178,9 @@ const BaseList = <T extends ModelWithLabel>({
               item,
               title: col.title,
               name: col.formName ?? col.dataIndex,
-              field: col.formField ?? <Input />,
+              field: col.formField ?? (
+                <Input size={tableSize === "small" ? "small" : "default"} />
+              ),
               rules: col.rules,
               editing: isEditing(item)
             } as any;
@@ -172,6 +191,7 @@ const BaseList = <T extends ModelWithLabel>({
         align: "right",
         width: 200,
         render(_, item, i) {
+          const canEdit = editable && isEditable(item);
           return isEditing(item) ? (
             <>
               <Button
@@ -188,7 +208,7 @@ const BaseList = <T extends ModelWithLabel>({
             </>
           ) : (
             <>
-              {editable && (
+              {canEdit && (
                 <Button type="link" onClick={() => editItem(item)}>
                   Edit
                 </Button>

@@ -2,9 +2,10 @@ import { Button, message } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { prefetchCategoryTree } from "../../dao/categories";
 import {
   postTransaction,
-  putTransactin,
+  putTransaction,
   Transaction,
   useTransactions
 } from "../../dao/transactions";
@@ -13,11 +14,14 @@ import columns from "./columns";
 
 const Transactions = ({ match }: RouteComponentProps) => {
   const [create] = useMutation(postTransaction);
-  const [update] = useMutation(putTransactin);
+  const [update] = useMutation(putTransaction);
+
+  prefetchCategoryTree();
 
   return (
     <BaseList<Transaction>
       editable
+      isEditable={tx => !tx.is_initial}
       onSave={async tx => {
         const isNew = tx.pk === 0;
         try {

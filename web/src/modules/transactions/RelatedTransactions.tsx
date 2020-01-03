@@ -1,19 +1,8 @@
 import { Table } from "antd";
 import React from "react";
-import { prefetchQuery } from "react-query";
-import {
-  fetchTransactions,
-  Transaction,
-  useTransactions
-} from "../../dao/transactions";
+import { Transaction, useTransactions } from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
 import columns from "./columns";
-
-export const prefetchRelatedTx = (filters: string[]) => {
-  prefetchQuery(["items/transactions", { filters }], fetchTransactions, {
-    staleTime: 500
-  });
-};
 
 interface RelatedTransactionsProps {
   filters: string[];

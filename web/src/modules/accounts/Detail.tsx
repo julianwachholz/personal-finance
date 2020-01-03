@@ -2,10 +2,9 @@ import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
+import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions, {
-  prefetchRelatedTx
-} from "../transactions/RelatedTransactions";
+import RelatedTransactions from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -16,7 +15,7 @@ interface DetailParams {
 const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: account, isLoading, error } = useAccount(match.params.pk);
   const filters = [`account=${match.params.pk}`];
-  prefetchRelatedTx(filters);
+  prefetchTransactions({ filters });
 
   return account ? (
     <BaseModule

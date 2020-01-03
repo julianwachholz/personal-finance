@@ -1,6 +1,5 @@
 import {
   makeDeleteItem,
-  makeFetchItems,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -19,9 +18,11 @@ export interface Account {
   readonly label: string;
 }
 
-export const fetchAccounts = makeFetchItems<Account>("accounts");
+// export const fetchAccounts = makeFetchItems<Account>("accounts");
 
-export const useAccounts = makeUseItems<Account>("accounts");
+export const [useAccounts, prefetchAccounts] = makeUseItems<Account>(
+  "accounts"
+);
 
 export const postAccount = makePostItem<Account>("accounts");
 

@@ -4,10 +4,9 @@ import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import Color from "../../components/data/Color";
 import { useCategory } from "../../dao/categories";
+import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions, {
-  prefetchRelatedTx
-} from "../transactions/RelatedTransactions";
+import RelatedTransactions from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -18,7 +17,7 @@ interface DetailParams {
 const Category = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: category, isLoading, error } = useCategory(match.params.pk);
   const filters = [`category=${match.params.pk}`];
-  prefetchRelatedTx(filters);
+  prefetchTransactions({ filters });
 
   return category ? (
     <BaseModule

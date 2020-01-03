@@ -1,5 +1,4 @@
 import {
-  makeFetchItems,
   makePostItem,
   makePutItem,
   makeUseItems,
@@ -32,17 +31,10 @@ const mapTx = (tx: Transaction) => {
   return tx;
 };
 
-export const fetchTransactions = makeFetchItems<Transaction>(
-  "transactions",
-  mapTx
-);
-
-export const useTransactions = makeUseItems<Transaction>(
-  "transactions",
-  mapTx,
-  fetchTransactions
-);
+export const [useTransactions, prefetchTransactions] = makeUseItems<
+  Transaction
+>("transactions", mapTx);
 
 export const postTransaction = makePostItem<Transaction>("transactions");
 
-export const putTransactin = makePutItem<Transaction>("transactions");
+export const putTransaction = makePutItem<Transaction>("transactions");

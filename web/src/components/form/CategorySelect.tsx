@@ -14,8 +14,8 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
   const treeData = useMemo(() => {
     const renderNode = (category: TreeCategory) => {
       const props = {
-        key: category.pk.toString(),
-        value: category.pk.toString(),
+        key: category.pk,
+        value: category.pk,
         title: category.label,
         searchIndex: category.label.toLowerCase()
       };

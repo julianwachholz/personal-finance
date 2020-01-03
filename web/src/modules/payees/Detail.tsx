@@ -2,10 +2,9 @@ import { Button, Descriptions, Spin } from "antd";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
+import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
-import RelatedTransactions, {
-  prefetchRelatedTx
-} from "../transactions/RelatedTransactions";
+import RelatedTransactions from "../transactions/RelatedTransactions";
 
 const { Item } = Descriptions;
 
@@ -16,7 +15,7 @@ interface DetailParams {
 const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: payee, isLoading, error } = usePayee(match.params.pk);
   const filters = [`payee=${match.params.pk}`];
-  prefetchRelatedTx(filters);
+  prefetchTransactions({ filters });
 
   return payee ? (
     <BaseModule

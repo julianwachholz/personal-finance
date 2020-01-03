@@ -16,7 +16,7 @@ export interface Payee {
   readonly label: string;
 }
 
-export const usePayees = makeUseItems<Payee>("payees");
+export const [usePayees, prefetchPayees] = makeUseItems<Payee>("payees");
 
 export const usePayee = makeUseItem<Payee>("payees");
 

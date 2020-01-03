@@ -1,4 +1,4 @@
-import { QueryResult, useQuery } from "react-query";
+import { prefetchQuery, QueryResult, useQuery } from "react-query";
 
 const authTokenKey = "_auth_token";
 const authTokenExpiryKey = "_auth_token_expiry";
@@ -92,11 +92,15 @@ export type UseItems<T extends ModelWithLabel> = (
   options?: FetchItemsOptions
 ) => QueryResult<Items<T>, FetchItemsOptions>;
 
+type PrefetchItems<T extends ModelWithLabel> = (
+  options?: FetchItemsOptions
+) => Promise<Items<T>>;
+
 export const makeUseItems = <T extends ModelWithLabel>(
   basename: string,
   map?: (item: T) => T,
   fetchItems?: FetchItems<T>
-) => {
+): [UseItems<T>, PrefetchItems<T>] => {
   if (!fetchItems) {
     fetchItems = makeFetchItems<T>(basename, map);
   }
@@ -104,7 +108,12 @@ export const makeUseItems = <T extends ModelWithLabel>(
     const query = useQuery([`items/${basename}`, options], fetchItems!);
     return query;
   };
-  return useItems;
+  const prefetchItems: PrefetchItems<T> = (options: FetchItemsOptions = {}) => {
+    return prefetchQuery([basename, options], fetchItems!, {
+      staleTime: 500
+    });
+  };
+  return [useItems, prefetchItems];
 };
 
 interface FetchItemOptions {
