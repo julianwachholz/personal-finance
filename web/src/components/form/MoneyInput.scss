@@ -1,6 +1,10 @@
 .input-money {
   width: 120px;
 
+  &.input-money-fullwidth {
+    width: 100%;
+  }
+
   input {
     text-align: right;
     padding-right: 26px;

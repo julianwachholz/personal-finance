@@ -1,6 +1,7 @@
-import { Button, Col, Form, Input, Row, Select } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { Account } from "../../dao/accounts";
 
@@ -31,27 +32,21 @@ const AccountForm = ({ data, onSave }: FormProps) => {
     onSave(values);
   };
 
-  const balance = data
-    ? {
-        amount: data.balance,
-        currency: data.currency
-      }
-    : {
-        amount: "0.00",
-        currency: "CHF" // TODO default currency
-      };
-
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={onSubmit}
-      initialValues={{ ...data, balance }}
+      initialValues={data}
     >
       <Row gutter={16}>
         <Col span={2}>
           <Form.Item name="icon" label="Icon">
-            <Input placeholder="💵" style={{ textAlign: "center" }} />
+            <Input
+              maxLength={1}
+              placeholder="💵"
+              style={{ textAlign: "center" }}
+            />
           </Form.Item>
         </Col>
         <Col span={22}>
@@ -70,19 +65,19 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       {data?.pk && !resetBalance ? (
         <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
       ) : (
-        <Row>
-          <Col span={6}>
+        <Row gutter={16}>
+          <Col span={4}>
             <Form.Item name="balance" label="Initial Balance" required>
-              <MoneyInput />
+              <MoneyInput size="default" fullWidth />
             </Form.Item>
           </Col>
-          <Col span={18}>
+          <Col span={4}>
             <Form.Item
               name="balance_currency"
               label="Currency"
               rules={[{ required: true, message: "Select a currency" }]}
             >
-              <Select></Select>
+              <CurrencySelect />
             </Form.Item>
           </Col>
         </Row>

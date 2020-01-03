@@ -1,6 +1,7 @@
 import { Form, Input, Radio, Switch } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
+import CurrencySelect from "../../components/form/CurrencySelect";
 import ModelSelect from "../../components/form/ModelSelect";
 import { useAccounts } from "../../dao/accounts";
 import { patchSettings, Settings } from "../../dao/settings";
@@ -25,9 +26,10 @@ const Options = () => {
         layout="vertical"
         initialValues={settings}
         onValuesChange={onChange}
+        wrapperCol={{ span: 12 }}
       >
         <Form.Item name="default_currency" label="Default Currency">
-          <Input />
+          <CurrencySelect />
         </Form.Item>
         <Form.Item name="default_debit_account" label="Default Debit Account">
           <ModelSelect size="default" useItems={useAccounts} />

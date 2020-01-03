@@ -18,3 +18,5 @@ const CurrencySelect = (props: SelectProps<string>) => {
     </Select>
   );
 };
+
+export default CurrencySelect;

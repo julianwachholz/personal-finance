@@ -3,13 +3,17 @@ import React from "react";
 import "./MoneyInput.scss";
 import { SizedInputNumber } from "./SizedInput";
 
-const MoneyInput = ({ value, ...props }: InputNumberProps) => {
+interface MoneyInputProps extends InputNumberProps {
+  fullWidth?: boolean;
+}
+
+const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
   if (value) {
     value = parseFloat(value as any);
   }
   return (
     <SizedInputNumber
-      className="input-money"
+      className={`input-money ${fullWidth && "input-money-fullwidth"}`}
       precision={2}
       formatter={v =>
         `${value && value > 0 ? "+" : ""}${v}`.replace(

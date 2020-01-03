@@ -48,7 +48,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
             <Input placeholder="📗" style={{ textAlign: "center" }} />
           </Form.Item>
         </Col>
-        <Col span={22}>
+        <Col span={8}>
           <Form.Item
             name="name"
             label="Name"
@@ -58,7 +58,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="set_color" label="Color">
+      <Form.Item name="set_color" label="Color" wrapperCol={{ span: 10 }}>
         <ColorInput />
       </Form.Item>
       {!data && (
@@ -81,7 +81,10 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               }
               rules={[{ required: true, message: "Select target position" }]}
             >
-              <CategorySelect placeholder="Select where to insert the new Category" />
+              <CategorySelect
+                size="default"
+                placeholder="Select where to insert the new Category"
+              />
             </Form.Item>
           </Col>
         </Row>
