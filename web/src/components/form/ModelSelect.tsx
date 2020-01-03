@@ -20,7 +20,11 @@ const ModelSelect = <T extends ModelWithLabel>({
     </Select.Option>
   ));
   return (
-    <SizedSelect {...props} loading={isLoading}>
+    <SizedSelect
+      {...props}
+      loading={isLoading}
+      dropdownStyle={{ minWidth: 300 }}
+    >
       {options}
     </SizedSelect>
   );

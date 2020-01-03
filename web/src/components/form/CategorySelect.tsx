@@ -35,7 +35,7 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
   return (
     <TreeSelect<Category>
       showSearch
-      dropdownStyle={{ maxHeight: 300 }}
+      dropdownStyle={{ maxHeight: 260, minWidth: 300 }}
       filterTreeNode={(search, node: any) =>
         node.props.searchIndex.includes(search.toLowerCase())
       }
