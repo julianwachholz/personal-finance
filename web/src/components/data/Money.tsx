@@ -1,5 +1,6 @@
 import padEnd from "lodash/padEnd";
 import React from "react";
+import { useAuth } from "../../utils/AuthProvider";
 import "./Money.scss";
 
 export interface Money {
@@ -9,22 +10,19 @@ export interface Money {
 
 interface MoneyProps {
   value: Money;
-  groupSeparator?: string;
-  decimalSeparator?: string;
   precision?: number;
 }
 
 // Parts from:
 // https://github.com/ant-design/ant-design/blob/f7d211fcea4655baf5fe1ad9f1efadc2e158fda5/components/statistic/Number.tsx
 
-const Money = ({
-  value,
-  groupSeparator = ",",
-  decimalSeparator = ".",
-  precision
-}: MoneyProps) => {
+const Money = ({ value, precision }: MoneyProps) => {
+  const { settings } = useAuth();
   let amount: React.ReactNode;
   const cells = value.amount.match(/^(-?)(\d*)(\.(\d+))?$/);
+
+  const groupSeparator = settings?.group_separator ?? "\xa0";
+  const decimalSeparator = settings?.decimal_separator ?? ".";
 
   if (!cells) {
     amount = value.amount;

@@ -45,19 +45,15 @@ const generateConfig: GenerateConfig<Date> = {
     getWeekFirstDay: locale => 1,
     getWeek: (locale, date) => getWeek(date),
     getShortWeekDays: locale => {
-      const d = Array.from({ length: 7 }).map((_, day) => {
+      return Array.from({ length: 7 }).map((_, day) => {
         console.info("localize day ", day);
         return enUS.localize.day(day, { width: "abbreviated" });
       });
-      console.log("days", d);
-      return d;
     },
     getShortMonths: locale => {
-      const m = Array.from({ length: 12 }).map((_, month) =>
+      return Array.from({ length: 12 }).map((_, month) =>
         enUS.localize.month(month, { width: "abbreviated" })
       );
-      console.log("months", m);
-      return m;
     },
     format: (locale, date, fmt) => {
       fmt = fmt.replace("YYYY", "yyyy");

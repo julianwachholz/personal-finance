@@ -4,6 +4,8 @@ export interface Settings {
   default_currency: string;
   default_debit_account?: number;
   default_credit_account?: number;
+  decimal_separator: string;
+  group_separator: string;
   date_format: string;
 }
 

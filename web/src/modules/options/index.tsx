@@ -9,13 +9,71 @@ import { useAuth } from "../../utils/AuthProvider";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseModule from "../base/BaseModule";
 
+interface NumberFormat {
+  label: string;
+  decimal_separator: string;
+  group_separator: string;
+}
+
+type NumberFormatName = "default" | "american" | "german" | "swiss";
+
+type NumberFormats = {
+  [F in NumberFormatName]: NumberFormat;
+};
+
+const numberFormats: NumberFormats = {
+  default: {
+    label: "1 000.99",
+    decimal_separator: ".",
+    group_separator: "\xa0"
+  },
+  american: {
+    label: "1,000.99",
+    decimal_separator: ".",
+    group_separator: ","
+  },
+  german: {
+    label: "1.000,99",
+    decimal_separator: ",",
+    group_separator: "."
+  },
+  swiss: {
+    label: "1'000.99",
+    decimal_separator: ".",
+    group_separator: "'"
+  }
+};
+
+interface NumberFormatSetter {
+  number_format?: NumberFormatName;
+}
+
+const getNumberFormat = (settings: Settings): NumberFormatName => {
+  const match = Object.entries(numberFormats).find(
+    ([k, f]) =>
+      f.group_separator === settings.group_separator &&
+      f.decimal_separator === settings.decimal_separator
+  );
+  if (match) {
+    return match[0] as NumberFormatName;
+  }
+  return "default";
+};
+
 const Options = () => {
   const [form] = Form.useForm();
   const { settings } = useAuth();
   const { theme, toggleTheme, tableSize, setTableSize } = useSettings();
-  const [mutate] = useMutation(patchSettings);
+  const [mutate] = useMutation(patchSettings, { refetchQueries: ["user"] });
 
-  const onChange = async (values: Partial<Settings>) => {
+  if (!settings) {
+    return <></>;
+  }
+
+  const onChange = async (values: Partial<Settings> & NumberFormatSetter) => {
+    if (values.number_format) {
+      values = numberFormats[values.number_format];
+    }
     mutate(values);
   };
 
@@ -24,7 +82,10 @@ const Options = () => {
       <Form
         form={form}
         layout="vertical"
-        initialValues={settings}
+        initialValues={{
+          ...settings,
+          number_format: getNumberFormat(settings)
+        }}
         onValuesChange={onChange}
         wrapperCol={{ span: 12 }}
       >
@@ -36,6 +97,15 @@ const Options = () => {
         </Form.Item>
         <Form.Item name="default_credit_account" label="Default Credit Account">
           <ModelSelect size="default" useItems={useAccounts} />
+        </Form.Item>
+        <Form.Item name="number_format" label="Number Format">
+          <Radio.Group>
+            {Object.entries(numberFormats).map(([k, v]) => (
+              <Radio.Button key={k} value={k}>
+                {v.label}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
         </Form.Item>
         <Form.Item name="date_format" label="Date Format">
           <Input />

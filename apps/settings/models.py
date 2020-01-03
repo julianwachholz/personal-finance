@@ -30,6 +30,12 @@ class Settings(models.Model):
         related_name="+",
     )
 
+    decimal_separator = models.CharField(
+        verbose_name=_("decimal separator"), max_length=3, default="."
+    )
+    group_separator = models.CharField(
+        verbose_name=_("group / thousand separator"), max_length=3, default=" "
+    )
     date_format = models.CharField(
         verbose_name=_("date format"), max_length=100, blank=True
     )

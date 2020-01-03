@@ -1,7 +1,6 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
 import { prefetchCategoryTree } from "../../dao/categories";
 import {
   postTransaction,
@@ -9,10 +8,12 @@ import {
   Transaction,
   useTransactions
 } from "../../dao/transactions";
+import { useAuth } from "../../utils/AuthProvider";
 import BaseList from "../base/BaseList";
 import columns from "./columns";
 
-const Transactions = ({ match }: RouteComponentProps) => {
+const Transactions = () => {
+  const { settings } = useAuth();
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
   prefetchCategoryTree();
@@ -36,16 +37,14 @@ const Transactions = ({ match }: RouteComponentProps) => {
           throw e;
         }
       }}
-      defaultValues={{ datetime: new Date() }}
+      defaultValues={{
+        datetime: new Date(),
+        set_account: settings?.default_debit_account
+      }}
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions}
       columns={columns}
-      actions={[
-        <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Transaction</Link>
-        </Button>
-      ]}
     />
   );
 };

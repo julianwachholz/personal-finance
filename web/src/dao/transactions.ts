@@ -17,11 +17,15 @@ export interface Transaction {
   amount: string;
   amount_currency: string;
 
-  is_transfer: boolean;
-  is_initial: boolean;
+  readonly is_transfer: boolean;
+  readonly is_initial: boolean;
 
   text: string;
   reference: string;
+
+  set_account?: number;
+  set_category?: number;
+  set_payee?: number;
 
   readonly label: string;
 }

@@ -60,7 +60,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         source="payee", queryset=Payee.objects, required=False, write_only=True
     )
     set_tags = PKField(
-        source="tags", queryset=Tag.objects, required=False, write_only=True
+        many=True, source="tags", queryset=Tag.objects, required=False, write_only=True
     )
 
     class Meta:

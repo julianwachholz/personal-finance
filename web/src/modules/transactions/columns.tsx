@@ -9,6 +9,7 @@ import { SizedDatePicker } from "../../components/form/SizedInput";
 import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
 import { usePayees } from "../../dao/payees";
+import { useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
 import { EditableColumnsType } from "../base/BaseList";
 
@@ -34,6 +35,20 @@ const columns: EditableColumnsType<Transaction> = [
     }
   },
   {
+    title: "Account",
+    dataIndex: "account",
+    formName: "set_account",
+    editable: true,
+    formField: <ModelSelect size="small" useItems={useAccounts} />,
+    formValue: (key, value) => ["set_account", value?.pk],
+    render(account: ModelWithLabel) {
+      if (!account) {
+        return "no";
+      }
+      return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
+    }
+  },
+  {
     title: "Amount",
     dataIndex: "amount",
     align: "right",
@@ -44,9 +59,24 @@ const columns: EditableColumnsType<Transaction> = [
     }
   },
   {
+    title: "Payee",
+    dataIndex: "payee",
+    ellipsis: true,
+    editable: true,
+    formName: "set_payee",
+    formField: <ModelSelect size="small" useItems={usePayees} />,
+    rules: [],
+    formValue: (key, value) => ["set_payee", value?.pk],
+    render(payee: ModelWithLabel) {
+      if (payee)
+        return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;
+    }
+  },
+  {
     title: "Category",
     dataIndex: "category",
     editable: true,
+    width: 200,
     formName: "set_category",
     formField: <CategorySelect />,
     formValue: (key, value) => ["set_category", value?.pk],
@@ -66,34 +96,6 @@ const columns: EditableColumnsType<Transaction> = [
     }
   },
   {
-    title: "Account",
-    dataIndex: "account",
-    formName: "set_account",
-    editable: true,
-    formField: <ModelSelect size="small" useItems={useAccounts} />,
-    formValue: (key, value) => ["set_account", value?.pk],
-    render(account: ModelWithLabel) {
-      if (!account) {
-        return "no";
-      }
-      return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
-    }
-  },
-  {
-    title: "Payee",
-    dataIndex: "payee",
-    ellipsis: true,
-    editable: true,
-    formName: "set_payee",
-    formField: <ModelSelect size="small" useItems={usePayees} />,
-    rules: [],
-    formValue: (key, value) => ["set_payee", value?.pk],
-    render(payee: ModelWithLabel) {
-      if (payee)
-        return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;
-    }
-  },
-  {
     title: "Description",
     dataIndex: "text",
     ellipsis: true,
@@ -103,7 +105,13 @@ const columns: EditableColumnsType<Transaction> = [
   {
     title: "Tags",
     dataIndex: "tags",
-    editable: true,
+    editable: false,
+    formName: "set_tags",
+    formValue: (key, value) => [
+      "set_tags",
+      value.map((v: ModelWithLabel) => v.pk)
+    ],
+    formField: <ModelSelect mode="tags" useItems={useTags} />,
     rules: [],
     render(tags: ModelWithLabel[]) {
       if (!tags) {
