@@ -1,9 +1,10 @@
-import { Button, Input, message, Popconfirm } from "antd";
+import { Button, message, Popconfirm } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import ColorInput from "../../components/form/ColorInput";
+import { SizedInput } from "../../components/form/SizedInput";
 import { deleteTag, postTag, putTag, Tag, useTags } from "../../dao/tags";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
@@ -22,13 +23,7 @@ const Tags = ({ match }: RouteComponentProps) => {
       dataIndex: "name",
       sorter: true,
       editable: true,
-      formField: (
-        <Input
-          size={tableSize === "small" ? "small" : "default"}
-          autoFocus
-          prefix="#"
-        />
-      ),
+      formField: <SizedInput autoFocus prefix="#" />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
       }

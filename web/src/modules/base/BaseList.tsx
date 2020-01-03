@@ -196,7 +196,7 @@ const BaseList = <T extends ModelWithLabel>({
             <>
               <Button
                 type="primary"
-                size="small"
+                size={tableSize === "small" ? "small" : "default"}
                 htmlType="submit"
                 loading={editLoading}
               >
@@ -332,7 +332,7 @@ const BaseList = <T extends ModelWithLabel>({
           editItem({ pk: 0 } as any);
         }}
       >
-        Create Inline
+        Quick Create {itemName}
       </Button>
     ];
   }

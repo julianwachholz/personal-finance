@@ -1,11 +1,11 @@
-import { InputNumber } from "antd";
 import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
 import Money from "../../components/data/Money";
 import CategorySelect from "../../components/form/CategorySelect";
-import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
+import MoneyInput from "../../components/form/MoneyInput";
+import { SizedDatePicker } from "../../components/form/SizedInput";
 import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
 import { usePayees } from "../../dao/payees";
@@ -19,8 +19,8 @@ const columns: EditableColumnsType<Transaction> = [
     sorter: true,
     defaultSortOrder: "descend",
     editable: true,
-    width: 130,
-    formField: <DatePicker size="small" allowClear={false} />,
+    width: 145,
+    formField: <SizedDatePicker allowClear={false} />,
     render(date: Date) {
       if (!date) {
         return;
@@ -38,7 +38,7 @@ const columns: EditableColumnsType<Transaction> = [
     dataIndex: "amount",
     align: "right",
     editable: true,
-    formField: <InputNumber size="small" autoFocus precision={2} />,
+    formField: <MoneyInput autoFocus />,
     render(amount: string, tx) {
       return <Money value={{ amount: amount, currency: tx.amount_currency }} />;
     }
@@ -48,8 +48,9 @@ const columns: EditableColumnsType<Transaction> = [
     dataIndex: "category",
     editable: true,
     formName: "set_category",
-    formField: <CategorySelect size="small" />,
+    formField: <CategorySelect />,
     formValue: (key, value) => ["set_category", value?.pk],
+    rules: [],
     render(category: ModelWithLabel, tx) {
       if (tx.is_transfer) {
         return <em>Transfer</em>;
@@ -85,6 +86,7 @@ const columns: EditableColumnsType<Transaction> = [
     editable: true,
     formName: "set_payee",
     formField: <ModelSelect size="small" useItems={usePayees} />,
+    rules: [],
     formValue: (key, value) => ["set_payee", value?.pk],
     render(payee: ModelWithLabel) {
       if (payee)
@@ -95,12 +97,14 @@ const columns: EditableColumnsType<Transaction> = [
     title: "Description",
     dataIndex: "text",
     ellipsis: true,
-    editable: true
+    editable: true,
+    rules: []
   },
   {
     title: "Tags",
     dataIndex: "tags",
     editable: true,
+    rules: [],
     render(tags: ModelWithLabel[]) {
       if (!tags) {
         return "no";

@@ -2,6 +2,7 @@ import { Select } from "antd";
 import { SelectProps, SelectValue } from "antd/lib/select";
 import React from "react";
 import { ModelWithLabel, UseItems } from "../../dao/base";
+import { SizedSelect } from "./SizedInput";
 
 interface ModelSelectProps<T extends ModelWithLabel>
   extends SelectProps<SelectValue> {
@@ -19,9 +20,9 @@ const ModelSelect = <T extends ModelWithLabel>({
     </Select.Option>
   ));
   return (
-    <Select {...props} loading={isLoading}>
+    <SizedSelect {...props} loading={isLoading}>
       {options}
-    </Select>
+    </SizedSelect>
   );
 };
 

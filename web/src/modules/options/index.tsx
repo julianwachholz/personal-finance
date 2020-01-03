@@ -30,10 +30,10 @@ const Options = () => {
           <Input />
         </Form.Item>
         <Form.Item name="default_debit_account" label="Default Debit Account">
-          <ModelSelect useItems={useAccounts} />
+          <ModelSelect size="default" useItems={useAccounts} />
         </Form.Item>
         <Form.Item name="default_credit_account" label="Default Credit Account">
-          <ModelSelect useItems={useAccounts} />
+          <ModelSelect size="default" useItems={useAccounts} />
         </Form.Item>
         <Form.Item name="date_format" label="Date Format">
           <Input />

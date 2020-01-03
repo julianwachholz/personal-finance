@@ -15,7 +15,6 @@ import columns from "./columns";
 const Transactions = ({ match }: RouteComponentProps) => {
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
-
   prefetchCategoryTree();
 
   return (

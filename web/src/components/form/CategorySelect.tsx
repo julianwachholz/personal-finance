@@ -1,10 +1,12 @@
 import TreeSelect, { TreeSelectProps } from "antd/lib/tree-select";
 import React, { useMemo } from "react";
 import { Category, TreeCategory, useCategoryTree } from "../../dao/categories";
+import { useSettings } from "../../utils/SettingsProvider";
 
 const { TreeNode: Node } = TreeSelect;
 
 const CategorySelect = (props: TreeSelectProps<Category>) => {
+  const { tableSize } = useSettings();
   const { data: categoryTree, isLoading } = useCategoryTree();
 
   const defaultExpandedKeys = JSON.parse(
@@ -40,6 +42,7 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
       // TODO suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
       treeDefaultExpandedKeys={defaultExpandedKeys}
       disabled={isLoading}
+      size={tableSize === "small" ? "small" : "default"}
       {...props}
     >
       {treeData}

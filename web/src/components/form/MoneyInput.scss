@@ -1,14 +1,8 @@
 .input-money {
-  .input-money-amount {
-    width: 120px;
+  width: 120px;
 
-    input {
-      text-align: right;
-      padding-right: 26px;
-    }
-  }
-
-  .input-money-currency.ant-select {
-    width: 80px;
+  input {
+    text-align: right;
+    padding-right: 26px;
   }
 }

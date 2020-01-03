@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row } from "antd";
+import { Button, Col, Form, Input, Row, Select } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import MoneyInput from "../../components/form/MoneyInput";
@@ -70,9 +70,22 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       {data?.pk && !resetBalance ? (
         <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
       ) : (
-        <Form.Item name="balance" label="Initial Balance" required>
-          <MoneyInput />
-        </Form.Item>
+        <Row>
+          <Col span={6}>
+            <Form.Item name="balance" label="Initial Balance" required>
+              <MoneyInput />
+            </Form.Item>
+          </Col>
+          <Col span={18}>
+            <Form.Item
+              name="balance_currency"
+              label="Currency"
+              rules={[{ required: true, message: "Select a currency" }]}
+            >
+              <Select></Select>
+            </Form.Item>
+          </Col>
+        </Row>
       )}
       <Form.Item className="form-actions">
         <>

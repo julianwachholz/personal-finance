@@ -61,6 +61,7 @@ class AbstractTransaction(models.Model):
             self.amount_currency = self.account.balance_currency
 
     def save(self, *args, **kwargs):
+        self.amount_currency = self.account.balance_currency
         super().save(*args, **kwargs)
         if self.related and self.related.related != self:
             self.related.related = self

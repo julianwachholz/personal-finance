@@ -1,5 +1,6 @@
 import { Button, Col, Form, Input, Radio, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
+import { InputNumberProps } from "antd/lib/input-number";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
@@ -38,6 +39,13 @@ const TransactionForm = ({ data, onSave }: FormProps) => {
     }
   };
 
+  const moneyProps: InputNumberProps = {};
+  if (isExpense) {
+    moneyProps.max = 0;
+  } else {
+    moneyProps.min = 0;
+  }
+
   return (
     <Form
       form={form}
@@ -48,7 +56,7 @@ const TransactionForm = ({ data, onSave }: FormProps) => {
       <Row>
         <Col span={7}>
           <Form.Item name="amount" label="Amount" rules={[{ required: true }]}>
-            <MoneyInput autoFocus isNegative={isExpense} />
+            <MoneyInput autoFocus {...moneyProps} />
           </Form.Item>
         </Col>
         <Col span={5}>
