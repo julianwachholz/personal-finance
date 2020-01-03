@@ -79,11 +79,6 @@ const Payees = ({ match }: RouteComponentProps) => {
       itemNamePlural="Payees"
       useItems={usePayees}
       columns={columns}
-      actions={[
-        <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Payee</Link>
-        </Button>
-      ]}
       extraRowActions={payee => [
         <Popconfirm
           key="del"

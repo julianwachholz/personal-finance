@@ -1,6 +1,6 @@
-import { Button, Descriptions, Spin } from "antd";
+import { Descriptions, Spin } from "antd";
 import React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
@@ -18,14 +18,7 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
   prefetchTransactions({ filters });
 
   return payee ? (
-    <BaseModule
-      title={payee.name}
-      extra={[
-        <Link key="edit" to={`${match.url}/edit`}>
-          <Button type="primary">Edit Payee</Button>
-        </Link>
-      ]}
-    >
+    <BaseModule title={payee.name}>
       <Descriptions title="Payee">
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>
