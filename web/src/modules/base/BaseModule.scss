@@ -1,6 +1,12 @@
 .module {
   .ant-page-header {
     padding: 0 0 16px 0;
+
+    .ant-page-header-heading-extra {
+      button:last-child {
+        margin-right: 0;
+      }
+    }
   }
   .ant-btn {
     margin-right: 8px;
@@ -28,7 +34,16 @@
     margin: 0;
   }
 
+  .ant-table-cell {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
+
   .ant-table-small {
+    .ant-table-filter-column-title {
+      padding-left: 8px;
+    }
     .ant-btn-link {
       height: auto;
     }

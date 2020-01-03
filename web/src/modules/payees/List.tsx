@@ -2,7 +2,13 @@ import { Button, Input, message, Popconfirm, Select } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { deletePayee, Payee, putPayee, usePayees } from "../../dao/payees";
+import {
+  deletePayee,
+  Payee,
+  postPayee,
+  putPayee,
+  usePayees
+} from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
 
@@ -13,6 +19,7 @@ const Payees = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/payees"]
   });
   const [edit] = useMutation(putPayee);
+  const [create] = useMutation(postPayee);
 
   const columns: EditableColumnsType<Payee> = [
     {
@@ -30,6 +37,7 @@ const Payees = ({ match }: RouteComponentProps) => {
     {
       title: "Type",
       dataIndex: "type",
+      width: 200,
       render(type) {
         return type === "business" ? "Business" : "Private";
       },
@@ -52,21 +60,30 @@ const Payees = ({ match }: RouteComponentProps) => {
     <BaseList<Payee>
       editable
       onSave={async payee => {
+        const isNew = payee.pk === 0;
         try {
-          const savedPayee = await edit(payee, {
-            updateQuery: ["item/payees", { pk: payee.pk }]
-          });
-          message.success("Payee updated!");
+          const savedPayee = isNew
+            ? await create(payee)
+            : await edit(payee, {
+                updateQuery: ["item/payees", { pk: payee.pk }]
+              });
+          message.success(`Payee ${isNew ? "created" : "updated"}!`);
           return savedPayee;
         } catch (e) {
-          message.error("Payee update failed!");
+          message.error(`Payee ${isNew ? "create" : "update"} failed!`);
           throw e;
         }
       }}
+      defaultValues={{ type: "business" }}
       itemName="Payee"
       itemNamePlural="Payees"
       useItems={usePayees}
       columns={columns}
+      actions={[
+        <Button key="create" type="primary">
+          <Link to={`${match.url}/create`}>Create Payee</Link>
+        </Button>
+      ]}
       extraRowActions={payee => [
         <Popconfirm
           key="del"
@@ -81,11 +98,6 @@ const Payees = ({ match }: RouteComponentProps) => {
         >
           <Button type="link">Delete</Button>
         </Popconfirm>
-      ]}
-      actions={[
-        <Button key="create" type="primary">
-          <Link to={`${match.url}/create`}>Create Payee</Link>
-        </Button>
       ]}
     />
   );

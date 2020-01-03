@@ -13,6 +13,7 @@ import {
 import { ColumnType } from "antd/lib/table/interface";
 import { TableProps } from "antd/lib/table/Table";
 import { FormInstance } from "rc-field-form";
+import { Rule } from "rc-field-form/lib/interface";
 import React, { HTMLAttributes, ReactText, useState } from "react";
 import { setQueryData } from "react-query";
 import { Link } from "react-router-dom";
@@ -28,6 +29,7 @@ interface EditableColumnType<T> extends ColumnType<T> {
   editable?: boolean;
   formName?: string;
   formField?: FormField;
+  rules?: Rule[];
 }
 
 export type EditableColumnsType<T> = EditableColumnType<T>[];
@@ -36,6 +38,7 @@ interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
   editing: boolean;
   name: string;
   field: FormField;
+  rules?: any;
   item: T;
   children: React.ReactNode;
 }
@@ -44,7 +47,9 @@ const EditableCell: React.FC<any> = <T extends Model>({
   editing,
   name,
   field,
+  rules,
   item,
+  title,
   children,
   ...props
 }: EditableCellProps<T>) => {
@@ -52,9 +57,8 @@ const EditableCell: React.FC<any> = <T extends Model>({
     <td {...props}>
       {editing ? (
         <Form.Item
-          noStyle
           name={name}
-          rules={[{ required: true, message: "Derp" }]}
+          rules={rules ?? [{ required: true, message: `${title} is required` }]}
         >
           {field}
         </Form.Item>
@@ -98,6 +102,7 @@ interface ListProps<T extends ModelWithLabel> {
   tableProps?: TableProps<T>;
   editable?: boolean;
   onSave?: (item: T) => Promise<T>;
+  defaultValues?: Partial<T>;
 }
 
 const BaseList = <T extends ModelWithLabel>({
@@ -113,7 +118,8 @@ const BaseList = <T extends ModelWithLabel>({
   extraRowActions,
   tableProps = {},
   editable = false,
-  onSave
+  onSave,
+  defaultValues = {}
 }: ListProps<T>) => {
   if (editable && !onSave) {
     throw new Error("editable list requires onSave callback");
@@ -126,19 +132,21 @@ const BaseList = <T extends ModelWithLabel>({
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
 
-  console.info(`render <BaseList>`);
-
   // Editable table
   const [form] = Form.useForm();
+  // const [inlineCreate, setInlineCreate] = useState(false);
   const [editingItem, setEditingItem] = useState<T>();
   const [editLoading, setEditLoading] = useState(false);
   const isEditing = (item: T) => item.pk === editingItem?.pk;
   const editItem = (item: T) => {
-    const data = { ...item };
+    const data = { ...defaultValues, ...item };
+    form.resetFields();
     form.setFieldsValue(data);
     setEditingItem(data);
   };
-  const cancelEdit = () => setEditingItem(undefined);
+  const cancelEdit = () => {
+    setEditingItem(undefined);
+  };
 
   if (editable || extraRowActions) {
     columns = [
@@ -151,8 +159,10 @@ const BaseList = <T extends ModelWithLabel>({
           onCell: (item: T) => {
             return {
               item,
+              title: col.title,
               name: col.formName ?? col.dataIndex,
               field: col.formField ?? <Input />,
+              rules: col.rules,
               editing: isEditing(item)
             } as any;
           }
@@ -160,6 +170,7 @@ const BaseList = <T extends ModelWithLabel>({
       }),
       {
         align: "right",
+        width: 200,
         render(_, item, i) {
           return isEditing(item) ? (
             <>
@@ -211,6 +222,7 @@ const BaseList = <T extends ModelWithLabel>({
       return;
     }
     setEditLoading(true);
+    await form.validateFields();
     const newValues = {
       ...editingItem!,
       ...values
@@ -283,6 +295,28 @@ const BaseList = <T extends ModelWithLabel>({
     />
   ) : null;
 
+  let dataSource: T[];
+  if (editingItem?.pk === 0) {
+    dataSource = [{ pk: 0 } as any, ...(data?.results ?? [])];
+  } else {
+    dataSource = data?.results ?? [];
+  }
+
+  if (editable) {
+    actions = [
+      ...actions,
+      <Button
+        key="inline-create"
+        type="primary"
+        onClick={() => {
+          editItem({ pk: 0 } as any);
+        }}
+      >
+        Create Inline
+      </Button>
+    ];
+  }
+
   return (
     <div className="module module-list">
       <PageHeader
@@ -320,7 +354,7 @@ const BaseList = <T extends ModelWithLabel>({
         }}
       >
         <Table<T>
-          dataSource={data?.results ?? []}
+          dataSource={dataSource}
           components={components}
           columns={columns}
           loading={isLoading}

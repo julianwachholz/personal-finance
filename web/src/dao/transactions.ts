@@ -1,6 +1,7 @@
 import {
   makeFetchItems,
   makePostItem,
+  makePutItem,
   makeUseItems,
   ModelWithLabel
 } from "./base";
@@ -43,3 +44,5 @@ export const useTransactions = makeUseItems<Transaction>(
 );
 
 export const postTransaction = makePostItem<Transaction>("transactions");
+
+export const putTransactin = makePutItem<Transaction>("transactions");

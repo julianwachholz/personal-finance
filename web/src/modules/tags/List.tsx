@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Color from "../../components/data/Color";
 import ColorInput from "../../components/form/ColorInput";
-import { deleteTag, putTag, Tag, useTags } from "../../dao/tags";
+import { deleteTag, postTag, putTag, Tag, useTags } from "../../dao/tags";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
 
@@ -14,6 +14,7 @@ const Tags = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/tags"]
   });
   const [edit] = useMutation(putTag);
+  const [create] = useMutation(postTag);
 
   const columns: EditableColumnsType<Tag> = [
     {
@@ -22,7 +23,11 @@ const Tags = ({ match }: RouteComponentProps) => {
       sorter: true,
       editable: true,
       formField: (
-        <Input size={tableSize === "small" ? "small" : "default"} autoFocus />
+        <Input
+          size={tableSize === "small" ? "small" : "default"}
+          autoFocus
+          prefix="#"
+        />
       ),
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
@@ -32,6 +37,8 @@ const Tags = ({ match }: RouteComponentProps) => {
       title: "Color",
       dataIndex: "color",
       editable: true,
+      width: 200,
+      rules: [],
       formField: (
         <ColorInput size={tableSize === "small" ? "small" : "default"} />
       ),
@@ -50,14 +57,17 @@ const Tags = ({ match }: RouteComponentProps) => {
     <BaseList
       editable
       onSave={async tag => {
+        const isNew = tag.pk === 0;
         try {
-          const savedTag = await edit(tag, {
-            updateQuery: ["item/tags", { pk: tag.pk }]
-          });
-          message.success("Tag updated!");
+          const savedTag = isNew
+            ? await create(tag)
+            : await edit(tag, {
+                updateQuery: ["item/tags", { pk: tag.pk }]
+              });
+          message.success(`Tag ${isNew ? "created" : "updated"}!`);
           return savedTag;
         } catch (e) {
-          message.error("Tag update failed!");
+          message.error(`Tag ${isNew ? "create" : "update"} failed!`);
           throw e;
         }
       }}

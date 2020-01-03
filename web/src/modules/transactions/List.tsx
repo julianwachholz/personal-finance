@@ -1,13 +1,39 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import React from "react";
+import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { Transaction, useTransactions } from "../../dao/transactions";
+import {
+  postTransaction,
+  putTransactin,
+  Transaction,
+  useTransactions
+} from "../../dao/transactions";
 import BaseList from "../base/BaseList";
 import columns from "./columns";
 
 const Transactions = ({ match }: RouteComponentProps) => {
+  const [create] = useMutation(postTransaction);
+  const [update] = useMutation(putTransactin);
+
   return (
     <BaseList<Transaction>
+      editable
+      onSave={async tx => {
+        const isNew = tx.pk === 0;
+        try {
+          const savedTx = isNew
+            ? await create(tx)
+            : await update(tx, {
+                updateQuery: ["item/transactions", { pk: tx.pk }]
+              });
+          message.success(`Transaction ${isNew ? "created" : "updated"}!`);
+          return savedTx;
+        } catch (e) {
+          message.error("Transaction failed!");
+          throw e;
+        }
+      }}
+      defaultValues={{ datetime: new Date() }}
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions}
