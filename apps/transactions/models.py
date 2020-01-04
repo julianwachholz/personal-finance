@@ -62,6 +62,8 @@ class AbstractTransaction(models.Model):
 
     def save(self, *args, **kwargs):
         self.amount_currency = self.account.balance_currency
+        if not self.category and self.payee:
+            self.category = self.payee.default_category
         super().save(*args, **kwargs)
         if self.related and self.related.related != self:
             self.related.related = self

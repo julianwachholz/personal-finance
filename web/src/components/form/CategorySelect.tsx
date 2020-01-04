@@ -1,11 +1,11 @@
 import TreeSelect, { TreeSelectProps } from "antd/lib/tree-select";
 import React, { useMemo } from "react";
-import { Category, TreeCategory, useCategoryTree } from "../../dao/categories";
+import { TreeCategory, useCategoryTree } from "../../dao/categories";
 import { useSettings } from "../../utils/SettingsProvider";
 
 const { TreeNode: Node } = TreeSelect;
 
-const CategorySelect = (props: TreeSelectProps<Category>) => {
+const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
   const { tableSize } = useSettings();
   const { data: categoryTree, isLoading } = useCategoryTree();
 
@@ -16,8 +16,8 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
   const treeData = useMemo(() => {
     const renderNode = (category: TreeCategory) => {
       const props = {
-        key: category.pk,
-        value: category.pk,
+        key: category.pk.toString(),
+        value: category.pk.toString(),
         title: category.label,
         searchIndex: category.label.toLowerCase()
       };
@@ -32,8 +32,10 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
     }
   }, [categoryTree]);
 
+  value = value?.toString();
+
   return (
-    <TreeSelect<Category>
+    <TreeSelect<string>
       showSearch
       dropdownStyle={{ maxHeight: 260, minWidth: 300 }}
       filterTreeNode={(search, node: any) =>
@@ -43,6 +45,7 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
       treeDefaultExpandedKeys={defaultExpandedKeys}
       disabled={isLoading}
       size={tableSize}
+      value={value}
       {...props}
     >
       {treeData}

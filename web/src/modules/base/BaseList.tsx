@@ -30,7 +30,7 @@ interface EditableColumnType<T> extends ColumnType<T> {
   formName?: string;
   formField?: FormField;
 
-  // Get the form value entry from an existing value
+  // Get the form value entry from an existing value, in addition to the actual value
   formValue?: (key: string, value: any) => [string, any];
 
   // Trigger when this form field was changed
@@ -43,6 +43,7 @@ export type EditableColumnsType<T> = EditableColumnType<T>[];
 
 interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
   editing: boolean;
+  dataIndex: string;
   name: string;
   field: FormField;
   rules?: any;
@@ -53,6 +54,7 @@ interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
 const EditableCell: React.FC<any> = <T extends Model>({
   editing,
   name,
+  dataIndex,
   field,
   rules,
   item,
@@ -148,17 +150,16 @@ const BaseList = <T extends ModelWithLabel>({
   const [editLoading, setEditLoading] = useState(false);
   const isEditing = (item: T) => item.pk === editingItem?.pk;
   const editItem = (item: T) => {
-    const mappedItem = Object.fromEntries(
-      Object.entries(item).map(([key, value]) => {
-        const col = columns.find(
-          c => c.formName === key || c.dataIndex === key
-        );
-        if (col?.formValue) {
-          return col.formValue(key, value);
-        }
-        return [key, value];
-      })
-    );
+    const extra: any[][] = [];
+    const mapped = Object.entries(item).map(([key, value]) => {
+      const col = columns.find(c => c.formName === key || c.dataIndex === key);
+      if (col?.formValue) {
+        extra.push(col.formValue(key, value));
+      }
+      return [key, value];
+    });
+
+    const mappedItem = Object.fromEntries([...mapped, ...extra]);
     const data = { ...defaultValues, ...mappedItem };
     form.resetFields();
     form.setFieldsValue(data);
@@ -177,7 +178,6 @@ const BaseList = <T extends ModelWithLabel>({
           (col.dataIndex && changedKeys.includes(col.dataIndex as string)) ||
           (col.formName && changedKeys.includes(col.formName))
         ) {
-          console.log("formChange!");
           col.formChange!(changedValues, form);
         }
       });
@@ -195,6 +195,7 @@ const BaseList = <T extends ModelWithLabel>({
             return {
               item,
               title: col.title,
+              dataIndex: col.dataIndex,
               name: col.formName ?? col.dataIndex,
               field: col.formField ?? <Input />,
               rules: col.rules,
@@ -316,6 +317,7 @@ const BaseList = <T extends ModelWithLabel>({
         setPage(current);
         cancelEdit();
       }}
+      size={tableSize}
       pageSize={pageSize}
       showSizeChanger
       pageSizeOptions={["10", "25", "50", "100"]}
@@ -369,6 +371,7 @@ const BaseList = <T extends ModelWithLabel>({
       />
       {showSearch ? (
         <Input.Search
+          size={tableSize}
           loading={isLoading}
           enterButton
           onSearch={value => {
@@ -384,6 +387,19 @@ const BaseList = <T extends ModelWithLabel>({
         component={editable ? undefined : false}
         onValuesChange={onValuesChange}
         onFinish={values => saveItem(values as Partial<T>)}
+        onKeyDown={(e: any) => {
+          if (e.keyCode === 13) {
+            if (
+              e.target.tagName.toLowerCase() === "button" ||
+              e.target.classList.contains("ant-input") ||
+              e.target.classList.contains("ant-input-number-input")
+            ) {
+              return;
+            }
+            console.log("enter pressed");
+            e.preventDefault();
+          }
+        }}
         onKeyUp={e => {
           // ESC
           if (e.keyCode === 27) {

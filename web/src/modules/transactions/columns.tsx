@@ -68,10 +68,11 @@ const columns: EditableColumnsType<Transaction> = [
     formField: <ModelSelect useItems={usePayees} />,
     rules: [],
     formValue: (key, value) => ["set_payee", value?.pk],
-    formChange: ({ set_payee }, form) => {
-      // const { data } = useQuery();
-      const p = form.getFieldValue("payee");
-      console.log("payee was changed!", p, set_payee);
+    formChange: (changed, form) => {
+      // @TODO set category directly
+      // const p = form.getFieldValue("payee");
+      // const p2 = form.getFieldValue("set_payee");
+      // console.log("payee was changed!", p, p2, changed);
     },
     render(payee: ModelWithLabel) {
       if (payee) {
@@ -116,7 +117,7 @@ const columns: EditableColumnsType<Transaction> = [
     formName: "set_tags",
     formValue: (key, value) => [
       "set_tags",
-      value.map((v: ModelWithLabel) => v.pk)
+      value.map((v: ModelWithLabel) => v?.pk)
     ],
     formField: <ModelSelect mode="tags" useItems={useTags} />,
     rules: [],
