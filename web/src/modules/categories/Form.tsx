@@ -81,10 +81,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               }
               rules={[{ required: true, message: "Select target position" }]}
             >
-              <CategorySelect
-                size="default"
-                placeholder="Select where to insert the new Category"
-              />
+              <CategorySelect placeholder="Select where to insert the new Category" />
             </Form.Item>
           </Col>
         </Row>

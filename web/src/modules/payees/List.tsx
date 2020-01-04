@@ -16,7 +16,6 @@ import BaseList, { EditableColumnsType } from "../base/BaseList";
 
 const Payees = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();
-
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
   });
@@ -29,9 +28,7 @@ const Payees = ({ match }: RouteComponentProps) => {
       dataIndex: "name",
       sorter: true,
       editable: true,
-      formField: (
-        <Input size={tableSize === "small" ? "small" : "default"} autoFocus />
-      ),
+      formField: <Input autoFocus size={tableSize} />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>{name}</Link>;
       }
@@ -44,7 +41,7 @@ const Payees = ({ match }: RouteComponentProps) => {
       },
       editable: true,
       formField: (
-        <Select size={tableSize === "small" ? "small" : "default"}>
+        <Select size={tableSize}>
           <Select.Option value="business">Business</Select.Option>
           <Select.Option value="private">Private</Select.Option>
         </Select>

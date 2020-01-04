@@ -33,6 +33,9 @@ interface EditableColumnType<T> extends ColumnType<T> {
   // Get the form value entry from an existing value
   formValue?: (key: string, value: any) => [string, any];
 
+  // Trigger when this form field was changed
+  formChange?: (changed: Partial<T>, form: FormInstance) => void;
+
   rules?: Rule[];
 }
 
@@ -165,6 +168,21 @@ const BaseList = <T extends ModelWithLabel>({
     setEditingItem(undefined);
   };
 
+  const onValuesChange = (changedValues: any) => {
+    const changedKeys = Object.keys(changedValues);
+    columns
+      .filter(col => !!col.formChange)
+      .forEach(col => {
+        if (
+          (col.dataIndex && changedKeys.includes(col.dataIndex as string)) ||
+          (col.formName && changedKeys.includes(col.formName))
+        ) {
+          console.log("formChange!");
+          col.formChange!(changedValues, form);
+        }
+      });
+  };
+
   if (editable || extraRowActions) {
     columns = [
       ...columns.map(col => {
@@ -178,9 +196,7 @@ const BaseList = <T extends ModelWithLabel>({
               item,
               title: col.title,
               name: col.formName ?? col.dataIndex,
-              field: col.formField ?? (
-                <Input size={tableSize === "small" ? "small" : "default"} />
-              ),
+              field: col.formField ?? <Input />,
               rules: col.rules,
               editing: isEditing(item)
             } as any;
@@ -197,7 +213,7 @@ const BaseList = <T extends ModelWithLabel>({
             <>
               <Button
                 type="primary"
-                size={tableSize === "small" ? "small" : "default"}
+                size={tableSize === "small" ? "small" : "middle"}
                 htmlType="submit"
                 loading={editLoading}
               >
@@ -366,6 +382,7 @@ const BaseList = <T extends ModelWithLabel>({
       <Form
         form={form}
         component={editable ? undefined : false}
+        onValuesChange={onValuesChange}
         onFinish={values => saveItem(values as Partial<T>)}
         onKeyUp={e => {
           // ESC
@@ -373,6 +390,7 @@ const BaseList = <T extends ModelWithLabel>({
             cancelEdit();
           }
         }}
+        size={tableSize === "small" ? "small" : "middle"}
       >
         <Table<T>
           dataSource={dataSource}

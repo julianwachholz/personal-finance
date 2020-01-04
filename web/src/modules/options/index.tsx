@@ -93,10 +93,10 @@ const Options = () => {
           <CurrencySelect />
         </Form.Item>
         <Form.Item name="default_debit_account" label="Default Debit Account">
-          <ModelSelect size="default" useItems={useAccounts} />
+          <ModelSelect useItems={useAccounts} />
         </Form.Item>
         <Form.Item name="default_credit_account" label="Default Credit Account">
-          <ModelSelect size="default" useItems={useAccounts} />
+          <ModelSelect useItems={useAccounts} />
         </Form.Item>
         <Form.Item name="number_format" label="Number Format">
           <Radio.Group>
@@ -119,7 +119,7 @@ const Options = () => {
             buttonStyle="solid"
             onChange={e => setTableSize(e.target.value)}
           >
-            <Radio.Button value="default">Default</Radio.Button>
+            <Radio.Button value="large">Large</Radio.Button>
             <Radio.Button value="middle">Medium</Radio.Button>
             <Radio.Button value="small">Small</Radio.Button>
           </Radio.Group>

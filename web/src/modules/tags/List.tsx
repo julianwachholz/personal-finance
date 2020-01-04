@@ -1,9 +1,8 @@
-import { Button, message, Popconfirm, Tag } from "antd";
+import { Button, Input, message, Popconfirm, Tag } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import ColorSelect from "../../components/form/ColorSelect";
-import { SizedInput } from "../../components/form/SizedInput";
 import {
   deleteTag,
   postTag,
@@ -11,9 +10,11 @@ import {
   Tag as TagModel,
   useTags
 } from "../../dao/tags";
+import { useSettings } from "../../utils/SettingsProvider";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
 
 const Tags = ({ match }: RouteComponentProps) => {
+  const { tableSize } = useSettings();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
@@ -26,7 +27,7 @@ const Tags = ({ match }: RouteComponentProps) => {
       dataIndex: "name",
       sorter: true,
       editable: true,
-      formField: <SizedInput autoFocus prefix="#" />,
+      formField: <Input autoFocus prefix="#" size={tableSize} />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
       }

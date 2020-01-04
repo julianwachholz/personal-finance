@@ -4,9 +4,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Money from "../../components/data/Money";
 import CategorySelect from "../../components/form/CategorySelect";
+import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
-import { SizedDatePicker } from "../../components/form/SizedInput";
 import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
 import { usePayees } from "../../dao/payees";
@@ -22,7 +22,7 @@ const columns: EditableColumnsType<Transaction> = [
     defaultSortOrder: "descend",
     editable: true,
     width: 145,
-    formField: <SizedDatePicker allowClear={false} />,
+    formField: <DatePicker allowClear={false} />,
     render(date: Date) {
       if (!date) {
         return;
@@ -41,7 +41,7 @@ const columns: EditableColumnsType<Transaction> = [
     formName: "set_account",
     ellipsis: true,
     editable: true,
-    formField: <ModelSelect size="small" useItems={useAccounts} />,
+    formField: <ModelSelect useItems={useAccounts} />,
     formValue: (key, value) => ["set_account", value?.pk],
     render(account: ModelWithLabel) {
       if (account) {
@@ -65,9 +65,14 @@ const columns: EditableColumnsType<Transaction> = [
     ellipsis: true,
     editable: true,
     formName: "set_payee",
-    formField: <ModelSelect size="small" useItems={usePayees} />,
+    formField: <ModelSelect useItems={usePayees} />,
     rules: [],
     formValue: (key, value) => ["set_payee", value?.pk],
+    formChange: ({ set_payee }, form) => {
+      // const { data } = useQuery();
+      const p = form.getFieldValue("payee");
+      console.log("payee was changed!", p, set_payee);
+    },
     render(payee: ModelWithLabel) {
       if (payee) {
         return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;

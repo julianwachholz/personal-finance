@@ -18,11 +18,6 @@ const RelatedTransactions = ({
     col => !excludeColumns.includes(col.dataIndex as string)
   );
 
-  // const { data, isLoading } = useQuery(
-  //   ["items/transactions", { page: 1, filters }],
-  //   fetchTransactions
-  // );
-
   const { data, isLoading } = useTransactions({ filters });
 
   return (

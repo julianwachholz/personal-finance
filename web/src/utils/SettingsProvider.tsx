@@ -1,16 +1,16 @@
-import { TableSize } from "antd/lib/table/interface";
+import { SizeType } from "antd/lib/config-provider/SizeContext";
 import React, { useContext, useState } from "react";
 
 interface SettingsValues {
   theme: "light" | "dark";
   menuCollapsed: boolean;
-  tableSize: TableSize;
+  tableSize: SizeType;
 }
 
 interface SettingsFunctions {
   toggleTheme: () => void;
   toggleMenu: () => void;
-  setTableSize: (size: TableSize) => void;
+  setTableSize: (size: SizeType) => void;
 }
 
 type Settings = SettingsValues & SettingsFunctions;
@@ -18,7 +18,7 @@ type Settings = SettingsValues & SettingsFunctions;
 const defaultConfig: SettingsValues = {
   theme: localStorage.getItem("theme") === "dark" ? "dark" : "light",
   menuCollapsed: localStorage.getItem("menu_collapsed") === "true",
-  tableSize: localStorage.getItem("table_size") as TableSize
+  tableSize: localStorage.getItem("table_size") as SizeType
 };
 
 const SettingsContext = React.createContext<Settings>(defaultConfig as any);
@@ -44,8 +44,8 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
     localStorage.setItem("menu_collapsed", (!menuCollapsed).toString());
     setMenuCollapsed(!menuCollapsed);
   };
-  const setTableSize = (size: TableSize) => {
-    localStorage.setItem("table_size", size);
+  const setTableSize = (size: SizeType) => {
+    localStorage.setItem("table_size", size ?? "middle");
     _setTableSize(size);
   };
 

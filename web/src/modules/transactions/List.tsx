@@ -33,7 +33,7 @@ const Transactions = () => {
           message.success(`Transaction ${isNew ? "created" : "updated"}!`);
           return savedTx;
         } catch (e) {
-          message.error("Transaction failed!");
+          message.error(`Transaction ${isNew ? "create" : "update"} failed!`);
           throw e;
         }
       }}

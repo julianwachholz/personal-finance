@@ -88,9 +88,11 @@ export const makeFetchItems = <T extends ModelWithLabel>(
   return fetchItems;
 };
 
-export type UseItems<T extends ModelWithLabel> = (
-  options?: FetchItemsOptions
-) => QueryResult<Items<T>, FetchItemsOptions>;
+export interface UseItems<T extends ModelWithLabel> {
+  (options?: FetchItemsOptions): QueryResult<Items<T>, FetchItemsOptions>;
+
+  basename: string;
+}
 
 type PrefetchItems<T extends ModelWithLabel> = (
   options?: FetchItemsOptions
@@ -108,6 +110,7 @@ export const makeUseItems = <T extends ModelWithLabel>(
     const query = useQuery([`items/${basename}`, options], fetchItems!);
     return query;
   };
+  useItems.basename = basename;
   const prefetchItems: PrefetchItems<T> = (options: FetchItemsOptions = {}) => {
     return prefetchQuery([basename, options], fetchItems!, {
       staleTime: 500

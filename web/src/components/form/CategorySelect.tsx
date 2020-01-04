@@ -42,7 +42,7 @@ const CategorySelect = (props: TreeSelectProps<Category>) => {
       // TODO suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
       treeDefaultExpandedKeys={defaultExpandedKeys}
       disabled={isLoading}
-      size={tableSize === "small" ? "small" : "default"}
+      size={tableSize}
       {...props}
     >
       {treeData}

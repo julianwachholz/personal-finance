@@ -1,4 +1,6 @@
-import generatePicker from "antd/lib/date-picker/generatePicker";
+import generatePicker, {
+  PickerProps
+} from "antd/lib/date-picker/generatePicker";
 import {
   addDays,
   addMonths,
@@ -17,6 +19,8 @@ import {
 } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { GenerateConfig } from "rc-picker/lib/generate";
+import React from "react";
+import { useSettings } from "../../utils/SettingsProvider";
 
 const generateConfig: GenerateConfig<Date> = {
   getNow: () => new Date(),
@@ -67,5 +71,11 @@ const generateConfig: GenerateConfig<Date> = {
   }
 };
 
-const DatePicker = generatePicker<Date>(generateConfig);
+const BaseDatePicker = generatePicker<Date>(generateConfig);
+
+const DatePicker = (props: PickerProps<Date>) => {
+  const { tableSize } = useSettings();
+  return <BaseDatePicker size={tableSize} {...props} />;
+};
+
 export default DatePicker;

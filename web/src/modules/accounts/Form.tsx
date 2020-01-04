@@ -68,7 +68,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
         <Row gutter={16}>
           <Col span={4}>
             <Form.Item name="balance" label="Initial Balance" required>
-              <MoneyInput size="default" fullWidth />
+              <MoneyInput fullWidth />
             </Form.Item>
           </Col>
           <Col span={4}>

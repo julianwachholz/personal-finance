@@ -1,14 +1,15 @@
-import { InputNumberProps } from "antd/lib/input-number";
+import InputNumber, { InputNumberProps } from "antd/lib/input-number";
 import React from "react";
 import { useAuth } from "../../utils/AuthProvider";
+import { useSettings } from "../../utils/SettingsProvider";
 import "./MoneyInput.scss";
-import { SizedInputNumber } from "./SizedInput";
 
 interface MoneyInputProps extends InputNumberProps {
   fullWidth?: boolean;
 }
 
 const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
+  const { tableSize } = useSettings();
   const { settings } = useAuth();
   if (value) {
     value = parseFloat(value as any);
@@ -19,7 +20,8 @@ const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
   const rParse = new RegExp(`(\\${groupSeparator}*)`, "g");
 
   return (
-    <SizedInputNumber
+    <InputNumber
+      size={tableSize}
       className={`input-money ${fullWidth && "input-money-fullwidth"}`}
       precision={2}
       decimalSeparator={decimalSeparator}
