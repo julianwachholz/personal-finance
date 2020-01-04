@@ -1,3 +1,4 @@
+import { Tag } from "antd";
 import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -9,7 +10,7 @@ import { SizedDatePicker } from "../../components/form/SizedInput";
 import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
 import { usePayees } from "../../dao/payees";
-import { useTags } from "../../dao/tags";
+import { Tag as TagModel, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
 import { EditableColumnsType } from "../base/BaseList";
 
@@ -38,14 +39,14 @@ const columns: EditableColumnsType<Transaction> = [
     title: "Account",
     dataIndex: "account",
     formName: "set_account",
+    ellipsis: true,
     editable: true,
     formField: <ModelSelect size="small" useItems={useAccounts} />,
     formValue: (key, value) => ["set_account", value?.pk],
     render(account: ModelWithLabel) {
-      if (!account) {
-        return "no";
+      if (account) {
+        return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
       }
-      return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
     }
   },
   {
@@ -68,15 +69,15 @@ const columns: EditableColumnsType<Transaction> = [
     rules: [],
     formValue: (key, value) => ["set_payee", value?.pk],
     render(payee: ModelWithLabel) {
-      if (payee)
+      if (payee) {
         return <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>;
+      }
     }
   },
   {
     title: "Category",
     dataIndex: "category",
     editable: true,
-    width: 200,
     formName: "set_category",
     formField: <CategorySelect />,
     formValue: (key, value) => ["set_category", value?.pk],
@@ -105,7 +106,8 @@ const columns: EditableColumnsType<Transaction> = [
   {
     title: "Tags",
     dataIndex: "tags",
-    editable: false,
+    editable: true,
+    ellipsis: true,
     formName: "set_tags",
     formValue: (key, value) => [
       "set_tags",
@@ -113,16 +115,16 @@ const columns: EditableColumnsType<Transaction> = [
     ],
     formField: <ModelSelect mode="tags" useItems={useTags} />,
     rules: [],
-    render(tags: ModelWithLabel[]) {
-      return (
+    render(tags: TagModel[]) {
+      return tags ? (
         <>
           {tags.map((tag, i) => (
             <Link key={i} to={`/settings/tags/${tag.pk}`}>
-              {tag.label}
+              <Tag color={tag.color}>{tag.label}</Tag>
             </Link>
           ))}
         </>
-      );
+      ) : null;
     }
   }
 ];

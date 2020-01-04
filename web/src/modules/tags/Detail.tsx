@@ -1,7 +1,6 @@
-import { Descriptions, Spin } from "antd";
+import { Descriptions, Spin, Tag as TagComp } from "antd";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
-import Color from "../../components/data/Color";
 import { useTag } from "../../dao/tags";
 import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
@@ -23,7 +22,7 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>
         <Item label="Color">
-          <Color value={tag.color} />
+          <TagComp color={tag.color} />
         </Item>
       </Descriptions>
       <RelatedTransactions filters={filters} />

@@ -1,0 +1,36 @@
+.colorselect-group {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  line-height: unset;
+
+  .colorselect-wrapper {
+    &:first-child {
+      border-left: 1px solid;
+      border-radius: 2px 0 0 2px;
+    }
+    &:last-child {
+      border-radius: 0 2px 2px 0;
+    }
+    &:hover {
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    }
+
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    &-checked {
+      border: 0;
+    }
+    border: 1px solid;
+    border-top-width: 1.02px;
+    border-left: 0;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    span {
+      visibility: hidden;
+    }
+  }
+}

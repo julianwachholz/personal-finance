@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
-import ColorInput from "../../components/form/ColorInput";
+import ColorSelect from "../../components/form/ColorSelect";
 import { Category } from "../../dao/categories";
 
 const { Option } = Select;
@@ -59,7 +59,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
         </Col>
       </Row>
       <Form.Item name="set_color" label="Color" wrapperCol={{ span: 10 }}>
-        <ColorInput />
+        <ColorSelect />
       </Form.Item>
       {!data && (
         <Row gutter={16}>

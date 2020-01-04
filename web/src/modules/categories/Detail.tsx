@@ -1,8 +1,7 @@
-import { Button, Descriptions, Spin } from "antd";
+import { Button, Descriptions, Spin, Tag } from "antd";
 import React from "react";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import Color from "../../components/data/Color";
 import { useCategory } from "../../dao/categories";
 import { prefetchTransactions } from "../../dao/transactions";
 import BaseModule from "../base/BaseModule";
@@ -35,7 +34,7 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
         <Item label="Name">{category.name}</Item>
         <Item label="Icon">{category.icon}</Item>
         <Item label="Color">
-          <Color value={category.color} />
+          <Tag color={category.color}>{category.color}</Tag>
         </Item>
         {category.parent ? (
           <Item label="Parent">

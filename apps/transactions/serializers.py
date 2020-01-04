@@ -33,7 +33,7 @@ class PayeeSerializer(RelatedSerializer):
 class TagSerializer(RelatedSerializer):
     class Meta:
         model = Tag
-        fields = ("pk", "label")
+        fields = ("pk", "label", "color")
 
 
 class PKField(serializers.PrimaryKeyRelatedField):

@@ -25,7 +25,7 @@ class Category(MPTTModel):
         related_name="children",
     )
 
-    color = ColorField(verbose_name=_("color"), blank=True)
+    color = models.CharField(verbose_name=_("color"), max_length=100, blank=True)
 
     class Meta:
         verbose_name = _("category")

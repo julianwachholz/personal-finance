@@ -190,7 +190,7 @@ const BaseList = <T extends ModelWithLabel>({
       {
         align: "right",
         title: "Actions",
-        width: tableSize === "small" ? 110 : 130,
+        width: tableSize === "small" ? 135 : 165,
         render(_, item, i) {
           const canEdit = editable && isEditable(item);
           return isEditing(item) ? (

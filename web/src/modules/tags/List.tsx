@@ -1,23 +1,26 @@
-import { Button, message, Popconfirm } from "antd";
+import { Button, message, Popconfirm, Tag } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
-import Color from "../../components/data/Color";
-import ColorInput from "../../components/form/ColorInput";
+import ColorSelect from "../../components/form/ColorSelect";
 import { SizedInput } from "../../components/form/SizedInput";
-import { deleteTag, postTag, putTag, Tag, useTags } from "../../dao/tags";
-import { useSettings } from "../../utils/SettingsProvider";
+import {
+  deleteTag,
+  postTag,
+  putTag,
+  Tag as TagModel,
+  useTags
+} from "../../dao/tags";
 import BaseList, { EditableColumnsType } from "../base/BaseList";
 
 const Tags = ({ match }: RouteComponentProps) => {
-  const { tableSize } = useSettings();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
   const [edit] = useMutation(putTag);
   const [create] = useMutation(postTag);
 
-  const columns: EditableColumnsType<Tag> = [
+  const columns: EditableColumnsType<TagModel> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -32,18 +35,10 @@ const Tags = ({ match }: RouteComponentProps) => {
       title: "Color",
       dataIndex: "color",
       editable: true,
-      width: 200,
       rules: [],
-      formField: (
-        <ColorInput size={tableSize === "small" ? "small" : "default"} />
-      ),
-      render(value) {
-        return (
-          <Color
-            size={tableSize === "small" ? "small" : "default"}
-            value={value}
-          />
-        );
+      formField: <ColorSelect />,
+      render(color) {
+        return <Tag color={color}>{color}</Tag>;
       }
     }
   ];

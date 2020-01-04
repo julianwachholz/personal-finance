@@ -13,7 +13,7 @@ class Tag(models.Model):
 
     name = models.CharField(max_length=100)
 
-    color = ColorField(verbose_name=_("color"), blank=True)
+    color = models.CharField(verbose_name=_("color"), max_length=100, blank=True)
 
     class Meta:
         verbose_name = _("tag")
