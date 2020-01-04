@@ -65,6 +65,7 @@ class AbstractTransaction(models.Model):
         if not self.category and self.payee:
             self.category = self.payee.default_category
         super().save(*args, **kwargs)
+
         if self.related and self.related.related != self:
             self.related.related = self
             self.related.save()

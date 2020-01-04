@@ -25,8 +25,8 @@ const AccountForm = ({ data, onSave }: FormProps) => {
     if (values.balance) {
       values = {
         ...values,
-        set_balance: values.balance.amount,
-        set_currency: values.balance.currency
+        set_balance: values.balance,
+        set_currency: values.currency
       };
     }
     onSave(values);
@@ -68,12 +68,12 @@ const AccountForm = ({ data, onSave }: FormProps) => {
         <Row gutter={16}>
           <Col span={4}>
             <Form.Item name="balance" label="Initial Balance" required>
-              <MoneyInput fullWidth />
+              <MoneyInput size="middle" fullWidth />
             </Form.Item>
           </Col>
           <Col span={4}>
             <Form.Item
-              name="balance_currency"
+              name="currency"
               label="Currency"
               rules={[{ required: true, message: "Select a currency" }]}
             >
