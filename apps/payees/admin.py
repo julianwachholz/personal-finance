@@ -5,6 +5,6 @@ from .models import Payee
 
 @admin.register(Payee)
 class PayeeAdmin(admin.ModelAdmin):
-    list_display = ("name", "user")
+    list_display = ("name", "type", "default_category", "user")
     search_fields = ("name",)
     autocomplete_fields = ("user",)

@@ -3,7 +3,8 @@ import {
   makePostItem,
   makePutItem,
   makeUseItem,
-  makeUseItems
+  makeUseItems,
+  ModelWithLabel
 } from "./base";
 
 type PayeeType = "business" | "private";
@@ -12,6 +13,7 @@ export interface Payee {
   pk: number;
   name: string;
   type: PayeeType;
+  default_category?: ModelWithLabel;
 
   readonly label: string;
 }

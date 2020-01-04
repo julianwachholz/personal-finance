@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -21,6 +22,10 @@ class Payee(models.Model):
         default=TYPE_BUSINESS,
     )
 
+    default_category = models.ForeignKey(
+        to="categories.Category", on_delete=models.SET_NULL, blank=True, null=True
+    )
+
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 
     class Meta:
@@ -29,3 +34,9 @@ class Payee(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.default_category.user != self.user:
+            raise ValidationError(
+                {"default_category": _("Category does not belong to same user")}
+            )

@@ -4,6 +4,7 @@ from apps.accounts.models import Account
 from apps.categories.models import Category
 from apps.payees.models import Payee
 from apps.tags.models import Tag
+from util.serializers import UserPKField
 
 from .models import Transaction
 
@@ -36,30 +37,22 @@ class TagSerializer(RelatedSerializer):
         fields = ("pk", "label", "color")
 
 
-class PKField(serializers.PrimaryKeyRelatedField):
-    def get_queryset(self):
-        request = self.context.get("request", None)
-        queryset = super().get_queryset()
-        if not request:
-            raise Exception("no request")
-            return queryset.none()
-        return queryset.filter(user=request.user)
-
-
 class TransactionSerializer(serializers.ModelSerializer):
     account = AccountSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
     payee = PayeeSerializer(read_only=True)
     tags = TagSerializer(read_only=True, many=True)
 
-    set_account = PKField(source="account", queryset=Account.objects, write_only=True)
-    set_category = PKField(
+    set_account = UserPKField(
+        source="account", queryset=Account.objects, write_only=True
+    )
+    set_category = UserPKField(
         source="category", queryset=Category.objects, required=False, write_only=True
     )
-    set_payee = PKField(
+    set_payee = UserPKField(
         source="payee", queryset=Payee.objects, required=False, write_only=True
     )
-    set_tags = PKField(
+    set_tags = UserPKField(
         many=True, source="tags", queryset=Tag.objects, required=False, write_only=True
     )
 

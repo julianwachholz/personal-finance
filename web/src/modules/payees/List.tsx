@@ -2,6 +2,8 @@ import { Button, Input, message, Popconfirm, Select } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
+import CategorySelect from "../../components/form/CategorySelect";
+import { ModelWithLabel } from "../../dao/base";
 import {
   deletePayee,
   Payee,
@@ -37,7 +39,6 @@ const Payees = ({ match }: RouteComponentProps) => {
     {
       title: "Type",
       dataIndex: "type",
-      width: 200,
       render(type) {
         return type === "business" ? "Business" : "Private";
       },
@@ -53,6 +54,22 @@ const Payees = ({ match }: RouteComponentProps) => {
         { text: "Business", value: "business" },
         { text: "Private", value: "private" }
       ]
+    },
+    {
+      title: "Default Category",
+      dataIndex: "default_category",
+      render(category: ModelWithLabel) {
+        return category ? (
+          <Link to={`/settings/categories/${category.pk}`}>
+            {category.label}
+          </Link>
+        ) : null;
+      },
+      editable: true,
+      formField: <CategorySelect />,
+      formValue: (key, value) => ["set_default_category", value?.pk],
+      formName: "set_default_category",
+      rules: []
     }
   ];
 

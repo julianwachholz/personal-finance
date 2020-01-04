@@ -22,6 +22,7 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
       <Descriptions title="Payee">
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>
+        <Item label="Default Category">{payee.default_category?.label}</Item>
       </Descriptions>
       <RelatedTransactions filters={filters} excludeColumns={["payee"]} />
     </BaseModule>
