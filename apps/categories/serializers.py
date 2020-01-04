@@ -46,12 +46,12 @@ class CategorySerializer(serializers.ModelSerializer):
         ]
 
     def create(self, data):
-        if data["user"] != data["target"].user:
+        if "target" in data and data["user"] != data["target"].user:
             raise serializers.ValidationError(
                 "target category does not belong to same user"
             )
         position = data.pop("position")
-        target = data.pop("target")
+        target = data.pop("target", None)
         category = Category(**data)
         category.insert_at(target, position, save=True)
         return category

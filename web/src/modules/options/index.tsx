@@ -1,4 +1,6 @@
-import { Form, Input, Radio, Switch } from "antd";
+import { Button, Form, Input, Radio, Switch } from "antd";
+import { InputProps } from "antd/lib/input";
+import { format } from "date-fns";
 import React from "react";
 import { useMutation } from "react-query";
 import CurrencySelect from "../../components/form/CurrencySelect";
@@ -48,6 +50,19 @@ interface NumberFormatSetter {
   number_format?: NumberFormatName;
 }
 
+const dateFormats: string[] = ["P", "PP", "PPP", "PPPP"];
+
+const InputFormat = ({ value, ...props }: InputProps) => {
+  const now = new Date();
+  return (
+    <Input
+      addonAfter={"Preview: " + (value ? format(now, value as string) : "")}
+      value={value}
+      {...props}
+    />
+  );
+};
+
 const getNumberFormat = (settings: Settings): NumberFormatName => {
   const match = Object.entries(numberFormats).find(
     ([k, f]) =>
@@ -77,6 +92,9 @@ const Options = () => {
     mutate(values);
   };
 
+  const now = new Date();
+  const dateFormat = form.getFieldValue("date_format");
+
   return (
     <BaseModule title="Options">
       <Form
@@ -87,7 +105,7 @@ const Options = () => {
           number_format: getNumberFormat(settings)
         }}
         onValuesChange={onChange}
-        wrapperCol={{ span: 12 }}
+        wrapperCol={{ span: 14 }}
       >
         <Form.Item name="default_currency" label="Default Currency">
           <CurrencySelect />
@@ -107,8 +125,26 @@ const Options = () => {
             ))}
           </Radio.Group>
         </Form.Item>
-        <Form.Item name="date_format" label="Date Format">
-          <Input />
+        <Form.Item
+          name="date_format"
+          label="Date Format"
+          style={{ marginBottom: 6 }}
+        >
+          <InputFormat />
+        </Form.Item>
+        <Form.Item label="Example Formats">
+          {dateFormats.map(date_format => (
+            <Button
+              key={date_format}
+              type="ghost"
+              onClick={() => {
+                form.setFieldsValue({ date_format });
+                onChange({ date_format });
+              }}
+            >
+              {format(now, date_format)}
+            </Button>
+          ))}
         </Form.Item>
         <Form.Item label="Dark Mode">
           <Switch checked={theme === "dark"} onChange={toggleTheme} />

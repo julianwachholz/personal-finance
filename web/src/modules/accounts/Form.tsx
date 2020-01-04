@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { Account } from "../../dao/accounts";
+import { useAuth } from "../../utils/AuthProvider";
 
 interface FormProps {
   data?: Account;
@@ -11,6 +12,7 @@ interface FormProps {
 }
 
 const AccountForm = ({ data, onSave }: FormProps) => {
+  const { settings } = useAuth();
   const [resetBalance, setResetBalance] = useState(false);
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
@@ -22,7 +24,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       setSubmitting(false);
       return;
     }
-    if (values.balance) {
+    if (values.balance !== undefined) {
       values = {
         ...values,
         set_balance: values.balance,
@@ -32,12 +34,18 @@ const AccountForm = ({ data, onSave }: FormProps) => {
     onSave(values);
   };
 
+  const initialValues: Partial<Account> = { ...data };
+  if (!data?.pk) {
+    initialValues.balance = "0.00";
+    initialValues.currency = settings?.default_currency;
+  }
+
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={onSubmit}
-      initialValues={data}
+      initialValues={initialValues}
     >
       <Row gutter={16}>
         <Col span={2}>

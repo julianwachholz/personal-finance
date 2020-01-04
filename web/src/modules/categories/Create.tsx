@@ -23,6 +23,7 @@ const CategoryCreate = () => {
             history.push(`/settings/categories/${category.pk}`);
           } catch (e) {
             message.error("Category create failed!");
+            throw e;
           }
         }}
       />

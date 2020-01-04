@@ -1,7 +1,7 @@
 import { Tag } from "antd";
-import { format } from "date-fns";
 import React from "react";
 import { Link } from "react-router-dom";
+import DateTime from "../../components/data/Date";
 import Money from "../../components/data/Money";
 import CategorySelect from "../../components/form/CategorySelect";
 import DatePicker from "../../components/form/DatePicker";
@@ -24,15 +24,7 @@ const columns: EditableColumnsType<Transaction> = [
     width: 145,
     formField: <DatePicker allowClear={false} />,
     render(date: Date) {
-      if (!date) {
-        return;
-      }
-      const str = format(date, "Pp");
-      return (
-        <time dateTime={str} title={str}>
-          {format(date, "d MMM")}
-        </time>
-      );
+      return <DateTime value={date} />;
     }
   },
   {

@@ -79,7 +79,6 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               label={
                 ["left", "right"].includes(position) ? "Neighbor" : "Parent"
               }
-              rules={[{ required: true, message: "Select target position" }]}
             >
               <CategorySelect placeholder="Select where to insert the new Category" />
             </Form.Item>

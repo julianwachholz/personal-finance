@@ -3,6 +3,7 @@ import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import { prefetchTransactions } from "../../dao/transactions";
+import { useAuth } from "../../utils/AuthProvider";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions from "../transactions/RelatedTransactions";
 
@@ -13,6 +14,7 @@ interface DetailParams {
 }
 
 const Account = ({ match }: RouteComponentProps<DetailParams>) => {
+  const { settings } = useAuth();
   const { data: account, isLoading, error } = useAccount(match.params.pk);
   const filters = [`account=${match.params.pk}`];
   prefetchTransactions({ filters });
@@ -38,6 +40,8 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         title="Balance"
         value={account.balance}
         precision={2}
+        groupSeparator={settings?.group_separator}
+        decimalSeparator={settings?.decimal_separator}
         suffix={account.currency}
       />
       <RelatedTransactions filters={filters} excludeColumns={["account"]} />
