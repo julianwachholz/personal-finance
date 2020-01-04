@@ -28,7 +28,8 @@ def post_save_transaction(sender, instance, created, **kwargs):
 
     """
     if created and not instance.is_initial:
-        instance.account.balance = F("balance") + instance.amount
-        instance.account.save()
+        if instance.account.initial_date < instance.datetime:
+            instance.account.balance = F("balance") + instance.amount
+            instance.account.save()
     else:
         instance.account.reconcile()
