@@ -114,9 +114,6 @@ const columns: EditableColumnsType<Transaction> = [
     formField: <ModelSelect mode="tags" useItems={useTags} />,
     rules: [],
     render(tags: ModelWithLabel[]) {
-      if (!tags) {
-        return "no";
-      }
       return (
         <>
           {tags.map((tag, i) => (
