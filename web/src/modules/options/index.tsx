@@ -93,7 +93,6 @@ const Options = () => {
   };
 
   const now = new Date();
-  const dateFormat = form.getFieldValue("date_format");
 
   return (
     <BaseModule title="Options">

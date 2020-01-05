@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum
+from django.db.models import F, Sum
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
@@ -49,6 +49,23 @@ class Account(models.Model):
         if save:
             self.save()
         self.transactions.create(user=self.user, is_initial=True, amount=amount)
+
+    def set_pos(self, pos, save=True):
+        if pos == self.pos:
+            raise Exception("same pos")
+        if pos > self.pos:
+            self.user.accounts.filter(pos__gt=self.pos, pos__lte=pos).update(
+                pos=F("pos") - 1
+            )
+        else:
+            self.user.accounts.filter(pos__lt=self.pos, pos__gte=pos).update(
+                pos=F("pos") + 1
+            )
+
+        self.pos = pos
+
+        if save:
+            self.save()
 
     def reconcile(self):
         """

@@ -1,5 +1,6 @@
 import {
   makeDeleteItem,
+  makePostAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -34,3 +35,10 @@ export const putAccount = makePutItem<Account>("accounts");
 export const deleteAccount = makeDeleteItem<Account>("accounts");
 
 export const useAccount = makeUseItem<Account>("accounts");
+
+export interface MoveAccount {
+  pk: number;
+  pos: number;
+}
+
+export const moveAccount = makePostAction<MoveAccount>("accounts", "move");

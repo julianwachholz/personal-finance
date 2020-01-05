@@ -12,7 +12,9 @@ import {
   usePayees
 } from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
-import BaseList, { EditableColumnsType } from "../base/BaseList";
+import BaseEditableList, {
+  EditableColumnsType
+} from "../base/BaseEditableList";
 
 const Payees = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();
@@ -71,7 +73,7 @@ const Payees = ({ match }: RouteComponentProps) => {
   ];
 
   return (
-    <BaseList<Payee>
+    <BaseEditableList<Payee>
       editable
       onSave={async payee => {
         const isNew = payee.pk === 0;

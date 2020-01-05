@@ -37,6 +37,7 @@ const AccountEdit = ({ match }: RouteComponentProps<DetailParams>) => {
             history.push(`/accounts/${pk}`);
           } catch (e) {
             message.error("Account update failed!");
+            throw e;
           }
         }}
       />

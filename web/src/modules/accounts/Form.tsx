@@ -51,7 +51,11 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       delete values["set_balance"];
       delete values["set_currency"];
     }
-    onSave(values);
+    try {
+      onSave(values);
+    } catch (e) {
+      setSubmitting(false);
+    }
   };
 
   const initialValues: Partial<Account> = { ...data };
@@ -99,7 +103,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       ) : (
         <Row gutter={16}>
           <Col span={4}>
-            <Form.Item name="set_balance" label="Initial Balance" required>
+            <Form.Item name="set_balance" label="Current Balance" required>
               <MoneyInput size="middle" fullWidth />
             </Form.Item>
           </Col>

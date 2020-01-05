@@ -1,6 +1,8 @@
 from django_filters import rest_framework as filters
 from djmoney.models.fields import CURRENCY_CHOICES
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from .models import Account
 from .serializers import AccountSerializer
@@ -30,4 +32,16 @@ class AccountViewSet(viewsets.ModelViewSet):
         return self.request.user.accounts.all()
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user = self.request.user
+        pos = user.accounts.count()
+        serializer.save(user=self.request.user, pos=pos)
+
+    @action(detail=True, methods=["post"])
+    def move(self, request, pk, **kwargs):
+        target_pos = request.data["pos"]
+        account = self.get_queryset().get(pk=pk)
+        try:
+            account.set_pos(target_pos)
+        except Exception as e:
+            return Response({"status": "fail", "error": str(e)})
+        return Response({"status": "ok"})

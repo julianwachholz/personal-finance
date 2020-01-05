@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import React from "react";
+import { useAuth } from "../../utils/AuthProvider";
 
 interface DateTimeProps {
   value: Date;
@@ -7,7 +8,10 @@ interface DateTimeProps {
   locale?: any;
 }
 
-const DateTime = ({ value, formatString = "PP", locale }: DateTimeProps) => {
+const DateTime = ({ value, formatString, locale }: DateTimeProps) => {
+  const { settings } = useAuth();
+  formatString = formatString ?? settings?.date_format ?? "PP";
+
   if (!value) {
     return <time />;
   }

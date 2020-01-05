@@ -13,7 +13,7 @@ import { ModelWithLabel } from "../../dao/base";
 import { Payee, usePayees } from "../../dao/payees";
 import { Tag as TagModel, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
-import { EditableColumnsType } from "../base/BaseList";
+import { EditableColumnsType } from "../base/BaseEditableList";
 
 interface GetGetColumnOptions {
   createPayee?: (name: string) => Promise<Payee>;

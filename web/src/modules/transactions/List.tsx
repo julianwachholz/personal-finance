@@ -10,7 +10,7 @@ import {
   useTransactions
 } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
-import BaseList from "../base/BaseList";
+import BaseEditableList from "../base/BaseEditableList";
 import getGetColumns from "./columns";
 
 const Transactions = () => {
@@ -31,7 +31,7 @@ const Transactions = () => {
   });
 
   return (
-    <BaseList<Transaction>
+    <BaseEditableList<Transaction>
       editable
       isEditable={tx => !tx.is_initial}
       onSave={async tx => {

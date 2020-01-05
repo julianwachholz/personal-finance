@@ -1,12 +1,17 @@
 import { Button } from "antd";
 import { ColumnsType } from "antd/lib/table/Table";
 import React from "react";
+import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
-import { Account, useAccounts } from "../../dao/accounts";
+import { Account, moveAccount, useAccounts } from "../../dao/accounts";
 import BaseList from "../base/BaseList";
 
 const Accounts = ({ match }: RouteComponentProps) => {
+  const [move] = useMutation(moveAccount, {
+    refetchQueries: ["items/accounts"]
+  });
+
   const columns: ColumnsType<Account> = [
     {
       title: "Name",
@@ -51,6 +56,11 @@ const Accounts = ({ match }: RouteComponentProps) => {
       itemNamePlural="Accounts"
       useItems={useAccounts}
       columns={columns}
+      isSortable
+      onMove={(pk, pos) => {
+        console.log("moveItem", pk, pos);
+        move({ pk, pos });
+      }}
       actions={[
         <Link key="create" to={`${match.url}/create`}>
           <Button type="primary">Create Account</Button>

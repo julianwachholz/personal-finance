@@ -23,6 +23,7 @@ const AccountCreate = () => {
             history.push(`/accounts/${tag.pk}`);
           } catch (e) {
             message.error("Account creation failed!");
+            throw e;
           }
         }}
       />

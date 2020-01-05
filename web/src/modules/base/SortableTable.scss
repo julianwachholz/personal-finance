@@ -1,0 +1,8 @@
+.dnd {
+  &.dnd-over-down td {
+    border-bottom: 2px dotted #1890ff;
+  }
+  &.dnd-over-up td {
+    border-top: 2px dotted #1890ff;
+  }
+}

@@ -3,82 +3,23 @@ import {
   Button,
   Divider,
   Dropdown,
-  Form,
   Input,
   Menu,
   PageHeader,
-  Pagination,
   Table
 } from "antd";
-import { ColumnType } from "antd/lib/table/interface";
-import { TableProps } from "antd/lib/table/Table";
-import { FormInstance } from "rc-field-form";
-import { Rule } from "rc-field-form/lib/interface";
-import React, { HTMLAttributes, ReactText, useState } from "react";
-import { setQueryData } from "react-query";
+import { ColumnsType, TableProps } from "antd/lib/table/Table";
+import React, { ReactText, useState } from "react";
+import { DndProvider } from "react-dnd";
+import DndBackend from "react-dnd-html5-backend";
 import { Link } from "react-router-dom";
-import { Model, ModelWithLabel, UseItems } from "../../dao/base";
+import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import "./BaseModule.scss";
+import ListPagination from "./ListPagination";
+import { DndRow } from "./SortableTable";
 
-type FormField =
-  | React.ReactElement
-  | ((form: FormInstance) => React.ReactElement);
-
-interface EditableColumnType<T> extends ColumnType<T> {
-  editable?: boolean;
-  formName?: string;
-  formField?: FormField;
-
-  // Get the form value entry from an existing value, in addition to the actual value
-  formValue?: (key: string, value: any) => [string, any];
-
-  // Trigger when this form field was changed
-  formChange?: (changed: Partial<T>, form: FormInstance) => void;
-
-  rules?: Rule[];
-}
-
-export type EditableColumnsType<T> = EditableColumnType<T>[];
-
-interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  name: string;
-  field: FormField;
-  rules?: any;
-  item: T;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<any> = <T extends Model>({
-  editing,
-  name,
-  dataIndex,
-  field,
-  rules,
-  item,
-  title,
-  children,
-  ...props
-}: EditableCellProps<T>) => {
-  return (
-    <td {...props}>
-      {editing ? (
-        <Form.Item
-          name={name}
-          rules={rules ?? [{ required: true, message: `${title} is required` }]}
-        >
-          {field}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-const mapFilters = (filters: Record<string, ReactText[] | null>) => {
+export const mapFilters = (filters: Record<string, ReactText[] | null>) => {
   const filterValues: string[] = [];
   Object.keys(filters).forEach(k => {
     const values = filters[k];
@@ -101,8 +42,7 @@ interface ListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
   useItems: UseItems<T>;
-  columns?: EditableColumnsType<T>;
-  getColumns?: (form: FormInstance) => EditableColumnsType<T>;
+  columns: ColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
   onSearch?: (search?: string) => void;
@@ -110,10 +50,8 @@ interface ListProps<T extends ModelWithLabel> {
   extraActions?: boolean | React.ReactElement[];
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
-  editable?: boolean;
-  isEditable?: (record: T) => boolean;
-  onSave?: (item: T) => Promise<T>;
-  defaultValues?: Partial<T>;
+  isSortable?: boolean;
+  onMove?: (pk: number, pos: number) => void;
 }
 
 const BaseList = <T extends ModelWithLabel>({
@@ -121,7 +59,6 @@ const BaseList = <T extends ModelWithLabel>({
   itemNamePlural,
   useItems,
   columns,
-  getColumns,
   pagination = true,
   showSearch = true,
   onSearch = () => {},
@@ -129,14 +66,9 @@ const BaseList = <T extends ModelWithLabel>({
   extraActions = true,
   extraRowActions,
   tableProps = {},
-  editable = false,
-  isEditable = () => true,
-  onSave,
-  defaultValues = {}
+  isSortable,
+  onMove
 }: ListProps<T>) => {
-  if (editable && !onSave) {
-    throw new Error("editable list requires onSave callback");
-  }
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -145,100 +77,18 @@ const BaseList = <T extends ModelWithLabel>({
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
 
-  // Editable table
-  const [form] = Form.useForm();
-  if (!columns && getColumns) {
-    columns = getColumns(form);
-  }
-  if (!columns) {
-    throw new Error("BaseList must specify columns or getColumns");
+  if (isSortable && !onMove) {
+    throw new Error("onMove is required with isSortable");
   }
 
-  const [editingItem, setEditingItem] = useState<T>();
-  const [editLoading, setEditLoading] = useState(false);
-  const isEditing = (item: T) => item.pk === editingItem?.pk;
-  const editItem = (item: T) => {
-    const extra: any[][] = [];
-    const mapped = Object.entries(item).map(([key, value]) => {
-      const col = columns!.find(c => c.formName === key || c.dataIndex === key);
-      if (col?.formValue) {
-        extra.push(col.formValue(key, value));
-      }
-      return [key, value];
-    });
-
-    const mappedItem = Object.fromEntries([...mapped, ...extra]);
-    const data = { ...defaultValues, ...mappedItem };
-    form.resetFields();
-    form.setFieldsValue(data);
-    setEditingItem(data);
-  };
-  const cancelEdit = () => {
-    setEditingItem(undefined);
-  };
-
-  const onValuesChange = (changedValues: any) => {
-    const changedKeys = Object.keys(changedValues);
-    columns!
-      .filter(col => !!col.formChange)
-      .forEach(col => {
-        if (
-          (col.dataIndex && changedKeys.includes(col.dataIndex as string)) ||
-          (col.formName && changedKeys.includes(col.formName))
-        ) {
-          col.formChange!(changedValues, form);
-        }
-      });
-  };
-
-  if (editable || extraRowActions) {
+  if (extraRowActions) {
     columns = [
-      ...columns.map(col => {
-        if (!col.editable) {
-          return col;
-        }
-        return {
-          ...col,
-          onCell: (item: T) => {
-            return {
-              item,
-              title: col.title,
-              dataIndex: col.dataIndex,
-              name: col.formName ?? col.dataIndex,
-              field: col.formField ?? <Input />,
-              rules: col.rules,
-              editing: isEditing(item)
-            } as any;
-          }
-        };
-      }),
+      ...columns,
       {
         align: "right",
-        title: "Actions",
-        width: tableSize === "small" ? 136 : 165,
         render(_, item, i) {
-          const canEdit = editable && isEditable(item);
-          return isEditing(item) ? (
+          return (
             <>
-              <Button
-                type="primary"
-                size={tableSize === "small" ? "small" : "middle"}
-                htmlType="submit"
-                loading={editLoading}
-              >
-                Save
-              </Button>
-              <Button type="link" onClick={() => cancelEdit()}>
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <>
-              {canEdit && (
-                <Button type="link" onClick={() => editItem(item)}>
-                  Edit
-                </Button>
-              )}
               {extraRowActions &&
                 extraRowActions(item, i).map(action => [
                   <Divider key={`div-${i}`} type="vertical" />,
@@ -251,8 +101,6 @@ const BaseList = <T extends ModelWithLabel>({
     ];
   }
 
-  const components = { body: { cell: EditableCell } };
-
   const useItemOptions = {
     page,
     pageSize,
@@ -261,33 +109,6 @@ const BaseList = <T extends ModelWithLabel>({
     search
   };
   const { data, isLoading, error } = useItems(useItemOptions);
-
-  // Save inline editing item
-  const saveItem = async (values: Partial<T>) => {
-    if (!data) {
-      return;
-    }
-    setEditLoading(true);
-    await form.validateFields();
-    const newValues = {
-      ...editingItem!,
-      ...values
-    };
-    try {
-      const savedItem = await onSave!(newValues);
-
-      // force update current view
-      const i = data.results.findIndex(item => item.pk === savedItem.pk);
-      const newData = { ...data };
-      newData.results[i] = savedItem;
-      await setQueryData(
-        [`items/${itemNamePlural.toLowerCase()}`, useItemOptions],
-        newData
-      );
-      cancelEdit();
-    } catch (e) {}
-    setEditLoading(false);
-  };
 
   // save total item count in state to prevent pagination jumping around
   if (data && data.count !== total) {
@@ -317,52 +138,31 @@ const BaseList = <T extends ModelWithLabel>({
     );
 
   const pager = pagination ? (
-    <Pagination
+    <ListPagination
+      itemName={itemName}
+      itemNamePlural={itemNamePlural}
       total={total}
-      showLessItems
       current={page}
       onChange={current => {
         setPage(current);
-        cancelEdit();
       }}
-      size={tableSize}
       pageSize={pageSize}
-      showSizeChanger
-      pageSizeOptions={["10", "25", "50", "100"]}
       onShowSizeChange={(_, size) => {
         setPage(1);
         setPageSize(size);
-        cancelEdit();
       }}
-      showTotal={(total, range) =>
-        total === 1
-          ? `1 ${itemName}`
-          : `${range[0]}-${range[1]} of ${total} ${itemNamePlural}`
-      }
     />
   ) : null;
 
-  let dataSource: T[];
-  if (editingItem?.pk === 0) {
-    dataSource = [{ pk: 0 } as any, ...(data?.results ?? [])];
-  } else {
-    dataSource = data?.results ?? [];
-  }
+  const components = isSortable
+    ? ({
+        body: {
+          row: DndRow
+        }
+      } as any)
+    : undefined;
 
-  if (editable) {
-    actions = [
-      ...actions,
-      <Button
-        key="inline-create"
-        type="primary"
-        onClick={() => {
-          editItem({ pk: 0 } as any);
-        }}
-      >
-        Quick Create {itemName}
-      </Button>
-    ];
-  }
+  let dataSource: T[] = data?.results ?? [];
 
   return (
     <div className="module module-list">
@@ -384,41 +184,14 @@ const BaseList = <T extends ModelWithLabel>({
           enterButton
           onSearch={value => {
             setSearch(value);
-            cancelEdit();
             onSearch(value);
           }}
         />
       ) : null}
       {pager}
-      <Form
-        form={form}
-        component={editable ? undefined : false}
-        onValuesChange={onValuesChange}
-        onFinish={values => saveItem(values as Partial<T>)}
-        onKeyDown={(e: any) => {
-          if (e.keyCode === 13) {
-            if (
-              e.target.tagName.toLowerCase() === "button" ||
-              e.target.classList.contains("ant-input") ||
-              e.target.classList.contains("ant-input-number-input")
-            ) {
-              return;
-            }
-            console.log("enter pressed");
-            e.preventDefault();
-          }
-        }}
-        onKeyUp={e => {
-          // ESC
-          if (e.keyCode === 27) {
-            cancelEdit();
-          }
-        }}
-        size={tableSize === "small" ? "small" : "middle"}
-      >
+      <DndProvider backend={DndBackend}>
         <Table<T>
           dataSource={dataSource}
-          components={components}
           columns={columns}
           loading={isLoading}
           rowKey="pk"
@@ -434,12 +207,23 @@ const BaseList = <T extends ModelWithLabel>({
                 `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
             );
             setPage(1);
-            cancelEdit();
           }}
           size={tableSize}
+          components={components}
+          onRow={(record, index) => {
+            if (isSortable) {
+              return {
+                index,
+                pk: record.pk,
+                onDrop(item: any) {
+                  onMove!(item.pk, index!);
+                }
+              } as any;
+            }
+          }}
           {...tableProps}
         />
-      </Form>
+      </DndProvider>
     </div>
   );
 };

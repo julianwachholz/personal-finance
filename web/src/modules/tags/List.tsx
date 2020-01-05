@@ -11,7 +11,9 @@ import {
   useTags
 } from "../../dao/tags";
 import { useSettings } from "../../utils/SettingsProvider";
-import BaseList, { EditableColumnsType } from "../base/BaseList";
+import BaseEditableList, {
+  EditableColumnsType
+} from "../base/BaseEditableList";
 
 const Tags = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();
@@ -45,7 +47,7 @@ const Tags = ({ match }: RouteComponentProps) => {
   ];
 
   return (
-    <BaseList
+    <BaseEditableList
       editable
       onSave={async tag => {
         const isNew = tag.pk === 0;
