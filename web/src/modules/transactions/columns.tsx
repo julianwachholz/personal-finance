@@ -57,7 +57,7 @@ const columns: EditableColumnsType<Transaction> = [
     ellipsis: true,
     editable: true,
     formName: "set_payee",
-    formField: <ModelSelect useItems={usePayees} />,
+    formField: <ModelSelect allowClear useItems={usePayees} />,
     rules: [],
     formValue: (key, value) => ["set_payee", value?.pk],
     formChange: (changed, form) => {
@@ -77,7 +77,7 @@ const columns: EditableColumnsType<Transaction> = [
     dataIndex: "category",
     editable: true,
     formName: "set_category",
-    formField: <CategorySelect />,
+    formField: <CategorySelect allowClear />,
     formValue: (key, value) => ["set_category", value?.pk],
     rules: [],
     render(category: ModelWithLabel, tx) {

@@ -24,6 +24,12 @@ const Transactions = () => {
       isEditable={tx => !tx.is_initial}
       onSave={async tx => {
         const isNew = tx.pk === 0;
+        if (!tx.set_category) {
+          tx.set_category = null;
+        }
+        if (!tx.set_payee) {
+          tx.set_payee = null;
+        }
         try {
           const savedTx = isNew
             ? await create(tx)

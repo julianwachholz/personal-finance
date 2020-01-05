@@ -27,7 +27,7 @@ const ModelSelect = <T extends ModelWithLabel>({
       value = value?.toString();
     }
     return (
-      <Select.Option key={item.pk} value={item.pk.toString()} data-item={item}>
+      <Select.Option key={item.pk} value={item.pk.toString()}>
         {item.label}
       </Select.Option>
     );

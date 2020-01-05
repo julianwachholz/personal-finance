@@ -47,10 +47,18 @@ class TransactionSerializer(serializers.ModelSerializer):
         source="account", queryset=Account.objects, write_only=True
     )
     set_category = UserPKField(
-        source="category", queryset=Category.objects, required=False, write_only=True
+        source="category",
+        queryset=Category.objects,
+        required=False,
+        allow_null=True,
+        write_only=True,
     )
     set_payee = UserPKField(
-        source="payee", queryset=Payee.objects, required=False, write_only=True
+        source="payee",
+        queryset=Payee.objects,
+        required=False,
+        allow_null=True,
+        write_only=True,
     )
     set_tags = UserPKField(
         many=True, source="tags", queryset=Tag.objects, required=False, write_only=True

@@ -23,9 +23,10 @@ export interface Transaction {
   text: string;
   reference: string;
 
-  set_account?: number;
-  set_category?: number;
-  set_payee?: number;
+  set_account: number;
+  set_category: number | null;
+  set_payee: number | null;
+  set_tags: number[];
 
   readonly label: string;
 }
