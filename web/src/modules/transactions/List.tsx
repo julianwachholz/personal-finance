@@ -1,7 +1,8 @@
 import { message } from "antd";
 import React from "react";
-import { useMutation } from "react-query";
+import { setQueryData, useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
+import { Payee, postPayee } from "../../dao/payees";
 import {
   postTransaction,
   putTransaction,
@@ -10,13 +11,24 @@ import {
 } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
 import BaseList from "../base/BaseList";
-import columns from "./columns";
+import getGetColumns from "./columns";
 
 const Transactions = () => {
   const { settings } = useAuth();
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
   prefetchCategoryTree();
+
+  const [createPayee] = useMutation(postPayee);
+
+  const getColumns = getGetColumns({
+    async createPayee(name) {
+      const data = { name } as Payee;
+      const payee = await createPayee(data);
+      setQueryData([`item/payees`, { pk: payee.pk }], payee);
+      return payee;
+    }
+  });
 
   return (
     <BaseList<Transaction>
@@ -50,7 +62,7 @@ const Transactions = () => {
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions}
-      columns={columns}
+      getColumns={getColumns}
     />
   );
 };

@@ -2,7 +2,7 @@ import { Table } from "antd";
 import React from "react";
 import { Transaction, useTransactions } from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
-import columns from "./columns";
+import getGetColumns from "./columns";
 
 interface RelatedTransactionsProps {
   filters: string[];
@@ -14,7 +14,7 @@ const RelatedTransactions = ({
   excludeColumns = []
 }: RelatedTransactionsProps) => {
   const { tableSize } = useSettings();
-  const filteredColumns = columns.filter(
+  const filteredColumns = getGetColumns()().filter(
     col => !excludeColumns.includes(col.dataIndex as string)
   );
 

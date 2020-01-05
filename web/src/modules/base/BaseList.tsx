@@ -101,7 +101,8 @@ interface ListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
   useItems: UseItems<T>;
-  columns: EditableColumnsType<T>;
+  columns?: EditableColumnsType<T>;
+  getColumns?: (form: FormInstance) => EditableColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
   onSearch?: (search?: string) => void;
@@ -120,6 +121,7 @@ const BaseList = <T extends ModelWithLabel>({
   itemNamePlural,
   useItems,
   columns,
+  getColumns,
   pagination = true,
   showSearch = true,
   onSearch = () => {},
@@ -145,14 +147,20 @@ const BaseList = <T extends ModelWithLabel>({
 
   // Editable table
   const [form] = Form.useForm();
-  // const [inlineCreate, setInlineCreate] = useState(false);
+  if (!columns && getColumns) {
+    columns = getColumns(form);
+  }
+  if (!columns) {
+    throw new Error("BaseList must specify columns or getColumns");
+  }
+
   const [editingItem, setEditingItem] = useState<T>();
   const [editLoading, setEditLoading] = useState(false);
   const isEditing = (item: T) => item.pk === editingItem?.pk;
   const editItem = (item: T) => {
     const extra: any[][] = [];
     const mapped = Object.entries(item).map(([key, value]) => {
-      const col = columns.find(c => c.formName === key || c.dataIndex === key);
+      const col = columns!.find(c => c.formName === key || c.dataIndex === key);
       if (col?.formValue) {
         extra.push(col.formValue(key, value));
       }
@@ -171,7 +179,7 @@ const BaseList = <T extends ModelWithLabel>({
 
   const onValuesChange = (changedValues: any) => {
     const changedKeys = Object.keys(changedValues);
-    columns
+    columns!
       .filter(col => !!col.formChange)
       .forEach(col => {
         if (
