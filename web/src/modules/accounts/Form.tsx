@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Row } from "antd";
+import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CurrencySelect from "../../components/form/CurrencySelect";
@@ -10,6 +10,29 @@ interface FormProps {
   data?: Account;
   onSave: (values: Account) => Promise<void>;
 }
+
+const ICONS: string[] = [
+  "💵",
+  "💴",
+  "💶",
+  "💷",
+  "💰",
+  "💳",
+  "🧾",
+  "🏦",
+  "🏛️",
+  "💎",
+  "👝",
+  "👛",
+  "📱",
+  "📈",
+  "💲",
+  "💸",
+  "🤑"
+];
+const suggestedIcons = ICONS.map(icon => ({
+  value: icon
+}));
 
 const AccountForm = ({ data, onSave }: FormProps) => {
   const { settings } = useAuth();
@@ -24,20 +47,20 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       setSubmitting(false);
       return;
     }
-    if (values.balance !== undefined) {
-      values = {
-        ...values,
-        set_balance: values.balance,
-        set_currency: values.currency
-      };
+    if (data?.pk && !resetBalance) {
+      delete values["set_balance"];
+      delete values["set_currency"];
     }
     onSave(values);
   };
 
   const initialValues: Partial<Account> = { ...data };
   if (!data?.pk) {
-    initialValues.balance = "0.00";
-    initialValues.currency = settings?.default_currency;
+    initialValues.set_balance = "0.00";
+    initialValues.set_currency = settings?.default_currency;
+  } else {
+    initialValues.set_balance = data.balance;
+    initialValues.set_currency = data.currency;
   }
 
   return (
@@ -50,11 +73,12 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       <Row gutter={16}>
         <Col span={2}>
           <Form.Item name="icon" label="Icon">
-            <Input
-              maxLength={1}
-              placeholder="💵"
-              style={{ textAlign: "center" }}
-            />
+            <AutoComplete
+              options={suggestedIcons}
+              dropdownStyle={{ textAlign: "center" }}
+            >
+              <Input maxLength={1} style={{ textAlign: "center" }} />
+            </AutoComplete>
           </Form.Item>
         </Col>
         <Col span={22}>
@@ -75,17 +99,17 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       ) : (
         <Row gutter={16}>
           <Col span={4}>
-            <Form.Item name="balance" label="Initial Balance" required>
+            <Form.Item name="set_balance" label="Initial Balance" required>
               <MoneyInput size="middle" fullWidth />
             </Form.Item>
           </Col>
           <Col span={4}>
             <Form.Item
-              name="currency"
+              name="set_currency"
               label="Currency"
               rules={[{ required: true, message: "Select a currency" }]}
             >
-              <CurrencySelect />
+              <CurrencySelect disabled={!!data?.pk} />
             </Form.Item>
           </Col>
         </Row>

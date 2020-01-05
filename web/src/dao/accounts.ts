@@ -15,6 +15,9 @@ export interface Account {
   currency: string;
   pos: number;
 
+  set_balance: string;
+  set_currency: string;
+
   readonly label: string;
 }
 
