@@ -5,6 +5,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import { ModelWithLabel } from "../../dao/base";
 import {
+  bulkDeletePayees,
   deletePayee,
   Payee,
   postPayee,
@@ -23,6 +24,9 @@ const Payees = ({ match }: RouteComponentProps) => {
   });
   const [edit] = useMutation(putPayee);
   const [create] = useMutation(postPayee);
+  const [bulkDelete] = useMutation(bulkDeletePayees, {
+    refetchQueries: ["items/payees"]
+  });
 
   const columns: EditableColumnsType<Payee> = [
     {
@@ -109,6 +113,16 @@ const Payees = ({ match }: RouteComponentProps) => {
         >
           <Button type="link">Delete</Button>
         </Popconfirm>
+      ]}
+      bulkActions={[
+        {
+          key: "delete",
+          name: "Delete selected tags",
+          async action(pks) {
+            const { deleted } = await bulkDelete({ pks });
+            message.info(`Deleted ${deleted} payees`);
+          }
+        }
       ]}
     />
   );

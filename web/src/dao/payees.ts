@@ -1,5 +1,6 @@
 import {
   makeDeleteItem,
+  makeItemsAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -27,3 +28,9 @@ export const postPayee = makePostItem<Payee>("payees");
 export const putPayee = makePutItem<Payee>("payees");
 
 export const deletePayee = makeDeleteItem<Payee>("payees");
+
+export const bulkDeletePayees = makeItemsAction(
+  "payees",
+  "bulk_delete",
+  "DELETE"
+);

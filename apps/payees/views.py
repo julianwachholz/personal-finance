@@ -1,6 +1,8 @@
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
 
+from util.views import BulkDeleteViewSetMixin
+
 from .models import Payee
 from .serializers import PayeeSerializer
 
@@ -11,7 +13,7 @@ class PayeeFilterSet(filters.FilterSet):
         fields = ("type",)
 
 
-class PayeeViewSet(viewsets.ModelViewSet):
+class PayeeViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows payees to be viewed or edited.
     """
