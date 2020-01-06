@@ -58,7 +58,6 @@ const Accounts = ({ match }: RouteComponentProps) => {
       columns={columns}
       isSortable
       onMove={(pk, pos) => {
-        console.log("moveItem", pk, pos);
         move({ pk, pos });
       }}
       actions={[

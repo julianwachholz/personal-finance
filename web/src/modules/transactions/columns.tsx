@@ -109,6 +109,7 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
         title: "Category",
         dataIndex: "category",
         editable: true,
+        ellipsis: true,
         formName: "set_category",
         formField: <CategorySelect allowClear />,
         formValue: (key, value) => ["set_category", value?.pk],

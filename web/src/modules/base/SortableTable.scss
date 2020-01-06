@@ -1,4 +1,7 @@
 .dnd {
+  td {
+    cursor: ns-resize;
+  }
   &.dnd-over-down td {
     border-bottom: 2px dotted #1890ff;
   }

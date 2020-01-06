@@ -154,7 +154,9 @@ const BaseList = <T extends ModelWithLabel>({
     />
   ) : null;
 
-  const components = isSortable
+  const canSort = isSortable && filters.length === 0 && !ordering && !search;
+
+  const components = canSort
     ? ({
         body: {
           row: DndRow
@@ -211,11 +213,15 @@ const BaseList = <T extends ModelWithLabel>({
           size={tableSize}
           components={components}
           onRow={(record, index) => {
-            if (isSortable) {
+            if (canSort) {
               return {
                 index,
                 pk: record.pk,
                 onDrop(item: any) {
+                  if (record.pk === item.pk) {
+                    // noop
+                    return;
+                  }
                   onMove!(item.pk, index!);
                 }
               } as any;
