@@ -1,6 +1,5 @@
 from rest_framework import generics
 
-from .models import Settings
 from .serializers import SettingsSerializer
 
 

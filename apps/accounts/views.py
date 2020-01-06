@@ -43,5 +43,5 @@ class AccountViewSet(viewsets.ModelViewSet):
         try:
             account.set_pos(target_pos)
         except Exception as e:
-            return Response({"status": "fail", "error": str(e)})
+            return Response({"status": "error", "error": str(e)}, status=400, exception=e)
         return Response({"status": "ok"})

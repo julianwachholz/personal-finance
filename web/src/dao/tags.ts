@@ -1,5 +1,6 @@
 import {
   makeDeleteItem,
+  makeItemsAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -23,3 +24,5 @@ export const postTag = makePostItem<Tag>("tags");
 export const putTag = makePutItem<Tag>("tags");
 
 export const deleteTag = makeDeleteItem<Tag>("tags");
+
+export const bulkDeleteTags = makeItemsAction("tags", "bulk_delete", "DELETE");

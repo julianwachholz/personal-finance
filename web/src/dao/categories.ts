@@ -1,6 +1,6 @@
 import {
   makeDeleteItem,
-  makePostAction,
+  makeItemAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -37,10 +37,10 @@ export const [useCategoryTree, prefetchCategoryTree] = makeUseItems<
 
 export type MovePosition = "first-child" | "last-child" | "left" | "right";
 
-export interface MoveCategory {
+interface MoveCategory {
   pk: number;
   target_pk: number;
   position: MovePosition;
 }
 
-export const moveCategory = makePostAction<MoveCategory>("categories", "move");
+export const moveCategory = makeItemAction<MoveCategory>("categories", "move");

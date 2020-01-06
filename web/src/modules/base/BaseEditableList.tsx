@@ -1,15 +1,18 @@
 import { DownOutlined } from "@ant-design/icons";
 import {
   Button,
+  Col,
   Divider,
   Dropdown,
   Form,
   Input,
   Menu,
   PageHeader,
+  Row,
+  Select,
   Table
 } from "antd";
-import { ColumnType } from "antd/lib/table/interface";
+import { ColumnType, TableRowSelection } from "antd/lib/table/interface";
 import { TableProps } from "antd/lib/table/Table";
 import { FormInstance } from "rc-field-form";
 import { Rule } from "rc-field-form/lib/interface";
@@ -79,6 +82,12 @@ const EditableCell: React.FC<any> = <T extends Model>({
   );
 };
 
+interface BulkAction {
+  key: string;
+  name: string;
+  action: (selectedKeys: number[]) => Promise<void>;
+}
+
 interface EditableListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
@@ -92,10 +101,15 @@ interface EditableListProps<T extends ModelWithLabel> {
   extraActions?: boolean | React.ReactElement[];
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
+
+  // can records be edited inline?
   editable?: boolean;
   isEditable?: (record: T) => boolean;
   onSave?: (item: T) => Promise<T>;
+  // default values for a new item
   defaultValues?: Partial<T>;
+  // allow actions on many items at once
+  bulkActions?: BulkAction[];
 }
 
 const BaseEditableList = <T extends ModelWithLabel>({
@@ -114,7 +128,8 @@ const BaseEditableList = <T extends ModelWithLabel>({
   editable = false,
   isEditable = () => true,
   onSave,
-  defaultValues = {}
+  defaultValues = {},
+  bulkActions
 }: EditableListProps<T>) => {
   if (editable && !onSave) {
     throw new Error("editable list requires onSave callback");
@@ -126,6 +141,11 @@ const BaseEditableList = <T extends ModelWithLabel>({
   const [ordering, setOrdering] = useState();
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
+
+  const [bulkMode, setBulkMode] = useState(false);
+  const [bulkAction, setBulkAction] = useState<string>();
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<number[]>([]);
 
   // Editable table
   const [form] = Form.useForm();
@@ -173,7 +193,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
       });
   };
 
-  if (editable || extraRowActions) {
+  if (!bulkMode && (editable || extraRowActions)) {
     columns = [
       ...columns.map(col => {
         if (!col.editable) {
@@ -280,7 +300,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
   }
 
   const extraActionMenu =
-    extraActions === false ? null : extraActions === true ? (
+    extraActions === false || bulkMode ? null : extraActions === true ? (
       <Menu>
         <Menu.Item>
           <Link to="#">Import</Link>
@@ -323,7 +343,31 @@ const BaseEditableList = <T extends ModelWithLabel>({
     dataSource = data?.results ?? [];
   }
 
-  if (editable) {
+  if (bulkActions) {
+    actions = [
+      ...actions,
+      <Button
+        key="bulk-mode"
+        onClick={() => {
+          setBulkMode(!bulkMode);
+        }}
+      >
+        {bulkMode ? "Deactivate Bulk Mode" : "Bulk Mode"}
+      </Button>
+    ];
+  }
+
+  const rowSelection: TableRowSelection<T> | undefined = bulkMode
+    ? {
+        type: "checkbox",
+        selectedRowKeys: selectedKeys,
+        onChange: selectedRowKeys => {
+          setSelectedKeys(selectedRowKeys as number[]);
+        }
+      }
+    : undefined;
+
+  if (editable && !bulkMode) {
     actions = [
       ...actions,
       <Button
@@ -333,7 +377,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
           editItem({ pk: 0 } as any);
         }}
       >
-        Quick Create {itemName}
+        Create {itemName}
       </Button>
     ];
   }
@@ -351,19 +395,55 @@ const BaseEditableList = <T extends ModelWithLabel>({
           ...actions
         ]}
       />
-      {showSearch ? (
-        <Input.Search
-          size={tableSize}
-          loading={isLoading}
-          enterButton
-          onSearch={value => {
-            setSearch(value);
-            cancelEdit();
-            onSearch(value);
-          }}
-        />
-      ) : null}
-      {pager}
+      <Row>
+        <Col span={12}>
+          {bulkMode ? (
+            <>
+              <Select
+                size={tableSize}
+                placeholder="Select bulk action..."
+                style={{ width: 200 }}
+                value={bulkAction}
+                onChange={(v: string) => setBulkAction(v)}
+              >
+                {(bulkActions! as BulkAction[]).map(b => (
+                  <Select.Option key={b.key} value={b.key}>
+                    {b.name}
+                  </Select.Option>
+                ))}
+              </Select>{" "}
+              <Button
+                size={tableSize}
+                disabled={!bulkAction || selectedKeys.length === 0}
+                loading={bulkLoading}
+                type="primary"
+                onClick={async () => {
+                  const bulk = bulkActions!.find(b => b.key === bulkAction);
+                  setBulkLoading(true);
+                  await bulk!.action(selectedKeys);
+                  setBulkLoading(false);
+                  setSelectedKeys([]);
+                }}
+              >
+                Go
+              </Button>
+              {selectedKeys.length} of {total} selected
+            </>
+          ) : showSearch ? (
+            <Input.Search
+              size={tableSize}
+              loading={isLoading}
+              enterButton
+              onSearch={value => {
+                setSearch(value);
+                cancelEdit();
+                onSearch(value);
+              }}
+            />
+          ) : null}
+        </Col>
+        <Col span={12}>{pager}</Col>
+      </Row>
       <Form
         form={form}
         component={editable ? undefined : false}
@@ -398,6 +478,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
           rowKey="pk"
           pagination={false}
           tableLayout="fixed"
+          rowSelection={rowSelection}
           onChange={(_pagination, filters, sorter) => {
             setFilters(mapFilters(filters));
             if (!Array.isArray(sorter)) {

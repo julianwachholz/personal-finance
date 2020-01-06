@@ -46,6 +46,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
         target = self.get_queryset().get(pk=target_pk)
         try:
             node.move_to(target, position)
-        except:
-            return Response({"status": "fail"})
+        except Exception as e:
+            return Response(
+                {"status": "error", "error": str(e)}, status=400, exception=e
+            )
         return Response({"status": "ok"})

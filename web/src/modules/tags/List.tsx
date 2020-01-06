@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import ColorSelect from "../../components/form/ColorSelect";
 import {
+  bulkDeleteTags,
   deleteTag,
   postTag,
   putTag,
@@ -22,6 +23,9 @@ const Tags = ({ match }: RouteComponentProps) => {
   });
   const [edit] = useMutation(putTag);
   const [create] = useMutation(postTag);
+  const [bulkDelete] = useMutation(bulkDeleteTags, {
+    refetchQueries: ["items/tags"]
+  });
 
   const columns: EditableColumnsType<TagModel> = [
     {
@@ -83,6 +87,16 @@ const Tags = ({ match }: RouteComponentProps) => {
         >
           <Button type="link">Delete</Button>
         </Popconfirm>
+      ]}
+      bulkActions={[
+        {
+          key: "delete",
+          name: "Delete selected tags",
+          async action(pks) {
+            const { deleted } = await bulkDelete({ pks });
+            message.info(`Deleted ${deleted} tags`);
+          }
+        }
       ]}
     />
   );

@@ -198,16 +198,21 @@ export const makeDeleteItem = <T extends Model>(basename: string) => {
   return makeItemMutation<T, void>(basename, "DELETE");
 };
 
-type PostAction<T extends Model> = (params: T) => Promise<any>;
+export interface ItemsActionParams {
+  pks: number[];
+}
 
-export const makePostAction = <T extends Model>(
+type ItemsAction<P = ItemsActionParams> = (params: P) => Promise<any>;
+
+export const makeItemsAction = <P = ItemsActionParams>(
   basename: string,
-  action: string
+  action: string,
+  method: string = "POST"
 ) => {
-  const postAction: PostAction<T> = async ({ pk, ...params }) => {
-    const url = `/api/${basename}/${pk}/${action}/`;
+  const itemsAction: ItemsAction<P> = async params => {
+    const url = `/api/${basename}/${action}/`;
     const response = await authFetch(url, {
-      method: "POST",
+      method,
       headers: {
         "content-type": "application/json"
       },
@@ -219,5 +224,30 @@ export const makePostAction = <T extends Model>(
     const responseData = await response.json();
     return responseData;
   };
-  return postAction;
+  return itemsAction;
+};
+
+type ItemAction<T extends Model> = (params: T) => Promise<any>;
+
+export const makeItemAction = <T extends Model>(
+  basename: string,
+  action: string,
+  method: string = "POST"
+) => {
+  const itemAction: ItemAction<T> = async ({ pk, ...params }) => {
+    const url = `/api/${basename}/${pk}/${action}/`;
+    const response = await authFetch(url, {
+      method,
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(params)
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    const responseData = await response.json();
+    return responseData;
+  };
+  return itemAction;
 };
