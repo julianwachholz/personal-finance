@@ -8,7 +8,7 @@ import useDebounce from "../../utils/debounce";
 interface ModelSelectProps<T extends ModelWithLabel>
   extends SelectProps<SelectValue> {
   useItems: UseItems<T>;
-  createItem?: (value: string) => Promise<void>;
+  createItem?: (value: string, cb: (item: T) => Promise<void>) => Promise<void>;
   onItemSelect?: (value: T) => void;
 }
 
@@ -24,6 +24,7 @@ const ModelSelect = <T extends ModelWithLabel>({
   const { data, isLoading } = useItems({ search: debouncedSearch });
   const debouncedData = useDebounce(data, 200);
   const debouncedLoading = useDebounce(isLoading, 200);
+  const [isCreating, setCreating] = useState(false);
 
   const options =
     debouncedData?.results.map(item => {
@@ -52,7 +53,7 @@ const ModelSelect = <T extends ModelWithLabel>({
   if (createItem && search && options.length < 5) {
     options.push(
       <Select.Option key="0" value="0">
-        Create "{search}"
+        {isCreating ? "Creating" : "Create"} "{search}"
       </Select.Option>
     );
   }
@@ -66,16 +67,21 @@ const ModelSelect = <T extends ModelWithLabel>({
       dropdownStyle={{ minWidth: 300 }}
       value={value}
       onSearch={setSearch}
-      onSelect={async (value, option) => {
+      onSelect={async value => {
         if (createItem && value === "0") {
-          await createItem(search);
+          setCreating(true);
+          await createItem(search, async () => {
+            await refetchQuery([`items/${useItems.basename}`, { search }], {
+              force: true
+            });
+          });
+          setCreating(false);
         } else {
           const item = debouncedData?.results.find(
             item => item.pk.toString() === value
           );
           onItemSelect?.(item!);
         }
-        refetchQuery([`items/${useItems.basename}`, { search }]);
       }}
       {...props}
     >

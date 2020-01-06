@@ -458,7 +458,6 @@ const BaseEditableList = <T extends ModelWithLabel>({
             ) {
               return;
             }
-            console.log("enter pressed");
             e.preventDefault();
           }
         }}

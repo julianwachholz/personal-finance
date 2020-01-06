@@ -25,8 +25,12 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
   return form => {
     const quickCreatePayee =
       form && createPayee
-        ? async (name: string) => {
+        ? async (name: string, cb: (item: Payee) => Promise<void>) => {
+            console.log("creating payee");
             const payee = await createPayee(name);
+            console.log("created payee; call refresh");
+            await cb(payee);
+            console.log("done refreshing; set field value");
             form?.setFieldsValue({ set_payee: payee.pk });
           }
         : undefined;
