@@ -70,7 +70,11 @@ const TransferForm = ({ visible, onVisible }: TransferFormProps) => {
           setLoading(false);
         }}
       >
-        <Form.Item name="pk" label="From Account" rules={[{ required: true }]}>
+        <Form.Item
+          name="pk"
+          label="From Account"
+          rules={[{ required: true, message: "Select debit account" }]}
+        >
           <ModelSelect
             autoFocus
             useItems={useAccounts}
@@ -82,7 +86,20 @@ const TransferForm = ({ visible, onVisible }: TransferFormProps) => {
         <Form.Item
           name="target"
           label="To Account"
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              message: "Select credit account"
+            },
+            {
+              validator(rule, value) {
+                if (value && value === form.getFieldValue("pk")) {
+                  return Promise.reject("Cannot transfer to same account");
+                }
+                return Promise.resolve();
+              }
+            }
+          ]}
         >
           <ModelSelect
             useItems={useAccounts}
@@ -98,7 +115,14 @@ const TransferForm = ({ visible, onVisible }: TransferFormProps) => {
                 <Form.Item
                   name="amount"
                   noStyle
-                  rules={[{ required: true, type: "number", min: 0 }]}
+                  rules={[
+                    {
+                      required: true,
+                      type: "number",
+                      min: 0.01,
+                      message: "Cannot move zero amount"
+                    }
+                  ]}
                 >
                   <MoneyInput size="middle" min={0} />
                 </Form.Item>
