@@ -54,7 +54,12 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
         ellipsis: true,
         editable: true,
         formField: <ModelSelect useItems={useAccounts} />,
-        formValue: (key, value) => ["set_account", value?.pk],
+        formValue: (key, value) => {
+          if (key === "account") {
+            return ["set_account", value?.pk];
+          }
+          return [key, value];
+        },
         render(account: ModelWithLabel) {
           if (account) {
             return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
@@ -66,7 +71,7 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
         dataIndex: "amount",
         align: "right",
         editable: true,
-        formField: <MoneyInput autoFocus />,
+        formField: <MoneyInput autoFocus fullWidth />,
         render(amount: string, tx) {
           return (
             <Money value={{ amount: amount, currency: tx.amount_currency }} />

@@ -32,10 +32,10 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
               { pk, ...data },
               { updateQuery: ["item/categories", { pk }] }
             );
-            message.success("Category updated!");
+            message.success("Category updated");
             history.push(`/settings/categories/${pk}`);
           } catch (e) {
-            message.error("Category update failed!");
+            message.error("Category update failed");
             throw e;
           }
         }}

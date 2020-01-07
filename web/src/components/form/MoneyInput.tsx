@@ -25,9 +25,7 @@ const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
       className={`input-money ${fullWidth && "input-money-fullwidth"}`}
       precision={2}
       decimalSeparator={decimalSeparator}
-      formatter={v =>
-        v ? `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator) : "-"
-      }
+      formatter={v => `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator)}
       parser={v => v!.replace(rParse, "")}
       value={value}
       {...props}

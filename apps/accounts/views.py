@@ -43,5 +43,31 @@ class AccountViewSet(viewsets.ModelViewSet):
         try:
             account.set_pos(target_pos)
         except Exception as e:
-            return Response({"status": "error", "error": str(e)}, status=400, exception=e)
+            return Response(
+                {"status": "error", "error": str(e)}, status=400, exception=e
+            )
+        return Response({"status": "ok"})
+
+    @action(detail=True, methods=["post"])
+    def transfer(self, request, pk, **kwargs):
+        target = request.data["target"]
+        amount = request.data["amount"]
+        conversion_rate = request.data.get("conversion_rate", 1)
+        text = request.data.get("text", "")
+        date = request.data.get("date", "")
+
+        credit_account = self.get_queryset().get(pk=target)
+        debit_account = self.get_queryset().get(pk=pk)
+        try:
+            debit_account.transfer(
+                to=credit_account,
+                amount=amount,
+                conversion_rate=conversion_rate,
+                text=text,
+                date=date,
+            )
+        except Exception as e:
+            return Response(
+                {"status": "error", "error": str(e)}, status=400, exception=e
+            )
         return Response({"status": "ok"})

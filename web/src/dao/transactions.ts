@@ -29,6 +29,9 @@ export interface Transaction {
   set_tags: number[];
 
   readonly label: string;
+
+  // Only used in frontend
+  readonly type: "expense" | "income";
 }
 
 const mapTx = (tx: Transaction) => {

@@ -19,10 +19,10 @@ const CategoryCreate = () => {
           try {
             const category = await mutate(data);
             setQueryData(["item/categories", { pk: category.pk }], category);
-            message.success("Category created!");
+            message.success("Category created");
             history.push(`/settings/categories/${category.pk}`);
           } catch (e) {
-            message.error("Category create failed!");
+            message.error("Category create failed");
             throw e;
           }
         }}

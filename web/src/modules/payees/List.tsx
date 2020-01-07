@@ -87,10 +87,10 @@ const Payees = ({ match }: RouteComponentProps) => {
             : await edit(payee, {
                 updateQuery: ["item/payees", { pk: payee.pk }]
               });
-          message.success(`Payee ${isNew ? "created" : "updated"}!`);
+          message.success(`Payee ${isNew ? "created" : "updated"}`);
           return savedPayee;
         } catch (e) {
-          message.error(`Payee ${isNew ? "create" : "update"} failed!`);
+          message.error(`Payee ${isNew ? "create" : "update"} failed`);
           throw e;
         }
       }}

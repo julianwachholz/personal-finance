@@ -33,10 +33,10 @@ const AccountEdit = ({ match }: RouteComponentProps<DetailParams>) => {
               { pk, ...data },
               { updateQuery: ["item/accounts", { pk }] }
             );
-            message.success("Account updated!");
+            message.success("Account updated");
             history.push(`/accounts/${pk}`);
           } catch (e) {
-            message.error("Account update failed!");
+            message.error("Account update failed");
             throw e;
           }
         }}

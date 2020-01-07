@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.db.models import F, Sum
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
@@ -76,3 +76,22 @@ class Account(models.Model):
         )
         self.balance = aggregate["amount__sum"]
         self.save()
+
+    def transfer(self, *, to, amount, conversion_rate=1, text=None, date=None):
+        if text is None:
+            text = ""
+        if date is None:
+            date = now()
+
+        with transaction.atomic():
+            source_tx = self.transactions.create(
+                user=self.user, amount=(amount * -1), text=text
+            )
+            target_tx = to.transactions.create(
+                user=self.user,
+                amount=amount * conversion_rate,
+                text=text,
+                related=source_tx,
+            )
+            source_tx.related = target_tx
+            source_tx.save()

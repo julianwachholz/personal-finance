@@ -61,10 +61,10 @@ const Tags = ({ match }: RouteComponentProps) => {
             : await edit(tag, {
                 updateQuery: ["item/tags", { pk: tag.pk }]
               });
-          message.success(`Tag ${isNew ? "created" : "updated"}!`);
+          message.success(`Tag ${isNew ? "created" : "updated"}`);
           return savedTag;
         } catch (e) {
-          message.error(`Tag ${isNew ? "create" : "update"} failed!`);
+          message.error(`Tag ${isNew ? "create" : "update"} failed`);
           throw e;
         }
       }}

@@ -12,6 +12,7 @@ class SettingsSerializer(serializers.ModelSerializer):
             "default_currency",
             "default_debit_account",
             "default_credit_account",
+            "default_credit_category",
             "decimal_separator",
             "group_separator",
             "date_format",

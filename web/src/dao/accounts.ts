@@ -42,3 +42,17 @@ interface MoveAccount {
 }
 
 export const moveAccount = makeItemAction<MoveAccount>("accounts", "move");
+
+export interface AccountTransfer {
+  pk: number;
+  target: number;
+  amount: number;
+  conversion_rate?: number;
+  text?: string;
+  date?: Date;
+}
+
+export const accountTransfer = makeItemAction<AccountTransfer>(
+  "accounts",
+  "transfer"
+);

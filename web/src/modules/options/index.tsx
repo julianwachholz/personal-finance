@@ -3,6 +3,7 @@ import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
 import React from "react";
 import { useMutation } from "react-query";
+import CategorySelect from "../../components/form/CategorySelect";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import ModelSelect from "../../components/form/ModelSelect";
 import { useAccounts } from "../../dao/accounts";
@@ -114,6 +115,12 @@ const Options = () => {
         </Form.Item>
         <Form.Item name="default_credit_account" label="Default Credit Account">
           <ModelSelect useItems={useAccounts} />
+        </Form.Item>
+        <Form.Item
+          name="default_credit_category"
+          label="Default Credit Category"
+        >
+          <CategorySelect size="middle" />
         </Form.Item>
         <Form.Item name="number_format" label="Number Format">
           <Radio.Group>

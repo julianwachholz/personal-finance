@@ -30,6 +30,14 @@ class Settings(models.Model):
         related_name="+",
     )
 
+    default_credit_category = models.ForeignKey(
+        to="categories.Category",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="+",
+    )
+
     decimal_separator = models.CharField(
         verbose_name=_("decimal separator"), max_length=3, default="."
     )
@@ -56,6 +64,14 @@ class Settings(models.Model):
             errors["default_credit_account"] = _("Account doesn't belong to same user.")
         if self.default_debit_account and self.user != self.default_debit_account.user:
             errors["default_debit_account"] = _("Account doesn't belong to same user.")
+
+        if (
+            self.default_credit_category
+            and self.user != self.default_credit_category.user
+        ):
+            errors["default_debit_category"] = _(
+                "Category doesn't belong to same user."
+            )
 
         if errors:
             raise ValidationError(errors)

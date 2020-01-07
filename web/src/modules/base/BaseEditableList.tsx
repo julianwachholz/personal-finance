@@ -12,6 +12,7 @@ import {
   Select,
   Table
 } from "antd";
+import { ButtonProps } from "antd/lib/button";
 import { ColumnType, TableRowSelection } from "antd/lib/table/interface";
 import { TableProps } from "antd/lib/table/Table";
 import { FormInstance } from "rc-field-form";
@@ -82,11 +83,35 @@ const EditableCell: React.FC<any> = <T extends Model>({
   );
 };
 
+interface InlineCreateButton {
+  key: string;
+  label: string;
+  buttonProps?: ButtonProps;
+  defaultValues: any;
+}
+
+type DefaultValues<T extends ModelWithLabel> = {
+  [K in keyof T]?: T[K] | (() => T[K]);
+};
+
 interface BulkAction {
   key: string;
   name: string;
   action: (selectedKeys: number[]) => Promise<void>;
 }
+
+const getDefaultValues = <T extends ModelWithLabel>(
+  v: DefaultValues<T>
+): Partial<T> => {
+  return Object.fromEntries(
+    Object.entries(v).map(([key, value]) => {
+      if (typeof value === "function") {
+        return [key, value()];
+      }
+      return [key, value];
+    })
+  );
+};
 
 interface EditableListProps<T extends ModelWithLabel> {
   itemName: string;
@@ -105,11 +130,14 @@ interface EditableListProps<T extends ModelWithLabel> {
   // can records be edited inline?
   editable?: boolean;
   isEditable?: (record: T) => boolean;
+  inlineCreateButtons?: InlineCreateButton[];
   onSave?: (item: T) => Promise<T>;
   // default values for a new item
-  defaultValues?: Partial<T>;
+  defaultValues?: DefaultValues<T>;
   // allow actions on many items at once
   bulkActions?: BulkAction[];
+
+  children?: React.ReactNode;
 }
 
 const BaseEditableList = <T extends ModelWithLabel>({
@@ -127,9 +155,11 @@ const BaseEditableList = <T extends ModelWithLabel>({
   tableProps = {},
   editable = false,
   isEditable = () => true,
+  inlineCreateButtons,
   onSave,
   defaultValues = {},
-  bulkActions
+  bulkActions,
+  children
 }: EditableListProps<T>) => {
   if (editable && !onSave) {
     throw new Error("editable list requires onSave callback");
@@ -169,8 +199,11 @@ const BaseEditableList = <T extends ModelWithLabel>({
       return [key, value];
     });
 
-    const mappedItem = Object.fromEntries([...mapped, ...extra]);
-    const data = { ...defaultValues, ...mappedItem };
+    const mappedItem = Object.fromEntries([
+      ...mapped,
+      ...extra.filter(([k, v]) => !!v)
+    ]);
+    const data = { ...getDefaultValues(defaultValues), ...mappedItem };
     form.resetFields();
     form.setFieldsValue(data);
     setEditingItem(data);
@@ -368,18 +401,35 @@ const BaseEditableList = <T extends ModelWithLabel>({
     : undefined;
 
   if (editable && !bulkMode) {
-    actions = [
-      ...actions,
-      <Button
-        key="inline-create"
-        type="primary"
-        onClick={() => {
-          editItem({ pk: 0 } as any);
-        }}
-      >
-        Create {itemName}
-      </Button>
-    ];
+    if (inlineCreateButtons) {
+      actions = [
+        ...actions,
+        ...inlineCreateButtons.map(b => (
+          <Button
+            key={b.key}
+            onClick={() => {
+              editItem({ pk: 0, ...b.defaultValues });
+            }}
+            {...b.buttonProps}
+          >
+            {b.label}
+          </Button>
+        ))
+      ];
+    } else {
+      actions = [
+        ...actions,
+        <Button
+          key="inline-create"
+          type="primary"
+          onClick={() => {
+            editItem({ pk: 0 } as any);
+          }}
+        >
+          Create {itemName}
+        </Button>
+      ];
+    }
   }
 
   return (
@@ -451,6 +501,9 @@ const BaseEditableList = <T extends ModelWithLabel>({
         onFinish={values => saveItem(values as Partial<T>)}
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {
+            if (editLoading) {
+              e.preventDefault();
+            }
             if (
               e.target.tagName.toLowerCase() === "button" ||
               e.target.classList.contains("ant-input") ||
@@ -494,6 +547,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
           {...tableProps}
         />
       </Form>
+      {children}
     </div>
   );
 };
