@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.categories.models import Category
+from util.views import BulkDeleteViewSetMixin
 
 from .models import Transaction
 from .serializers import TransactionSerializer
@@ -42,7 +43,7 @@ class TransactionFilterSet(filters.FilterSet):
         fields = ("currency", "category", "account", "payee", "tags")
 
 
-class TransactionViewSet(viewsets.ModelViewSet):
+class TransactionViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
     """
     API endpoint to manage transactions.
     """

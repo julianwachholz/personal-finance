@@ -5,6 +5,7 @@ import { setQueryData, useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
 import { Payee, postPayee } from "../../dao/payees";
 import {
+  bulkDeleteTransactions,
   postTransaction,
   putTransaction,
   Transaction,
@@ -22,6 +23,10 @@ const Transactions = () => {
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
   prefetchCategoryTree();
+
+  const [bulkDelete] = useMutation(bulkDeleteTransactions, {
+    refetchQueries: ["items/transactions"]
+  });
 
   const [createPayee] = useMutation(postPayee);
 
@@ -104,6 +109,16 @@ const Transactions = () => {
         >
           Transfer
         </Button>
+      ]}
+      bulkActions={[
+        {
+          key: "delete",
+          name: "Delete transactions",
+          async action(pks) {
+            const { deleted } = await bulkDelete({ pks });
+            message.info(`Deleted ${deleted} transactions`);
+          }
+        }
       ]}
     >
       <TransferForm

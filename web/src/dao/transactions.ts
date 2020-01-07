@@ -1,4 +1,5 @@
 import {
+  makeItemsAction,
   makePostItem,
   makePutItem,
   makeUseItems,
@@ -46,3 +47,9 @@ export const [useTransactions, prefetchTransactions] = makeUseItems<
 export const postTransaction = makePostItem<Transaction>("transactions");
 
 export const putTransaction = makePutItem<Transaction>("transactions");
+
+export const bulkDeleteTransactions = makeItemsAction(
+  "transactions",
+  "bulk_delete",
+  "DELETE"
+);

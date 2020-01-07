@@ -1,8 +1,6 @@
 from django.db.models import F
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
-
-from apps.accounts.models import Account
 
 from .models import Transaction
 
@@ -33,3 +31,8 @@ def post_save_transaction(sender, instance, created, **kwargs):
             instance.account.save()
     else:
         instance.account.reconcile()
+
+
+@receiver(post_delete, sender=Transaction)
+def post_delete_transaction(sender, instance, **kwargs):
+    instance.account.reconcile()

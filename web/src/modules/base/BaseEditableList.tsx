@@ -378,7 +378,6 @@ const BaseEditableList = <T extends ModelWithLabel>({
 
   if (bulkActions) {
     actions = [
-      ...actions,
       <Button
         key="bulk-mode"
         onClick={() => {
@@ -386,7 +385,8 @@ const BaseEditableList = <T extends ModelWithLabel>({
         }}
       >
         {bulkMode ? "Deactivate Bulk Mode" : "Bulk Mode"}
-      </Button>
+      </Button>,
+      ...(bulkMode ? [] : actions)
     ];
   }
 
