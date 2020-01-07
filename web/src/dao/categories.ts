@@ -1,6 +1,7 @@
 import {
   makeDeleteItem,
   makeItemAction,
+  makeItemsAction,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -44,3 +45,8 @@ interface MoveCategory {
 }
 
 export const moveCategory = makeItemAction<MoveCategory>("categories", "move");
+
+export const createDefaultCategories = makeItemsAction<{}>(
+  "categories",
+  "create_default"
+);

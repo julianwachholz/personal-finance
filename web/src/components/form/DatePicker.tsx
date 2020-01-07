@@ -50,7 +50,6 @@ const generateConfig: GenerateConfig<Date> = {
     getWeek: (locale, date) => getWeek(date),
     getShortWeekDays: locale => {
       return Array.from({ length: 7 }).map((_, day) => {
-        console.info("localize day ", day);
         return enUS.localize.day(day, { width: "abbreviated" });
       });
     },

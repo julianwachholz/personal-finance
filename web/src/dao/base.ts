@@ -199,7 +199,7 @@ export const makeDeleteItem = <T extends Model>(basename: string) => {
 };
 
 export interface ItemsActionParams {
-  pks: number[];
+  pks?: number[];
 }
 
 type ItemsAction<P = ItemsActionParams> = (params: P) => Promise<any>;
@@ -220,6 +220,9 @@ export const makeItemsAction = <P = ItemsActionParams>(
     });
     if (!response.ok) {
       throw new Error(response.statusText);
+    }
+    if (response.status === 204) {
+      return;
     }
     const responseData = await response.json();
     return responseData;
@@ -245,6 +248,9 @@ export const makeItemAction = <T extends Model>(
     });
     if (!response.ok) {
       throw new Error(response.statusText);
+    }
+    if (response.status === 204) {
+      return;
     }
     const responseData = await response.json();
     return responseData;

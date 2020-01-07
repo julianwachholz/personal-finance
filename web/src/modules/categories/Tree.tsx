@@ -1,9 +1,10 @@
-import { Button, Spin, Tree } from "antd";
+import { Button, message, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
 import React, { useMemo, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import {
+  createDefaultCategories,
   moveCategory,
   MovePosition,
   TreeCategory,
@@ -16,6 +17,10 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
   const [move] = useMutation(moveCategory, {
     refetchQueries: ["items/categories/tree"]
   });
+  const [createDefault] = useMutation(createDefaultCategories, {
+    refetchQueries: ["items/categories/tree", "user"]
+  });
+  const [createDefaultLoading, setCreateDefaultLoading] = useState(false);
 
   const defaultOpenKeys = JSON.parse(
     localStorage.getItem("categories_open") ?? "[]"
@@ -99,6 +104,28 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
           history.push(`/settings/categories/${selectedKeys[0]}`);
         }}
       />
+      {!isLoading && !treeData?.length && (
+        <>
+          <p>It looks like you haven't created any categories yet.</p>
+          <Button
+            size="large"
+            type="primary"
+            loading={createDefaultLoading}
+            onClick={async () => {
+              setCreateDefaultLoading(true);
+              try {
+                await createDefault();
+                message.success("Default categories created");
+              } catch (e) {
+                message.error("Could't create default categories");
+              }
+              setCreateDefaultLoading(false);
+            }}
+          >
+            Create Default Categories
+          </Button>
+        </>
+      )}
     </BaseModule>
   );
 };

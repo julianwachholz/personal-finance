@@ -1,10 +1,10 @@
 from django_filters import rest_framework as filters
 from mptt.utils import get_cached_trees
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from .models import Category
+from .models import Category, create_default_categories
 from .serializers import CategorySerializer, CategoryTreeSerializer
 
 
@@ -50,4 +50,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
             return Response(
                 {"status": "error", "error": str(e)}, status=400, exception=e
             )
-        return Response({"status": "ok"})
+        return Response(status=204)
+
+    @action(detail=False, methods=["post"])
+    def create_default(self, request, **kwargs):
+        if self.get_queryset().count():
+            return Response({"status": "error", "error": "Categories already exist."})
+        user = self.request.user
+        create_default_categories(user)
+        return Response(status=204)
