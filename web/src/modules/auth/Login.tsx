@@ -17,7 +17,11 @@ const Login = () => {
     try {
       await login(values);
     } catch (e) {
-      setError(e.non_field_errors[0]);
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError(e.non_field_errors[0]);
+      }
     }
     setValidating(false);
     form.resetFields();

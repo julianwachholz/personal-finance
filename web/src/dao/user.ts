@@ -47,7 +47,12 @@ export const postLogin = async (params: Record<string, string>) => {
     },
     body: JSON.stringify(params)
   });
-  const data = await response.json();
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error(response.statusText);
+  }
   if (!response.ok) {
     throw data;
   }
