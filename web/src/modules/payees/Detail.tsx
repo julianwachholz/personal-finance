@@ -3,6 +3,7 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import { prefetchTransactions } from "../../dao/transactions";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions from "../transactions/RelatedTransactions";
 
@@ -17,6 +18,7 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
   const filters = [`payee=${match.params.pk}`];
   prefetchTransactions({ filters });
 
+  useTitle(payee && payee.label);
   return payee ? (
     <BaseModule title={payee.name}>
       <Descriptions title="Payee">

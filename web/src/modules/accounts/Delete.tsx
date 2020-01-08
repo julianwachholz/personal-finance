@@ -3,6 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { deleteAccount, useAccount } from "../../dao/accounts";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
@@ -27,6 +28,7 @@ const AccountDelete = ({
     refetchQueries: ["items/accounts"]
   });
 
+  useTitle(account && `Delete ${account.label}`);
   return account ? (
     <BaseModule title={`Delete ${account.label}`}>
       <P>Are you sure you want to delete the Account "{account.label}"?</P>

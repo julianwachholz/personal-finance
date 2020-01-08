@@ -3,6 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
 import { putAccount, useAccount } from "../../dao/accounts";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
@@ -12,21 +13,22 @@ interface DetailParams {
 
 const AccountEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
-  const { data, isLoading } = useAccount(pk);
+  const { data: account, isLoading } = useAccount(pk);
 
   const [mutate] = useMutation(putAccount, {
     refetchQueries: ["items/accounts"]
   });
   const history = useHistory();
+  useTitle(account && `Edit ${account.label}`);
 
-  if (!data || isLoading) {
+  if (!account || isLoading) {
     return <Spin />;
   }
 
   return (
-    <BaseModule title={`Edit ${data.label}`}>
+    <BaseModule title={`Edit ${account.label}`}>
       <AccountForm
-        data={data}
+        data={account}
         onSave={async data => {
           try {
             await mutate(

@@ -1,6 +1,7 @@
 import { Button, Typography } from "antd";
 import React, { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
@@ -9,6 +10,7 @@ const Profile = () => {
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  useTitle(`Profile`);
   return (
     <BaseModule title="Profile">
       <P>Logged in as: {user!.username}</P>

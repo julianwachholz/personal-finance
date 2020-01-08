@@ -44,8 +44,8 @@ const Tags = ({ match }: RouteComponentProps) => {
       editable: true,
       rules: [],
       formField: <ColorSelect />,
-      render(color) {
-        return <Tag color={color}>{color}</Tag>;
+      render(color, tag) {
+        return <Tag color={color}>{tag.label}</Tag>;
       }
     }
   ];

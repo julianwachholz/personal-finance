@@ -3,6 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
 import { putCategory, useCategory } from "../../dao/categories";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import CategoryForm from "./Form";
 
@@ -11,21 +12,23 @@ interface DetailParams {
 }
 const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
-  const { data, isLoading } = useCategory(pk);
+  const { data: category, isLoading } = useCategory(pk);
 
   const [mutate] = useMutation(putCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
   const history = useHistory();
 
-  if (!data || isLoading) {
+  useTitle(category && `Edit ${category.label}`);
+
+  if (!category || isLoading) {
     return <Spin />;
   }
 
   return (
-    <BaseModule title={`Edit ${data.label}`}>
+    <BaseModule title={`Edit ${category.label}`}>
       <CategoryForm
-        data={data}
+        data={category}
         onSave={async data => {
           try {
             await mutate(

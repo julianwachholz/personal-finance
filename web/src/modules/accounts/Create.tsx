@@ -3,6 +3,7 @@ import React from "react";
 import { setQueryData, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { postAccount } from "../../dao/accounts";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import AccountForm from "./Form";
 
@@ -12,6 +13,7 @@ const AccountCreate = () => {
   });
   const history = useHistory();
 
+  useTitle(`Create Account`);
   return (
     <BaseModule title="Create Account">
       <AccountForm

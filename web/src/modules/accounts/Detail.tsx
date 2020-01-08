@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
 import { prefetchTransactions } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions from "../transactions/RelatedTransactions";
 
@@ -19,6 +20,7 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const filters = [`account=${match.params.pk}`];
   prefetchTransactions({ filters });
 
+  useTitle(account && account.label);
   return account ? (
     <BaseModule
       title={account.label}

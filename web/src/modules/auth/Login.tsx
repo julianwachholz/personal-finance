@@ -3,6 +3,7 @@ import { Button, Form, Input, Modal } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
+import useTitle from "../../utils/useTitle";
 
 const Login = () => {
   const [form] = useForm();
@@ -22,6 +23,7 @@ const Login = () => {
     form.resetFields();
   };
 
+  useTitle(`Login`);
   return (
     <Modal title="Login" visible centered footer={null} closable={false}>
       <Form

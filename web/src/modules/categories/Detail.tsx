@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { useCategory } from "../../dao/categories";
 import { prefetchTransactions } from "../../dao/transactions";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions from "../transactions/RelatedTransactions";
 
@@ -18,6 +19,7 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
   const filters = [`category=${match.params.pk}`];
   prefetchTransactions({ filters });
 
+  useTitle(category && category.label);
   return category ? (
     <BaseModule
       title={category.label}

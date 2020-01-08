@@ -1,8 +1,9 @@
-import { Descriptions, Spin, Tag as TagComp } from "antd";
+import { Descriptions, Spin, Tag as TagComponent } from "antd";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { useTag } from "../../dao/tags";
 import { prefetchTransactions } from "../../dao/transactions";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import RelatedTransactions from "../transactions/RelatedTransactions";
 
@@ -17,12 +18,13 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
   const filters = [`tags=${match.params.pk}`];
   prefetchTransactions({ filters });
 
+  useTitle(tag && tag.label);
   return tag ? (
     <BaseModule title={tag.label}>
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>
         <Item label="Color">
-          <TagComp color={tag.color} />
+          <TagComponent color={tag.color} />
         </Item>
       </Descriptions>
       <RelatedTransactions filters={filters} />

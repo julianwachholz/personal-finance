@@ -10,6 +10,7 @@ import {
   TreeCategory,
   useCategoryTree
 } from "../../dao/categories";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
 const CategoryTree = ({ history }: RouteComponentProps) => {
@@ -69,6 +70,8 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
     }
     return [undefined, []];
   }, [data]);
+
+  useTitle(`Categories`);
 
   if (!data || isLoading) {
     return <Spin />;

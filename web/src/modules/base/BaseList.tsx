@@ -15,6 +15,7 @@ import DndBackend from "react-dnd-html5-backend";
 import { Link } from "react-router-dom";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
+import useTitle from "../../utils/useTitle";
 import "./BaseModule.scss";
 import ListPagination from "./ListPagination";
 import { DndRow } from "./SortableTable";
@@ -114,6 +115,8 @@ const BaseList = <T extends ModelWithLabel>({
   if (data && data.count !== total) {
     setTotal(data.count);
   }
+
+  useTitle(itemNamePlural);
 
   if (error) {
     return <h1>{error.toString()}</h1>;

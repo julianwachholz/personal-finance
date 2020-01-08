@@ -3,6 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { deleteCategory, useCategory } from "../../dao/categories";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
 const { Paragraph: P } = Typography;
@@ -27,6 +28,7 @@ const CategoryDelete = ({
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
 
+  useTitle(category && `Delete ${category.label}`);
   return category ? (
     <BaseModule title={`Delete ${category.label}`}>
       <P>Are you sure you want to delete the Category "{category.label}"?</P>

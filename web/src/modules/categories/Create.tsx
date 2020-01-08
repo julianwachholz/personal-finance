@@ -3,6 +3,7 @@ import React from "react";
 import { setQueryData, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { postCategory } from "../../dao/categories";
+import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import CategoryForm from "./Form";
 
@@ -12,6 +13,7 @@ const CategoryCreate = () => {
   });
   const history = useHistory();
 
+  useTitle(`Create Category`);
   return (
     <BaseModule title="Create Category">
       <CategoryForm
