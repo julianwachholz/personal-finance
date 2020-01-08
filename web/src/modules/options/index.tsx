@@ -1,7 +1,7 @@
-import { Button, Form, Input, Radio, Switch } from "antd";
+import { Button, Form, Input, Radio, Switch, Tag } from "antd";
 import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-query";
 import CategorySelect from "../../components/form/CategorySelect";
 import CurrencySelect from "../../components/form/CurrencySelect";
@@ -77,11 +77,14 @@ const getNumberFormat = (settings: Settings): NumberFormatName => {
   return "default";
 };
 
+type SaveStatus = null | "saving" | "saved";
+
 const Options = () => {
   const [form] = Form.useForm();
   const { settings } = useAuth();
   const { theme, toggleTheme, tableSize, setTableSize } = useSettings();
   const [mutate] = useMutation(patchSettings, { refetchQueries: ["user"] });
+  const [status, setStatus] = useState<SaveStatus>(null);
 
   useTitle(`Options`);
 
@@ -90,16 +93,30 @@ const Options = () => {
   }
 
   const onChange = async (values: Partial<Settings> & NumberFormatSetter) => {
+    setStatus("saving");
     if (values.number_format) {
       values = numberFormats[values.number_format];
     }
-    mutate(values);
+    await mutate(values);
+    setTimeout(() => {
+      setStatus("saved");
+    }, 100);
+    setTimeout(() => {
+      setStatus(null);
+    }, 2500);
   };
 
   const now = new Date();
+  const tags: React.ReactElement<Tag>[] = [];
+  if (status === "saving") {
+    tags.push(<Tag color="processing">Saving...</Tag>);
+  }
+  if (status === "saved") {
+    tags.push(<Tag color="success">All changes saved!</Tag>);
+  }
 
   return (
-    <BaseModule title="Options">
+    <BaseModule title="Options" tags={tags}>
       <Form
         form={form}
         layout="vertical"
