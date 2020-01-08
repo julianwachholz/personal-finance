@@ -58,7 +58,15 @@ const InputFormat = ({ value, ...props }: InputProps) => {
   const now = new Date();
   return (
     <Input
-      addonAfter={"Preview: " + (value ? format(now, value as string) : "")}
+      addonAfter={
+        "Preview: " +
+        (value
+          ? format(now, value as string, {
+              useAdditionalDayOfYearTokens: true,
+              useAdditionalWeekYearTokens: true
+            })
+          : "")
+      }
       value={value}
       {...props}
     />
