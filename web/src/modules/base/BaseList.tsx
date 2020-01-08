@@ -12,7 +12,7 @@ import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { DndProvider } from "react-dnd";
 import DndBackend from "react-dnd-html5-backend";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import useStoredState from "../../utils/useStoredState";
@@ -56,6 +56,13 @@ interface ListProps<T extends ModelWithLabel> {
   onMove?: (pk: number, pos: number) => void;
 }
 
+export interface BaseListLocationState {
+  page?: number;
+  ordering?: string;
+  filters?: string[];
+  search?: string;
+}
+
 const BaseList = <T extends ModelWithLabel>({
   itemName,
   itemNamePlural,
@@ -73,14 +80,13 @@ const BaseList = <T extends ModelWithLabel>({
 }: ListProps<T>) => {
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useStoredState(
     `${useItems.basename}_pagesize`,
     10
   );
-  const [ordering, setOrdering] = useState();
-  const [filters, setFilters] = useState<string[]>([]);
-  const [search, setSearch] = useState();
+
+  const history = useHistory<BaseListLocationState>();
+  const location = useLocation<BaseListLocationState>();
 
   if (isSortable && !onMove) {
     throw new Error("onMove is required with isSortable");
@@ -107,11 +113,8 @@ const BaseList = <T extends ModelWithLabel>({
   }
 
   const useItemOptions = {
-    page,
-    pageSize,
-    ordering,
-    filters,
-    search
+    ...location.state,
+    pageSize
   };
   const { data, isLoading, error } = useItems(useItemOptions);
 
@@ -149,19 +152,29 @@ const BaseList = <T extends ModelWithLabel>({
       itemName={itemName}
       itemNamePlural={itemNamePlural}
       total={total}
-      current={page}
+      current={location.state?.page ?? 1}
       onChange={current => {
-        setPage(current);
+        history.push(location.pathname, {
+          ...location.state,
+          page: current
+        });
       }}
       pageSize={pageSize}
       onShowSizeChange={(_, size) => {
-        setPage(1);
+        history.push(location.pathname, {
+          ...location.state,
+          page: 1
+        });
         setPageSize(size);
       }}
     />
   ) : null;
 
-  const canSort = isSortable && filters.length === 0 && !ordering && !search;
+  const canSort =
+    isSortable &&
+    location.state?.filters?.length === 0 &&
+    !location.state?.ordering &&
+    !location.state?.search;
 
   const components = canSort
     ? ({
@@ -191,8 +204,20 @@ const BaseList = <T extends ModelWithLabel>({
           size={tableSize}
           loading={isLoading}
           enterButton
+          // @TODO need to use <Input /> to control value
+          // value={location.state?.search}
+          // onChange={e => {
+          //   console.log("onChange");
+          //   history.replace(location.pathname, {
+          //     ...location.state,
+          //     search: e.target.value
+          //   });
+          // }}
           onSearch={value => {
-            setSearch(value);
+            history.push(location.pathname, {
+              ...location.state,
+              search: value
+            });
             onSearch(value);
           }}
         />
@@ -207,15 +232,21 @@ const BaseList = <T extends ModelWithLabel>({
           pagination={false}
           tableLayout="fixed"
           onChange={(_pagination, filters, sorter) => {
-            setFilters(mapFilters(filters));
             if (!Array.isArray(sorter)) {
               sorter = [sorter];
             }
-            setOrdering(
-              sorter[0].order &&
-                `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
-            );
-            setPage(1);
+            const ordering =
+              (sorter[0].order &&
+                `${sorter[0].order === "ascend" ? "" : "-"}${
+                  sorter[0].field
+                }`) ??
+              undefined;
+            history.push(location.pathname, {
+              search: location.state?.search,
+              filters: mapFilters(filters),
+              ordering,
+              page: 1
+            });
           }}
           size={tableSize}
           components={components}

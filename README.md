@@ -7,11 +7,9 @@
 - reports
 
 - list views
+  - reflect location.state changes in view (sort, filter, search)
 
-  - put current page in url
-  - remember pageSize
-
-- transactions
+* transactions
   - filter by date
     - before date
     - after date

@@ -18,12 +18,12 @@ import { TableProps } from "antd/lib/table/Table";
 import { FormInstance } from "rc-field-form";
 import React, { useState } from "react";
 import { setQueryData } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import useStoredState from "../../utils/useStoredState";
 import useTitle from "../../utils/useTitle";
-import { mapFilters } from "./BaseList";
+import { BaseListLocationState, mapFilters } from "./BaseList";
 import "./BaseModule.scss";
 import { EditableCell, EditableColumnsType } from "./EditableTable";
 import ListPagination from "./ListPagination";
@@ -128,14 +128,13 @@ const BaseEditableList = <T extends ModelWithLabel>({
   }
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useStoredState(
     `${useItems.basename}_pagesize`,
     10
   );
-  const [ordering, setOrdering] = useState();
-  const [filters, setFilters] = useState<string[]>([]);
-  const [search, setSearch] = useState();
+
+  const history = useHistory<BaseListLocationState>();
+  const location = useLocation<BaseListLocationState>();
 
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkAction, setBulkAction] = useState<string>();
@@ -253,11 +252,8 @@ const BaseEditableList = <T extends ModelWithLabel>({
   const components = { body: { cell: EditableCell } };
 
   const useItemOptions = {
-    page,
-    pageSize,
-    ordering,
-    filters,
-    search
+    ...location.state,
+    pageSize
   };
   const { data, isLoading, error } = useItems(useItemOptions);
 
@@ -324,14 +320,14 @@ const BaseEditableList = <T extends ModelWithLabel>({
       itemName={itemName}
       itemNamePlural={itemNamePlural}
       total={total}
-      current={page}
+      current={location.state?.page ?? 1}
       onChange={current => {
-        setPage(current);
+        history.push(location.pathname, { ...location.state, page: current });
         cancelEdit();
       }}
       pageSize={pageSize}
       onShowSizeChange={(_, size) => {
-        setPage(1);
+        history.push(location.pathname, { ...location.state, page: 1 });
         setPageSize(size);
         cancelEdit();
       }}
@@ -454,7 +450,10 @@ const BaseEditableList = <T extends ModelWithLabel>({
               loading={isLoading}
               enterButton
               onSearch={value => {
-                setSearch(value);
+                history.push(location.pathname, {
+                  ...location.state,
+                  search: value
+                });
                 cancelEdit();
                 onSearch(value);
               }}
@@ -501,15 +500,21 @@ const BaseEditableList = <T extends ModelWithLabel>({
           tableLayout="fixed"
           rowSelection={rowSelection}
           onChange={(_pagination, filters, sorter) => {
-            setFilters(mapFilters(filters));
             if (!Array.isArray(sorter)) {
               sorter = [sorter];
             }
-            setOrdering(
-              sorter[0].order &&
-                `${sorter[0].order === "ascend" ? "" : "-"}${sorter[0].field}`
-            );
-            setPage(1);
+            const ordering =
+              (sorter[0].order &&
+                `${sorter[0].order === "ascend" ? "" : "-"}${
+                  sorter[0].field
+                }`) ??
+              undefined;
+            history.push(location.pathname, {
+              search: location.state?.search,
+              filters: mapFilters(filters),
+              ordering,
+              page: 1
+            });
             cancelEdit();
           }}
           size={tableSize}
