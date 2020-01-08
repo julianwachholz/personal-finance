@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import CICharField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +14,7 @@ class Payee(models.Model):
     TYPE_PRIVATE = "private"
     TYPE_CHOICES = (("business", _("business")), ("private", _("private")))
 
-    name = models.CharField(verbose_name=_("name"), max_length=100)
+    name = CICharField(verbose_name=_("name"), max_length=100)
 
     type = models.CharField(
         verbose_name=_("type"),
@@ -31,6 +32,8 @@ class Payee(models.Model):
     class Meta:
         verbose_name = _("payee")
         verbose_name_plural = _("payees")
+        unique_together = ("user", "name")
+        ordering = ("name",)
 
     def __str__(self):
         return self.name

@@ -16,6 +16,6 @@ class TagSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Tag.objects.all(),
                 fields=["user", "name"],
-                message=_("Tag already exists."),
+                message=_("Tag with that name already exists"),
             )
         ]
