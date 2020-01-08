@@ -12,9 +12,8 @@ import {
   useTags
 } from "../../dao/tags";
 import { useSettings } from "../../utils/SettingsProvider";
-import BaseEditableList, {
-  EditableColumnsType
-} from "../base/BaseEditableList";
+import BaseEditableList from "../base/BaseEditableList";
+import { EditableColumnsType } from "../base/EditableTable";
 
 const Tags = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();

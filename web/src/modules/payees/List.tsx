@@ -13,9 +13,8 @@ import {
   usePayees
 } from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
-import BaseEditableList, {
-  EditableColumnsType
-} from "../base/BaseEditableList";
+import BaseEditableList from "../base/BaseEditableList";
+import { EditableColumnsType } from "../base/EditableTable";
 
 const Payees = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();

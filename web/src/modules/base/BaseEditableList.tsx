@@ -13,76 +13,19 @@ import {
   Table
 } from "antd";
 import { ButtonProps } from "antd/lib/button";
-import { ColumnType, TableRowSelection } from "antd/lib/table/interface";
+import { TableRowSelection } from "antd/lib/table/interface";
 import { TableProps } from "antd/lib/table/Table";
 import { FormInstance } from "rc-field-form";
-import { Rule } from "rc-field-form/lib/interface";
-import React, { HTMLAttributes, useState } from "react";
+import React, { useState } from "react";
 import { setQueryData } from "react-query";
 import { Link } from "react-router-dom";
-import { Model, ModelWithLabel, UseItems } from "../../dao/base";
+import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import useTitle from "../../utils/useTitle";
 import { mapFilters } from "./BaseList";
 import "./BaseModule.scss";
+import { EditableCell, EditableColumnsType } from "./EditableTable";
 import ListPagination from "./ListPagination";
-
-type FormField =
-  | React.ReactElement
-  | ((form: FormInstance) => React.ReactElement);
-
-interface EditableColumnType<T> extends ColumnType<T> {
-  editable?: boolean;
-  formName?: string;
-  formField?: FormField;
-
-  // Get the form value entry from an existing value, in addition to the actual value
-  formValue?: (key: string, value: any) => [string, any];
-
-  // Trigger when this form field was changed
-  formChange?: (changed: Partial<T>, form: FormInstance) => void;
-
-  rules?: Rule[];
-}
-
-export type EditableColumnsType<T> = EditableColumnType<T>[];
-
-interface EditableCellProps<T> extends HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  name: string;
-  field: FormField;
-  rules?: any;
-  item: T;
-  children: React.ReactNode;
-}
-
-const EditableCell: React.FC<any> = <T extends Model>({
-  editing,
-  name,
-  dataIndex,
-  field,
-  rules,
-  item,
-  title,
-  children,
-  ...props
-}: EditableCellProps<T>) => {
-  return (
-    <td {...props}>
-      {editing ? (
-        <Form.Item
-          name={name}
-          rules={rules ?? [{ required: true, message: `${title} is required` }]}
-        >
-          {field}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
 
 interface InlineCreateButton {
   key: string;
