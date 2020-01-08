@@ -114,6 +114,23 @@ const getDefaultValues = <T extends ModelWithLabel>(
   );
 };
 
+const applyError = <T extends ModelWithLabel>(
+  form: FormInstance,
+  columns: EditableColumnsType<T>,
+  error: any
+) => {
+  if (error.non_field_errors) {
+    form.setFields([
+      {
+        name: columns![0].dataIndex as string,
+        errors: error.non_field_errors
+      }
+    ]);
+  } else {
+    console.error(`save item failed`, error);
+  }
+};
+
 interface EditableListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
@@ -320,7 +337,9 @@ const BaseEditableList = <T extends ModelWithLabel>({
         newData
       );
       cancelEdit();
-    } catch (e) {}
+    } catch (error) {
+      applyError<T>(form, columns!, error);
+    }
     setEditLoading(false);
   };
 

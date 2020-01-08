@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import CICharField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -10,7 +11,7 @@ class Tag(models.Model):
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
 
-    name = models.CharField(max_length=100)
+    name = CICharField(max_length=100)
 
     color = models.CharField(verbose_name=_("color"), max_length=100, blank=True)
 
