@@ -21,6 +21,7 @@ import { setQueryData } from "react-query";
 import { Link } from "react-router-dom";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
+import useStoredState from "../../utils/useStoredState";
 import useTitle from "../../utils/useTitle";
 import { mapFilters } from "./BaseList";
 import "./BaseModule.scss";
@@ -128,7 +129,10 @@ const BaseEditableList = <T extends ModelWithLabel>({
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useStoredState(
+    `${useItems.basename}_pagesize`,
+    10
+  );
   const [ordering, setOrdering] = useState();
   const [filters, setFilters] = useState<string[]>([]);
   const [search, setSearch] = useState();
