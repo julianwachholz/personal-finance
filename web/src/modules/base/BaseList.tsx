@@ -1,4 +1,8 @@
-import { DownOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  LoadingOutlined,
+  SearchOutlined
+} from "@ant-design/icons";
 import {
   Button,
   Divider,
@@ -70,7 +74,6 @@ export const getColumnFilter = (
   if (!filteredValue || filteredValue?.length === 0) {
     return { filteredValue: null };
   }
-  console.log(filteredValue);
   return { filteredValue };
 };
 
@@ -218,6 +221,11 @@ const BaseList = <T extends ModelWithLabel>({
       } as any)
     : undefined;
 
+  const doSearch = (search: string) => {
+    history.push(location.pathname, { ...location.state, search });
+    onSearch(search);
+  };
+
   let dataSource: T[] = data?.results ?? [];
 
   return (
@@ -234,26 +242,22 @@ const BaseList = <T extends ModelWithLabel>({
         ]}
       />
       {showSearch ? (
-        <Input.Search
+        <Input
+          className="ant-input-search ant-input-search-enter-button ant-input-search-small"
           size={tableSize}
-          loading={isLoading}
-          enterButton
-          // @TODO need to use <Input /> to control value
-          // value={location.state?.search}
-          // onChange={e => {
-          //   console.log("onChange");
-          //   history.replace(location.pathname, {
-          //     ...location.state,
-          //     search: e.target.value
-          //   });
-          // }}
-          onSearch={value => {
-            history.push(location.pathname, {
+          value={location.state?.search}
+          onChange={e => {
+            history.replace(location.pathname, {
               ...location.state,
-              search: value
+              search: e.target.value
             });
-            onSearch(value);
           }}
+          addonAfter={
+            // button just for looks, search will execute instantly
+            <Button type="primary" size={tableSize}>
+              {isLoading ? <LoadingOutlined /> : <SearchOutlined />}
+            </Button>
+          }
         />
       ) : null}
       {pager}
