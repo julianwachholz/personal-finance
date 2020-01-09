@@ -1,7 +1,7 @@
 import { Button, Input, message, Popconfirm, Select } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import { ModelWithLabel } from "../../dao/base";
 import {
@@ -14,6 +14,7 @@ import {
 } from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseEditableList from "../base/BaseEditableList";
+import { BaseListLocationState, getColumnSort } from "../base/BaseList";
 import { EditableColumnsType } from "../base/EditableTable";
 
 const Payees = ({ match }: RouteComponentProps) => {
@@ -27,16 +28,18 @@ const Payees = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/payees"]
   });
 
+  const location = useLocation<BaseListLocationState>();
+
   const columns: EditableColumnsType<Payee> = [
     {
       title: "Name",
       dataIndex: "name",
-      sorter: true,
       editable: true,
       formField: <Input autoFocus size={tableSize} />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>{name}</Link>;
-      }
+      },
+      ...getColumnSort("name", location.state)
     },
     {
       title: "Type",

@@ -1,7 +1,7 @@
 import { Button, Input, message, Popconfirm, Tag } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import ColorSelect from "../../components/form/ColorSelect";
 import {
   bulkDeleteTags,
@@ -13,6 +13,7 @@ import {
 } from "../../dao/tags";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseEditableList from "../base/BaseEditableList";
+import { BaseListLocationState, getColumnSort } from "../base/BaseList";
 import { EditableColumnsType } from "../base/EditableTable";
 
 const Tags = ({ match }: RouteComponentProps) => {
@@ -26,16 +27,17 @@ const Tags = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/tags"]
   });
 
+  const location = useLocation<BaseListLocationState>();
   const columns: EditableColumnsType<TagModel> = [
     {
       title: "Name",
       dataIndex: "name",
-      sorter: true,
       editable: true,
       formField: <Input autoFocus prefix="#" size={tableSize} />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
-      }
+      },
+      ...getColumnSort("name", location.state)
     },
     {
       title: "Color",

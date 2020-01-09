@@ -8,6 +8,7 @@ import {
   PageHeader,
   Table
 } from "antd";
+import { ColumnType, SortOrder } from "antd/lib/table/interface";
 import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { DndProvider } from "react-dnd";
@@ -38,6 +39,23 @@ export const mapFilters = (filters: Record<string, ReactText[] | null>) => {
     });
   });
   return filterValues;
+};
+
+export const getColumnSort = (
+  dataIndex: string,
+  state?: BaseListLocationState
+): Pick<ColumnType<any>, "sorter" | "sortOrder"> => {
+  let sortOrder: SortOrder = null;
+  if (state?.ordering === dataIndex) {
+    sortOrder = "ascend";
+  }
+  if (state?.ordering === `-${dataIndex}`) {
+    sortOrder = "descend";
+  }
+  return {
+    sorter: true,
+    sortOrder
+  };
 };
 
 interface ListProps<T extends ModelWithLabel> {
