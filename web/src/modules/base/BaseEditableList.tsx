@@ -1,4 +1,8 @@
-import { DownOutlined } from "@ant-design/icons";
+import {
+  DownOutlined,
+  LoadingOutlined,
+  SearchOutlined
+} from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -449,18 +453,22 @@ const BaseEditableList = <T extends ModelWithLabel>({
               {selectedKeys.length} of {total} selected
             </>
           ) : showSearch ? (
-            <Input.Search
+            <Input
+              className="ant-input-search ant-input-search-enter-button ant-input-search-small"
               size={tableSize}
-              loading={isLoading}
-              enterButton
-              onSearch={value => {
-                history.push(location.pathname, {
+              value={location.state?.search}
+              onChange={e => {
+                history.replace(location.pathname, {
                   ...location.state,
-                  search: value
+                  search: e.target.value
                 });
-                cancelEdit();
-                onSearch(value);
               }}
+              addonAfter={
+                // button just for looks, search will execute instantly
+                <Button type="primary" size={tableSize}>
+                  {isLoading ? <LoadingOutlined /> : <SearchOutlined />}
+                </Button>
+              }
             />
           ) : null}
         </Col>
