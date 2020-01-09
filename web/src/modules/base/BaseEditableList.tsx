@@ -15,6 +15,7 @@ import {
 import { ButtonProps } from "antd/lib/button";
 import { TableRowSelection } from "antd/lib/table/interface";
 import { TableProps } from "antd/lib/table/Table";
+import { Location } from "history";
 import { FormInstance } from "rc-field-form";
 import React, { useState } from "react";
 import { setQueryData } from "react-query";
@@ -80,7 +81,10 @@ interface EditableListProps<T extends ModelWithLabel> {
   itemNamePlural: string;
   useItems: UseItems<T>;
   columns?: EditableColumnsType<T>;
-  getColumns?: (form: FormInstance) => EditableColumnsType<T>;
+  getColumns?: (
+    location: Location<BaseListLocationState>,
+    form: FormInstance
+  ) => EditableColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
   onSearch?: (search?: string) => void;
@@ -144,7 +148,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
   // Editable table
   const [form] = Form.useForm();
   if (!columns && getColumns) {
-    columns = getColumns(form);
+    columns = getColumns(location, form);
   }
   if (!columns) {
     throw new Error("BaseList must specify columns or getColumns");

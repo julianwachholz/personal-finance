@@ -1,4 +1,5 @@
 import { Tag } from "antd";
+import { Location } from "history";
 import { FormInstance } from "rc-field-form";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -13,6 +14,7 @@ import { ModelWithLabel } from "../../dao/base";
 import { Payee, usePayees } from "../../dao/payees";
 import { Tag as TagModel, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
+import { BaseListLocationState, getColumnSort } from "../base/BaseList";
 import { EditableColumnsType } from "../base/EditableTable";
 
 interface GetGetColumnOptions {
@@ -20,9 +22,10 @@ interface GetGetColumnOptions {
 }
 
 const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
+  location: Location<BaseListLocationState>,
   form?: FormInstance
 ) => EditableColumnsType<Transaction>) => {
-  return form => {
+  return (location, form) => {
     const quickCreatePayee =
       form && createPayee
         ? async (name: string, cb: (item: Payee) => Promise<void>) => {
@@ -38,14 +41,14 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
       {
         title: "Date",
         dataIndex: "datetime",
-        sorter: true,
         defaultSortOrder: "descend",
         editable: true,
         width: 145,
         formField: <DatePicker allowClear={false} />,
         render(date: Date) {
           return <DateTime value={date} />;
-        }
+        },
+        ...getColumnSort("datetime", location.state)
       },
       {
         title: "Account",
