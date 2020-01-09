@@ -14,7 +14,11 @@ import {
 } from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
 import BaseEditableList from "../base/BaseEditableList";
-import { BaseListLocationState, getColumnSort } from "../base/BaseList";
+import {
+  BaseListLocationState,
+  getColumnFilter,
+  getColumnSort
+} from "../base/BaseList";
 import { EditableColumnsType } from "../base/EditableTable";
 
 const Payees = ({ match }: RouteComponentProps) => {
@@ -58,7 +62,8 @@ const Payees = ({ match }: RouteComponentProps) => {
       filters: [
         { text: "Business", value: "business" },
         { text: "Private", value: "private" }
-      ]
+      ],
+      ...getColumnFilter("type", location.state)
     },
     {
       title: "Default Category",

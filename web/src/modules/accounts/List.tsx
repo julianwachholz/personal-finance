@@ -7,6 +7,7 @@ import Money from "../../components/data/Money";
 import { Account, moveAccount, useAccounts } from "../../dao/accounts";
 import BaseList, {
   BaseListLocationState,
+  getColumnFilter,
   getColumnSort
 } from "../base/BaseList";
 
@@ -44,7 +45,8 @@ const Accounts = ({ match }: RouteComponentProps) => {
           <Money value={{ amount: balance, currency: account.currency }} />
         );
       },
-      ...getColumnSort("balance", location.state)
+      ...getColumnSort("balance", location.state),
+      ...getColumnFilter("currency", location.state, true)
     },
     {
       align: "right",

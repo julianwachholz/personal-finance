@@ -58,6 +58,22 @@ export const getColumnSort = (
   };
 };
 
+export const getColumnFilter = (
+  dataIndex: string,
+  state?: BaseListLocationState,
+  keepEqual?: boolean
+): Pick<ColumnType<any>, "filteredValue"> => {
+  const filteredValue = state?.filters
+    ?.filter(f => f.includes(`${dataIndex}=`))
+    .map(f => (keepEqual ? f : f.split("=")[1]));
+
+  if (!filteredValue || filteredValue?.length === 0) {
+    return { filteredValue: null };
+  }
+  console.log(filteredValue);
+  return { filteredValue };
+};
+
 interface ListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
