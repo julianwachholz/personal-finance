@@ -6,9 +6,6 @@
 - budgets
 - reports
 
-- list views
-  - reflect location.state changes in view (sort, filter, search)
-
 * transactions
   - filter by date
     - before date
