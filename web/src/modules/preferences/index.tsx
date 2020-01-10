@@ -52,7 +52,7 @@ interface NumberFormatSetter {
   number_format?: NumberFormatName;
 }
 
-const dateFormats: string[] = ["P", "PP", "PPP", "PPPP"];
+const dateFormats: string[] = ["yyyy-MM-dd", "MM/dd", "MMM d", "eee, MMM do"];
 
 const InputFormat = ({ value, ...props }: InputProps) => {
   const now = new Date();
