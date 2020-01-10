@@ -91,7 +91,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
             label="Name"
             rules={[{ required: true, message: "Enter a name" }]}
           >
-            <Input placeholder="Checking" />
+            <Input placeholder="Checking" autoFocus />
           </Form.Item>
         </Col>
       </Row>
@@ -103,11 +103,15 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       ) : (
         <Row gutter={16}>
           <Col span={4}>
-            <Form.Item name="set_balance" label="Current Balance" required>
+            <Form.Item
+              name="set_balance"
+              label="Current Balance"
+              rules={[{ required: true, message: "Enter a balance" }]}
+            >
               <MoneyInput size="middle" fullWidth />
             </Form.Item>
           </Col>
-          <Col span={4}>
+          <Col span={6}>
             <Form.Item
               name="set_currency"
               label="Currency"

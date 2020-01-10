@@ -14,6 +14,11 @@
   .form-actions {
     margin-top: 24px;
   }
+
+  .ant-select-auto-complete .ant-select-selector .ant-select-selection-search {
+    left: 0;
+    right: 0;
+  }
 }
 .module-list {
   .ant-input-search {

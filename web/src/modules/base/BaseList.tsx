@@ -221,11 +221,6 @@ const BaseList = <T extends ModelWithLabel>({
       } as any)
     : undefined;
 
-  const doSearch = (search: string) => {
-    history.push(location.pathname, { ...location.state, search });
-    onSearch(search);
-  };
-
   let dataSource: T[] = data?.results ?? [];
 
   return (

@@ -1,6 +1,7 @@
 import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { CURRENCY_FORMATS } from "../../components/data/Money";
 import { useAccount } from "../../dao/accounts";
 import { prefetchTransactions } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
@@ -19,6 +20,7 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
   const { data: account, isLoading, error } = useAccount(match.params.pk);
   const filters = [`account=${match.params.pk}`];
   prefetchTransactions({ filters });
+  const currencyFormat = account && CURRENCY_FORMATS[account?.currency];
 
   useTitle(account && account.label);
   return account ? (
@@ -44,7 +46,8 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         precision={2}
         groupSeparator={settings?.group_separator}
         decimalSeparator={settings?.decimal_separator}
-        suffix={account.currency}
+        prefix={currencyFormat?.prefix}
+        suffix={currencyFormat?.suffix}
       />
       <RelatedTransactions filters={filters} excludeColumns={["account"]} />
     </BaseModule>

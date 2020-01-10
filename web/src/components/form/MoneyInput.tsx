@@ -2,22 +2,42 @@ import InputNumber, { InputNumberProps } from "antd/lib/input-number";
 import React from "react";
 import { useAuth } from "../../utils/AuthProvider";
 import { useSettings } from "../../utils/SettingsProvider";
+import { CURRENCY_FORMATS } from "../data/Money";
 import "./MoneyInput.scss";
 
+const escapeRegExp = (value: string) => {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};
+
 interface MoneyInputProps extends InputNumberProps {
+  currency?: string;
   fullWidth?: boolean;
 }
 
-const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
+const MoneyInput = ({
+  value,
+  currency,
+  fullWidth,
+  ...props
+}: MoneyInputProps) => {
   const { tableSize } = useSettings();
   const { settings } = useAuth();
   if (value) {
     value = parseFloat(value as any);
   }
+  const currencyFormat = currency ? CURRENCY_FORMATS[currency] : undefined;
+  const prefix = currencyFormat?.prefix ?? "";
+  const suffix = currencyFormat?.suffix ?? "";
+
   const decimalSeparator = settings?.decimal_separator ?? ".";
   const groupSeparator = settings?.group_separator ?? "\xa0";
 
-  const rParse = new RegExp(`(\\${groupSeparator}*)`, "g");
+  const rParse = new RegExp(
+    `${prefix ? `${escapeRegExp(prefix)}\\s?|` : ""}(\\${groupSeparator}*)${
+      suffix ? `|${escapeRegExp(suffix)}` : ""
+    }`,
+    "g"
+  );
 
   return (
     <InputNumber
@@ -25,8 +45,13 @@ const MoneyInput = ({ value, fullWidth, ...props }: MoneyInputProps) => {
       className={`input-money ${fullWidth && "input-money-fullwidth"}`}
       precision={2}
       decimalSeparator={decimalSeparator}
-      formatter={v => `${v}`.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator)}
       parser={v => v!.replace(rParse, "")}
+      formatter={v =>
+        `${prefix}${v}${suffix}`.replace(
+          /\B(?=(\d{3})+(?!\d))/g,
+          groupSeparator
+        )
+      }
       value={value}
       {...props}
     />
