@@ -72,9 +72,9 @@ const menuItems: MenuItem[] = [
         text: "Payees"
       },
       {
-        path: "/settings/options",
+        path: "/settings/preferences",
         icon: <ToolOutlined />,
-        text: "Options"
+        text: "Preferences"
       },
       {
         path: "/settings/user",

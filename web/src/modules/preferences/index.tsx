@@ -87,14 +87,14 @@ const getNumberFormat = (settings: Settings): NumberFormatName => {
 
 type SaveStatus = null | "saving" | "saved";
 
-const Options = () => {
+const Preferences = () => {
   const [form] = Form.useForm();
   const { settings } = useAuth();
   const { theme, toggleTheme, tableSize, setTableSize } = useSettings();
   const [mutate] = useMutation(patchSettings, { refetchQueries: ["user"] });
   const [status, setStatus] = useState<SaveStatus>(null);
 
-  useTitle(`Options`);
+  useTitle(`Preferences`);
 
   if (!settings) {
     return <></>;
@@ -199,4 +199,4 @@ const Options = () => {
   );
 };
 
-export default Options;
+export default Preferences;
