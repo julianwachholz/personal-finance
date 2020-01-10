@@ -110,13 +110,18 @@ const renderItem = (item: MenuItem) =>
 const MainMenu = () => {
   const { theme, menuCollapsed } = useSettings();
   const { pathname } = useLocation();
-  const subpaths = pathname.split("/").map(p => `/${p}`);
+
+  const subpaths = pathname.split("/").reduce<string[]>((acc, path) => {
+    if (!path) return acc;
+    acc.push(`${acc[acc.length - 1] ?? ""}/${path}`);
+    return acc;
+  }, []);
 
   return (
     <Menu
       mode="inline"
       theme={theme}
-      selectedKeys={[pathname]}
+      selectedKeys={subpaths.length ? subpaths : ["/"]}
       defaultOpenKeys={menuCollapsed ? undefined : subpaths}
     >
       {menuItems.map(renderItem)}
