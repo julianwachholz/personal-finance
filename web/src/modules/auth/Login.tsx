@@ -29,7 +29,7 @@ const Login = () => {
 
   useTitle(`Login`);
   return (
-    <Modal title="Login" visible centered footer={null} closable={false}>
+    <Modal title="Login" visible footer={null} closable={false}>
       <Form
         form={form}
         onFinish={onSubmit}

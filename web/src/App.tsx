@@ -1,9 +1,11 @@
 import { Spin } from "antd";
 import "antd/dist/antd.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { isMobile } from "react-device-detect";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import AppLayout from "./components/layout/Layout";
+import MobileLayout from "./components/layout/MobileLayout";
 import Accounts from "./modules/accounts";
 import Login from "./modules/auth/Login";
 import Budgets from "./modules/budgets";
@@ -18,6 +20,13 @@ import { useSettings } from "./utils/SettingsProvider";
 const App = () => {
   const { theme } = useSettings();
   const { isAuthenticated, isLoading } = useAuth();
+  const Layout = isMobile ? MobileLayout : AppLayout;
+
+  useEffect(() => {
+    document.body.className = "";
+    document.body.classList.add(`app--${isMobile ? "mobile" : "web"}`);
+    document.body.classList.add(`app--${theme}`);
+  }, [theme, isMobile]);
 
   if (isLoading) {
     return (
@@ -28,7 +37,7 @@ const App = () => {
   }
 
   return isAuthenticated ? (
-    <AppLayout>
+    <Layout>
       <Switch>
         <Route exact path="/" component={Dashboard} />
         <Route path="/transactions" component={Transactions} />
@@ -39,7 +48,7 @@ const App = () => {
         <Route exact path="/404" component={NotFound} />
         <Route render={() => <Redirect to="/404" />} />
       </Switch>
-    </AppLayout>
+    </Layout>
   ) : (
     <Switch>
       <Route path="/login" component={Login} />
