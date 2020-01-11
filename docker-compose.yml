@@ -1,14 +1,5 @@
 version: "3"
 services:
-  # db:
-  #   image: "postgres:9.6.9-alpine"
-  #   restart: unless-stopped
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   networks:
-  #     - webnet
-  #   env_file: ./config/.env
-
   web:
     <<: &web
       build:
@@ -26,7 +17,7 @@ services:
         - proxynet
       env_file: .env
       environment:
-        DJANGO_DATABASE_HOST: localhost
+        DATABASE_URL: postgres://localhost/shinywaffle
     command: python -Wd manage.py runserver 0.0.0.0:8000
     # healthcheck:
     #   test: curl --fail http://localhost:8000/health/?format=json || exit 1
