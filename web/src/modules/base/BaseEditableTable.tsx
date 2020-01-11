@@ -419,7 +419,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
         ]}
       />
       <Row>
-        <Col span={12}>
+        <Col span={10}>
           {bulkMode ? (
             <>
               <Select
@@ -472,7 +472,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             />
           ) : null}
         </Col>
-        <Col span={12}>{pager}</Col>
+        <Col span={14}>{pager}</Col>
       </Row>
       <Form
         form={form}
