@@ -24,7 +24,7 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>
         <Item label="Color">
-          <TagComponent color={tag.color} />
+          <TagComponent color={tag.color}>{tag.color}</TagComponent>
         </Item>
       </Descriptions>
       <RelatedTransactions filters={filters} />

@@ -26,7 +26,7 @@ const App = () => {
     document.body.className = "";
     document.body.classList.add(`app--${isMobile ? "mobile" : "web"}`);
     document.body.classList.add(`app--${theme}`);
-  }, [theme, isMobile]);
+  }, [theme]);
 
   if (isLoading) {
     return (

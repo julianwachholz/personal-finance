@@ -1,306 +1,94 @@
-import {
-  DownOutlined,
-  LoadingOutlined,
-  SearchOutlined
-} from "@ant-design/icons";
-import {
-  Button,
-  Divider,
-  Dropdown,
-  Input,
-  Menu,
-  PageHeader,
-  Table
-} from "antd";
-import { ColumnType, SortOrder } from "antd/lib/table/interface";
-import { ColumnsType, TableProps } from "antd/lib/table/Table";
-import React, { ReactText, useState } from "react";
-import { DndProvider } from "react-dnd";
-import DndBackend from "react-dnd-html5-backend";
-import { Link, useHistory, useLocation } from "react-router-dom";
-import { ModelWithLabel, UseItems } from "../../dao/base";
-import { useSettings } from "../../utils/SettingsProvider";
-import useStoredState from "../../utils/useStoredState";
+import { ActivityIndicator, List, WhiteSpace } from "antd-mobile";
+import React from "react";
+import AppHeader from "../../components/layout/AppHeader";
+import { ModelWithLabel, UseItemsPaginated } from "../../dao/base";
+import { debounce } from "../../utils/debounce";
 import useTitle from "../../utils/useTitle";
-import "./BaseModule.scss";
-import ListPagination from "./ListPagination";
-import { DndRow } from "./SortableTable";
 
-export const mapFilters = (filters: Record<string, ReactText[] | null>) => {
-  const filterValues: string[] = [];
-  Object.keys(filters).forEach(k => {
-    const values = filters[k];
-    if (!values) {
-      return;
-    }
-    values.forEach(v => {
-      v = v.toString();
-      if (v.includes("=")) {
-        filterValues.push(v);
-      } else {
-        filterValues.push(`${k}=${v}`);
-      }
-    });
-  });
-  return filterValues;
-};
-
-export const getColumnSort = (
-  dataIndex: string,
-  state?: BaseListLocationState
-): Pick<ColumnType<any>, "sorter" | "sortOrder"> => {
-  let sortOrder: SortOrder = null;
-  if (state?.ordering === dataIndex) {
-    sortOrder = "ascend";
-  }
-  if (state?.ordering === `-${dataIndex}`) {
-    sortOrder = "descend";
-  }
-  return {
-    sorter: true,
-    sortOrder
-  };
-};
-
-export const getColumnFilter = (
-  dataIndex: string,
-  state?: BaseListLocationState,
-  keepEqual?: boolean
-): Pick<ColumnType<any>, "filteredValue"> => {
-  const filteredValue = state?.filters
-    ?.filter(f => f.includes(`${dataIndex}=`))
-    .map(f => (keepEqual ? f : f.split("=")[1]));
-
-  if (!filteredValue || filteredValue?.length === 0) {
-    return { filteredValue: null };
-  }
-  return { filteredValue };
-};
-
-interface ListProps<T extends ModelWithLabel> {
+interface BaseListProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
-  useItems: UseItems<T>;
-  columns: ColumnsType<T>;
-  pagination?: boolean;
-  showSearch?: boolean;
-  onSearch?: (search?: string) => void;
+  useItems: UseItemsPaginated<T>;
+  renderRow: (item: T) => React.ReactElement;
   actions?: React.ReactElement[];
-  extraActions?: boolean | React.ReactElement[];
-  extraRowActions?: (record: T, index: number) => React.ReactElement[];
-  tableProps?: TableProps<T>;
-  isSortable?: boolean;
-  onMove?: (pk: number, pos: number) => void;
-}
-
-export interface BaseListLocationState {
-  page?: number;
-  ordering?: string;
-  filters?: string[];
-  search?: string;
 }
 
 const BaseList = <T extends ModelWithLabel>({
-  itemName,
   itemNamePlural,
   useItems,
-  columns,
-  pagination = true,
-  showSearch = true,
-  onSearch = () => {},
-  actions = [],
-  extraActions = true,
-  extraRowActions,
-  tableProps = {},
-  isSortable,
-  onMove
-}: ListProps<T>) => {
-  const { tableSize } = useSettings();
-  const [total, setTotal] = useState(0);
-  const [pageSize, setPageSize] = useStoredState(
-    `${useItems.basename}_pagesize`,
-    10
+  renderRow,
+  actions
+}: BaseListProps<T>) => {
+  const {
+    data: pages,
+    isLoading,
+    isFetchingMore,
+    fetchMore,
+    canFetchMore
+  } = useItems(
+    { pageSize: 20 },
+    {
+      paginated: true,
+      getCanFetchMore(lastPage) {
+        return lastPage.next !== null;
+      }
+    }
   );
 
-  const history = useHistory<BaseListLocationState>();
-  const location = useLocation<BaseListLocationState>();
-
-  if (isSortable && !onMove) {
-    throw new Error("onMove is required with isSortable");
-  }
-
-  if (extraRowActions) {
-    columns = [
-      ...columns,
-      {
-        align: "right",
-        render(_, item, i) {
-          return (
-            <>
-              {extraRowActions &&
-                extraRowActions(item, i).map(action => [
-                  <Divider key={`div-${i}`} type="vertical" />,
-                  action
-                ])}
-            </>
-          );
-        }
-      }
-    ];
-  }
-
-  const useItemOptions = {
-    ...location.state,
-    pageSize
+  const loadMore = async () => {
+    try {
+      const lastPage = pages![pages!.length - 1];
+      await fetchMore({
+        pageSize: 20,
+        page: lastPage.next as number
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
-  const { data, isLoading, error } = useItems(useItemOptions);
+  const onScroll = debounce((distanceToBottom: number) => {
+    if (canFetchMore && distanceToBottom < 100) {
+      loadMore();
+    }
+  }, 50);
 
-  // save total item count in state to prevent pagination jumping around
-  if (data && data.count !== total) {
-    setTotal(data.count);
-  }
+  const listRef = React.createRef<HTMLDivElement>();
 
   useTitle(itemNamePlural);
-
-  if (error) {
-    return <h1>{error.toString()}</h1>;
-  }
-
-  const extraActionMenu =
-    extraActions === false ? null : extraActions === true ? (
-      <Menu>
-        <Menu.Item>
-          <Link to="#">Import</Link>
-        </Menu.Item>
-        <Menu.Item>
-          <Link to="#">Export</Link>
-        </Menu.Item>
-      </Menu>
-    ) : (
-      <Menu>
-        {extraActions.map((action, i) => (
-          <Menu.Item key={i}>{action}</Menu.Item>
-        ))}
-      </Menu>
-    );
-
-  const pager = pagination ? (
-    <ListPagination
-      itemName={itemName}
-      itemNamePlural={itemNamePlural}
-      total={total}
-      current={location.state?.page ?? 1}
-      onChange={current => {
-        history.push(location.pathname, {
-          ...location.state,
-          page: current
-        });
-      }}
-      pageSize={pageSize}
-      onShowSizeChange={(_, size) => {
-        history.push(location.pathname, {
-          ...location.state,
-          page: 1
-        });
-        setPageSize(size);
-      }}
-    />
-  ) : null;
-
-  const canSort =
-    isSortable &&
-    location.state?.filters?.length === 0 &&
-    !location.state?.ordering &&
-    !location.state?.search;
-
-  const components = canSort
-    ? ({
-        body: {
-          row: DndRow
-        }
-      } as any)
-    : undefined;
-
-  let dataSource: T[] = data?.results ?? [];
-
   return (
     <div className="module module-list">
-      <PageHeader
+      <AppHeader
         title={itemNamePlural}
-        extra={[
-          extraActionMenu ? (
-            <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon={<DownOutlined />}>Actions</Button>
-            </Dropdown>
-          ) : null,
-          ...actions
-        ]}
+        extra={actions}
+        onClick={() => {
+          listRef.current?.scroll({
+            top: 0,
+            behavior: "smooth"
+          });
+        }}
       />
-      {showSearch ? (
-        <Input
-          className="ant-input-search ant-input-search-enter-button ant-input-search-small"
-          size={tableSize}
-          value={location.state?.search}
-          onChange={e => {
-            history.replace(location.pathname, {
-              ...location.state,
-              search: e.target.value
-            });
-          }}
-          addonAfter={
-            // button just for looks, search will execute instantly
-            <Button type="primary" size={tableSize}>
-              {isLoading ? <LoadingOutlined /> : <SearchOutlined />}
-            </Button>
+      <div
+        ref={listRef}
+        className="am-list-wrap"
+        onScroll={(e: any) => {
+          const distanceToBottom =
+            e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+          onScroll(distanceToBottom);
+        }}
+      >
+        <List
+          renderFooter={() =>
+            isLoading || isFetchingMore ? (
+              <ActivityIndicator text="Loading..." />
+            ) : (
+              // <div className="loading-spacer" />
+              <WhiteSpace style={{ height: 22 }} />
+            )
           }
-        />
-      ) : null}
-      {pager}
-      <DndProvider backend={DndBackend}>
-        <Table<T>
-          dataSource={dataSource}
-          columns={columns}
-          loading={isLoading}
-          rowKey="pk"
-          pagination={false}
-          tableLayout="fixed"
-          onChange={(_pagination, filters, sorter) => {
-            if (!Array.isArray(sorter)) {
-              sorter = [sorter];
-            }
-            const ordering =
-              (sorter[0].order &&
-                `${sorter[0].order === "ascend" ? "" : "-"}${
-                  sorter[0].field
-                }`) ??
-              undefined;
-            history.push(location.pathname, {
-              search: location.state?.search,
-              filters: mapFilters(filters),
-              ordering,
-              page: 1
-            });
-          }}
-          size={tableSize}
-          components={components}
-          onRow={(record, index) => {
-            if (canSort) {
-              return {
-                index,
-                pk: record.pk,
-                onDrop(item: any) {
-                  if (record.pk === item.pk) {
-                    // noop
-                    return;
-                  }
-                  onMove!(item.pk, index!);
-                }
-              } as any;
-            }
-          }}
-          {...tableProps}
-        />
-      </DndProvider>
+        >
+          {pages?.map(page => page.results.map(renderRow))}
+        </List>
+      </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ import { ModelWithLabel } from "../../dao/base";
 import { Payee, usePayees } from "../../dao/payees";
 import { Tag as TagModel, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
-import { BaseListLocationState, getColumnSort } from "../base/BaseList";
+import { BaseTableLocationState, getColumnSort } from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
 interface GetGetColumnOptions {
@@ -22,7 +22,7 @@ interface GetGetColumnOptions {
 }
 
 const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
-  location: Location<BaseListLocationState>,
+  location: Location<BaseTableLocationState>,
   form?: FormInstance
 ) => EditableColumnsType<Transaction>) => {
   return (location, form) => {

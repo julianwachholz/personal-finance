@@ -1,4 +1,11 @@
-import { prefetchQuery, QueryResult, useQuery } from "react-query";
+import {
+  prefetchQuery,
+  QueryOptions,
+  QueryOptionsPaginated,
+  QueryResult,
+  QueryResultPaginated,
+  useQuery
+} from "react-query";
 
 const authTokenKey = "_auth_token";
 const authTokenExpiryKey = "_auth_token_expiry";
@@ -47,6 +54,8 @@ export interface ModelWithLabel {
 
 interface Items<T extends Model> {
   count: number;
+  next: number | null;
+  previous: number | null;
   results: T[];
 }
 
@@ -89,7 +98,19 @@ export const makeFetchItems = <T extends ModelWithLabel>(
 };
 
 export interface UseItems<T extends ModelWithLabel> {
-  (options?: FetchItemsOptions): QueryResult<Items<T>, FetchItemsOptions>;
+  (
+    options?: FetchItemsOptions,
+    queryOptions?: QueryOptions<Items<T>>
+  ): QueryResult<Items<T>, FetchItemsOptions>;
+
+  basename: string;
+}
+
+export interface UseItemsPaginated<T extends ModelWithLabel> {
+  (
+    options?: FetchItemsOptions,
+    queryOptions?: QueryOptionsPaginated<Items<T>>
+  ): QueryResultPaginated<Items<T>, FetchItemsOptions>;
 
   basename: string;
 }
@@ -106,8 +127,15 @@ export const makeUseItems = <T extends ModelWithLabel>(
   if (!fetchItems) {
     fetchItems = makeFetchItems<T>(basename, map);
   }
-  const useItems: UseItems<T> = (options: FetchItemsOptions = {}) => {
-    const query = useQuery([`items/${basename}`, options], fetchItems!);
+  const useItems: UseItems<T> = (
+    options: FetchItemsOptions = {},
+    queryOptions?: QueryOptions<Items<T>>
+  ) => {
+    const query = useQuery(
+      [`items/${basename}`, options],
+      fetchItems!,
+      queryOptions
+    );
     return query;
   };
   useItems.basename = basename;

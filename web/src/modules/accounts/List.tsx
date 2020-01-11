@@ -5,18 +5,18 @@ import { useMutation } from "react-query";
 import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import Money from "../../components/data/Money";
 import { Account, moveAccount, useAccounts } from "../../dao/accounts";
-import BaseList, {
-  BaseListLocationState,
+import BaseTable, {
+  BaseTableLocationState,
   getColumnFilter,
   getColumnSort
-} from "../base/BaseList";
+} from "../base/BaseTable";
 
 const Accounts = ({ match }: RouteComponentProps) => {
   const [move] = useMutation(moveAccount, {
     refetchQueries: ["items/accounts"]
   });
 
-  const location = useLocation<BaseListLocationState>();
+  const location = useLocation<BaseTableLocationState>();
   const columns: ColumnsType<Account> = [
     {
       title: "Name",
@@ -57,7 +57,7 @@ const Accounts = ({ match }: RouteComponentProps) => {
   ];
 
   return (
-    <BaseList<Account>
+    <BaseTable<Account>
       itemName="Account"
       itemNamePlural="Accounts"
       useItems={useAccounts}

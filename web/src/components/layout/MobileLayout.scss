@@ -1,14 +1,34 @@
 .app--mobile {
-  // mobile
+  .ant-layout {
+    height: 100vh;
+    overflow: hidden;
+  }
   .content-container {
-    overflow: scroll;
-    padding-bottom: 100px;
+    padding: 0;
+    flex-grow: 1;
+    overflow: auto;
   }
   .am-tab-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
     height: auto;
+  }
+  .am-navbar {
+    border-bottom: 1px solid #ddd;
+  }
+
+  .module-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .am-navbar {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    .am-list-wrap {
+      flex-grow: 1;
+      overflow: auto;
+    }
   }
 }

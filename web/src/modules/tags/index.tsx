@@ -1,7 +1,11 @@
 import React from "react";
+import { isMobile } from "react-device-detect";
 import { Route, RouteComponentProps, Switch } from "react-router";
 import Tag from "./Detail";
-import Tags from "./List";
+import TagsList from "./List";
+import TagsTable from "./Table";
+
+const Tags = isMobile ? TagsList : TagsTable;
 
 const Module = ({ match }: RouteComponentProps) => (
   <Switch>

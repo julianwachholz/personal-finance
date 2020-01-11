@@ -1,106 +1,69 @@
-import { Button, Input, message, Popconfirm, Tag } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
+import { message, Tag as TagComponent } from "antd";
+import { List, SwipeAction } from "antd-mobile";
+import { History } from "history";
 import React from "react";
-import { useMutation } from "react-query";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
-import ColorSelect from "../../components/form/ColorSelect";
-import {
-  bulkDeleteTags,
-  deleteTag,
-  postTag,
-  putTag,
-  Tag as TagModel,
-  useTags
-} from "../../dao/tags";
-import { useSettings } from "../../utils/SettingsProvider";
-import BaseEditableList from "../base/BaseEditableList";
-import { BaseListLocationState, getColumnSort } from "../base/BaseList";
-import { EditableColumnsType } from "../base/EditableTable";
+import { MutateFunction, useMutation } from "react-query";
+import { useHistory } from "react-router-dom";
+import { UseItemsPaginated } from "../../dao/base";
+import { deleteTag, Tag, useTags } from "../../dao/tags";
+import BaseList from "../base/BaseList";
 
-const Tags = ({ match }: RouteComponentProps) => {
-  const { tableSize } = useSettings();
+const renderTag = (
+  history: History,
+  doDelete: MutateFunction<void, Tag>,
+  tag: Tag
+) => {
+  return (
+    <SwipeAction
+      key={tag.pk}
+      left={
+        [
+          {
+            text: <DeleteFilled />,
+            style: { width: 48, backgroundColor: "#f00", color: "#fff" },
+            async onPress() {
+              await doDelete();
+              message.info(`Deleted Tag ${tag.label}`);
+            }
+          }
+        ] as any
+      }
+    >
+      <List.Item
+        extra={
+          <TagComponent color={tag.color}>
+            {tag.color || "default"}
+          </TagComponent>
+        }
+        onClick={() => {
+          history.push(`/settings/tags/${tag.pk}`);
+        }}
+      >
+        {tag.label}
+      </List.Item>
+    </SwipeAction>
+  );
+};
+
+const TagsList = () => {
+  const history = useHistory();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
-  const [edit] = useMutation(putTag);
-  const [create] = useMutation(postTag);
-  const [bulkDelete] = useMutation(bulkDeleteTags, {
-    refetchQueries: ["items/tags"]
-  });
+  // const [edit] = useMutation(putTag);
+  // const [create] = useMutation(postTag);
 
-  const location = useLocation<BaseListLocationState>();
-  const columns: EditableColumnsType<TagModel> = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      editable: true,
-      formField: <Input autoFocus prefix="#" size={tableSize} />,
-      render(name, tag) {
-        return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
-      },
-      ...getColumnSort("name", location.state)
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      editable: true,
-      rules: [],
-      formField: <ColorSelect />,
-      render(color, tag) {
-        return <Tag color={color}>{tag.label}</Tag>;
-      }
-    }
-  ];
+  // const location = useLocation<BaseTableLocationState>();
 
   return (
-    <BaseEditableList
-      editable
-      onSave={async tag => {
-        const isNew = tag.pk === 0;
-        try {
-          const savedTag = isNew
-            ? await create(tag)
-            : await edit(tag, {
-                updateQuery: ["item/tags", { pk: tag.pk }]
-              });
-          message.success(`Tag ${isNew ? "created" : "updated"}`);
-          return savedTag;
-        } catch (e) {
-          message.error(`Tag ${isNew ? "create" : "update"} failed`);
-          throw e;
-        }
-      }}
+    <BaseList
       itemName="Tag"
       itemNamePlural="Tags"
-      useItems={useTags}
-      columns={columns}
-      extraActions={[<Link to="#">Example</Link>]}
-      extraRowActions={tag => [
-        <Popconfirm
-          key="del"
-          title={`Delete Tag "${tag.label}"?`}
-          okText="Delete"
-          okButtonProps={{ type: "danger" }}
-          placement="left"
-          onConfirm={async () => {
-            await doDelete(tag);
-            message.info(`Tag "${tag.label}" deleted.`);
-          }}
-        >
-          <Button type="link">Delete</Button>
-        </Popconfirm>
-      ]}
-      bulkActions={[
-        {
-          key: "delete",
-          name: "Delete selected tags",
-          async action(pks) {
-            const { deleted } = await bulkDelete({ pks });
-            message.info(`Deleted ${deleted} tags`);
-          }
-        }
-      ]}
+      useItems={useTags as UseItemsPaginated<Tag>}
+      renderRow={renderTag.bind(null, history, doDelete)}
     />
   );
 };
 
-export default Tags;
+export default TagsList;

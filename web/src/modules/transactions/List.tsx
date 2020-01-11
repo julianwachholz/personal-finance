@@ -12,7 +12,7 @@ import {
   useTransactions
 } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
-import BaseEditableList from "../base/BaseEditableList";
+import { default as BaseEditableTable } from "../base/BaseEditableTable";
 import getGetColumns from "./columns";
 import TransferForm from "./TransferForm";
 
@@ -40,7 +40,7 @@ const Transactions = () => {
   });
 
   return (
-    <BaseEditableList<Transaction>
+    <BaseEditableTable<Transaction>
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions}
@@ -125,7 +125,7 @@ const Transactions = () => {
         visible={transferModalVisible}
         onVisible={setTransferModalVisible}
       />
-    </BaseEditableList>
+    </BaseEditableTable>
   );
 };
 

@@ -3,7 +3,7 @@ import React from "react";
 import { useLocation } from "react-router";
 import { Transaction, useTransactions } from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
-import { BaseListLocationState } from "../base/BaseList";
+import { BaseTableLocationState } from "../base/BaseTable";
 import getGetColumns from "./columns";
 
 interface RelatedTransactionsProps {
@@ -16,7 +16,7 @@ const RelatedTransactions = ({
   excludeColumns = []
 }: RelatedTransactionsProps) => {
   const { tableSize } = useSettings();
-  const location = useLocation<BaseListLocationState>();
+  const location = useLocation<BaseTableLocationState>();
   const filteredColumns = getGetColumns()(location).filter(
     col => !excludeColumns.includes(col.dataIndex as string)
   );

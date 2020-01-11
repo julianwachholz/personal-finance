@@ -13,12 +13,12 @@ import {
   usePayees
 } from "../../dao/payees";
 import { useSettings } from "../../utils/SettingsProvider";
-import BaseEditableList from "../base/BaseEditableList";
+import BaseEditableTable from "../base/BaseEditableTable";
 import {
-  BaseListLocationState,
+  BaseTableLocationState,
   getColumnFilter,
   getColumnSort
-} from "../base/BaseList";
+} from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
 const Payees = ({ match }: RouteComponentProps) => {
@@ -32,7 +32,7 @@ const Payees = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/payees"]
   });
 
-  const location = useLocation<BaseListLocationState>();
+  const location = useLocation<BaseTableLocationState>();
 
   const columns: EditableColumnsType<Payee> = [
     {
@@ -84,7 +84,7 @@ const Payees = ({ match }: RouteComponentProps) => {
   ];
 
   return (
-    <BaseEditableList<Payee>
+    <BaseEditableTable<Payee>
       editable
       onSave={async payee => {
         const isNew = payee.pk === 0;

@@ -75,7 +75,7 @@ if DEBUG:
     MIDDLEWARE = (
         ["debug_toolbar.middleware.DebugToolbarMiddleware"]
         + MIDDLEWARE
-        # + ["shinywaffle.middleware.TimeDelayMiddleware"]
+        + ["shinywaffle.middleware.TimeDelayMiddleware"]
     )
 
 ROOT_URLCONF = "shinywaffle.urls"

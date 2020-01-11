@@ -42,4 +42,12 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns = (
+        [path("__debug__/", include(debug_toolbar.urls))]
+        + urlpatterns
+        + [
+            path(
+                "api-auth/", include("rest_framework.urls", namespace="rest_framework")
+            )
+        ]
+    )

@@ -1,13 +1,6 @@
 .ant-layout {
   min-height: 100vh;
 
-  .app--web .ant-layout-content {
-    margin: 0 16px;
-
-    .ant-breadcrumb {
-      margin: 16px 0;
-    }
-  }
   .content-container {
     background: #fff;
     padding: 24px;
@@ -16,6 +9,16 @@
 
   .ant-layout-footer {
     text-align: center;
+  }
+}
+
+.app--web {
+  .ant-layout-content {
+    margin: 0 16px;
+
+    .ant-breadcrumb {
+      margin: 16px 0;
+    }
   }
 }
 

@@ -28,3 +28,15 @@ export default function useDebounce<T>(value: T, delay: number) {
 
   return debouncedValue;
 }
+
+export const debounce = (func: Function, delay: number, callNow = false) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: any[]) => {
+    if (timeout) {
+      clearTimeout(timeout);
+    } else if (callNow) {
+      func(...args);
+    }
+    timeout = setTimeout(() => func(...args), delay);
+  };
+};

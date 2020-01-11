@@ -11,7 +11,6 @@ import {
   Form,
   Input,
   Menu,
-  PageHeader,
   Row,
   Select,
   Table
@@ -24,12 +23,13 @@ import { FormInstance } from "rc-field-form";
 import React, { useState } from "react";
 import { setQueryData } from "react-query";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import AppHeader from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
 import useStoredState from "../../utils/useStoredState";
 import useTitle from "../../utils/useTitle";
-import { BaseListLocationState, mapFilters } from "./BaseList";
 import "./BaseModule.scss";
+import { BaseTableLocationState, mapFilters } from "./BaseTable";
 import { EditableCell, EditableColumnsType } from "./EditableTable";
 import ListPagination from "./ListPagination";
 
@@ -80,13 +80,13 @@ const applyError = <T extends ModelWithLabel>(
   }
 };
 
-interface EditableListProps<T extends ModelWithLabel> {
+interface EditableTableProps<T extends ModelWithLabel> {
   itemName: string;
   itemNamePlural: string;
   useItems: UseItems<T>;
   columns?: EditableColumnsType<T>;
   getColumns?: (
-    location: Location<BaseListLocationState>,
+    location: Location<BaseTableLocationState>,
     form: FormInstance
   ) => EditableColumnsType<T>;
   pagination?: boolean;
@@ -110,7 +110,7 @@ interface EditableListProps<T extends ModelWithLabel> {
   children?: React.ReactNode;
 }
 
-const BaseEditableList = <T extends ModelWithLabel>({
+const BaseEditableTable = <T extends ModelWithLabel>({
   itemName,
   itemNamePlural,
   useItems,
@@ -130,7 +130,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
   defaultValues = {},
   bulkActions,
   children
-}: EditableListProps<T>) => {
+}: EditableTableProps<T>) => {
   if (editable && !onSave) {
     throw new Error("editable list requires onSave callback");
   }
@@ -141,8 +141,8 @@ const BaseEditableList = <T extends ModelWithLabel>({
     10
   );
 
-  const history = useHistory<BaseListLocationState>();
-  const location = useLocation<BaseListLocationState>();
+  const history = useHistory<BaseTableLocationState>();
+  const location = useLocation<BaseTableLocationState>();
 
   const [bulkMode, setBulkMode] = useState(false);
   const [bulkAction, setBulkAction] = useState<string>();
@@ -407,7 +407,7 @@ const BaseEditableList = <T extends ModelWithLabel>({
 
   return (
     <div className="module module-list">
-      <PageHeader
+      <AppHeader
         title={itemNamePlural}
         extra={[
           extraActionMenu ? (
@@ -538,4 +538,4 @@ const BaseEditableList = <T extends ModelWithLabel>({
   );
 };
 
-export default BaseEditableList;
+export default BaseEditableTable;

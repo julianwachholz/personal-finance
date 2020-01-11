@@ -9,6 +9,7 @@ import ModelSelect from "../../components/form/ModelSelect";
 import { useAccounts } from "../../dao/accounts";
 import { patchSettings, Settings } from "../../dao/settings";
 import { useAuth } from "../../utils/AuthProvider";
+import { debounce } from "../../utils/debounce";
 import { useSettings } from "../../utils/SettingsProvider";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
@@ -132,7 +133,7 @@ const Preferences = () => {
           ...settings,
           number_format: getNumberFormat(settings)
         }}
-        onValuesChange={onChange}
+        onValuesChange={debounce(onChange, 100, true)}
         wrapperCol={{ span: 14 }}
       >
         <Form.Item name="default_currency" label="Default Currency">
