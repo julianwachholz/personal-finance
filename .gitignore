@@ -107,5 +107,5 @@ venv.bak/
 # uploaded files
 /media
 
-# static files
-/static
+# backend static files
+/djstatic
