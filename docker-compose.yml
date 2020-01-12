@@ -20,4 +20,7 @@ services:
     #   retries: 2
     #   start_period: 1m
 
-    network_mode: bridge
+networks:
+  default:
+    external:
+      name: db
