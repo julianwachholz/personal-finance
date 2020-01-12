@@ -4,13 +4,15 @@ import { useAuth } from "../../utils/AuthProvider";
 
 interface DateTimeProps {
   value: Date;
-  formatString?: string;
   locale?: any;
 }
 
-const DateTime = ({ value, formatString, locale }: DateTimeProps) => {
+const DateTime = ({ value, locale }: DateTimeProps) => {
   const { settings } = useAuth();
-  formatString = formatString ?? settings?.date_format ?? "PP";
+  let formatString = settings?.date_format;
+  if (!formatString) {
+    formatString = "PP";
+  }
 
   if (!value) {
     return <time />;
