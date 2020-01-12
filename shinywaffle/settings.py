@@ -135,6 +135,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ("knox.auth.TokenAuthentication",),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_PAGINATION_CLASS": "shinywaffle.pagination.ControllablePageNumberPagination",
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_FILTER_BACKENDS": (
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
@@ -143,6 +144,7 @@ REST_FRAMEWORK = {
 }
 
 if DEBUG:
+    REST_FRAMEWORK.pop("DEFAULT_RENDERER_CLASSES")
     REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = (
         "knox.auth.TokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
