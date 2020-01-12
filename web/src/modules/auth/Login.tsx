@@ -42,7 +42,7 @@ const Login = () => {
           label="Username"
           validateStatus={error && "error"}
         >
-          <Input autoFocus prefix={<UserOutlined />} />
+          <Input autoFocus prefix={<UserOutlined />} autoComplete="username" />
         </Form.Item>
         <Form.Item
           validateStatus={error && "error"}
@@ -50,7 +50,10 @@ const Login = () => {
           name="password"
           label="Password"
         >
-          <Input.Password prefix={<LockOutlined />} />
+          <Input.Password
+            prefix={<LockOutlined />}
+            autoComplete="current-password"
+          />
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <>
