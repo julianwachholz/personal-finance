@@ -11,7 +11,7 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.0.0b4
+    POETRY_VERSION=1.0.2
 
 RUN apk --no-cache add \
     bash \
@@ -30,7 +30,7 @@ RUN apk --no-cache add \
     && pip install poetry==$POETRY_VERSION
 
 COPY poetry.lock pyproject.toml /app/
-RUN poetry config settings.virtualenvs.create false \
-    && poetry install $(test "$ENV" == production && echo "--no-dev") --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false \
+    && poetry install $(test "$DJANGO_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
 
 COPY . /app
