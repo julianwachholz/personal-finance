@@ -21,6 +21,11 @@ const renderTransaction = (
   if (tx.is_transfer) {
     icon = <SwapOutlined />;
   }
+
+  const title = tx.is_transfer
+    ? "Transfer"
+    : tx.payee?.label ?? tx.category?.name;
+
   return (
     <SwipeAction
       key={tx.pk}
@@ -44,15 +49,23 @@ const renderTransaction = (
         }
       >
         <DateTime value={tx.datetime} />
-        {tx.payee || tx.category ? " - " : ""}
-        {tx.payee?.label ?? tx.category?.name}
+        {title ? " - " : ""}
+        {title}
         <List.Item.Brief>
-          {tx.text || tx.category?.name || <em>uncategorized</em>}{" "}
-          {tx.tags.map(t => (
-            <Tag key={t.pk} color={t.color}>
-              {t.label}
-            </Tag>
-          ))}
+          {tx.is_transfer ? (
+            tx.account.label
+          ) : (
+            <>
+              {tx.text || tx.category?.name || (
+                <em>{tx.is_initial ? "Initial balance" : "uncategorized"}</em>
+              )}{" "}
+              {tx.tags.map(t => (
+                <Tag key={t.pk} color={t.color}>
+                  {t.label}
+                </Tag>
+              ))}
+            </>
+          )}
         </List.Item.Brief>
       </List.Item>
     </SwipeAction>
