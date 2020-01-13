@@ -22,7 +22,7 @@ const AccountCreate = () => {
             const tag = await mutate(data);
             setQueryData(["item/accounts", { pk: tag.pk }], tag);
             message.success("Account created");
-            history.push(`/accounts/${tag.pk}`);
+            history.push(`/accounts`);
           } catch (e) {
             message.error("Account creation failed");
             throw e;

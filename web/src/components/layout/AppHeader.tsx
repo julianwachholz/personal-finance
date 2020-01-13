@@ -1,4 +1,4 @@
-import { LeftOutlined, MenuOutlined } from "@ant-design/icons";
+import { LeftOutlined } from "@ant-design/icons";
 import { PageHeader } from "antd";
 import { NavBar } from "antd-mobile";
 import { PageHeaderProps } from "antd/lib/page-header";
@@ -10,9 +10,15 @@ export interface AppHeaderProps extends PageHeaderProps {
   onClick?: () => void;
   onLeftClick?: () => void;
   leftIcon?: React.ReactElement;
+  rightContent?: React.ReactElement;
 }
 
-const AppHeader = ({ onLeftClick, leftIcon, ...props }: AppHeaderProps) => {
+const AppHeader = ({
+  onLeftClick,
+  leftIcon,
+  rightContent,
+  ...props
+}: AppHeaderProps) => {
   const { theme } = useSettings();
   if (isMobile) {
     return (
@@ -23,7 +29,7 @@ const AppHeader = ({ onLeftClick, leftIcon, ...props }: AppHeaderProps) => {
           e.stopPropagation();
           onLeftClick?.();
         }}
-        rightContent={<MenuOutlined />}
+        rightContent={rightContent}
         onClick={props.onClick}
       >
         <div>{props.title}</div>

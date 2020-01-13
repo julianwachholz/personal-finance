@@ -1,6 +1,7 @@
 import { DeleteFilled, PlusOutlined, SwapOutlined } from "@ant-design/icons";
 import { message, Tag } from "antd";
 import { List, SwipeAction } from "antd-mobile";
+import { History } from "history";
 import React from "react";
 import { MutateFunction, useMutation } from "react-query";
 import { useHistory } from "react-router";
@@ -16,6 +17,7 @@ import {
 import BaseList from "../base/BaseList";
 
 const renderTransaction = (
+  history: History,
   doDelete: MutateFunction<void, Transaction>,
   tx: Transaction
 ) => {
@@ -37,7 +39,7 @@ const renderTransaction = (
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: "#f00", color: "#fff" },
             async onPress() {
-              await doDelete();
+              await doDelete(tx);
               message.info(`Deleted Transaction #${tx.pk}`);
             }
           }
@@ -49,6 +51,9 @@ const renderTransaction = (
         extra={
           <Money value={{ amount: tx.amount, currency: tx.amount_currency }} />
         }
+        onClick={() => {
+          history.push(`/transactions/${tx.pk}`);
+        }}
       >
         <DateTime value={tx.datetime} />
         {title ? " - " : ""}
@@ -88,7 +93,7 @@ const TransactionList = () => {
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions as UseItemsPaginated<Transaction>}
-      renderRow={renderTransaction.bind(null, doDelete)}
+      renderRow={renderTransaction.bind(null, history, doDelete)}
       fab={
         <Fab
           icon={<PlusOutlined />}

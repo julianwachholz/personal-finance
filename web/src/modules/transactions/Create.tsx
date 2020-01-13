@@ -1,6 +1,12 @@
+import {
+  EllipsisOutlined,
+  PlusCircleOutlined,
+  SwapOutlined
+} from "@ant-design/icons";
 import { message } from "antd";
+import { Popover } from "antd-mobile";
 import React from "react";
-import { useMutation } from "react-query";
+import { setQueryData, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { postTransaction } from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
@@ -20,11 +26,30 @@ const TransactionCreate = () => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        <Popover
+          mask
+          overlay={[
+            <Popover.Item key="income" icon={<PlusCircleOutlined />}>
+              Add Income
+            </Popover.Item>,
+            <Popover.Item key="transfer" icon={<SwapOutlined />}>
+              Transfer
+            </Popover.Item>
+          ]}
+          onSelect={item => {
+            console.log("overlay select", item.key);
+          }}
+        >
+          <EllipsisOutlined />
+        </Popover>
+      }
     >
       <TransactionForm
         onSave={async data => {
           try {
-            await mutate(data);
+            const tx = await mutate(data);
+            setQueryData(["item/transactions", { pk: tx.pk }], tx);
             message.success("Transaction created!");
             history.push(`/transactions`);
           } catch (e) {

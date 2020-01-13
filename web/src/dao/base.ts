@@ -150,11 +150,15 @@ export const makeUseItems = <T extends ModelWithLabel>(
 interface FetchItemOptions {
   pk: number;
 }
+
 export type FetchItem<T extends Model, O = FetchItemOptions> = (
   options: O
 ) => Promise<T>;
 
-export const makeFetchItem = <T extends Model>(basename: string) => {
+export const makeFetchItem = <T extends Model>(
+  basename: string,
+  map?: (item: T) => T
+) => {
   const fetchItem: FetchItem<T> = async ({ pk }) => {
     if (isNaN(pk)) {
       throw new Error("Invalid ID");
@@ -165,6 +169,9 @@ export const makeFetchItem = <T extends Model>(basename: string) => {
       throw new Error(response.statusText);
     }
     const data = await response.json();
+    if (map) {
+      return map(data);
+    }
     return data;
   };
   return fetchItem;
@@ -174,13 +181,19 @@ type UseItem<T extends Model> = (
   pk: number | string
 ) => QueryResult<T, { pk: number }>;
 
-export const makeUseItem = <T extends Model>(basename: string) => {
-  const fetchItem = makeFetchItem<T>(basename);
+export const makeUseItem = <T extends Model>(
+  basename: string,
+  map?: (item: T) => T,
+  fetchItem?: FetchItem<T>
+) => {
+  if (!fetchItem) {
+    fetchItem = makeFetchItem<T>(basename, map);
+  }
   const useItem: UseItem<T> = pk => {
     if (typeof pk === "string") {
       pk = parseInt(pk, 10);
     }
-    const query = useQuery([`item/${basename}`, { pk }], fetchItem);
+    const query = useQuery([`item/${basename}`, { pk }], fetchItem!);
     return query;
   };
   return useItem;

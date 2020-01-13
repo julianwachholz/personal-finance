@@ -3,6 +3,7 @@ import {
   makeItemsAction,
   makePostItem,
   makePutItem,
+  makeUseItem,
   makeUseItems,
   ModelWithLabel
 } from "./base";
@@ -56,6 +57,8 @@ const mapTx = (tx: Transaction) => {
 export const [useTransactions, prefetchTransactions] = makeUseItems<
   Transaction
 >("transactions", mapTx);
+
+export const useTransaction = makeUseItem<Transaction>("transactions", mapTx);
 
 export const postTransaction = makePostItem<Transaction>("transactions");
 
