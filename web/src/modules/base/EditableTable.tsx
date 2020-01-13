@@ -18,9 +18,6 @@ interface EditableColumnType<T> extends ColumnType<T> {
   // Get the form value entry from an existing value, in addition to the actual value
   formValue?: (key: string, value: any) => [string, any];
 
-  // Trigger when this form field was changed
-  formChange?: (changed: Partial<T>, form: FormInstance) => void;
-
   rules?: Rule[];
 }
 

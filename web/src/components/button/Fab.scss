@@ -1,0 +1,16 @@
+a.am-button.floating-action-button {
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
+  z-index: 2;
+  width: 56px;
+  height: 56px;
+  text-align: center;
+  border-radius: 50%;
+  box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+
+  .am-button-icon {
+    margin: 0;
+  }
+}

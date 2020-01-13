@@ -10,6 +10,7 @@ interface BaseListProps<T extends ModelWithLabel> {
   itemNamePlural: string;
   useItems: UseItemsPaginated<T>;
   renderRow: (item: T) => React.ReactElement;
+  fab?: React.ReactElement;
   actions?: React.ReactElement[];
 }
 
@@ -17,6 +18,7 @@ const BaseList = <T extends ModelWithLabel>({
   itemNamePlural,
   useItems,
   renderRow,
+  fab,
   actions
 }: BaseListProps<T>) => {
   const {
@@ -67,6 +69,7 @@ const BaseList = <T extends ModelWithLabel>({
           });
         }}
       />
+      {fab}
       <div
         ref={listRef}
         className="am-list-wrap"
@@ -81,7 +84,6 @@ const BaseList = <T extends ModelWithLabel>({
             isLoading || isFetchingMore ? (
               <ActivityIndicator text="Loading..." />
             ) : (
-              // <div className="loading-spacer" />
               <WhiteSpace style={{ height: 22 }} />
             )
           }

@@ -52,7 +52,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       delete values["set_currency"];
     }
     try {
-      onSave(values);
+      await onSave(values);
     } catch (e) {
       setSubmitting(false);
     }

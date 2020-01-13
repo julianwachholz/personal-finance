@@ -29,11 +29,8 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
     const quickCreatePayee =
       form && createPayee
         ? async (name: string, cb: (item: Payee) => Promise<void>) => {
-            console.log("creating payee");
             const payee = await createPayee(name);
-            console.log("created payee; call refresh");
             await cb(payee);
-            console.log("done refreshing; set field value");
             form?.setFieldsValue({ set_payee: payee.pk });
           }
         : undefined;
@@ -103,12 +100,6 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
         ),
         rules: [],
         formValue: (key, value) => ["set_payee", value?.pk],
-        formChange: (changed, form) => {
-          // @TODO set category directly
-          // const p = form.getFieldValue("payee");
-          // const p2 = form.getFieldValue("set_payee");
-          // console.log("payee was changed!", p, p2, changed);
-        },
         render(payee: ModelWithLabel) {
           if (payee) {
             return (
@@ -159,7 +150,7 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
           "set_tags",
           value.map((v: ModelWithLabel) => v?.pk)
         ],
-        formField: <ModelSelect mode="tags" useItems={useTags} />,
+        formField: <ModelSelect mode="multiple" useItems={useTags} />,
         rules: [],
         render(tags: TagModel[]) {
           return tags ? (

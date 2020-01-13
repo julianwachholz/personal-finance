@@ -1,8 +1,10 @@
-import { DeleteFilled, SwapOutlined } from "@ant-design/icons";
+import { DeleteFilled, PlusOutlined, SwapOutlined } from "@ant-design/icons";
 import { message, Tag } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import React from "react";
 import { MutateFunction, useMutation } from "react-query";
+import { useHistory } from "react-router";
+import Fab from "../../components/button/Fab";
 import DateTime from "../../components/data/Date";
 import Money from "../../components/data/Money";
 import { UseItemsPaginated } from "../../dao/base";
@@ -73,7 +75,7 @@ const renderTransaction = (
 };
 
 const TransactionList = () => {
-  //   const history = useHistory();
+  const history = useHistory();
   const [doDelete] = useMutation(deleteTransaction, {
     refetchQueries: ["items/transactions"]
   });
@@ -87,6 +89,14 @@ const TransactionList = () => {
       itemNamePlural="Transactions"
       useItems={useTransactions as UseItemsPaginated<Transaction>}
       renderRow={renderTransaction.bind(null, doDelete)}
+      fab={
+        <Fab
+          icon={<PlusOutlined />}
+          onClick={() => {
+            history.push(`/transactions/create`);
+          }}
+        />
+      }
     />
   );
 };

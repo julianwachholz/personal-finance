@@ -184,20 +184,6 @@ const BaseEditableTable = <T extends ModelWithLabel>({
     setEditingItem(undefined);
   };
 
-  const onValuesChange = (changedValues: any) => {
-    const changedKeys = Object.keys(changedValues);
-    columns!
-      .filter(col => !!col.formChange)
-      .forEach(col => {
-        if (
-          (col.dataIndex && changedKeys.includes(col.dataIndex as string)) ||
-          (col.formName && changedKeys.includes(col.formName))
-        ) {
-          col.formChange!(changedValues, form);
-        }
-      });
-  };
-
   if (!bulkMode && (editable || extraRowActions)) {
     columns = [
       ...columns.map(col => {
@@ -477,7 +463,6 @@ const BaseEditableTable = <T extends ModelWithLabel>({
       <Form
         form={form}
         component={editable ? undefined : false}
-        onValuesChange={onValuesChange}
         onFinish={values => saveItem(values as Partial<T>)}
         onKeyDown={(e: any) => {
           if (e.keyCode === 13) {

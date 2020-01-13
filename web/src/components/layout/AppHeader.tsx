@@ -6,20 +6,22 @@ import React from "react";
 import { isMobile } from "react-device-detect";
 import { useSettings } from "../../utils/SettingsProvider";
 
-interface AppHeaderProps extends PageHeaderProps {
+export interface AppHeaderProps extends PageHeaderProps {
   onClick?: () => void;
+  onLeftClick?: () => void;
+  leftIcon?: React.ReactElement;
 }
 
-const AppHeader = (props: AppHeaderProps) => {
+const AppHeader = ({ onLeftClick, leftIcon, ...props }: AppHeaderProps) => {
   const { theme } = useSettings();
   if (isMobile) {
     return (
       <NavBar
         mode={theme}
-        icon={<LeftOutlined />}
+        icon={onLeftClick ? leftIcon ?? <LeftOutlined /> : undefined}
         onLeftClick={e => {
           e.stopPropagation();
-          console.log("NavBar left click");
+          onLeftClick?.();
         }}
         rightContent={<MenuOutlined />}
         onClick={props.onClick}
