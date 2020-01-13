@@ -198,7 +198,13 @@ const Preferences = () => {
               </Form.Item>
             </Col>
             <Col span={20}>
-              Examples: <Money value={{ amount: "4321.00", currency: "USD" }} />
+              Examples:{" "}
+              <Money
+                value={{
+                  amount: "4321.00",
+                  currency: settings.default_currency
+                }}
+              />
               {", "}
               <Money value={{ amount: "-1590.42", currency: "EUR" }} />
             </Col>
