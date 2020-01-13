@@ -1,11 +1,12 @@
 import {
   EllipsisOutlined,
+  MinusCircleOutlined,
   PlusCircleOutlined,
   SwapOutlined
 } from "@ant-design/icons";
 import { message } from "antd";
 import { Popover } from "antd-mobile";
-import React from "react";
+import React, { useState } from "react";
 import { setQueryData, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { postTransaction } from "../../dao/transactions";
@@ -18,11 +19,24 @@ const TransactionCreate = () => {
     refetchQueries: ["items/transactions"]
   });
   const history = useHistory();
+  const [type, setType] = useState<"expense" | "income">("expense");
+  const title = type === "expense" ? "Add Expense" : "Add Income";
 
-  useTitle(`Add Expense`);
+  const changeTypeItem = (
+    <Popover.Item
+      key={type === "expense" ? "income" : "expense"}
+      icon={
+        type === "expense" ? <PlusCircleOutlined /> : <MinusCircleOutlined />
+      }
+    >
+      {type === "expense" ? "Add Income" : "Add Expense"}
+    </Popover.Item>
+  );
+
+  useTitle(title);
   return (
     <BaseModule
-      title="Add Expense"
+      title={title}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -30,15 +44,15 @@ const TransactionCreate = () => {
         <Popover
           mask
           overlay={[
-            <Popover.Item key="income" icon={<PlusCircleOutlined />}>
-              Add Income
-            </Popover.Item>,
+            changeTypeItem,
             <Popover.Item key="transfer" icon={<SwapOutlined />}>
               Transfer
             </Popover.Item>
           ]}
           onSelect={item => {
-            console.log("overlay select", item.key);
+            if (["expense", "income"].includes(item.key)) {
+              setType(item.key);
+            }
           }}
         >
           <EllipsisOutlined />
@@ -46,6 +60,7 @@ const TransactionCreate = () => {
       }
     >
       <TransactionForm
+        data={{ type } as any}
         onSave={async data => {
           try {
             const tx = await mutate(data);
