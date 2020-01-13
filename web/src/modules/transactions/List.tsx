@@ -44,10 +44,14 @@ const renderTransaction = (
         }
       >
         <DateTime value={tx.datetime} />
+        {tx.payee || tx.category ? " - " : ""}
+        {tx.payee?.label ?? tx.category?.name}
         <List.Item.Brief>
-          {tx.payee?.label} {tx.category?.name} {tx.text}
+          {tx.text || tx.category?.name || <em>uncategorized</em>}{" "}
           {tx.tags.map(t => (
-            <Tag color={t.color}>{t.label}</Tag>
+            <Tag key={t.pk} color={t.color}>
+              {t.label}
+            </Tag>
           ))}
         </List.Item.Brief>
       </List.Item>

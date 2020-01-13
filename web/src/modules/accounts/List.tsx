@@ -10,6 +10,7 @@ import BaseList from "../base/BaseList";
 const renderAccount = (history: History, account: Account) => {
   return (
     <List.Item
+      key={account.pk}
       thumb={<>{account.icon}</>}
       extra={
         <Money
