@@ -74,8 +74,9 @@ class Account(models.Model):
         aggregate = self.transactions.filter(datetime__gte=self.initial_date).aggregate(
             Sum("amount")
         )
-        self.balance = aggregate["amount__sum"]
-        self.save()
+        if aggregate["amount__sum"]:
+            self.balance = aggregate["amount__sum"]
+            self.save()
 
     def transfer(self, *, to, amount, conversion_rate=1, text=None, date=None):
         if text is None:
