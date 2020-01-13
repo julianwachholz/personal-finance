@@ -1,78 +1,42 @@
-import { Button } from "antd";
-import { ColumnsType } from "antd/lib/table/Table";
+import { List } from "antd-mobile";
+import { History } from "history";
 import React from "react";
-import { useMutation } from "react-query";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Money from "../../components/data/Money";
-import { Account, moveAccount, useAccounts } from "../../dao/accounts";
-import BaseTable, {
-  BaseTableLocationState,
-  getColumnFilter,
-  getColumnSort
-} from "../base/BaseTable";
+import { Account, useAccounts } from "../../dao/accounts";
+import { UseItemsPaginated } from "../../dao/base";
+import BaseList from "../base/BaseList";
 
-const Accounts = ({ match }: RouteComponentProps) => {
-  const [move] = useMutation(moveAccount, {
-    refetchQueries: ["items/accounts"]
-  });
-
-  const location = useLocation<BaseTableLocationState>();
-  const columns: ColumnsType<Account> = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      render(_, account) {
-        return <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>;
-      },
-      ...getColumnSort("name", location.state)
-    },
-    {
-      title: "Institution",
-      dataIndex: "institution",
-      ...getColumnSort("institution", location.state)
-    },
-    {
-      title: "Balance",
-      dataIndex: "balance",
-      align: "right",
-      filters: [
-        { text: "SFr.", value: "currency=CHF" },
-        { text: "€", value: "currency=EUR" },
-        { text: "US$", value: "currency=USD" }
-      ],
-      render(balance, account) {
-        return (
-          <Money value={{ amount: balance, currency: account.currency }} />
-        );
-      },
-      ...getColumnSort("balance", location.state),
-      ...getColumnFilter("currency", location.state, true)
-    },
-    {
-      align: "right",
-      render(_, account) {
-        return <Link to={`${match.url}/${account.pk}/edit`}>Edit</Link>;
+const renderAccount = (history: History, account: Account) => {
+  return (
+    <List.Item
+      extra={
+        <Money
+          value={{ amount: account.balance, currency: account.currency }}
+        />
       }
-    }
-  ];
+      onClick={() => {
+        history.push(`/accounts/${account.pk}`);
+      }}
+    >
+      {account.label}
+      <List.Item.Brief>{account.institution}</List.Item.Brief>
+    </List.Item>
+  );
+};
+
+const AccountsList = () => {
+  const history = useHistory();
+  // const [create] = useMutation(postTag);
 
   return (
-    <BaseTable<Account>
+    <BaseList
       itemName="Account"
       itemNamePlural="Accounts"
-      useItems={useAccounts}
-      columns={columns}
-      isSortable
-      onMove={(pk, pos) => {
-        move({ pk, pos });
-      }}
-      actions={[
-        <Link key="create" to={`${match.url}/create`}>
-          <Button type="primary">Create Account</Button>
-        </Link>
-      ]}
+      useItems={useAccounts as UseItemsPaginated<Account>}
+      renderRow={renderAccount.bind(null, history)}
     />
   );
 };
 
-export default Accounts;
+export default AccountsList;

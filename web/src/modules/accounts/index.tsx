@@ -1,10 +1,14 @@
 import React from "react";
+import { isMobile } from "react-device-detect";
 import { Route, RouteComponentProps, Switch } from "react-router";
 import AccountCreate from "./Create";
 import AccountDelete from "./Delete";
 import Account from "./Detail";
 import AccountEdit from "./Edit";
-import Accounts from "./List";
+import AccountsList from "./List";
+import AccountsTable from "./Table";
+
+const Accounts = isMobile ? AccountsList : AccountsTable;
 
 const Module = ({ match }: RouteComponentProps) => (
   <Switch>
