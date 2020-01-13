@@ -1,6 +1,9 @@
 from django.db.models import F
-from django.db.models.signals import post_delete, post_save, pre_save
+from django.db.models.signals import m2m_changed, post_delete, post_save, pre_save
 from django.dispatch import receiver
+from django.utils.timezone import now
+
+from apps.tags.models import Tag
 
 from .models import Transaction
 
@@ -8,6 +11,7 @@ from .models import Transaction
 @receiver(pre_save, sender=Transaction)
 def pre_save_transaction(sender, instance, **kwargs):
     if instance.pk is None:
+        # New transaction is handled by post_save signal.
         return
     try:
         old_tx = Transaction.objects.get(pk=instance.pk)
@@ -40,3 +44,14 @@ def post_save_transaction(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=Transaction)
 def post_delete_transaction(sender, instance, **kwargs):
     instance.account.reconcile()
+
+
+@receiver(m2m_changed, sender=Transaction.tags.through)
+def transaction_tags_changed(sender, action, pk_set, **kwargs):
+    if action in ("pre_remove", "pre_clear"):
+        Tag.objects.filter(pk__in=pk_set).update(use_count=F("use_count") - 1)
+
+    if action == "pre_add":
+        Tag.objects.filter(pk__in=pk_set).update(
+            use_count=F("use_count") + 1, last_used=now()
+        )
