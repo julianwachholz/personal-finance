@@ -6,7 +6,8 @@ import {
   PieChartOutlined,
   ProjectOutlined,
   SettingOutlined,
-  TagOutlined,
+  ShopOutlined,
+  TagsOutlined,
   ToolOutlined,
   UserOutlined
 } from "@ant-design/icons";
@@ -63,12 +64,12 @@ const menuItems: MenuItem[] = [
       },
       {
         path: "/settings/tags",
-        icon: <TagOutlined />,
+        icon: <TagsOutlined />,
         text: "Tags"
       },
       {
         path: "/settings/payees",
-        icon: <TagOutlined />,
+        icon: <ShopOutlined />,
         text: "Payees"
       },
       {

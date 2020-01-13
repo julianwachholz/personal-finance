@@ -2,7 +2,7 @@ import {
   BankOutlined,
   HistoryOutlined,
   PieChartOutlined,
-  TagsOutlined
+  ShopOutlined
 } from "@ant-design/icons";
 import { Layout } from "antd";
 import { TabBar } from "antd-mobile";
@@ -49,12 +49,12 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title="Tags"
-          icon={<TagsOutlined />}
-          selectedIcon={<TagsOutlined />}
-          selected={pathname.startsWith(`/settings/tags`)}
+          title="Payees"
+          icon={<ShopOutlined />}
+          selectedIcon={<ShopOutlined />}
+          selected={pathname.startsWith(`/settings/payees`)}
           onPress={() => {
-            history.push(`/settings/tags`);
+            history.push(`/settings/payees`);
           }}
         />
       </TabBar>

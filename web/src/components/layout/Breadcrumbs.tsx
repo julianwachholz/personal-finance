@@ -1,8 +1,4 @@
-import {
-  HomeOutlined,
-  LoadingOutlined,
-  RightOutlined
-} from "@ant-design/icons";
+import { HomeOutlined, RightOutlined, SyncOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import React from "react";
 import { QueryResult, useIsFetching } from "react-query";
@@ -90,7 +86,7 @@ const Breadcrumbs = () => {
 
   items.unshift(
     <Breadcrumb.Item key="/">
-      <Link to="/">{spinning ? <LoadingOutlined /> : <HomeOutlined />}</Link>
+      <Link to="/">{spinning ? <SyncOutlined spin /> : <HomeOutlined />}</Link>
     </Breadcrumb.Item>
   );
 

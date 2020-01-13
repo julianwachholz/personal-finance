@@ -12,7 +12,7 @@ class Payee(models.Model):
 
     TYPE_BUSINESS = "business"
     TYPE_PRIVATE = "private"
-    TYPE_CHOICES = (("business", _("business")), ("private", _("private")))
+    TYPE_CHOICES = (("business", _("business")), ("private", _("person")))
 
     name = CICharField(verbose_name=_("name"), max_length=100)
 
