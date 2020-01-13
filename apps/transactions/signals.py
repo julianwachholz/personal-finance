@@ -7,14 +7,18 @@ from .models import Transaction
 
 @receiver(pre_save, sender=Transaction)
 def pre_save_transaction(sender, instance, **kwargs):
+    if instance.pk is None:
+        return
     try:
-        current = Transaction.objects.get(pk=instance.pk)
+        old_tx = Transaction.objects.get(pk=instance.pk)
+
+        # Fix account balance if a transaction was moved to another account.
         if (
-            instance.account != current.account
-            and current.account.initial_date < current.datetime
+            instance.account != old_tx.account
+            and old_tx.account.initial_date < old_tx.datetime
         ):
-            current.account.balance = F("balance") - current.amount
-            current.account.save()
+            old_tx.account.balance = F("balance") - old_tx.amount
+            old_tx.account.save()
     except Transaction.DoesNotExist:
         pass
 
@@ -22,15 +26,15 @@ def pre_save_transaction(sender, instance, **kwargs):
 @receiver(post_save, sender=Transaction)
 def post_save_transaction(sender, instance, created, **kwargs):
     """
-    Update the transaction account balance.
-
+    Update account balance when a transaction was created or updated.
     """
-    if created and not instance.is_initial:
-        if instance.account.initial_date < instance.datetime:
-            instance.account.balance = F("balance") + instance.amount
-            instance.account.save()
+    tx = instance
+    if created and not tx.is_initial:
+        if tx.account.initial_date < tx.datetime:
+            tx.account.balance = F("balance") + tx.amount
+            tx.account.save()
     else:
-        instance.account.reconcile()
+        tx.account.reconcile()
 
 
 @receiver(post_delete, sender=Transaction)
