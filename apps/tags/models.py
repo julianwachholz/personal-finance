@@ -26,7 +26,6 @@ class Tag(models.Model):
         verbose_name = _("tag")
         verbose_name_plural = _("tags")
         unique_together = ("user", "name")
-        ordering = ("name",)
 
     def __str__(self):
         return f"#{self.name}"
