@@ -6,7 +6,7 @@ import "./BaseModule.scss";
 const BaseModule: React.FC<PageHeaderProps> = ({ children, ...props }) => (
   <div className="module">
     <AppHeader {...props} />
-    {children}
+    <div className="module-content">{children}</div>
   </div>
 );
 

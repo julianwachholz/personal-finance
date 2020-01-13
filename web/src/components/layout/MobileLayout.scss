@@ -17,7 +17,7 @@
     border-bottom: 1px solid #ddd;
   }
 
-  .module-list {
+  .module {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -26,9 +26,20 @@
       flex-grow: 0;
       flex-shrink: 0;
     }
-    .am-list-wrap {
-      flex-grow: 1;
-      overflow: auto;
+  }
+  .module-list > .am-list-wrap,
+  .module-content {
+    flex-grow: 1;
+    overflow: auto;
+  }
+  .module-content {
+    padding: 16px;
+  }
+
+  .ant-tree {
+    font-size: 16px;
+    .ant-tree-treenode {
+      padding-bottom: 10px;
     }
   }
 }
