@@ -21,7 +21,7 @@ import {
 } from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
-const Payees = ({ match }: RouteComponentProps) => {
+const PayeeTable = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
@@ -135,4 +135,4 @@ const Payees = ({ match }: RouteComponentProps) => {
   );
 };
 
-export default Payees;
+export default PayeeTable;

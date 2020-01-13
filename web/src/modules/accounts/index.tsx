@@ -5,10 +5,10 @@ import AccountCreate from "./Create";
 import AccountDelete from "./Delete";
 import Account from "./Detail";
 import AccountEdit from "./Edit";
-import AccountsList from "./List";
-import AccountsTable from "./Table";
+import AccountList from "./List";
+import AccountTable from "./Table";
 
-const Accounts = isMobile ? AccountsList : AccountsTable;
+const Accounts = isMobile ? AccountList : AccountTable;
 
 const Module = ({ match }: RouteComponentProps) => (
   <Switch>

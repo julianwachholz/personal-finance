@@ -2,10 +2,10 @@ import React from "react";
 import { isMobile } from "react-device-detect";
 import { Route, RouteComponentProps, Switch } from "react-router";
 import Tag from "./Detail";
-import PayeesList from "./List";
-import PayeesTable from "./Table";
+import PayeeList from "./List";
+import PayeeTable from "./Table";
 
-const Payees = isMobile ? PayeesList : PayeesTable;
+const Payees = isMobile ? PayeeList : PayeeTable;
 
 const Module = ({ match }: RouteComponentProps) => (
   <Switch>

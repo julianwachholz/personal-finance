@@ -7,6 +7,7 @@ export interface Settings {
   default_credit_category?: number;
   decimal_separator: string;
   group_separator: string;
+  use_colors: boolean;
   date_format: string;
 }
 

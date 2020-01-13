@@ -37,13 +37,15 @@ const renderPayee = (
         }}
       >
         {payee.label}
-        <List.Item.Brief>{payee.default_category?.label}</List.Item.Brief>
+        {payee.default_category && (
+          <List.Item.Brief>{payee.default_category?.label}</List.Item.Brief>
+        )}
       </List.Item>
     </SwipeAction>
   );
 };
 
-const PayeesList = () => {
+const PayeeList = () => {
   const history = useHistory();
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
@@ -62,4 +64,4 @@ const PayeesList = () => {
   );
 };
 
-export default PayeesList;
+export default PayeeList;

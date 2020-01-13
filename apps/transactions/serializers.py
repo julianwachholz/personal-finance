@@ -16,13 +16,15 @@ class RelatedSerializer(serializers.ModelSerializer):
 class AccountSerializer(RelatedSerializer):
     class Meta:
         model = Account
-        fields = ("pk", "label")
+        fields = ("pk", "label", "icon")
 
 
 class CategorySerializer(RelatedSerializer):
+    icon = serializers.CharField(source="get_icon", read_only=True)
+
     class Meta:
         model = Category
-        fields = ("pk", "label")
+        fields = ("pk", "label", "name", "icon")
 
 
 class PayeeSerializer(RelatedSerializer):

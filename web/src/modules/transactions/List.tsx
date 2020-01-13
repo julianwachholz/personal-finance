@@ -1,132 +1,77 @@
-import { SwapOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
-import React, { useState } from "react";
-import { setQueryData, useMutation } from "react-query";
-import { prefetchCategoryTree } from "../../dao/categories";
-import { Payee, postPayee } from "../../dao/payees";
+import { DeleteFilled, SwapOutlined } from "@ant-design/icons";
+import { message, Tag } from "antd";
+import { List, SwipeAction } from "antd-mobile";
+import React from "react";
+import { MutateFunction, useMutation } from "react-query";
+import DateTime from "../../components/data/Date";
+import Money from "../../components/data/Money";
+import { UseItemsPaginated } from "../../dao/base";
 import {
-  bulkDeleteTransactions,
-  postTransaction,
-  putTransaction,
+  deleteTransaction,
   Transaction,
   useTransactions
 } from "../../dao/transactions";
-import { useAuth } from "../../utils/AuthProvider";
-import { default as BaseEditableTable } from "../base/BaseEditableTable";
-import getGetColumns from "./columns";
-import TransferForm from "./TransferForm";
+import BaseList from "../base/BaseList";
 
-const Transactions = () => {
-  const { settings } = useAuth();
-  const [transferModalVisible, setTransferModalVisible] = useState(false);
-
-  const [create] = useMutation(postTransaction);
-  const [update] = useMutation(putTransaction);
-  prefetchCategoryTree();
-
-  const [bulkDelete] = useMutation(bulkDeleteTransactions, {
-    refetchQueries: ["items/transactions"]
-  });
-
-  const [createPayee] = useMutation(postPayee);
-
-  const getColumns = getGetColumns({
-    async createPayee(name) {
-      const data = { name } as Payee;
-      const payee = await createPayee(data);
-      setQueryData([`item/payees`, { pk: payee.pk }], payee);
-      return payee;
-    }
-  });
-
+const renderTransaction = (
+  doDelete: MutateFunction<void, Transaction>,
+  tx: Transaction
+) => {
+  let icon: React.ReactNode = tx.category?.icon ?? tx.account.icon;
+  if (tx.is_transfer) {
+    icon = <SwapOutlined />;
+  }
   return (
-    <BaseEditableTable<Transaction>
-      itemName="Transaction"
-      itemNamePlural="Transactions"
-      useItems={useTransactions}
-      getColumns={getColumns}
-      editable
-      isEditable={tx => !tx.is_initial}
-      inlineCreateButtons={[
-        {
-          key: "create-income",
-          label: "Add Income",
-          buttonProps: {
-            type: "primary"
-          },
-          defaultValues: {
-            type: "income",
-            set_account: settings?.default_credit_account,
-            set_category: settings?.default_credit_category
+    <SwipeAction
+      key={tx.pk}
+      left={
+        [
+          {
+            text: <DeleteFilled />,
+            style: { width: 48, backgroundColor: "#f00", color: "#fff" },
+            async onPress() {
+              await doDelete();
+              message.info(`Deleted Transaction #${tx.pk}`);
+            }
           }
-        },
-        {
-          key: "create-expense",
-          label: "Add Expense",
-          buttonProps: {
-            type: "primary"
-          },
-          defaultValues: {
-            type: "expense",
-            set_account: settings?.default_debit_account
-          }
-        }
-      ]}
-      onSave={async tx => {
-        const isNew = tx.pk === 0;
-        if (isNew && tx.type === "expense" && tx.amount[0] !== "-") {
-          tx.amount = `-${tx.amount}`;
-        }
-        if (!tx.set_category) {
-          tx.set_category = null;
-        }
-        if (!tx.set_payee) {
-          tx.set_payee = null;
-        }
-        try {
-          const savedTx = isNew
-            ? await create(tx)
-            : await update(tx, {
-                updateQuery: ["item/transactions", { pk: tx.pk }]
-              });
-          message.success(`Transaction ${isNew ? "created" : "updated"}`);
-          return savedTx;
-        } catch (e) {
-          message.error(`Transaction ${isNew ? "create" : "update"} failed`);
-          throw e;
-        }
-      }}
-      defaultValues={{
-        datetime: () => new Date()
-      }}
-      actions={[
-        <Button
-          key="transfer"
-          icon={<SwapOutlined />}
-          onClick={() => {
-            setTransferModalVisible(true);
-          }}
-        >
-          Transfer
-        </Button>
-      ]}
-      bulkActions={[
-        {
-          key: "delete",
-          name: "Delete transactions",
-          async action(pks) {
-            const { deleted } = await bulkDelete({ pks });
-            message.info(`Deleted ${deleted} transactions`);
-          }
-        }
-      ]}
+        ] as any
+      }
     >
-      <TransferForm
-        visible={transferModalVisible}
-        onVisible={setTransferModalVisible}
-      />
-    </BaseEditableTable>
+      <List.Item
+        thumb={<>{icon}</>}
+        extra={
+          <Money value={{ amount: tx.amount, currency: tx.amount_currency }} />
+        }
+      >
+        <DateTime value={tx.datetime} />
+        <List.Item.Brief>
+          {tx.payee?.label} {tx.category?.name} {tx.text}
+          {tx.tags.map(t => (
+            <Tag color={t.color}>{t.label}</Tag>
+          ))}
+        </List.Item.Brief>
+      </List.Item>
+    </SwipeAction>
   );
 };
 
-export default Transactions;
+const TransactionList = () => {
+  //   const history = useHistory();
+  const [doDelete] = useMutation(deleteTransaction, {
+    refetchQueries: ["items/transactions"]
+  });
+  // const [edit] = useMutation(putTag);
+  // const [create] = useMutation(postTag);
+  // const location = useLocation<BaseTableLocationState>();
+
+  return (
+    <BaseList
+      itemName="Transaction"
+      itemNamePlural="Transactions"
+      useItems={useTransactions as UseItemsPaginated<Transaction>}
+      renderRow={renderTransaction.bind(null, doDelete)}
+    />
+  );
+};
+
+export default TransactionList;

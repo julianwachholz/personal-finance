@@ -46,7 +46,7 @@ const renderTag = (
   );
 };
 
-const TagsList = () => {
+const TagList = () => {
   const history = useHistory();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
@@ -66,4 +66,4 @@ const TagsList = () => {
   );
 };
 
-export default TagsList;
+export default TagList;

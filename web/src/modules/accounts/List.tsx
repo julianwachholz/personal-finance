@@ -10,6 +10,7 @@ import BaseList from "../base/BaseList";
 const renderAccount = (history: History, account: Account) => {
   return (
     <List.Item
+      thumb={<>{account.icon}</>}
       extra={
         <Money
           value={{ amount: account.balance, currency: account.currency }}
@@ -19,13 +20,15 @@ const renderAccount = (history: History, account: Account) => {
         history.push(`/accounts/${account.pk}`);
       }}
     >
-      {account.label}
-      <List.Item.Brief>{account.institution}</List.Item.Brief>
+      {account.name}
+      {account.institution && (
+        <List.Item.Brief>{account.institution}</List.Item.Brief>
+      )}
     </List.Item>
   );
 };
 
-const AccountsList = () => {
+const AccountList = () => {
   const history = useHistory();
   // const [create] = useMutation(postTag);
 
@@ -39,4 +42,4 @@ const AccountsList = () => {
   );
 };
 
-export default AccountsList;
+export default AccountList;

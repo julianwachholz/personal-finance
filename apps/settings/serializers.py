@@ -15,5 +15,6 @@ class SettingsSerializer(serializers.ModelSerializer):
             "default_credit_category",
             "decimal_separator",
             "group_separator",
+            "use_colors",
             "date_format",
         )

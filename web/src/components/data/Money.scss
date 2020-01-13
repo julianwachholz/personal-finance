@@ -1,11 +1,24 @@
 .money {
   white-space: nowrap;
 
+  &.money-colors {
+    &.money-negative {
+      color: hsl(357, 91%, 50%);
+    }
+    &.money-positive {
+      color: hsl(100, 77%, 33%);
+    }
+  }
+
   .amount {
     font-variant: tabular-nums;
     font-feature-settings: "tnum";
   }
+  .sign {
+    display: inline-block;
+    padding: 0 3px 0 2px;
+  }
   .currency {
-    opacity: 0.8;
+    opacity: 0.7;
   }
 }

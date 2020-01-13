@@ -44,6 +44,10 @@ class Settings(models.Model):
     group_separator = models.CharField(
         verbose_name=_("group / thousand separator"), max_length=3, default=" "
     )
+    use_colors = models.BooleanField(
+        verbose_name=_("colorize currency values?"), default=True
+    )
+
     date_format = models.CharField(
         verbose_name=_("date format"), max_length=100, blank=True
     )

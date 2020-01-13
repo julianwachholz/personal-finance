@@ -1,8 +1,9 @@
-import { Button, Form, Input, Radio, Switch, Tag } from "antd";
+import { Button, Col, Form, Input, Radio, Row, Switch } from "antd";
 import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
+import Money from "../../components/data/Money";
 import CategorySelect from "../../components/form/CategorySelect";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import ModelSelect from "../../components/form/ModelSelect";
@@ -86,14 +87,14 @@ const getNumberFormat = (settings: Settings): NumberFormatName => {
   return "default";
 };
 
-type SaveStatus = null | "saving" | "saved";
-
 const Preferences = () => {
   const [form] = Form.useForm();
   const { settings } = useAuth();
   const { theme, toggleTheme, tableSize, setTableSize } = useSettings();
   const [mutate] = useMutation(patchSettings, { refetchQueries: ["user"] });
-  const [status, setStatus] = useState<SaveStatus>(null);
+
+  const [savingKeys, setSavingKeys] = useState<string[]>([]);
+  const [savedKeys, setSavedKeys] = useState<string[]>([]);
 
   useTitle(`Preferences`);
 
@@ -102,30 +103,38 @@ const Preferences = () => {
   }
 
   const onChange = async (values: Partial<Settings> & NumberFormatSetter) => {
-    setStatus("saving");
+    const keys = Object.keys(values);
+    setSavingKeys(keys);
     if (values.number_format) {
       values = numberFormats[values.number_format];
     }
     await mutate(values);
     setTimeout(() => {
-      setStatus("saved");
+      setSavingKeys([]);
+      setSavedKeys(keys);
     }, 100);
     setTimeout(() => {
-      setStatus(null);
-    }, 2500);
+      setSavedKeys([]);
+    }, 2000);
   };
 
   const now = new Date();
-  const tags: React.ReactElement<Tag>[] = [];
-  if (status === "saving") {
-    tags.push(<Tag color="processing">Saving...</Tag>);
-  }
-  if (status === "saved") {
-    tags.push(<Tag color="success">All changes saved!</Tag>);
-  }
+  const feedbackFor = (name: string) => {
+    let validateStatus: "validating" | "success" | undefined;
+    if (savingKeys.includes(name)) {
+      validateStatus = "validating";
+    }
+    if (savedKeys.includes(name)) {
+      validateStatus = "success";
+    }
+    return {
+      hasFeedback: validateStatus !== undefined,
+      validateStatus
+    };
+  };
 
   return (
-    <BaseModule title="Options" tags={tags}>
+    <BaseModule title="Options">
       <Form
         form={form}
         layout="vertical"
@@ -136,22 +145,39 @@ const Preferences = () => {
         onValuesChange={debounce(onChange, 100, true)}
         wrapperCol={{ span: 14 }}
       >
-        <Form.Item name="default_currency" label="Default Currency">
+        <Form.Item
+          name="default_currency"
+          label="Default Currency"
+          {...feedbackFor("default_currency")}
+        >
           <CurrencySelect />
         </Form.Item>
-        <Form.Item name="default_debit_account" label="Default Debit Account">
+        <Form.Item
+          name="default_debit_account"
+          label="Default Debit Account"
+          {...feedbackFor("default_debit_account")}
+        >
           <ModelSelect useItems={useAccounts} />
         </Form.Item>
-        <Form.Item name="default_credit_account" label="Default Credit Account">
+        <Form.Item
+          name="default_credit_account"
+          label="Default Credit Account"
+          {...feedbackFor("default_credit_account")}
+        >
           <ModelSelect useItems={useAccounts} />
         </Form.Item>
         <Form.Item
           name="default_credit_category"
           label="Default Credit Category"
+          {...feedbackFor("default_credit_category")}
         >
           <CategorySelect size="middle" />
         </Form.Item>
-        <Form.Item name="number_format" label="Number Format">
+        <Form.Item
+          name="number_format"
+          label="Number Format"
+          {...feedbackFor("number_format")}
+        >
           <Radio.Group>
             {Object.entries(numberFormats).map(([k, v]) => (
               <Radio.Button key={k} value={k}>
@@ -161,9 +187,28 @@ const Preferences = () => {
           </Radio.Group>
         </Form.Item>
         <Form.Item
+          label="Use Colors?"
+          htmlFor="use_colors"
+          {...feedbackFor("use_colors")}
+        >
+          <Row>
+            <Col span={4}>
+              <Form.Item name="use_colors" noStyle valuePropName="checked">
+                <Switch loading={savingKeys.includes("use_colors")} />
+              </Form.Item>
+            </Col>
+            <Col span={20}>
+              Examples: <Money value={{ amount: "4321.00", currency: "USD" }} />
+              {", "}
+              <Money value={{ amount: "-1590.42", currency: "EUR" }} />
+            </Col>
+          </Row>
+        </Form.Item>
+        <Form.Item
           name="date_format"
           label="Date Format"
           style={{ marginBottom: 6 }}
+          {...feedbackFor("date_format")}
         >
           <InputFormat />
         </Form.Item>

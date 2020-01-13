@@ -16,7 +16,7 @@ import BaseEditableTable from "../base/BaseEditableTable";
 import { BaseTableLocationState, getColumnSort } from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
-const TagsTable = ({ match }: RouteComponentProps) => {
+const TagTable = ({ match }: RouteComponentProps) => {
   const { tableSize } = useSettings();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
@@ -103,4 +103,4 @@ const TagsTable = ({ match }: RouteComponentProps) => {
   );
 };
 
-export default TagsTable;
+export default TagTable;

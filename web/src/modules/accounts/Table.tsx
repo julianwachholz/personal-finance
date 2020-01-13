@@ -11,7 +11,7 @@ import BaseTable, {
   getColumnSort
 } from "../base/BaseTable";
 
-const AccountsTable = ({ match }: RouteComponentProps) => {
+const AccountTable = ({ match }: RouteComponentProps) => {
   const [move] = useMutation(moveAccount, {
     refetchQueries: ["items/accounts"]
   });
@@ -75,4 +75,4 @@ const AccountsTable = ({ match }: RouteComponentProps) => {
   );
 };
 
-export default AccountsTable;
+export default AccountTable;

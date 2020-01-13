@@ -8,6 +8,7 @@ interface Currency {
   name: string;
   prefix?: string;
   suffix?: string;
+  sign?: "before-amount" | "before-symbol" | "after-amount";
 }
 
 export const CURRENCY_FORMATS: Record<string, Currency> = {
@@ -31,7 +32,7 @@ export const CURRENCY_FORMATS: Record<string, Currency> = {
   RUB: { code: "RUB", name: "Russian Ruble", suffix: "₽" },
   SEK: { code: "SEK", name: "Swedish Krona", suffix: " Skr" },
   THB: { code: "THB", name: "Thai Baht", prefix: "฿" },
-  USD: { code: "USD", name: "U.S. Dollar", prefix: "$" }
+  USD: { code: "USD", name: "U.S. Dollar", prefix: "$", sign: "before-symbol" }
 };
 
 export interface Money {
@@ -55,10 +56,17 @@ const Money = ({ value, precision }: MoneyProps) => {
   const groupSeparator = settings?.group_separator ?? "\xa0";
   const decimalSeparator = settings?.decimal_separator ?? ".";
 
+  const format = CURRENCY_FORMATS[value.currency];
+  let sign = "";
+  let negative = false;
+
   if (!cells) {
     amount = value.amount;
   } else {
-    const negative = cells[1];
+    sign = cells[1];
+    if (sign === "-") {
+      negative = true;
+    }
     let int = cells[2] || "0";
     let decimal = cells[4] || "";
     int = int.replace(/\B(?=(\d{3})+(?!\d))/g, groupSeparator);
@@ -71,7 +79,10 @@ const Money = ({ value, precision }: MoneyProps) => {
     }
     amount = [
       <span key="int" className={`value-int`}>
-        {negative}
+        {sign &&
+          (format.sign === undefined || format.sign === "before-amount") && (
+            <span className="sign">{sign}</span>
+          )}
         {int}
       </span>,
       decimal && (
@@ -82,13 +93,25 @@ const Money = ({ value, precision }: MoneyProps) => {
     ];
   }
 
-  const format = CURRENCY_FORMATS[value.currency];
-
   return (
-    <span className="money">
-      <span className="currency prefix">{format.prefix}</span>
+    <span
+      className={`money ${settings?.use_colors ? "money-colors" : ""} money-${
+        negative ? "negative" : "positive"
+      }`}
+    >
+      {sign && format.sign === "before-symbol" && (
+        <span className="sign">{sign}</span>
+      )}
+      {format.prefix && (
+        <span className="currency prefix">{format.prefix}</span>
+      )}
       <span className="amount">{amount}</span>
-      <span className="currency suffix">{format.suffix}</span>
+      {sign && format.sign === "after-amount" && (
+        <span className="sign">{sign}</span>
+      )}
+      {format.suffix && (
+        <span className="currency suffix">{format.suffix}</span>
+      )}
     </span>
   );
 };

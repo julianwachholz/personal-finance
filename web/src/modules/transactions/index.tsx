@@ -1,6 +1,10 @@
 import React from "react";
+import { isMobile } from "react-device-detect";
 import { Route, RouteComponentProps, Switch } from "react-router";
-import Transactions from "./List";
+import TransactionList from "./List";
+import TransactionTable from "./Table";
+
+const Transactions = isMobile ? TransactionList : TransactionTable;
 
 const Module = ({ match }: RouteComponentProps) => (
   <Switch>

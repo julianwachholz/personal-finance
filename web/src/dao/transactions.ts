@@ -1,4 +1,5 @@
 import {
+  makeDeleteItem,
   makeItemsAction,
   makePostItem,
   makePutItem,
@@ -6,12 +7,24 @@ import {
   ModelWithLabel
 } from "./base";
 
+interface HasIcon {
+  icon?: string;
+}
+
+interface HasName {
+  name: string;
+}
+
+interface HasColor {
+  color?: string;
+}
+
 export interface Transaction {
   pk: number;
-  account: ModelWithLabel;
-  category?: ModelWithLabel;
+  account: ModelWithLabel & HasIcon;
+  category?: ModelWithLabel & HasIcon & HasName;
   payee?: ModelWithLabel;
-  tags: ModelWithLabel[];
+  tags: (ModelWithLabel & HasColor)[];
 
   datetime: Date;
 
@@ -47,6 +60,8 @@ export const [useTransactions, prefetchTransactions] = makeUseItems<
 export const postTransaction = makePostItem<Transaction>("transactions");
 
 export const putTransaction = makePutItem<Transaction>("transactions");
+
+export const deleteTransaction = makeDeleteItem<Transaction>("transactions");
 
 export const bulkDeleteTransactions = makeItemsAction(
   "transactions",
