@@ -22,7 +22,7 @@ interface GetGetColumnOptions {
 }
 
 const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
-  location: Location<BaseTableLocationState>,
+  location?: Location<BaseTableLocationState>,
   form?: FormInstance
 ) => EditableColumnsType<Transaction>) => {
   return (location, form) => {
@@ -45,7 +45,7 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
         render(date: Date) {
           return <DateTime value={date} />;
         },
-        ...getColumnSort("datetime", location.state)
+        ...getColumnSort("datetime", location?.state)
       },
       {
         title: "Account",

@@ -20,6 +20,7 @@ const TransactionCreate = () => {
   });
   const history = useHistory();
   const [type, setType] = useState<"expense" | "income">("expense");
+  const [visible, setVisible] = useState(false);
   const title = type === "expense" ? "Add Expense" : "Add Income";
 
   const changeTypeItem = (
@@ -43,6 +44,8 @@ const TransactionCreate = () => {
       rightContent={
         <Popover
           mask
+          visible={visible}
+          onVisibleChange={setVisible}
           overlay={[
             changeTypeItem,
             <Popover.Item key="transfer" icon={<SwapOutlined />}>
@@ -53,6 +56,7 @@ const TransactionCreate = () => {
             if (["expense", "income"].includes(item.key)) {
               setType(item.key);
             }
+            setVisible(false);
           }}
         >
           <EllipsisOutlined />
@@ -60,7 +64,7 @@ const TransactionCreate = () => {
       }
     >
       <TransactionForm
-        data={{ type } as any}
+        type={type}
         onSave={async data => {
           try {
             const tx = await mutate(data);
