@@ -1,5 +1,5 @@
 import { DeleteFilled, PlusOutlined, SwapOutlined } from "@ant-design/icons";
-import { message, Tag } from "antd";
+import { Tag } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
 import React from "react";
@@ -14,7 +14,9 @@ import {
   Transaction,
   useTransactions
 } from "../../dao/transactions";
+import { COLOR_DANGER } from "../../utils/constants";
 import BaseList from "../base/BaseList";
+import { confirmDeleteTransaction } from "./delete";
 
 export const renderTransaction = (
   history: History,
@@ -38,14 +40,11 @@ export const renderTransaction = (
         [
           {
             text: <DeleteFilled />,
-            style: { width: 48, backgroundColor: "#ff4d4f", color: "#fff" },
-            async onPress() {
-              if (doDelete === false) {
-                console.error("delete() called with no mutate function");
-                return;
+            style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
+            onPress() {
+              if (doDelete) {
+                confirmDeleteTransaction(tx, doDelete, history);
               }
-              await doDelete(tx);
-              message.info(`Deleted Transaction #${tx.pk}`);
             }
           }
         ] as any
