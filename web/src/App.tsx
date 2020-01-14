@@ -12,7 +12,7 @@ import Budgets from "./modules/budgets";
 import Dashboard from "./modules/dashboard/Dashboard";
 import NotFound from "./modules/error/NotFound";
 import Reports from "./modules/reports";
-import Settings from "./modules/settings/Settings";
+import Settings from "./modules/settings";
 import Transactions from "./modules/transactions";
 import { useAuth } from "./utils/AuthProvider";
 import { useSettings } from "./utils/SettingsProvider";

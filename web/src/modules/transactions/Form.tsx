@@ -101,6 +101,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         date: format(date, "yyyy-MM-dd"),
         ...data
       }}
+      size="large"
     >
       <Row gutter={16}>
         <Col span={12}>
@@ -109,7 +110,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
             label="Amount"
             rules={[{ required: true, message: "Enter an amount" }]}
           >
-            <MoneyInput autoFocus fullWidth size="middle" />
+            <MoneyInput autoFocus fullWidth size="large" />
           </Form.Item>
         </Col>
 
@@ -144,7 +145,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         />
       </Form.Item>
       <Form.Item name="set_category" label="Category">
-        <CategorySelect allowClear size="middle" />
+        <CategorySelect allowClear size="large" />
       </Form.Item>
       <Form.Item name="text" label="Description">
         <Input />

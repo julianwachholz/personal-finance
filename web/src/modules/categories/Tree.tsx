@@ -96,6 +96,9 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
           <Link to={`/settings/categories/create`}>Create Category</Link>
         </Button>
       ]}
+      onLeftClick={() => {
+        history.go(-1);
+      }}
     >
       <Tree
         treeData={treeData}

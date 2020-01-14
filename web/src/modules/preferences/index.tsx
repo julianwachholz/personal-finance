@@ -3,6 +3,7 @@ import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
+import { useHistory } from "react-router";
 import Money from "../../components/data/Money";
 import CategorySelect from "../../components/form/CategorySelect";
 import CurrencySelect from "../../components/form/CurrencySelect";
@@ -88,6 +89,7 @@ const getNumberFormat = (settings: Settings): NumberFormatName => {
 };
 
 const Preferences = () => {
+  const history = useHistory();
   const [form] = Form.useForm();
   const { settings } = useAuth();
   const { theme, toggleTheme, tableSize, setTableSize } = useSettings();
@@ -134,7 +136,12 @@ const Preferences = () => {
   };
 
   return (
-    <BaseModule title="Options">
+    <BaseModule
+      title="Preferences"
+      onLeftClick={() => {
+        history.go(-1);
+      }}
+    >
       <Form
         form={form}
         layout="vertical"
@@ -143,7 +150,7 @@ const Preferences = () => {
           number_format: getNumberFormat(settings)
         }}
         onValuesChange={debounce(onChange, 100, true)}
-        wrapperCol={{ span: 14 }}
+        wrapperCol={{ xs: 24, sm: 14 }}
       >
         <Form.Item
           name="default_currency"

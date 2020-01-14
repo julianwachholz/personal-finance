@@ -62,6 +62,11 @@ const TagList = () => {
       itemNamePlural="Tags"
       useItems={useTags as UseItemsPaginated<Tag>}
       renderRow={renderTag.bind(null, history, doDelete)}
+      headerProps={{
+        onLeftClick() {
+          history.go(-1);
+        }
+      }}
     />
   );
 };

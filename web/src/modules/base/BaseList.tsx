@@ -1,6 +1,6 @@
 import { ActivityIndicator, List, WhiteSpace } from "antd-mobile";
 import React from "react";
-import AppHeader from "../../components/layout/AppHeader";
+import AppHeader, { AppHeaderProps } from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItemsPaginated } from "../../dao/base";
 import { debounce } from "../../utils/debounce";
 import useTitle from "../../utils/useTitle";
@@ -12,6 +12,7 @@ interface BaseListProps<T extends ModelWithLabel> {
   renderRow: (item: T) => React.ReactElement;
   fab?: React.ReactElement;
   actions?: React.ReactElement[];
+  headerProps?: Omit<AppHeaderProps, "title" | "extra" | "onClick">;
 }
 
 const BaseList = <T extends ModelWithLabel>({
@@ -19,7 +20,8 @@ const BaseList = <T extends ModelWithLabel>({
   useItems,
   renderRow,
   fab,
-  actions
+  actions,
+  headerProps
 }: BaseListProps<T>) => {
   const {
     data: pages,
@@ -68,6 +70,7 @@ const BaseList = <T extends ModelWithLabel>({
             behavior: "smooth"
           });
         }}
+        {...headerProps}
       />
       {fab}
       <div

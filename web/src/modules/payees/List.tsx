@@ -60,6 +60,11 @@ const PayeeList = () => {
       itemNamePlural="Payees"
       useItems={usePayees as UseItemsPaginated<Payee>}
       renderRow={renderPayee.bind(null, history, doDelete)}
+      headerProps={{
+        onLeftClick() {
+          history.go(-1);
+        }
+      }}
     />
   );
 };

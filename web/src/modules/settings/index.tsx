@@ -1,10 +1,11 @@
 import React from "react";
-import { Redirect, Route, RouteComponentProps, Switch } from "react-router";
+import { Route, RouteComponentProps, Switch } from "react-router";
 import Categories from "../categories";
 import Payees from "../payees";
 import Preferences from "../preferences";
 import Profile from "../profile";
 import Tags from "../tags";
+import SettingsMenu from "./Menu";
 
 const Settings = ({ match }: RouteComponentProps) => (
   <Switch>
@@ -13,10 +14,7 @@ const Settings = ({ match }: RouteComponentProps) => (
     <Route path={`${match.url}/payees`} component={Payees} />
     <Route path={`${match.url}/preferences`} component={Preferences} />
     <Route path={`${match.url}/user`} component={Profile} />
-    <Route
-      path={match.url}
-      render={() => <Redirect to="/settings/preferences" />}
-    />
+    <Route path={match.url} component={SettingsMenu} />
   </Switch>
 );
 
