@@ -1,4 +1,5 @@
-import { message, Spin } from "antd";
+import { DeleteFilled } from "@ant-design/icons";
+import { message, Modal, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
@@ -26,17 +27,33 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   }
 
   return (
-    <BaseModule title={`Edit ${category.label}`}>
+    <BaseModule
+      title={`Edit ${category.label}`}
+      onLeftClick={() => {
+        history.go(-2);
+      }}
+      rightContent={
+        <DeleteFilled
+          onClick={() => {
+            Modal.confirm({
+              title: `Delete Category "${category.label}"?`,
+              icon: <DeleteFilled />,
+              content:
+                "This will delete the category and remove it from all associated transactions.",
+              okText: "Delete",
+              okButtonProps: { type: "danger" }
+            });
+          }}
+        />
+      }
+    >
       <CategoryForm
         data={category}
         onSave={async data => {
           try {
-            await mutate(
-              { pk, ...data },
-              { updateQuery: ["item/categories", { pk }] }
-            );
+            await mutate(data, { updateQuery: ["item/categories", { pk }] });
             message.success("Category updated");
-            history.push(`/settings/categories/${pk}`);
+            history.push(`/settings/categories`);
           } catch (e) {
             message.error("Category update failed");
             throw e;

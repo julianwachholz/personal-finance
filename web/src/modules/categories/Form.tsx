@@ -1,5 +1,6 @@
 import { Button, Col, Form, Input, Row, Select } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { BrowserView, isMobile } from "react-device-detect";
 import { Link } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import ColorSelect from "../../components/form/ColorSelect";
@@ -35,20 +36,27 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      form.setFieldsValue({ set_color: data.my_color, set_icon: data.my_icon });
+    }
+  }, [data]);
+
   return (
     <Form
       form={form}
       layout="vertical"
       onFinish={onSubmit}
       initialValues={{ position: "first-child", ...data }}
+      size={isMobile ? "large" : "middle"}
     >
       <Row gutter={16}>
-        <Col span={2}>
+        <Col xs={4} sm={2}>
           <Form.Item name="set_icon" label="Icon">
             <Input placeholder="📗" style={{ textAlign: "center" }} />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={20} sm={12}>
           <Form.Item
             name="name"
             label="Name"
@@ -58,12 +66,12 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="set_color" label="Color" wrapperCol={{ span: 10 }}>
+      <Form.Item name="set_color" label="Color">
         <ColorSelect />
       </Form.Item>
       {!data && (
         <Row gutter={16}>
-          <Col span={6}>
+          <Col xs={10} sm={4}>
             <Form.Item name="position" label="Position" required>
               <Select onChange={value => setPosition(value as string)}>
                 <Option value="first-child">Top of</Option>
@@ -73,23 +81,35 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={18}>
+          <Col xs={14} sm={10}>
             <Form.Item
               name="target"
               label={
                 ["left", "right"].includes(position) ? "Neighbor" : "Parent"
               }
             >
-              <CategorySelect placeholder="Select where to insert the new Category" />
+              <CategorySelect
+                placeholder={
+                  ["left", "right"].includes(position)
+                    ? "Select Neighbor"
+                    : "Select Parent"
+                }
+                size={isMobile ? "large" : "middle"}
+              />
             </Form.Item>
           </Col>
         </Row>
       )}
       <Form.Item>
-        <>
-          <Button type="primary" htmlType="submit" loading={submitting}>
-            Save Category
-          </Button>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={submitting}
+          block={isMobile}
+        >
+          Save Category
+        </Button>
+        <BrowserView>
           <Link
             to={
               (data && `/settings/categories/${data.pk}`) ??
@@ -98,7 +118,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           >
             <Button>Discard</Button>
           </Link>
-        </>
+        </BrowserView>
       </Form.Item>
     </Form>
   );

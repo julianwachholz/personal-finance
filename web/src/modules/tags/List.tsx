@@ -1,10 +1,11 @@
-import { DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled, TagOutlined } from "@ant-design/icons";
 import { message, Tag as TagComponent } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
 import React from "react";
 import { MutateFunction, useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
+import Fab from "../../components/button/Fab";
 import { UseItemsPaginated } from "../../dao/base";
 import { deleteTag, Tag, useTags } from "../../dao/tags";
 import BaseList from "../base/BaseList";
@@ -51,10 +52,6 @@ const TagList = () => {
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
-  // const [edit] = useMutation(putTag);
-  // const [create] = useMutation(postTag);
-
-  // const location = useLocation<BaseTableLocationState>();
 
   return (
     <BaseList
@@ -67,6 +64,14 @@ const TagList = () => {
           history.go(-1);
         }
       }}
+      fab={
+        <Fab
+          icon={<TagOutlined />}
+          onClick={() => {
+            // history.push(`/settings/tags/create`);
+          }}
+        />
+      }
     />
   );
 };

@@ -1,10 +1,11 @@
-import { DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled, ShopOutlined } from "@ant-design/icons";
 import { message } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
 import React from "react";
 import { MutateFunction, useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
+import Fab from "../../components/button/Fab";
 import { UseItemsPaginated } from "../../dao/base";
 import { deletePayee, Payee, usePayees } from "../../dao/payees";
 import BaseList from "../base/BaseList";
@@ -65,6 +66,14 @@ const PayeeList = () => {
           history.go(-1);
         }
       }}
+      fab={
+        <Fab
+          icon={<ShopOutlined />}
+          onClick={() => {
+            // history.push(`/settings/payees/create`);
+          }}
+        />
+      }
     />
   );
 };

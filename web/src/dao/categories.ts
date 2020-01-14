@@ -16,6 +16,11 @@ export interface Category {
   color: string;
   parent?: ModelWithLabel;
 
+  set_icon?: string;
+  set_color?: string;
+  readonly my_icon: string;
+  readonly my_color: string;
+
   readonly label: string;
 }
 

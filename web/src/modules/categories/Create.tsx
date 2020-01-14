@@ -15,14 +15,19 @@ const CategoryCreate = () => {
 
   useTitle(`Create Category`);
   return (
-    <BaseModule title="Create Category">
+    <BaseModule
+      title="Create Category"
+      onLeftClick={() => {
+        history.go(-1);
+      }}
+    >
       <CategoryForm
         onSave={async data => {
           try {
             const category = await mutate(data);
             setQueryData(["item/categories", { pk: category.pk }], category);
             message.success("Category created");
-            history.push(`/settings/categories/${category.pk}`);
+            history.push(`/settings/categories`);
           } catch (e) {
             message.error("Category create failed");
             throw e;

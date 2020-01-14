@@ -1,8 +1,11 @@
+import { FolderOutlined } from "@ant-design/icons";
 import { Button, message, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
 import React, { useMemo, useState } from "react";
+import { MobileView } from "react-device-detect";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
+import Fab from "../../components/button/Fab";
 import {
   createDefaultCategories,
   moveCategory,
@@ -100,6 +103,14 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
         history.go(-1);
       }}
     >
+      <MobileView>
+        <Fab
+          icon={<FolderOutlined />}
+          onClick={() => {
+            history.push(`/settings/categories/create`);
+          }}
+        />
+      </MobileView>
       <Tree
         treeData={treeData}
         draggable

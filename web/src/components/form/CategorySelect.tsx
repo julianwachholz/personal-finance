@@ -1,5 +1,6 @@
 import TreeSelect, { TreeSelectProps } from "antd/lib/tree-select";
 import React, { useMemo } from "react";
+import { isMobile } from "react-device-detect";
 import { TreeCategory, useCategoryTree } from "../../dao/categories";
 import { useSettings } from "../../utils/SettingsProvider";
 
@@ -37,11 +38,11 @@ const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
   return (
     <TreeSelect<string>
       showSearch
-      dropdownStyle={{ maxHeight: 260, minWidth: 300 }}
+      dropdownStyle={{ maxHeight: 260, minWidth: isMobile ? undefined : 300 }}
       filterTreeNode={(search, node: any) =>
         node.props.searchIndex.includes(search.toLowerCase())
       }
-      // TODO suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
+      // TODO: suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
       treeDefaultExpandedKeys={defaultExpandedKeys}
       disabled={isLoading}
       size={tableSize}

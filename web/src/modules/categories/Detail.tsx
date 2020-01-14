@@ -1,3 +1,4 @@
+import { FormOutlined } from "@ant-design/icons";
 import { Button, Descriptions, Spin, Tag } from "antd";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router";
@@ -35,6 +36,13 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        <FormOutlined
+          onClick={() => {
+            history.push(`${match.url}/edit`);
+          }}
+        />
+      }
     >
       <Descriptions title="Category">
         <Item label="Name">{category.name}</Item>

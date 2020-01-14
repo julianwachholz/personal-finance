@@ -1,9 +1,10 @@
 import { LeftOutlined } from "@ant-design/icons";
 import { PageHeader } from "antd";
-import { NavBar } from "antd-mobile";
+import { ActivityIndicator, NavBar } from "antd-mobile";
 import { PageHeaderProps } from "antd/lib/page-header";
 import React from "react";
 import { isMobile } from "react-device-detect";
+import { useIsFetching } from "react-query";
 
 export interface AppHeaderProps extends PageHeaderProps {
   onClick?: () => void;
@@ -18,6 +19,8 @@ const AppHeader = ({
   rightContent,
   ...props
 }: AppHeaderProps) => {
+  const isFetching = useIsFetching();
+
   if (isMobile) {
     return (
       <NavBar
@@ -27,7 +30,9 @@ const AppHeader = ({
           e.stopPropagation();
           onLeftClick?.();
         }}
-        rightContent={rightContent}
+        rightContent={
+          rightContent ?? (isFetching ? <ActivityIndicator /> : undefined)
+        }
         onClick={props.onClick}
       >
         <div>{props.title}</div>

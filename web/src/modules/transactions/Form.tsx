@@ -1,5 +1,4 @@
-import { Col, Form, Input, Row } from "antd";
-import { Button } from "antd-mobile";
+import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import { format, parseISO, set } from "date-fns";
 import React, { useEffect, useState } from "react";
@@ -154,7 +153,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         <ModelSelect useItems={useTags} mode="multiple" />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={form.submit} loading={submitting}>
+        <Button type="primary" htmlType="submit" loading={submitting} block>
           {data?.pk
             ? "Update Transaction"
             : type === "income"
