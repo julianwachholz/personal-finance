@@ -200,9 +200,10 @@ const BaseTable = <T extends ModelWithLabel>({
 
   const canSort =
     isSortable &&
-    location.state?.filters?.length === 0 &&
-    !location.state?.ordering &&
-    !location.state?.search;
+    (location.state === undefined ||
+      (location.state?.filters?.length === 0 &&
+        !location.state?.ordering &&
+        !location.state?.search));
 
   const components = canSort
     ? ({
