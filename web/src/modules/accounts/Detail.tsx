@@ -1,6 +1,6 @@
 import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, RouteComponentProps, useHistory } from "react-router-dom";
 import { CURRENCY_FORMATS } from "../../components/data/Money";
 import { useAccount } from "../../dao/accounts";
 import { prefetchTransactions } from "../../dao/transactions";
@@ -16,11 +16,14 @@ interface DetailParams {
 }
 
 const Account = ({ match }: RouteComponentProps<DetailParams>) => {
+  const history = useHistory();
   const { settings } = useAuth();
   const { data: account, isLoading, error } = useAccount(match.params.pk);
   const filters = [`account=${match.params.pk}`];
-  prefetchTransactions({ filters });
   const currencyFormat = account && CURRENCY_FORMATS[account?.currency];
+
+  // load related transactions in parallel
+  prefetchTransactions({ filters });
 
   useTitle(account && account.label);
   return account ? (
@@ -34,6 +37,9 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
           <Button type="danger">Delete Account</Button>
         </Link>
       ]}
+      onLeftClick={() => {
+        history.go(-1);
+      }}
     >
       <Descriptions title="Account">
         <Item label="Name">{account.name}</Item>

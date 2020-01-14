@@ -16,9 +16,9 @@ import {
 } from "../../dao/transactions";
 import BaseList from "../base/BaseList";
 
-const renderTransaction = (
+export const renderTransaction = (
   history: History,
-  doDelete: MutateFunction<void, Transaction>,
+  doDelete: MutateFunction<void, Transaction> | false,
   tx: Transaction
 ) => {
   let icon: React.ReactNode = tx.category?.icon ?? tx.account.icon;
@@ -33,12 +33,17 @@ const renderTransaction = (
   return (
     <SwipeAction
       key={tx.pk}
+      disabled={doDelete === false}
       left={
         [
           {
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: "#f00", color: "#fff" },
             async onPress() {
+              if (doDelete === false) {
+                console.error("delete() called with no mutate function");
+                return;
+              }
               await doDelete(tx);
               message.info(`Deleted Transaction #${tx.pk}`);
             }

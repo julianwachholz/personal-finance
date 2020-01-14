@@ -35,6 +35,11 @@
   }
   .module-content {
     padding: 16px;
+
+    > .am-list {
+      // make it borderless again
+      margin: 0 -16px;
+    }
   }
 
   .ant-tree {

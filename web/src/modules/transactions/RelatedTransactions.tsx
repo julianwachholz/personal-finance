@@ -1,10 +1,13 @@
 import { Table } from "antd";
+import { ActivityIndicator, List } from "antd-mobile";
 import React from "react";
-import { useLocation } from "react-router";
+import { isMobile } from "react-device-detect";
+import { useHistory, useLocation } from "react-router";
 import { Transaction, useTransactions } from "../../dao/transactions";
 import { useSettings } from "../../utils/SettingsProvider";
 import { BaseTableLocationState } from "../base/BaseTable";
 import getGetColumns from "./columns";
+import { renderTransaction } from "./List";
 
 interface RelatedTransactionsProps {
   filters: string[];
@@ -15,6 +18,7 @@ const RelatedTransactions = ({
   filters,
   excludeColumns = []
 }: RelatedTransactionsProps) => {
+  const history = useHistory();
   const { tableSize } = useSettings();
   const location = useLocation<BaseTableLocationState>();
   const filteredColumns = getGetColumns()(location).filter(
@@ -22,6 +26,16 @@ const RelatedTransactions = ({
   );
 
   const { data, isLoading } = useTransactions({ filters });
+
+  if (isMobile) {
+    return isLoading ? (
+      <ActivityIndicator text="Loading Recent Transactions" />
+    ) : (
+      <List renderHeader="Recent Transactions">
+        {data?.results.map(renderTransaction.bind(null, history, false))}
+      </List>
+    );
+  }
 
   return (
     <Table<Transaction>
