@@ -1,3 +1,4 @@
+import { FormOutlined } from "@ant-design/icons";
 import { Descriptions, Spin, Tag as TagComponent } from "antd";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
@@ -26,6 +27,13 @@ const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        <FormOutlined
+          onClick={() => {
+            history.push(`${match.url}/edit`);
+          }}
+        />
+      }
     >
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>

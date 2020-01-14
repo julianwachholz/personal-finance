@@ -38,7 +38,7 @@ export const renderTransaction = (
         [
           {
             text: <DeleteFilled />,
-            style: { width: 48, backgroundColor: "#f00", color: "#fff" },
+            style: { width: 48, backgroundColor: "#ff4d4f", color: "#fff" },
             async onPress() {
               if (doDelete === false) {
                 console.error("delete() called with no mutate function");

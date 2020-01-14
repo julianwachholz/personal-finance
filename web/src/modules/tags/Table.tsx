@@ -33,7 +33,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
       title: "Name",
       dataIndex: "name",
       editable: true,
-      formField: <Input autoFocus prefix="#" size={tableSize} />,
+      formField: <Input size={tableSize} autoFocus prefix="#" />,
       render(name, tag) {
         return <Link to={`${match.url}/${tag.pk}`}>#{name}</Link>;
       },

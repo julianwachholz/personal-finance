@@ -1,3 +1,4 @@
+import { FormOutlined } from "@ant-design/icons";
 import { Descriptions, Spin } from "antd";
 import React from "react";
 import { RouteComponentProps, useHistory } from "react-router-dom";
@@ -26,10 +27,19 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        <FormOutlined
+          onClick={() => {
+            history.push(`${match.url}/edit`);
+          }}
+        />
+      }
     >
       <Descriptions title="Payee">
         <Item label="Name">{payee.name}</Item>
-        <Item label="Type">{payee.type}</Item>
+        <Item label="Type">
+          {payee.type === "business" ? "Business" : "Person"}
+        </Item>
         <Item label="Default Category">{payee.default_category?.label}</Item>
       </Descriptions>
       <RelatedTransactions filters={filters} excludeColumns={["payee"]} />

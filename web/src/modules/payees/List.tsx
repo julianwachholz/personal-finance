@@ -1,5 +1,4 @@
-import { DeleteFilled, ShopOutlined } from "@ant-design/icons";
-import { message } from "antd";
+import { DeleteFilled, FormOutlined, ShopOutlined } from "@ant-design/icons";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
 import React from "react";
@@ -8,7 +7,9 @@ import { useHistory } from "react-router-dom";
 import Fab from "../../components/button/Fab";
 import { UseItemsPaginated } from "../../dao/base";
 import { deletePayee, Payee, usePayees } from "../../dao/payees";
+import { COLOR_DANGER, COLOR_PRIMARY } from "../../utils/constants";
 import BaseList from "../base/BaseList";
+import { confirmDeletePayee } from "./delete";
 
 const renderPayee = (
   history: History,
@@ -22,10 +23,20 @@ const renderPayee = (
         [
           {
             text: <DeleteFilled />,
-            style: { width: 48, backgroundColor: "#f00", color: "#fff" },
-            async onPress() {
-              await doDelete();
-              message.info(`Deleted Payee ${payee.label}`);
+            style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
+            onPress() {
+              confirmDeletePayee(payee, doDelete, history);
+            }
+          }
+        ] as any
+      }
+      right={
+        [
+          {
+            text: <FormOutlined />,
+            style: { width: 48, backgroundColor: COLOR_PRIMARY, color: "#fff" },
+            onPress() {
+              history.push(`/settings/payees/${payee.pk}/edit`, { back: -1 });
             }
           }
         ] as any
@@ -67,7 +78,7 @@ const PayeeList = () => {
         <Fab
           icon={<ShopOutlined />}
           onClick={() => {
-            // history.push(`/settings/payees/create`);
+            history.push(`/settings/payees/create`);
           }}
         />
       }

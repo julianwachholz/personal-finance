@@ -1,5 +1,5 @@
-import { DeleteFilled, TagOutlined } from "@ant-design/icons";
-import { message, Tag as TagComponent } from "antd";
+import { DeleteFilled, FormOutlined, TagOutlined } from "@ant-design/icons";
+import { Tag as TagComponent } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
 import React from "react";
@@ -8,7 +8,9 @@ import { useHistory } from "react-router-dom";
 import Fab from "../../components/button/Fab";
 import { UseItemsPaginated } from "../../dao/base";
 import { deleteTag, Tag, useTags } from "../../dao/tags";
+import { COLOR_DANGER, COLOR_PRIMARY } from "../../utils/constants";
 import BaseList from "../base/BaseList";
+import { confirmDeleteTag } from "./delete";
 
 const renderTag = (
   history: History,
@@ -22,10 +24,20 @@ const renderTag = (
         [
           {
             text: <DeleteFilled />,
-            style: { width: 48, backgroundColor: "#f00", color: "#fff" },
-            async onPress() {
-              await doDelete();
-              message.info(`Deleted Tag ${tag.label}`);
+            style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
+            onPress() {
+              confirmDeleteTag(tag, doDelete, history);
+            }
+          }
+        ] as any
+      }
+      right={
+        [
+          {
+            text: <FormOutlined />,
+            style: { width: 48, backgroundColor: COLOR_PRIMARY, color: "#fff" },
+            onPress() {
+              history.push(`/settings/tags/${tag.pk}/edit`, { back: -1 });
             }
           }
         ] as any
@@ -68,7 +80,7 @@ const TagList = () => {
         <Fab
           icon={<TagOutlined />}
           onClick={() => {
-            // history.push(`/settings/tags/create`);
+            history.push(`/settings/tags/create`);
           }}
         />
       }
