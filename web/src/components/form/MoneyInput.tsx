@@ -52,6 +52,7 @@ const MoneyInput = ({
           groupSeparator
         )
       }
+      inputMode="decimal"
       value={value}
       {...props}
     />

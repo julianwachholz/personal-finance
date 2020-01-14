@@ -42,7 +42,12 @@ const Login = () => {
           label="Username"
           validateStatus={error && "error"}
         >
-          <Input autoFocus prefix={<UserOutlined />} autoComplete="username" />
+          <Input
+            autoFocus
+            prefix={<UserOutlined />}
+            autoComplete="username"
+            inputMode="email"
+          />
         </Form.Item>
         <Form.Item
           validateStatus={error && "error"}
