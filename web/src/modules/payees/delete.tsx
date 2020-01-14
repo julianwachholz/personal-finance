@@ -20,7 +20,7 @@ export const confirmDeletePayee = (
     okButtonProps: { type: "danger" },
     onOk: async () => {
       await doDelete(payee);
-      message.info(`Payee "${payee.label}" deleted.`);
+      message.info(`Payee "${payee.label}" deleted`);
       history.push(`/settings/payees`);
     }
   });

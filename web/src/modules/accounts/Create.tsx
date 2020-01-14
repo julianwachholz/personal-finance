@@ -29,7 +29,7 @@ const AccountCreate = () => {
             message.success("Account created");
             history.push(`/accounts`);
           } catch (e) {
-            message.error("Account creation failed");
+            message.error("Account create failed");
             throw e;
           }
         }}

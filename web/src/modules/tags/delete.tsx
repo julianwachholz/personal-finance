@@ -20,7 +20,7 @@ export const confirmDeleteTag = (
     okButtonProps: { type: "danger" },
     onOk: async () => {
       await doDelete(tag);
-      message.info(`Tag "${tag.label}" deleted.`);
+      message.info(`Tag "${tag.label}" deleted`);
       history.push(`/settings/tags`);
     }
   });

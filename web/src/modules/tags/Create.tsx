@@ -29,7 +29,7 @@ const TagCreate = () => {
             message.success("Tag created");
             history.push(`/settings/tags`);
           } catch (e) {
-            message.error("Tag creation failed");
+            message.error("Tag create failed");
             throw e;
           }
         }}

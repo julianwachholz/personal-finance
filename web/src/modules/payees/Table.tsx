@@ -115,7 +115,7 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
           placement="left"
           onConfirm={async () => {
             await doDelete(payee);
-            message.info(`Tag "${payee.name}" deleted.`);
+            message.info(`Payee "${payee.name}" deleted`);
           }}
         >
           <Button type="link">Delete</Button>

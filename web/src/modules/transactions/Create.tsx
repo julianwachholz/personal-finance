@@ -69,10 +69,10 @@ const TransactionCreate = () => {
           try {
             const tx = await mutate(data);
             setQueryData(["item/transactions", { pk: tx.pk }], tx);
-            message.success("Transaction created!");
+            message.success("Transaction created");
             history.push(`/transactions`);
           } catch (e) {
-            message.error("Transaction create failed!");
+            message.error("Transaction create failed");
             throw e;
           }
         }}

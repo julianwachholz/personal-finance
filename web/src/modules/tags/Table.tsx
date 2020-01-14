@@ -83,7 +83,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
           placement="left"
           onConfirm={async () => {
             await doDelete(tag);
-            message.info(`Tag "${tag.label}" deleted.`);
+            message.info(`Tag "${tag.label}" deleted`);
           }}
         >
           <Button type="link">Delete</Button>

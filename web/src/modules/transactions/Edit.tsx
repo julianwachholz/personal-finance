@@ -38,10 +38,10 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
               await mutate(data, {
                 updateQuery: ["item/transactions", { pk }]
               });
-              message.success("Transaction updated!");
+              message.success("Transaction updated");
               history.push(`/transactions`);
             } catch (e) {
-              message.error("Transaction update failed!");
+              message.error("Transaction update failed");
               throw e;
             }
           }}

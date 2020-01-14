@@ -29,7 +29,7 @@ const PayeeCreate = () => {
             message.success("Payee created");
             history.push(`/settings/payees`);
           } catch (e) {
-            message.error("Payee creation failed");
+            message.error("Payee create failed");
             throw e;
           }
         }}
