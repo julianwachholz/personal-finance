@@ -47,7 +47,7 @@ const AccountDelete = ({
         type="danger"
         onClick={async () => {
           await mutate(account);
-          message.info(`Account "${account.label}" deleted.`);
+          message.info(`Account "${account.label}" deleted`);
           history.push(`/accounts`);
         }}
         block={isMobile}

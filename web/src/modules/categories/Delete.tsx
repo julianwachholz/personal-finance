@@ -1,5 +1,6 @@
 import { Button, List, message, Spin, Typography } from "antd";
 import React from "react";
+import { BrowserView, isMobile } from "react-device-detect";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { deleteCategory, useCategory } from "../../dao/categories";
@@ -30,7 +31,12 @@ const CategoryDelete = ({
 
   useTitle(category && `Delete ${category.label}`);
   return category ? (
-    <BaseModule title={`Delete ${category.label}`}>
+    <BaseModule
+      title={`Delete ${category.label}`}
+      onLeftClick={() => {
+        history.go(-3);
+      }}
+    >
       <P>Are you sure you want to delete the Category "{category.label}"?</P>
       <P>The following associated records will also be deleted:</P>
       <List
@@ -39,17 +45,21 @@ const CategoryDelete = ({
       />
       <Button
         type="danger"
+        block={isMobile}
+        size={isMobile ? "large" : "middle"}
         onClick={async () => {
           await mutate(category);
-          message.info(`Category "${category.label}" deleted.`);
+          message.info(`Category "${category.label}" deleted`);
           history.push(`/settings/categories`);
         }}
       >
         Delete Category
       </Button>
-      <Link to={`/settings/categories/${category.pk}`}>
-        <Button>Cancel</Button>
-      </Link>
+      <BrowserView>
+        <Link to={`/settings/categories/${category.pk}`}>
+          <Button>Cancel</Button>
+        </Link>
+      </BrowserView>
     </BaseModule>
   ) : (
     <Spin />

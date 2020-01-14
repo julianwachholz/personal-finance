@@ -1,5 +1,5 @@
 import { DeleteFilled } from "@ant-design/icons";
-import { message, Modal, Spin } from "antd";
+import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
@@ -35,14 +35,7 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
       rightContent={
         <DeleteFilled
           onClick={() => {
-            Modal.confirm({
-              title: `Delete Category "${category.label}"?`,
-              icon: <DeleteFilled />,
-              content:
-                "This will delete the category and remove it from all associated transactions.",
-              okText: "Delete",
-              okButtonProps: { type: "danger" }
-            });
+            history.push(`/settings/categories/${category.pk}/delete`);
           }}
         />
       }
