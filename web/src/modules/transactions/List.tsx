@@ -89,9 +89,6 @@ const TransactionList = () => {
   const [doDelete] = useMutation(deleteTransaction, {
     refetchQueries: ["items/transactions"]
   });
-  // const [edit] = useMutation(putTag);
-  // const [create] = useMutation(postTag);
-  // const location = useLocation<BaseTableLocationState>();
 
   return (
     <BaseList

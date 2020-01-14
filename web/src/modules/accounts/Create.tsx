@@ -15,7 +15,12 @@ const AccountCreate = () => {
 
   useTitle(`Create Account`);
   return (
-    <BaseModule title="Create Account">
+    <BaseModule
+      title="Create Account"
+      onLeftClick={() => {
+        history.go(-1);
+      }}
+    >
       <AccountForm
         onSave={async data => {
           try {

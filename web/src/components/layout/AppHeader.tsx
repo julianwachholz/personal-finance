@@ -1,4 +1,4 @@
-import { LeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { PageHeader } from "antd";
 import { ActivityIndicator, NavBar } from "antd-mobile";
 import { PageHeaderProps } from "antd/lib/page-header";
@@ -25,7 +25,7 @@ const AppHeader = ({
     return (
       <NavBar
         mode="dark"
-        icon={onLeftClick ? leftIcon ?? <LeftOutlined /> : undefined}
+        icon={onLeftClick ? leftIcon ?? <ArrowLeftOutlined /> : undefined}
         onLeftClick={e => {
           e.stopPropagation();
           onLeftClick?.();

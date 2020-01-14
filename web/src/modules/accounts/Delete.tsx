@@ -1,5 +1,6 @@
 import { Button, List, message, Spin, Typography } from "antd";
 import React from "react";
+import { BrowserView, isMobile } from "react-device-detect";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { deleteAccount, useAccount } from "../../dao/accounts";
@@ -30,7 +31,12 @@ const AccountDelete = ({
 
   useTitle(account && `Delete ${account.label}`);
   return account ? (
-    <BaseModule title={`Delete ${account.label}`}>
+    <BaseModule
+      title={`Delete ${account.label}`}
+      onLeftClick={() => {
+        history.go(-3);
+      }}
+    >
       <P>Are you sure you want to delete the Account "{account.label}"?</P>
       <P>The following associated records will also be deleted:</P>
       <List
@@ -44,12 +50,16 @@ const AccountDelete = ({
           message.info(`Account "${account.label}" deleted.`);
           history.push(`/accounts`);
         }}
+        block={isMobile}
+        size={isMobile ? "large" : "middle"}
       >
         Delete Account
       </Button>
-      <Link to={`/accounts/${account.pk}`}>
-        <Button>Cancel</Button>
-      </Link>
+      <BrowserView>
+        <Link to={`/accounts/${account.pk}`}>
+          <Button>Cancel</Button>
+        </Link>
+      </BrowserView>
     </BaseModule>
   ) : (
     <Spin />

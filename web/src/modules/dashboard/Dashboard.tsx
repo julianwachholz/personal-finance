@@ -1,6 +1,5 @@
-import { MenuOutlined, SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined } from "@ant-design/icons";
 import { Typography } from "antd";
-import { Popover } from "antd-mobile";
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import useTitle from "../../utils/useTitle";
@@ -17,21 +16,11 @@ const Dashboard = () => {
     <BaseModule
       title="Dashboard"
       rightContent={
-        <Popover
-          mask
-          visible={visible}
-          onVisibleChange={setVisible}
-          overlay={[
-            <Popover.Item key="/settings">
-              <SettingOutlined /> Settings
-            </Popover.Item>
-          ]}
-          onSelect={item => {
-            history.push(item.key);
+        <SettingOutlined
+          onClick={() => {
+            history.push("/settings");
           }}
-        >
-          <MenuOutlined />
-        </Popover>
+        />
       }
     >
       <P>TODO: Dashboard</P>

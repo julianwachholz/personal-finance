@@ -1,3 +1,4 @@
+import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
@@ -26,7 +27,19 @@ const AccountEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   }
 
   return (
-    <BaseModule title={`Edit ${account.label}`}>
+    <BaseModule
+      title={`Edit ${account.label}`}
+      onLeftClick={() => {
+        history.go(-2);
+      }}
+      rightContent={
+        <DeleteFilled
+          onClick={() => {
+            history.push(`/accounts/${pk}/delete`);
+          }}
+        />
+      }
+    >
       <AccountForm
         data={account}
         onSave={async data => {

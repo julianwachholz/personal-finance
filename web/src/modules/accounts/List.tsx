@@ -33,7 +33,6 @@ const renderAccount = (history: History, account: Account) => {
 
 const AccountList = () => {
   const history = useHistory();
-  // const [create] = useMutation(postTag);
 
   return (
     <BaseList

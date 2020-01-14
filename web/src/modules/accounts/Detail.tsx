@@ -1,3 +1,4 @@
+import { FormOutlined } from "@ant-design/icons";
 import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
 import { Link, RouteComponentProps, useHistory } from "react-router-dom";
@@ -40,6 +41,13 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        <FormOutlined
+          onClick={() => {
+            history.push(`${match.url}/edit`);
+          }}
+        />
+      }
     >
       <Descriptions title="Account">
         <Item label="Name">{account.name}</Item>

@@ -22,11 +22,12 @@ const SettingsMenu = () => {
   return (
     <BaseModule
       title="Settings"
+      className="module module-list"
       onLeftClick={() => {
         history.go(-1);
       }}
     >
-      <List renderHeader="Settings">
+      <List>
         <List.Item
           thumb={<FolderOutlined />}
           arrow="horizontal"

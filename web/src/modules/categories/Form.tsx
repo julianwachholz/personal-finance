@@ -95,6 +95,9 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
                     : "Select Parent"
                 }
                 size={isMobile ? "large" : "middle"}
+                dropdownPopupAlign={
+                  isMobile ? { points: ["tr", "br"] } : undefined
+                }
               />
             </Form.Item>
           </Col>

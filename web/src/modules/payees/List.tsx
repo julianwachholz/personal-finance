@@ -51,9 +51,6 @@ const PayeeList = () => {
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
   });
-  // const [edit] = useMutation(putTag);
-  // const [create] = useMutation(postTag);
-  // const location = useLocation<BaseTableLocationState>();
 
   return (
     <BaseList

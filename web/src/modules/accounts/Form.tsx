@@ -1,5 +1,6 @@
 import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
+import { BrowserView, isMobile } from "react-device-detect";
 import { Link } from "react-router-dom";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
@@ -60,7 +61,6 @@ const AccountForm = ({ data, onSave }: FormProps) => {
 
   const initialValues: Partial<Account> = { ...data };
   if (!data?.pk) {
-    initialValues.set_balance = "0.00";
     initialValues.set_currency = settings?.default_currency;
   } else {
     initialValues.set_balance = data.balance;
@@ -73,9 +73,10 @@ const AccountForm = ({ data, onSave }: FormProps) => {
       layout="vertical"
       onFinish={onSubmit}
       initialValues={initialValues}
+      size={isMobile ? "large" : "middle"}
     >
       <Row gutter={16}>
-        <Col span={2}>
+        <Col xs={4} sm={2}>
           <Form.Item name="icon" label="Icon">
             <AutoComplete
               options={suggestedIcons}
@@ -85,7 +86,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
             </AutoComplete>
           </Form.Item>
         </Col>
-        <Col span={22}>
+        <Col xs={20} sm={12}>
           <Form.Item
             name="name"
             label="Name"
@@ -95,42 +96,53 @@ const AccountForm = ({ data, onSave }: FormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="institution" label="Institution">
+      <Form.Item name="institution" label="Institution" wrapperCol={{ sm: 14 }}>
         <Input placeholder="Example Credit Union" />
       </Form.Item>
       {data?.pk && !resetBalance ? (
-        <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
+        <Form.Item>
+          <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
+        </Form.Item>
       ) : (
         <Row gutter={16}>
-          <Col span={4}>
+          <Col xs={18} sm={4}>
             <Form.Item
               name="set_balance"
               label="Current Balance"
               rules={[{ required: true, message: "Enter a balance" }]}
             >
-              <MoneyInput size="middle" fullWidth />
+              <MoneyInput size={isMobile ? "large" : "middle"} fullWidth />
             </Form.Item>
           </Col>
-          <Col span={6}>
+          <Col xs={6} sm={6}>
             <Form.Item
               name="set_currency"
               label="Currency"
               rules={[{ required: true, message: "Select a currency" }]}
             >
-              <CurrencySelect disabled={!!data?.pk} />
+              <CurrencySelect
+                disabled={!!data?.pk}
+                dropdownMatchSelectWidth={300}
+                dropdownAlign={isMobile ? { points: ["tr", "br"] } : undefined}
+              />
             </Form.Item>
           </Col>
         </Row>
       )}
-      <Form.Item className="form-actions">
-        <>
-          <Button type="primary" htmlType="submit" loading={submitting}>
-            Save Account
-          </Button>
+      <Form.Item>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={submitting}
+          block={isMobile}
+        >
+          Save Account
+        </Button>
+        <BrowserView>
           <Link to={(data && `/accounts/${data.pk}`) ?? `/accounts`}>
             <Button>Discard</Button>
           </Link>
-        </>
+        </BrowserView>
       </Form.Item>
     </Form>
   );
