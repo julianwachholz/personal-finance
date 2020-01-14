@@ -139,11 +139,13 @@ export const makeUseItems = <T extends ModelWithLabel>(
     return query;
   };
   useItems.basename = basename;
+
   const prefetchItems: PrefetchItems<T> = (options: FetchItemsOptions = {}) => {
-    return prefetchQuery([basename, options], fetchItems!, {
-      staleTime: 500
+    return prefetchQuery([`items/${basename}`, options], fetchItems!, {
+      staleTime: 1000
     });
   };
+
   return [useItems, prefetchItems];
 };
 
