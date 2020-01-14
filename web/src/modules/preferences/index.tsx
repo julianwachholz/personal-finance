@@ -2,6 +2,7 @@ import { Button, Col, Form, Input, Radio, Row, Switch } from "antd";
 import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
 import React, { useState } from "react";
+import { BrowserView } from "react-device-detect";
 import { useMutation } from "react-query";
 import { useHistory } from "react-router";
 import Money from "../../components/data/Money";
@@ -239,20 +240,22 @@ const Preferences = () => {
             </Button>
           ))}
         </Form.Item>
-        <Form.Item label="Dark Mode">
-          <Switch checked={theme === "dark"} onChange={toggleTheme} />
-        </Form.Item>
-        <Form.Item label="Table Layout">
-          <Radio.Group
-            defaultValue={tableSize}
-            buttonStyle="solid"
-            onChange={e => setTableSize(e.target.value)}
-          >
-            <Radio.Button value="large">Large</Radio.Button>
-            <Radio.Button value="middle">Medium</Radio.Button>
-            <Radio.Button value="small">Small</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
+        <BrowserView>
+          <Form.Item label="Dark Mode">
+            <Switch checked={theme === "dark"} onChange={toggleTheme} />
+          </Form.Item>
+          <Form.Item label="Table Layout">
+            <Radio.Group
+              defaultValue={tableSize}
+              buttonStyle="solid"
+              onChange={e => setTableSize(e.target.value)}
+            >
+              <Radio.Button value="large">Large</Radio.Button>
+              <Radio.Button value="middle">Medium</Radio.Button>
+              <Radio.Button value="small">Small</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+        </BrowserView>
       </Form>
     </BaseModule>
   );

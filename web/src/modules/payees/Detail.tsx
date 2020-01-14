@@ -1,6 +1,6 @@
 import { Descriptions, Spin } from "antd";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import { prefetchTransactions } from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
@@ -14,13 +14,19 @@ interface DetailParams {
 }
 
 const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
+  const history = useHistory();
   const { data: payee, isLoading, error } = usePayee(match.params.pk);
   const filters = [`payee=${match.params.pk}`];
   prefetchTransactions({ filters });
 
   useTitle(payee && payee.label);
   return payee ? (
-    <BaseModule title={payee.name}>
+    <BaseModule
+      title={payee.name}
+      onLeftClick={() => {
+        history.go(-1);
+      }}
+    >
       <Descriptions title="Payee">
         <Item label="Name">{payee.name}</Item>
         <Item label="Type">{payee.type}</Item>

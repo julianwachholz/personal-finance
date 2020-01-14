@@ -1,6 +1,6 @@
 import { Button, Descriptions, Spin, Tag } from "antd";
 import React from "react";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { useCategory } from "../../dao/categories";
 import { prefetchTransactions } from "../../dao/transactions";
@@ -15,6 +15,7 @@ interface DetailParams {
 }
 
 const Category = ({ match }: RouteComponentProps<DetailParams>) => {
+  const history = useHistory();
   const { data: category, isLoading, error } = useCategory(match.params.pk);
   const filters = [`category=${match.params.pk}`];
   prefetchTransactions({ filters });
@@ -31,6 +32,9 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
           <Button type="danger">Delete Category</Button>
         </Link>
       ]}
+      onLeftClick={() => {
+        history.go(-1);
+      }}
     >
       <Descriptions title="Category">
         <Item label="Name">{category.name}</Item>

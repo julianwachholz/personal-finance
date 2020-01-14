@@ -4,7 +4,6 @@ import { NavBar } from "antd-mobile";
 import { PageHeaderProps } from "antd/lib/page-header";
 import React from "react";
 import { isMobile } from "react-device-detect";
-import { useSettings } from "../../utils/SettingsProvider";
 
 export interface AppHeaderProps extends PageHeaderProps {
   onClick?: () => void;
@@ -19,11 +18,10 @@ const AppHeader = ({
   rightContent,
   ...props
 }: AppHeaderProps) => {
-  const { theme } = useSettings();
   if (isMobile) {
     return (
       <NavBar
-        mode={theme}
+        mode="dark"
         icon={onLeftClick ? leftIcon ?? <LeftOutlined /> : undefined}
         onLeftClick={e => {
           e.stopPropagation();

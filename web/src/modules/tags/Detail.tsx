@@ -1,6 +1,6 @@
 import { Descriptions, Spin, Tag as TagComponent } from "antd";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, useHistory } from "react-router-dom";
 import { useTag } from "../../dao/tags";
 import { prefetchTransactions } from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
@@ -14,13 +14,19 @@ interface DetailParams {
 }
 
 const Tag = ({ match }: RouteComponentProps<DetailParams>) => {
+  const history = useHistory();
   const { data: tag, isLoading, error } = useTag(match.params.pk);
   const filters = [`tags=${match.params.pk}`];
   prefetchTransactions({ filters });
 
   useTitle(tag && tag.label);
   return tag ? (
-    <BaseModule title={tag.label}>
+    <BaseModule
+      title={tag.label}
+      onLeftClick={() => {
+        history.go(-1);
+      }}
+    >
       <Descriptions title="Tag">
         <Item label="Name">{tag.name}</Item>
         <Item label="Color">
