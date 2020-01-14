@@ -33,7 +33,7 @@ export const renderTransaction = (
   return (
     <SwipeAction
       key={tx.pk}
-      disabled={doDelete === false}
+      disabled={doDelete === false || tx.is_initial}
       left={
         [
           {

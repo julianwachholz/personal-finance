@@ -73,7 +73,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       });
       form.setFieldsValue(Object.fromEntries(mapped));
     }
-  }, [data]);
+  }, [data, form]);
 
   useEffect(() => {
     if (type === "expense") {
@@ -89,7 +89,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         set_category: settings?.default_credit_category
       });
     }
-  }, [type]);
+  }, [type, form, settings]);
 
   return (
     <Form

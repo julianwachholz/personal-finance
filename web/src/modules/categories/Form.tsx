@@ -40,7 +40,7 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     if (data) {
       form.setFieldsValue({ set_color: data.my_color, set_icon: data.my_icon });
     }
-  }, [data]);
+  }, [data, form]);
 
   return (
     <Form
