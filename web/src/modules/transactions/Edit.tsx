@@ -13,7 +13,9 @@ interface DetailParams {
 
 const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const pk = parseInt(match.params.pk, 10);
-  const { data: tx, isLoading } = useTransaction(pk);
+  const { data: tx, isLoading } = useTransaction(pk, {
+    refetchOnWindowFocus: false
+  });
 
   const [mutate] = useMutation(putTransaction, {
     refetchQueries: ["items/transactions"]

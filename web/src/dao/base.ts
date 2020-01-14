@@ -180,7 +180,8 @@ export const makeFetchItem = <T extends Model>(
 };
 
 type UseItem<T extends Model> = (
-  pk: number | string
+  pk: number | string,
+  queryOptions?: QueryOptions<T>
 ) => QueryResult<T, { pk: number }>;
 
 export const makeUseItem = <T extends Model>(
@@ -191,11 +192,15 @@ export const makeUseItem = <T extends Model>(
   if (!fetchItem) {
     fetchItem = makeFetchItem<T>(basename, map);
   }
-  const useItem: UseItem<T> = pk => {
+  const useItem: UseItem<T> = (pk, queryOptions) => {
     if (typeof pk === "string") {
       pk = parseInt(pk, 10);
     }
-    const query = useQuery([`item/${basename}`, { pk }], fetchItem!);
+    const query = useQuery(
+      [`item/${basename}`, { pk }],
+      fetchItem!,
+      queryOptions
+    );
     return query;
   };
   return useItem;
