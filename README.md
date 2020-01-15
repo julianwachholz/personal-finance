@@ -3,13 +3,25 @@
 ## todo
 
 - landing page
-- registration
+
+- user
+
+  - registration
+  - change password
 
 - dashboard
+
+  - spent this month
+  - available this month
+
 - budgets
+
+  - overall expenses / period
+  - per category
+
 - reports
 
-* transactions
+- transactions
   - filter by date
     - before date
     - after date

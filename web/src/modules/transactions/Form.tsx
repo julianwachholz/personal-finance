@@ -1,13 +1,14 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useEffect, useState } from "react";
+import { setQueryData, useMutation } from "react-query";
 import CategorySelect from "../../components/form/CategorySelect";
 import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { useAccounts } from "../../dao/accounts";
 import { ModelWithLabel } from "../../dao/base";
-import { usePayees } from "../../dao/payees";
+import { Payee, postPayee, usePayees } from "../../dao/payees";
 import { useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
@@ -22,6 +23,19 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
   const { settings } = useAuth();
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
+  const [createPayee] = useMutation(postPayee, {
+    refetchQueries: ["items/payees"]
+  });
+
+  const quickCreatePayee = async (
+    name: string,
+    cb: (item: Payee) => Promise<void>
+  ) => {
+    const payee = await createPayee({ name } as Payee);
+    setQueryData([`item/payees`, { pk: payee.pk }], payee);
+    await cb(payee);
+    form?.setFieldsValue({ set_payee: payee.pk });
+  };
 
   const onSubmit = async (tx: any) => {
     setSubmitting(true);
@@ -123,7 +137,9 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       <Form.Item name="set_payee" label="Payee">
         <ModelSelect
           allowClear
+          defaultActiveFirstOption
           useItems={usePayees}
+          createItem={quickCreatePayee}
           onItemSelect={payee => {
             if (form && payee.default_category) {
               form.setFieldsValue({

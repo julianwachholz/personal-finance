@@ -28,7 +28,9 @@ const TransactionsTable = () => {
     refetchQueries: ["items/transactions"]
   });
 
-  const [createPayee] = useMutation(postPayee);
+  const [createPayee] = useMutation(postPayee, {
+    refetchQueries: ["items/payees"]
+  });
 
   const getColumns = getGetColumns({
     async createPayee(name) {
