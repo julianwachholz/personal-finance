@@ -108,4 +108,4 @@ venv.bak/
 /media
 
 # backend static files
-/djstatic
+/static
