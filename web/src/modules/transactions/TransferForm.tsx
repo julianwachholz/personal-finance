@@ -177,6 +177,7 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
           icon={<SwapOutlined />}
           htmlType="submit"
           loading={isLoading}
+          block={isMobile}
         >
           Transfer
         </Button>
