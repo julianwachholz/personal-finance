@@ -2,6 +2,9 @@
 
 ## todo
 
+- landing page
+- registration
+
 - dashboard
 - budgets
 - reports
