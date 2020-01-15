@@ -56,6 +56,9 @@ const TransactionCreate = () => {
             if (["expense", "income"].includes(item.key)) {
               setType(item.key);
             }
+            if (item.key === "transfer") {
+              history.replace(`/transactions/transfer`);
+            }
             setVisible(false);
           }}
         >

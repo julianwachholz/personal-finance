@@ -123,7 +123,11 @@ const AccountForm = ({ data, onSave }: FormProps) => {
               <CurrencySelect
                 disabled={!!data?.pk}
                 dropdownMatchSelectWidth={300}
-                dropdownAlign={isMobile ? { points: ["tr", "br"] } : undefined}
+                dropdownAlign={
+                  isMobile
+                    ? { points: ["tr", "br"], offset: [0, 4] }
+                    : undefined
+                }
               />
             </Form.Item>
           </Col>

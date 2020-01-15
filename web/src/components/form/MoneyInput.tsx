@@ -1,7 +1,7 @@
 import { Input, InputNumber } from "antd";
 import { InputProps } from "antd/lib/input";
 import { InputNumberProps } from "antd/lib/input-number";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useAuth } from "../../utils/AuthProvider";
 import { useSettings } from "../../utils/SettingsProvider";
@@ -25,6 +25,7 @@ const MoneyInput = ({
 }: MoneyInputProps) => {
   const { tableSize } = useSettings();
   const { settings } = useAuth();
+  const [input, setInput] = useState(value as any);
   const currencyFormat = currency ? CURRENCY_FORMATS[currency] : undefined;
   const prefix = currencyFormat?.prefix ?? "";
   const suffix = currencyFormat?.suffix ?? "";
@@ -39,12 +40,17 @@ const MoneyInput = ({
     "g"
   );
 
+  useEffect(() => {
+    setInput(value);
+  }, [value]);
+
   if (isMobile) {
     const inputProps: InputProps = {
       ...props,
       onChange(e) {
-        console.log("onChange", e.target.value);
-        props.onChange?.(e.target.value.replace(",", ".") as any);
+        const value = e.target.value.replace(",", ".");
+        setInput(value);
+        props.onChange?.(value ? parseFloat(value) : undefined);
       }
     };
     return (
@@ -52,7 +58,7 @@ const MoneyInput = ({
         className={`input-money ${fullWidth && "input-money-fullwidth"}`}
         inputMode="decimal"
         {...inputProps}
-        value={value}
+        value={input}
         autoComplete="off"
       />
     );

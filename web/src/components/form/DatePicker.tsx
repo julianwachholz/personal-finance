@@ -1,3 +1,4 @@
+import { Input } from "antd";
 import generatePicker, {
   PickerProps
 } from "antd/lib/date-picker/generatePicker";
@@ -10,6 +11,8 @@ import {
   isAfter,
   isValid,
   parse,
+  parseISO,
+  set,
   setDate,
   setHours,
   setMinutes,
@@ -20,6 +23,8 @@ import {
 import { enUS } from "date-fns/locale";
 import { GenerateConfig } from "rc-picker/lib/generate";
 import React from "react";
+import { isMobile } from "react-device-detect";
+import { useAuth } from "../../utils/AuthProvider";
 import { useSettings } from "../../utils/SettingsProvider";
 
 const generateConfig: GenerateConfig<Date> = {
@@ -74,7 +79,35 @@ const BaseDatePicker = generatePicker<Date>(generateConfig);
 
 const DatePicker = (props: PickerProps<Date>) => {
   const { tableSize } = useSettings();
-  return <BaseDatePicker size={tableSize} {...props} />;
+  const { settings } = useAuth();
+
+  if (isMobile) {
+    const inputProps = {
+      value: props.value ? format(props.value, "yyyy-MM-dd") : undefined,
+      defaultValue: props.defaultValue
+        ? format(props.defaultValue, "yyyy-MM-dd")
+        : undefined,
+      onChange(e: any) {
+        const date = set(parseISO(e.target.value), {
+          hours: props.value?.getHours(),
+          minutes: props.value?.getMinutes(),
+          seconds: props.value?.getSeconds()
+        });
+        props.onChange?.(
+          date,
+          format(date, settings?.date_format ?? "yyyy-MM-dd")
+        );
+      }
+    };
+    return <Input type="date" {...inputProps} />;
+  }
+  return (
+    <BaseDatePicker
+      format={settings?.date_format}
+      size={tableSize}
+      {...props}
+    />
+  );
 };
 
 export default DatePicker;

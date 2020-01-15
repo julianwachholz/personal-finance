@@ -1,8 +1,8 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
-import { format, parseISO, set } from "date-fns";
 import React, { useEffect, useState } from "react";
 import CategorySelect from "../../components/form/CategorySelect";
+import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { useAccounts } from "../../dao/accounts";
@@ -23,8 +23,6 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
 
-  const date = data?.datetime ?? new Date();
-
   const onSubmit = async (tx: any) => {
     setSubmitting(true);
     try {
@@ -38,13 +36,6 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
     if (isNew && tx.type === "expense" && tx.amount[0] !== "-") {
       tx.amount = `-${tx.amount}`;
     }
-
-    // re-add current time if date was set
-    tx.datetime = set(parseISO(tx.date), {
-      hours: date.getHours(),
-      minutes: date.getMinutes(),
-      seconds: date.getSeconds()
-    });
 
     if (!tx.set_category) {
       tx.set_category = null;
@@ -97,7 +88,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       layout="vertical"
       onFinish={onSubmit}
       initialValues={{
-        date: format(date, "yyyy-MM-dd"),
+        datetime: new Date(),
         ...data
       }}
       size="large"
@@ -112,14 +103,13 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
             <MoneyInput autoFocus fullWidth size="large" />
           </Form.Item>
         </Col>
-
         <Col span={12}>
           <Form.Item
-            name="date"
+            name="datetime"
             label="Date"
             rules={[{ required: true, message: "Enter a date" }]}
           >
-            <Input type="date" />
+            <DatePicker />
           </Form.Item>
         </Col>
       </Row>

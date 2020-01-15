@@ -1,5 +1,5 @@
 import { SwapOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
+import { Button, message, Modal } from "antd";
 import React, { useState } from "react";
 import { setQueryData, useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
@@ -121,10 +121,15 @@ const TransactionsTable = () => {
         }
       ]}
     >
-      <TransferForm
+      <Modal
         visible={transferModalVisible}
-        onVisible={setTransferModalVisible}
-      />
+        title="Balance Transfer"
+        maskClosable
+        onCancel={() => setTransferModalVisible(false)}
+        footer={false}
+      >
+        <TransferForm />
+      </Modal>
     </BaseEditableTable>
   );
 };
