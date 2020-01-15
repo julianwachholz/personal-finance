@@ -19,9 +19,10 @@ import { EditableColumnsType } from "../base/EditableTable";
 
 interface GetGetColumnOptions {
   createPayee?: (name: string) => Promise<Payee>;
+  createTag?: (name: string) => Promise<TagModel>;
 }
 
-const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
+const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
   location?: Location<BaseTableLocationState>,
   form?: FormInstance
 ) => EditableColumnsType<Transaction>) => {
@@ -34,6 +35,20 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
             form?.setFieldsValue({ set_payee: payee.pk });
           }
         : undefined;
+
+    const quickCreateTag =
+      form && createTag
+        ? async (name: string, cb: (item: TagModel) => Promise<void>) => {
+            const tag = await createTag(name);
+            await cb(tag);
+            const set_tags = form
+              .getFieldValue("set_tags")
+              .filter((pk: string) => pk !== "0");
+            set_tags.push(tag.pk);
+            form?.setFieldsValue({ set_tags });
+          }
+        : undefined;
+
     return [
       {
         title: "Date",
@@ -150,7 +165,13 @@ const getGetColumns = ({ createPayee }: GetGetColumnOptions = {}): ((
           "set_tags",
           value.map((v: ModelWithLabel) => v?.pk)
         ],
-        formField: <ModelSelect mode="multiple" useItems={useTags} />,
+        formField: (
+          <ModelSelect
+            mode="multiple"
+            useItems={useTags}
+            createItem={quickCreateTag}
+          />
+        ),
         rules: [],
         render(tags: TagModel[]) {
           return tags ? (

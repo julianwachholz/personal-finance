@@ -23,9 +23,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
   const { settings } = useAuth();
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
-  const [createPayee] = useMutation(postPayee, {
-    refetchQueries: ["items/payees"]
-  });
+  const [createPayee] = useMutation(postPayee);
 
   const quickCreatePayee = async (
     name: string,

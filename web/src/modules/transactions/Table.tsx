@@ -1,9 +1,10 @@
 import { SwapOutlined } from "@ant-design/icons";
 import { Button, message, Modal } from "antd";
 import React, { useState } from "react";
-import { setQueryData, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
 import { Payee, postPayee } from "../../dao/payees";
+import { postTag, Tag } from "../../dao/tags";
 import {
   bulkDeleteTransactions,
   postTransaction,
@@ -28,16 +29,15 @@ const TransactionsTable = () => {
     refetchQueries: ["items/transactions"]
   });
 
-  const [createPayee] = useMutation(postPayee, {
-    refetchQueries: ["items/payees"]
-  });
+  const [createPayee] = useMutation(postPayee);
+  const [createTag] = useMutation(postTag);
 
   const getColumns = getGetColumns({
     async createPayee(name) {
-      const data = { name } as Payee;
-      const payee = await createPayee(data);
-      setQueryData([`item/payees`, { pk: payee.pk }], payee);
-      return payee;
+      return await createPayee({ name } as Payee);
+    },
+    async createTag(name) {
+      return await createTag({ name } as Tag);
     }
   });
 

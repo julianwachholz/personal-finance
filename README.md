@@ -22,6 +22,7 @@
 - reports
 
 - transactions
+
   - filter by date
     - before date
     - after date
@@ -36,3 +37,6 @@
     - multiple
   - filter by category
   - filter by tags
+
+- select model:
+  - load current values to display labels
