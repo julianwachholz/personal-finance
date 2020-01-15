@@ -1,11 +1,12 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Route, RouteComponentProps, Switch } from "react-router";
-import Categories from "../categories";
-import Payees from "../payees";
-import Preferences from "../preferences";
-import Profile from "../profile";
-import Tags from "../tags";
-import SettingsMenu from "./Menu";
+
+const Categories = lazy(() => import("../categories"));
+const Payees = lazy(() => import("../payees"));
+const Preferences = lazy(() => import("../preferences"));
+const Profile = lazy(() => import("../profile"));
+const Tags = lazy(() => import("../tags"));
+const SettingsMenu = lazy(() => import("./Menu"));
 
 const Settings = ({ match }: RouteComponentProps) => (
   <Switch>

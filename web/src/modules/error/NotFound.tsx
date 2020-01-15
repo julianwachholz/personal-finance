@@ -1,18 +1,19 @@
 import { Button } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useTitle from "../../utils/useTitle";
+import BaseModule from "../base/BaseModule";
 
 const NotFound = () => {
+  const location = useLocation();
   useTitle(`Error 404`);
   return (
-    <div>
-      <h1>Error 404</h1>
-      <p>Not found</p>
+    <BaseModule title="Error 404">
+      <p>We looked everywhere but couldn't find "{location.pathname}".</p>
       <Link to="/">
         <Button type="primary">Go to Dashboard</Button>
       </Link>
-    </div>
+    </BaseModule>
   );
 };
 

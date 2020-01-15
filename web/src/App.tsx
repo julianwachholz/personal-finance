@@ -1,21 +1,27 @@
+import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import "antd/dist/antd.css";
-import React, { useEffect } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import AppLayout from "./components/layout/Layout";
 import MobileLayout from "./components/layout/MobileLayout";
-import Accounts from "./modules/accounts";
-import Login from "./modules/auth/Login";
-import Budgets from "./modules/budgets";
-import Dashboard from "./modules/dashboard/Dashboard";
+import BaseModule from "./modules/base/BaseModule";
 import NotFound from "./modules/error/NotFound";
-import Reports from "./modules/reports";
-import Settings from "./modules/settings";
-import Transactions from "./modules/transactions";
 import { useAuth } from "./utils/AuthProvider";
 import { useSettings } from "./utils/SettingsProvider";
+
+// Lazy components
+const Accounts = lazy(() => import("./modules/accounts"));
+const Budgets = lazy(() => import("./modules/budgets"));
+const Dashboard = lazy(() => import("./modules/dashboard"));
+const Reports = lazy(() => import("./modules/reports"));
+const Settings = lazy(() => import("./modules/settings"));
+const Transactions = lazy(() => import("./modules/transactions"));
+
+// Lazy components (unauthenticated)
+const Login = lazy(() => import("./modules/auth/Login"));
 
 const App = () => {
   const { theme } = useSettings();
@@ -31,31 +37,54 @@ const App = () => {
   if (isLoading) {
     return (
       <div className={`app-loading app--${theme}`}>
-        <Spin delay={100} size="large" tip="Loading..." />
+        <Spin
+          delay={100}
+          size="large"
+          indicator={<LoadingOutlined />}
+          tip="Loading..."
+        />
       </div>
     );
   }
 
+  const fallback = isMobile ? (
+    <BaseModule title={document.title.replace(" - Shinywaffle", "")}>
+      <div className="app-loading">
+        <Spin
+          delay={100}
+          size="large"
+          indicator={<LoadingOutlined />}
+          tip="Loading..."
+        />
+      </div>
+    </BaseModule>
+  ) : (
+    <Spin delay={100} tip="Loading..." />
+  );
+
   return isAuthenticated ? (
     <Layout>
-      <Switch>
-        <Route exact path="/" component={Dashboard} />
-        <Route path="/transactions" component={Transactions} />
-        <Route path="/reports" component={Reports} />
-        <Route path="/accounts" component={Accounts} />
-        <Route path="/budgets" component={Budgets} />
-        <Route path="/settings" component={Settings} />
-        <Route exact path="/404" component={NotFound} />
-        <Route render={() => <Redirect to="/404" />} />
-      </Switch>
+      <Suspense fallback={fallback}>
+        <Switch>
+          <Route exact path="/" component={Dashboard} />
+          <Route path="/transactions" component={Transactions} />
+          <Route path="/reports" component={Reports} />
+          <Route path="/accounts" component={Accounts} />
+          <Route path="/budgets" component={Budgets} />
+          <Route path="/settings" component={Settings} />
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </Layout>
   ) : (
-    <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/recover" render={() => <p>Forgot password</p>} />
-      <Route path="/register" render={() => <p>Register</p>} />
-      <Route render={() => <Redirect to="/login" />} />
-    </Switch>
+    <Suspense fallback={fallback}>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/recover" render={() => <p>Forgot password</p>} />
+        <Route path="/register" render={() => <p>Register</p>} />
+        <Route render={() => <Redirect to="/login" />} />
+      </Switch>
+    </Suspense>
   );
 };
 
