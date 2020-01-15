@@ -8,20 +8,15 @@
       "type": "image/x-icon"
     },
     {
-      "src": "waffle192.png",
+      "src": "icon512.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "waffle384.png",
-      "type": "image/png",
-      "sizes": "384x384",
+      "sizes": "512x512",
       "purpose": "maskable any"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#4287f5",
+  "theme_color": "#108ee9",
   "background_color": "#eeeeee",
   "orientation": "portrait"
 }
