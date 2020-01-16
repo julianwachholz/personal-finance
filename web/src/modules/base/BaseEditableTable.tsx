@@ -91,7 +91,6 @@ interface EditableTableProps<T extends ModelWithLabel> {
   ) => EditableColumnsType<T>;
   pagination?: boolean;
   showSearch?: boolean;
-  onSearch?: (search?: string) => void;
   actions?: React.ReactElement[];
   extraActions?: boolean | React.ReactElement[];
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
@@ -99,7 +98,7 @@ interface EditableTableProps<T extends ModelWithLabel> {
 
   // can records be edited inline?
   editable?: boolean;
-  isEditable?: (record: T) => boolean;
+  canEdit?: (record: T) => boolean;
   inlineCreateButtons?: InlineCreateButton[];
   onSave?: (item: T) => Promise<T>;
   // default values for a new item
@@ -118,13 +117,12 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   getColumns,
   pagination = true,
   showSearch = true,
-  onSearch = () => {},
   actions = [],
   extraActions = true,
   extraRowActions,
   tableProps = {},
   editable = false,
-  isEditable = () => true,
+  canEdit = () => true,
   inlineCreateButtons,
   onSave,
   defaultValues = {},
@@ -209,7 +207,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
         align: "right",
         width: tableSize === "small" ? 136 : 165,
         render(_, item, i) {
-          const canEdit = editable && isEditable(item);
+          const canEditRecord = editable && canEdit(item);
           return isEditing(item) ? (
             <>
               <Button
@@ -226,7 +224,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             </>
           ) : (
             <>
-              {canEdit && (
+              {canEditRecord && (
                 <Button type="link" onClick={() => editItem(item)}>
                   Edit
                 </Button>
@@ -352,6 +350,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   const rowSelection: TableRowSelection<T> | undefined = bulkMode
     ? {
         type: "checkbox",
+        getCheckboxProps: item => ({ disabled: !canEdit(item) }),
         selectedRowKeys: selectedKeys,
         onChange: selectedRowKeys => {
           setSelectedKeys(selectedRowKeys as number[]);

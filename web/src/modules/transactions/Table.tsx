@@ -7,6 +7,7 @@ import { Payee, postPayee } from "../../dao/payees";
 import { postTag, Tag } from "../../dao/tags";
 import {
   bulkDeleteTransactions,
+  canEdit,
   postTransaction,
   putTransaction,
   Transaction,
@@ -48,7 +49,7 @@ const TransactionsTable = () => {
       useItems={useTransactions}
       getColumns={getColumns}
       editable
-      isEditable={tx => !tx.is_initial}
+      canEdit={canEdit}
       inlineCreateButtons={[
         {
           key: "create-income",

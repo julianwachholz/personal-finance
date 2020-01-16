@@ -71,3 +71,11 @@ export const bulkDeleteTransactions = makeItemsAction(
   "bulk_delete",
   "DELETE"
 );
+
+export const canEdit = (tx: Transaction) => {
+  return !tx.is_initial;
+};
+
+export const canDelete = (tx: Transaction) => {
+  return !tx.is_initial;
+};
