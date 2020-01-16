@@ -51,12 +51,13 @@ INSTALLED_APPS = [
     "data_wizard",
     "data_wizard.sources",
     # "apps.taxdata",
-    "apps.settings",
-    "apps.categories",
-    "apps.payees",
-    "apps.tags",
     "apps.registration",
     "apps.accounts",
+    "apps.tags",
+    "apps.categories",
+    "apps.budgets",
+    "apps.settings",
+    "apps.payees",
     "apps.transactions",
 ]
 
