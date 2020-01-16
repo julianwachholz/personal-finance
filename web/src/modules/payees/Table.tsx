@@ -76,9 +76,7 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
         ) : null;
       },
       editable: true,
-      formField: <CategorySelect />,
-      formValue: (key, value) => ["set_default_category", value?.pk],
-      formName: "set_default_category",
+      formField: <CategorySelect allowClear />,
       rules: []
     }
   ];
@@ -88,6 +86,9 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
       editable
       onSave={async payee => {
         const isNew = payee.pk === 0;
+        if (!payee.default_category) {
+          payee.default_category = null;
+        }
         try {
           const savedPayee = isNew
             ? await create(payee)

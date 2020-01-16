@@ -52,6 +52,11 @@ export interface ModelWithLabel {
   label: string;
 }
 
+export interface RelatedModel {
+  value: number;
+  label: string;
+}
+
 interface Items<T extends Model> {
   count: number;
   next: number | null;

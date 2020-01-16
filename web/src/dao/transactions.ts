@@ -5,7 +5,7 @@ import {
   makePutItem,
   makeUseItem,
   makeUseItems,
-  ModelWithLabel
+  RelatedModel
 } from "./base";
 
 interface HasIcon {
@@ -22,10 +22,10 @@ interface HasColor {
 
 export interface Transaction {
   pk: number;
-  account: ModelWithLabel & HasIcon;
-  category?: ModelWithLabel & HasIcon & HasName;
-  payee?: ModelWithLabel;
-  tags: (ModelWithLabel & HasColor)[];
+  account: RelatedModel & HasIcon;
+  category: (RelatedModel & HasIcon & HasName) | null;
+  payee: RelatedModel | null;
+  tags: (RelatedModel & HasColor)[];
 
   datetime: Date;
 
@@ -37,11 +37,6 @@ export interface Transaction {
 
   text: string;
   reference: string;
-
-  set_account: number;
-  set_category: number | null;
-  set_payee: number | null;
-  set_tags: number[];
 
   readonly label: string;
 

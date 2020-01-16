@@ -52,7 +52,7 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
         </Item>
         {category.parent ? (
           <Item label="Parent">
-            <Link to={`/settings/categories/${category.parent.pk}`}>
+            <Link to={`/settings/categories/${category.parent.value}`}>
               {category.parent.label}
             </Link>
           </Item>

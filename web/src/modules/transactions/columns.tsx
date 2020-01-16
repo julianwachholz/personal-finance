@@ -10,7 +10,7 @@ import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { useAccounts } from "../../dao/accounts";
-import { ModelWithLabel } from "../../dao/base";
+import { RelatedModel } from "../../dao/base";
 import { Payee, usePayees } from "../../dao/payees";
 import { Tag as TagModel, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
@@ -29,23 +29,33 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
   return (location, form) => {
     const quickCreatePayee =
       form && createPayee
-        ? async (name: string, cb: (item: Payee) => Promise<void>) => {
+        ? async (name: string) => {
+            form?.setFieldsValue({
+              payee: { value: "0", label: `Creating "${name}"...` }
+            });
             const payee = await createPayee(name);
-            await cb(payee);
-            form?.setFieldsValue({ set_payee: payee.pk });
+            form?.setFieldsValue({
+              payee: { value: payee.pk, label: payee.label }
+            });
           }
         : undefined;
 
     const quickCreateTag =
       form && createTag
-        ? async (name: string, cb: (item: TagModel) => Promise<void>) => {
+        ? async (name: string) => {
+            const tags = form
+              .getFieldValue("tags")
+              .filter((tag: any) => tag.value !== "0");
+
+            const loadingTags = [
+              ...tags,
+              { value: "0", label: `Creating ${name}...` }
+            ];
+
+            form?.setFieldsValue({ tags: loadingTags });
             const tag = await createTag(name);
-            await cb(tag);
-            const set_tags = form
-              .getFieldValue("set_tags")
-              .filter((pk: string) => pk !== "0");
-            set_tags.push(tag.pk);
-            form?.setFieldsValue({ set_tags });
+            tags.push({ value: tag.pk, label: tag.label });
+            form?.setFieldsValue({ tags });
           }
         : undefined;
 
@@ -65,19 +75,14 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
       {
         title: "Account",
         dataIndex: "account",
-        formName: "set_account",
         ellipsis: true,
         editable: true,
         formField: <ModelSelect useItems={useAccounts} />,
-        formValue: (key, value) => {
-          if (key === "account") {
-            return ["set_account", value?.pk];
-          }
-          return [key, value];
-        },
-        render(account: ModelWithLabel) {
+        render(account: RelatedModel) {
           if (account) {
-            return <Link to={`/accounts/${account.pk}`}>{account.label}</Link>;
+            return (
+              <Link to={`/accounts/${account.value}`}>{account.label}</Link>
+            );
           }
         }
       },
@@ -98,7 +103,6 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         dataIndex: "payee",
         ellipsis: true,
         editable: true,
-        formName: "set_payee",
         formField: (
           <ModelSelect
             allowClear
@@ -107,18 +111,17 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
             onItemSelect={payee => {
               if (form && payee.default_category) {
                 form.setFieldsValue({
-                  set_category: payee.default_category.pk
+                  category: payee.default_category
                 });
               }
             }}
           />
         ),
         rules: [],
-        formValue: (key, value) => ["set_payee", value?.pk],
-        render(payee: ModelWithLabel) {
+        render(payee: RelatedModel) {
           if (payee) {
             return (
-              <Link to={`/settings/payees/${payee.pk}`}>{payee.label}</Link>
+              <Link to={`/settings/payees/${payee.value}`}>{payee.label}</Link>
             );
           }
         }
@@ -128,11 +131,9 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         dataIndex: "category",
         editable: true,
         ellipsis: true,
-        formName: "set_category",
         formField: <CategorySelect allowClear />,
-        formValue: (key, value) => ["set_category", value?.pk],
         rules: [],
-        render(category: ModelWithLabel, tx) {
+        render(category: RelatedModel, tx) {
           if (tx.is_transfer) {
             return <em>Transfer</em>;
           }
@@ -140,7 +141,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
             return <em>Initial balance</em>;
           }
           return category ? (
-            <Link to={`/settings/categories/${category.pk}`}>
+            <Link to={`/settings/categories/${category.value}`}>
               {category.label}
             </Link>
           ) : (
@@ -160,11 +161,6 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         dataIndex: "tags",
         editable: true,
         ellipsis: true,
-        formName: "set_tags",
-        formValue: (key, value) => [
-          "set_tags",
-          value.map((v: ModelWithLabel) => v?.pk)
-        ],
         formField: (
           <ModelSelect
             mode="multiple"
@@ -173,11 +169,11 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
           />
         ),
         rules: [],
-        render(tags: TagModel[]) {
+        render(tags: (RelatedModel & { color: string })[]) {
           return tags ? (
             <>
               {tags.map((tag, i) => (
-                <Link key={i} to={`/settings/tags/${tag.pk}`}>
+                <Link key={i} to={`/settings/tags/${tag.value}`}>
                   <Tag color={tag.color}>{tag.label}</Tag>
                 </Link>
               ))}

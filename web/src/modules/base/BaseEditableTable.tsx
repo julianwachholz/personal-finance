@@ -160,20 +160,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   const [editLoading, setEditLoading] = useState(false);
   const isEditing = (item: T) => item.pk === editingItem?.pk;
   const editItem = (item: T) => {
-    const extra: any[][] = [];
-    const mapped = Object.entries(item).map(([key, value]) => {
-      const col = columns!.find(c => c.formName === key || c.dataIndex === key);
-      if (col?.formValue) {
-        extra.push(col.formValue(key, value));
-      }
-      return [key, value];
-    });
-
-    const mappedItem = Object.fromEntries([
-      ...mapped,
-      ...extra.filter(([k, v]) => !!v)
-    ]);
-    const data = { ...getDefaultValues(defaultValues), ...mappedItem };
+    const data = { ...getDefaultValues(defaultValues), ...item };
     form.resetFields();
     form.setFieldsValue(data);
     setEditingItem(data);
@@ -195,7 +182,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
               item,
               title: col.title,
               dataIndex: col.dataIndex,
-              name: col.formName ?? col.dataIndex,
+              name: col.dataIndex,
               field: col.formField ?? <Input />,
               rules: col.rules,
               editing: isEditing(item)

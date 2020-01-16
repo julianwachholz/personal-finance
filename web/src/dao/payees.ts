@@ -5,7 +5,7 @@ import {
   makePutItem,
   makeUseItem,
   makeUseItems,
-  ModelWithLabel
+  RelatedModel
 } from "./base";
 
 type PayeeType = "business" | "private";
@@ -14,7 +14,7 @@ export interface Payee {
   pk: number;
   name: string;
   type: PayeeType;
-  default_category?: ModelWithLabel;
+  default_category: RelatedModel | null;
 
   readonly label: string;
 }

@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from util.serializers import UserPKField
+
 from .models import Category
 
 
@@ -32,9 +34,7 @@ class CategorySerializer(serializers.ModelSerializer):
         write_only=True,
         required=False,
     )
-    target = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(), write_only=True, required=False
-    )
+    target = UserPKField(queryset=Category.objects, write_only=True, required=False)
 
     class Meta:
         model = Category

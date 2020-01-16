@@ -59,8 +59,8 @@ const TransactionsTable = () => {
           },
           defaultValues: {
             type: "income",
-            set_account: settings?.default_credit_account,
-            set_category: settings?.default_credit_category
+            account: settings?.default_credit_account,
+            category: settings?.default_credit_category
           }
         },
         {
@@ -71,7 +71,7 @@ const TransactionsTable = () => {
           },
           defaultValues: {
             type: "expense",
-            set_account: settings?.default_debit_account
+            account: settings?.default_debit_account
           }
         }
       ]}
@@ -80,11 +80,11 @@ const TransactionsTable = () => {
         if (isNew && tx.type === "expense" && tx.amount[0] !== "-") {
           tx.amount = `-${tx.amount}`;
         }
-        if (!tx.set_category) {
-          tx.set_category = null;
+        if (!tx.category) {
+          tx.category = null;
         }
-        if (!tx.set_payee) {
-          tx.set_payee = null;
+        if (!tx.payee) {
+          tx.payee = null;
         }
         try {
           const savedTx = isNew

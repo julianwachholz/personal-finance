@@ -26,11 +26,11 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
       setSubmitting(false);
       return;
     }
-    const newData: Category = {
-      ...values
-    };
+    if (values.target) {
+      values.target = values.target.value;
+    }
     try {
-      await onSave(newData);
+      await onSave(values);
     } catch (e) {
       setSubmitting(false);
     }

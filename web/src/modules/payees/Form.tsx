@@ -29,7 +29,7 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
       onFinish={onSubmit}
       initialValues={{
         type: "business",
-        set_default_category: data?.default_category?.pk,
+        default_category: data?.default_category?.value,
         ...data
       }}
       size={isMobile ? "large" : "middle"}

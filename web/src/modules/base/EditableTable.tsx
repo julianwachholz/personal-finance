@@ -12,12 +12,7 @@ type FormField =
 
 interface EditableColumnType<T> extends ColumnType<T> {
   editable?: boolean;
-  formName?: string;
   formField?: FormField;
-
-  // Get the form value entry from an existing value, in addition to the actual value
-  formValue?: (key: string, value: any) => [string, any];
-
   rules?: Rule[];
 }
 

@@ -1,10 +1,10 @@
-import { authFetch } from "./base";
+import { authFetch, RelatedModel } from "./base";
 
 export interface Settings {
   default_currency: string;
-  default_debit_account?: number;
-  default_credit_account?: number;
-  default_credit_category?: number;
+  default_debit_account: RelatedModel | null;
+  default_credit_account: RelatedModel | null;
+  default_credit_category: RelatedModel | null;
   decimal_separator: string;
   group_separator: string;
   use_colors: boolean;

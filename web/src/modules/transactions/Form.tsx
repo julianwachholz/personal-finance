@@ -1,13 +1,12 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useEffect, useState } from "react";
-import { setQueryData, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import CategorySelect from "../../components/form/CategorySelect";
 import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { useAccounts } from "../../dao/accounts";
-import { ModelWithLabel } from "../../dao/base";
 import { Payee, postPayee, usePayees } from "../../dao/payees";
 import { useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
@@ -25,14 +24,12 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
   const [submitting, setSubmitting] = useState(false);
   const [createPayee] = useMutation(postPayee);
 
-  const quickCreatePayee = async (
-    name: string,
-    cb: (item: Payee) => Promise<void>
-  ) => {
+  const quickCreatePayee = async (name: string) => {
+    form?.setFieldsValue({
+      payee: { value: "0", label: `Creating "${name}"...` }
+    });
     const payee = await createPayee({ name } as Payee);
-    setQueryData([`item/payees`, { pk: payee.pk }], payee);
-    await cb(payee);
-    form?.setFieldsValue({ set_payee: payee.pk });
+    form?.setFieldsValue({ payee: { value: payee.pk, label: payee.label } });
   };
 
   const onSubmit = async (tx: any) => {
@@ -48,12 +45,11 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
     if (isNew && tx.type === "expense" && tx.amount[0] !== "-") {
       tx.amount = `-${tx.amount}`;
     }
-
-    if (!tx.set_category) {
-      tx.set_category = null;
+    if (!tx.category) {
+      tx.category = null;
     }
-    if (!tx.set_payee) {
-      tx.set_payee = null;
+    if (!tx.payee) {
+      tx.payee = null;
     }
 
     try {
@@ -65,16 +61,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
 
   useEffect(() => {
     if (data) {
-      const mapped = Object.entries(data).map(([key, value]) => {
-        if (["account", "category", "payee"].includes(key)) {
-          return [`set_${key}`, value?.pk];
-        }
-        if (key === "tags") {
-          return ["set_tags", value.map((t: ModelWithLabel) => t.pk)];
-        }
-        return [key, value];
-      });
-      form.setFieldsValue(Object.fromEntries(mapped));
+      form.setFieldsValue(data);
     }
   }, [data, form]);
 
@@ -82,14 +69,14 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
     if (type === "expense") {
       form.setFieldsValue({
         type: "expense",
-        set_account: settings?.default_debit_account
+        account: settings?.default_debit_account
       });
     }
     if (type === "income") {
       form.setFieldsValue({
         type: "income",
-        set_account: settings?.default_credit_account,
-        set_category: settings?.default_credit_category
+        account: settings?.default_credit_account,
+        category: settings?.default_credit_category
       });
     }
   }, [type, form, settings]);
@@ -126,13 +113,13 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         </Col>
       </Row>
       <Form.Item
-        name="set_account"
+        name="account"
         label="Account"
         rules={[{ required: true, message: "Select an account" }]}
       >
         <ModelSelect useItems={useAccounts} />
       </Form.Item>
-      <Form.Item name="set_payee" label="Payee">
+      <Form.Item name="payee" label="Payee">
         <ModelSelect
           allowClear
           defaultActiveFirstOption
@@ -141,19 +128,19 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
           onItemSelect={payee => {
             if (form && payee.default_category) {
               form.setFieldsValue({
-                set_category: payee.default_category.pk
+                category: payee.default_category
               });
             }
           }}
         />
       </Form.Item>
-      <Form.Item name="set_category" label="Category">
+      <Form.Item name="category" label="Category">
         <CategorySelect allowClear size="large" />
       </Form.Item>
       <Form.Item name="text" label="Description">
         <Input />
       </Form.Item>
-      <Form.Item name="set_tags" label="Tags">
+      <Form.Item name="tags" label="Tags">
         <ModelSelect useItems={useTags} mode="multiple" />
       </Form.Item>
       <Form.Item>

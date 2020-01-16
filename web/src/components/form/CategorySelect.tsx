@@ -17,7 +17,7 @@ const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
     const renderNode = (category: TreeCategory) => {
       const props = {
         key: category.pk.toString(),
-        value: category.pk.toString(),
+        value: category.pk,
         title: category.label,
         searchIndex: category.label.toLowerCase()
       };
@@ -32,11 +32,10 @@ const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
     }
   }, [categoryTree]);
 
-  value = value?.toString();
-
   return (
     <TreeSelect<string>
       showSearch
+      labelInValue
       dropdownStyle={{ maxHeight: 260, minWidth: 300 }}
       filterTreeNode={(search, node: any) =>
         node.props.searchIndex.includes(search.toLowerCase())

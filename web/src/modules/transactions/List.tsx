@@ -10,6 +10,7 @@ import DateTime from "../../components/data/Date";
 import Money from "../../components/data/Money";
 import { UseItemsPaginated } from "../../dao/base";
 import {
+  canEdit,
   deleteTransaction,
   Transaction,
   useTransactions
@@ -35,7 +36,7 @@ export const renderTransaction = (
   return (
     <SwipeAction
       key={tx.pk}
-      disabled={doDelete === false || tx.is_initial}
+      disabled={doDelete === false || !canEdit(tx)}
       left={
         [
           {
@@ -55,9 +56,13 @@ export const renderTransaction = (
         extra={
           <Money value={{ amount: tx.amount, currency: tx.amount_currency }} />
         }
-        onClick={() => {
-          history.push(`/transactions/${tx.pk}`);
-        }}
+        onClick={
+          canEdit(tx)
+            ? () => {
+                history.push(`/transactions/${tx.pk}`);
+              }
+            : undefined
+        }
       >
         <DateTime value={tx.datetime} />
         {title ? " - " : ""}
@@ -71,7 +76,7 @@ export const renderTransaction = (
                 <em>{tx.is_initial ? "Initial balance" : "uncategorized"}</em>
               )}{" "}
               {tx.tags.map(t => (
-                <Tag key={t.pk} color={t.color}>
+                <Tag key={t.value} color={t.color}>
                   {t.label}
                 </Tag>
               ))}
