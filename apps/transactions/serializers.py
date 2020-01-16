@@ -13,7 +13,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     account = UserPKWithLabelField(queryset=Account.objects, extra=["icon"])
     category = UserPKWithLabelField(
         queryset=Category.objects,
-        extra=["icon", "name"],
+        extra=[("icon", "get_icon"), "name"],
         required=False,
         allow_null=True,
     )

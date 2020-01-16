@@ -39,7 +39,14 @@ class PKWithLabelField(serializers.RelatedField):
         """Show a nice key + value dict instead of just the ID."""
         rep = {"value": obj.pk, "label": str(obj)}
         for field in self.extra:
-            rep[field] = getattr(obj, field)
+            if isinstance(field, tuple):
+                field, getter = field
+                value = getattr(obj, getter)
+                if callable(value):
+                    value = value()
+                rep[field] = value
+            else:
+                rep[field] = getattr(obj, field)
         return rep
 
     def to_internal_value(self, data):
