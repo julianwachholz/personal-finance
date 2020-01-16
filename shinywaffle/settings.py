@@ -50,11 +50,12 @@ INSTALLED_APPS = [
     "colorfield",
     "data_wizard",
     "data_wizard.sources",
-    "apps.taxdata",
+    # "apps.taxdata",
     "apps.settings",
     "apps.categories",
     "apps.payees",
     "apps.tags",
+    "apps.registration",
     "apps.accounts",
     "apps.transactions",
 ]
