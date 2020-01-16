@@ -10,6 +10,7 @@ from .models import Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     account = UserPKWithLabelField(queryset=Account.objects, extra=["icon"])
     category = UserPKWithLabelField(
         queryset=Category.objects,
@@ -28,6 +29,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = (
             "pk",
+            "user",
             "datetime",
             "amount",
             "amount_currency",

@@ -58,6 +58,3 @@ class TransactionViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
         qs = qs.select_related("account", "category", "payee")
         qs = qs.prefetch_related("tags")
         return qs
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)

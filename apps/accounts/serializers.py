@@ -6,7 +6,7 @@ from .models import Account
 
 class AccountSerializer(serializers.HyperlinkedModelSerializer):
     label = serializers.CharField(read_only=True, source="__str__")
-
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     balance = serializers.DecimalField(
         source="balance.amount", max_digits=10, decimal_places=2, read_only=True
     )
@@ -21,6 +21,7 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
             "pk",
             "label",
             "name",
+            "user",
             "institution",
             "balance",
             "set_balance",

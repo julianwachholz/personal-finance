@@ -14,8 +14,8 @@ class ParentCategorySerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     label = serializers.CharField(source="__str__", read_only=True)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     icon = serializers.CharField(source="get_icon", read_only=True)
     color = serializers.CharField(source="get_color", read_only=True)
     parent = ParentCategorySerializer(read_only=True)
@@ -40,6 +40,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = [
             "pk",
+            "user",
             "label",
             "name",
             "icon",

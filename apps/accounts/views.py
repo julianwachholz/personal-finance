@@ -32,9 +32,8 @@ class AccountViewSet(viewsets.ModelViewSet):
         return self.request.user.accounts.all()
 
     def perform_create(self, serializer):
-        user = self.request.user
-        pos = user.accounts.count()
-        serializer.save(user=self.request.user, pos=pos)
+        pos = self.request.user.accounts.count()
+        serializer.save(pos=pos)
 
     @action(detail=True, methods=["post"])
     def move(self, request, pk, **kwargs):
