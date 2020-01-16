@@ -1,6 +1,7 @@
+import os
 import time
 
-DELAY = 0.5
+DELAY = float(os.getenv("API_DELAY", 0.0))
 
 
 class TimeDelayMiddleware(object):
