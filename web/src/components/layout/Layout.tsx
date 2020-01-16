@@ -10,7 +10,7 @@ const { Sider, Content, Footer } = Layout;
 const AppLayout: React.FC = ({ children }) => {
   const { theme, menuCollapsed, toggleMenu } = useSettings();
   return (
-    <Layout className={`app--${theme}`}>
+    <Layout>
       <Sider
         collapsible
         collapsed={menuCollapsed}

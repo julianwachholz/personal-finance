@@ -1,6 +1,12 @@
 .ant-layout {
   min-height: 100vh;
 
+  .ant-layout-sider-children {
+    position: fixed;
+    left: 0;
+    width: 200px;
+  }
+
   .content-container {
     background: #fff;
     padding: 24px;
