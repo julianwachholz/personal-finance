@@ -3,7 +3,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
-import { ModelWithLabel } from "../../dao/base";
+import { RelatedModel } from "../../dao/base";
 import {
   bulkDeletePayees,
   deletePayee,
@@ -68,9 +68,9 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
     {
       title: "Default Category",
       dataIndex: "default_category",
-      render(category: ModelWithLabel) {
+      render(category: RelatedModel) {
         return category ? (
-          <Link to={`/settings/categories/${category.pk}`}>
+          <Link to={`/settings/categories/${category.value}`}>
             {category.label}
           </Link>
         ) : null;
