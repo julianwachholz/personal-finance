@@ -1,9 +1,11 @@
 import { Layout } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 import { useSettings } from "../../utils/SettingsProvider";
 import MainMenu from "../menu/Menu";
 import Breadcrumbs from "./Breadcrumbs";
 import "./Layout.scss";
+import Logo from "./Logo";
 
 const { Sider, Content, Footer } = Layout;
 
@@ -17,6 +19,10 @@ const AppLayout: React.FC = ({ children }) => {
         onCollapse={toggleMenu}
         theme={theme}
       >
+        <Link to="/" className="app-title">
+          <Logo />
+          <span>ShinyWaffle</span>
+        </Link>
         <MainMenu />
       </Sider>
       <Layout>
