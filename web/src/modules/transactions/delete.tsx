@@ -11,7 +11,7 @@ import { COLOR_DANGER } from "../../utils/constants";
 export const confirmDeleteTransaction = (
   tx: Transaction,
   doDelete: MutateFunction<void, Transaction>,
-  history: History
+  history?: History
 ) => {
   Modal.confirm({
     title: `Delete Transaction?`,
@@ -38,7 +38,7 @@ export const confirmDeleteTransaction = (
     onOk: async () => {
       await doDelete(tx);
       message.info(`Transaction #${tx.pk} deleted`);
-      history.push(`/transactions`);
+      history?.push(`/transactions`);
     }
   });
 };

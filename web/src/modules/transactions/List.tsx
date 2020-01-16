@@ -43,7 +43,7 @@ export const renderTransaction = (
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
               if (doDelete) {
-                confirmDeleteTransaction(tx, doDelete, history);
+                confirmDeleteTransaction(tx, doDelete);
               }
             }
           }

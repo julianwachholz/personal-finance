@@ -1,10 +1,16 @@
+import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
-import { putTransaction, useTransaction } from "../../dao/transactions";
+import {
+  deleteTransaction,
+  putTransaction,
+  useTransaction
+} from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
+import { confirmDeleteTransaction } from "./delete";
 import TransactionForm from "./Form";
 
 interface DetailParams {
@@ -20,6 +26,9 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const [mutate] = useMutation(putTransaction, {
     refetchQueries: ["items/transactions"]
   });
+  const [doDelete] = useMutation(deleteTransaction, {
+    refetchQueries: ["items/transactions"]
+  });
   const history = useHistory();
 
   useTitle(`Edit Transaction`);
@@ -29,6 +38,17 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
+      rightContent={
+        tx ? (
+          <DeleteFilled
+            onClick={() => {
+              confirmDeleteTransaction(tx, doDelete, history);
+            }}
+          />
+        ) : (
+          undefined
+        )
+      }
     >
       {tx && !isLoading ? (
         <TransactionForm
