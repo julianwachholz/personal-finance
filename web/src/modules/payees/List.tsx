@@ -25,7 +25,7 @@ const renderPayee = (
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
-              confirmDeletePayee(payee, doDelete, history);
+              confirmDeletePayee(payee, doDelete);
             }
           }
         ] as any

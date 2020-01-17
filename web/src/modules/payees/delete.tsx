@@ -9,7 +9,7 @@ import { COLOR_DANGER } from "../../utils/constants";
 export const confirmDeletePayee = (
   payee: Payee,
   doDelete: MutateFunction<void, Payee>,
-  history: History
+  history?: History
 ) => {
   Modal.confirm({
     title: `Delete Payee "${payee.label}"?`,
@@ -21,7 +21,7 @@ export const confirmDeletePayee = (
     onOk: async () => {
       await doDelete(payee);
       message.info(`Payee "${payee.label}" deleted`);
-      history.push(`/settings/payees`);
+      history?.push(`/settings/payees`);
     }
   });
 };
