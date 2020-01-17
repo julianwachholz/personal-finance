@@ -12,7 +12,9 @@ class BudgetViewSet(viewsets.ModelViewSet):
     search_fields = ("name",)
 
     def get_queryset(self):
-        return self.request.user.budgets.all()
+        qs = self.request.user.budgets.all()
+        qs.prefetch_related("categories")
+        return qs
 
     def perform_create(self, serializer):
         pos = self.request.user.budgets.count()

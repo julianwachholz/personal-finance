@@ -1,14 +1,11 @@
 import React from "react";
-import useTitle from "../../utils/useTitle";
-import BaseModule from "../base/BaseModule";
+import { Route, RouteComponentProps, Switch } from "react-router";
+import Budgets from "./List";
 
-const Budgets = () => {
-  useTitle(`Budgets`);
-  return (
-    <BaseModule title="Budgets">
-      <p>TODO: Budgets</p>
-    </BaseModule>
-  );
-};
+const Module = ({ match }: RouteComponentProps) => (
+  <Switch>
+    <Route path={match.url} component={Budgets} />
+  </Switch>
+);
 
-export default Budgets;
+export default Module;

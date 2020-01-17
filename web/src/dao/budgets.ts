@@ -19,6 +19,10 @@ export interface Budget {
   target: string;
   target_currency: string;
 
+  readonly current_amount: string;
+  readonly remaining_amount: string;
+  readonly percentage: number;
+
   readonly label: string;
 }
 

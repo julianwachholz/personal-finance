@@ -1,8 +1,14 @@
+from decimal import Decimal
+
 from django.contrib.postgres.fields import CICharField
 from django.db import models
+from django.utils.functional import cached_property
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 from djmoney.models.validators import MinMoneyValidator
+
+from apps.transactions.models import Transaction
 
 
 class Budget(models.Model):
@@ -61,3 +67,47 @@ class Budget(models.Model):
 
     def __repr__(self):
         return f"<Budget user={self.user!r} name={self.name!r}>"
+
+    def _period_filter(self):
+        """Get kwargs to filter transactions by the current period."""
+        if self.period != self.PERIOD_MONTH:
+            raise NotImplementedError()
+
+        # only monthly period for now
+        date = now()
+        return {"datetime__year": date.year, "datetime__month": date.month}
+
+    def _category_filter(self):
+        return {"category__in": self.categories.all()}
+
+    @cached_property
+    def current_amount(self):
+        """Current amount for the active period."""
+        qs = Transaction.objects.filter(
+            user=self.user,
+            # ignore initial balances and transfers
+            is_initial=False,
+            related__isnull=True,
+        )
+
+        # filter by datetime period
+        qs = qs.filter(**self._period_filter())
+
+        # filter by categories
+        if self.is_blacklist:
+            qs = qs.exclude(**self._category_filter())
+        else:
+            qs = qs.filter(**self._category_filter())
+
+        aggregate = qs.aggregate(sum=models.Sum("amount"))
+        return aggregate["sum"] or Decimal(0)
+
+    @property
+    def remaining_amount(self):
+        """Remaining amount for the active period."""
+        return self.target.amount + self.current_amount
+
+    @property
+    def percentage(self):
+        """Current percentage for the active period."""
+        return round(self.current_amount / self.target.amount * -100)
