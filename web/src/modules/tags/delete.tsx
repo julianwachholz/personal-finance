@@ -9,7 +9,7 @@ import { COLOR_DANGER } from "../../utils/constants";
 export const confirmDeleteTag = (
   tag: Tag,
   doDelete: MutateFunction<void, Tag>,
-  history: History
+  history?: History
 ) => {
   Modal.confirm({
     title: `Delete Tag "${tag.label}"?`,
@@ -21,7 +21,7 @@ export const confirmDeleteTag = (
     onOk: async () => {
       await doDelete(tag);
       message.info(`Tag "${tag.label}" deleted`);
-      history.push(`/settings/tags`);
+      history?.push(`/settings/tags`);
     }
   });
 };

@@ -26,7 +26,7 @@ const renderTag = (
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
-              confirmDeleteTag(tag, doDelete, history);
+              confirmDeleteTag(tag, doDelete);
             }
           }
         ] as any
