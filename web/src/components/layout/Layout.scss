@@ -19,6 +19,14 @@
   padding: 10px;
 }
 
+.ant-list-item {
+  .ant-list-item-action {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
 .ant-layout-sider-collapsed {
   .app-title {
     justify-content: center;

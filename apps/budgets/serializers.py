@@ -20,8 +20,12 @@ class BudgetSerializer(serializers.ModelSerializer):
         queryset=Category.objects, many=True, required=False
     )
 
-    current_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
-    remaining_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    current_amount = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True
+    )
+    remaining_amount = serializers.DecimalField(
+        max_digits=10, decimal_places=2, read_only=True
+    )
 
     class Meta:
         model = Budget

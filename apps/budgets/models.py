@@ -70,12 +70,17 @@ class Budget(models.Model):
 
     def _period_filter(self):
         """Get kwargs to filter transactions by the current period."""
-        if self.period != self.PERIOD_MONTH:
-            raise NotImplementedError()
-
-        # only monthly period for now
         date = now()
-        return {"datetime__year": date.year, "datetime__month": date.month}
+        kwargs = {"datetime__year": date.year}
+
+        if self.period == self.PERIOD_WEEK:
+            kwargs["datetime__week"] = date.isocalendar()[1]
+        if self.period == self.PERIOD_MONTH:
+            kwargs["datetime__month"] = date.month
+        if self.period == self.PERIOD_QUARTER:
+            kwargs["datetime__quarter"] = date.month // 4 + 1
+        # no additional kwargs needed for PERIOD_YEAR
+        return kwargs
 
     def _category_filter(self):
         return {"category__in": self.categories.all()}
@@ -85,6 +90,8 @@ class Budget(models.Model):
         """Current amount for the active period."""
         qs = Transaction.objects.filter(
             user=self.user,
+            # ensure same currency
+            amount_currency=self.target_currency,
             # ignore initial balances and transfers
             is_initial=False,
             related__isnull=True,

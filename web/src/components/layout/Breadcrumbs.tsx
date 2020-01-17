@@ -5,6 +5,7 @@ import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { useAccount } from "../../dao/accounts";
+import { useBudget } from "../../dao/budgets";
 import { useCategory } from "../../dao/categories";
 import { usePayee } from "../../dao/payees";
 import { useTag } from "../../dao/tags";
@@ -27,6 +28,7 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/accounts\/(\d+)\/?$/, pk => useLabel(useAccount(pk))],
 
   [/^\/budgets\/?$/, "Budgets"],
+  [/^\/budgets\/(\d+)\/?$/, pk => useLabel(useBudget(pk))],
   [/^\/settings\/?$/, "Settings"],
   [/^\/settings\/categories\/?$/, "Categories"],
   [/^\/settings\/categories\/(\d+)\/?$/, pk => useLabel(useCategory(pk))],

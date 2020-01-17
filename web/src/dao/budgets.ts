@@ -7,7 +7,21 @@ import {
   RelatedModel
 } from "./base";
 
-export type BudgetPeriod = "weekly" | "monthly" | "quarterly" | "yearly";
+// export type BudgetPeriod = "weekly" | "monthly" | "quarterly" | "yearly";
+
+export enum BudgetPeriod {
+  WEEKLY = "weekly",
+  MONTHLY = "monthly",
+  QUARTERLY = "quarterly",
+  YEARLY = "yearly"
+}
+
+export const PERIOD_CHOICES = [
+  [BudgetPeriod.WEEKLY, "Weekly"],
+  [BudgetPeriod.MONTHLY, "Monthly"],
+  [BudgetPeriod.QUARTERLY, "Quarterly"],
+  [BudgetPeriod.YEARLY, "Yearly"]
+];
 
 export interface Budget {
   pk: number;
