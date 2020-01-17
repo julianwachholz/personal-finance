@@ -1,5 +1,9 @@
+from django.contrib.postgres.fields import CICharField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from djmoney.models.fields import MoneyField
+from djmoney.models.validators import MinMoneyValidator
+from moneyed import Money
 
 
 class Budget(models.Model):
@@ -19,8 +23,10 @@ class Budget(models.Model):
         (PERIOD_YEAR, _("yearly")),
     )
 
-    name = models.CharField(verbose_name=_("name"), max_length=100)
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+    name = CICharField(max_length=100)
+    user = models.ForeignKey(
+        to="auth.User", on_delete=models.CASCADE, related_name="budgets"
+    )
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     period = models.CharField(
@@ -30,15 +36,26 @@ class Budget(models.Model):
         default=PERIOD_MONTH,
     )
 
-    category_whitelist = models.BooleanField(_("include categories"), default=True)
+    is_blacklist = models.BooleanField(
+        verbose_name=_("blacklist categories?"),
+        default=False,
+        help_text=_("Exclude selected categories instead of including them."),
+    )
 
-    include_categories = []
-    exclude_categories = []
+    categories = models.ManyToManyField(to="categories.Category", blank=True)
+
+    target = MoneyField(
+        verbose_name=_("target amount"),
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinMoneyValidator(0)],
+    )
 
     class Meta:
         verbose_name = _("budget")
         verbose_name_plural = _("budgets")
         ordering = ("user", "pos", "name")
+        unique_together = (("user", "name"),)
 
     def __str__(self):
         return self.name

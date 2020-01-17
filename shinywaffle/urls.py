@@ -19,6 +19,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from apps.accounts.views import AccountViewSet
+from apps.budgets.views import BudgetViewSet
 from apps.categories.views import CategoryViewSet
 from apps.payees.views import PayeeViewSet
 from apps.tags.views import TagViewSet
@@ -30,6 +31,7 @@ router.register("payees", PayeeViewSet, basename="payees")
 router.register("categories", CategoryViewSet, basename="categories")
 router.register("accounts", AccountViewSet, basename="accounts")
 router.register("transactions", TransactionViewSet, basename="transactions")
+router.register("budgets", BudgetViewSet, basename="budgets")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
