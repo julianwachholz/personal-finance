@@ -16,6 +16,7 @@ class BudgetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Budget
         fields = (
+            "pk",
             "label",
             "user",
             "name",
