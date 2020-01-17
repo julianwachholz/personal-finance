@@ -24,4 +24,4 @@ class PayeeViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
     ordering_fields = ["name"]
 
     def get_queryset(self):
-        return Payee.objects.filter(user=self.request.user)
+        return self.request.user.payees.all()

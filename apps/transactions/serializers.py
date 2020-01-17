@@ -4,7 +4,7 @@ from apps.accounts.models import Account
 from apps.categories.models import Category
 from apps.payees.models import Payee
 from apps.tags.models import Tag
-from util.serializers import UserPKField, UserPKWithLabelField
+from util.serializers import UserPKWithLabelField
 
 from .models import Transaction
 

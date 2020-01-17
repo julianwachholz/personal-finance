@@ -27,7 +27,9 @@ class Payee(models.Model):
         to="categories.Category", on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to="auth.User", on_delete=models.CASCADE, related_name="payees"
+    )
 
     class Meta:
         verbose_name = _("payee")

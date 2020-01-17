@@ -9,7 +9,9 @@ class Tag(models.Model):
 
     """
 
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to="auth.User", on_delete=models.CASCADE, related_name="tags"
+    )
 
     name = CICharField(max_length=100)
 

@@ -10,7 +10,7 @@ class Settings(models.Model):
 
     """
 
-    user = models.OneToOneField(to="auth.User", on_delete=models.CASCADE)
+    user = models.OneToOneField(to="auth.User", on_delete=models.CASCADE, related_name='settings')
 
     default_currency = CurrencyField()
 

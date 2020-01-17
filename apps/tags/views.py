@@ -4,7 +4,6 @@ from rest_framework import viewsets
 
 from util.views import BulkDeleteViewSetMixin
 
-from .models import Tag
 from .serializers import TagSerializer
 
 
@@ -18,7 +17,7 @@ class TagViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
     ordering_fields = ["name"]
 
     def get_queryset(self):
-        return Tag.objects.filter(user=self.request.user)
+        return self.request.user.tags.all()
 
     def filter_queryset(self, qs):
         qs = super().filter_queryset(qs)
