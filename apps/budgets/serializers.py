@@ -10,7 +10,7 @@ class BudgetSerializer(serializers.ModelSerializer):
     label = serializers.CharField(source="__str__", read_only=True)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     categories = UserPKWithLabelField(
-        queryset=Category.objects, many=True, required=False,
+        queryset=Category.objects, many=True, required=False
     )
 
     class Meta:

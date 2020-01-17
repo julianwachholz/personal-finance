@@ -1,9 +1,6 @@
 from django_filters import rest_framework as filters
 from djmoney.models.fields import CURRENCY_CHOICES
-from mptt.models import MPTTModel
 from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
 from apps.categories.models import Category
 from util.views import BulkDeleteViewSetMixin

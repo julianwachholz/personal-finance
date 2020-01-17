@@ -11,7 +11,9 @@ class Category(MPTTModel):
 
     name = models.CharField(verbose_name=_("name"), max_length=100)
 
-    user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE, related_name='categories')
+    user = models.ForeignKey(
+        to="auth.User", on_delete=models.CASCADE, related_name="categories"
+    )
 
     icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
 

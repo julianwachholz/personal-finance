@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 from djmoney.models.validators import MinMoneyValidator
-from moneyed import Money
 
 
 class Budget(models.Model):
