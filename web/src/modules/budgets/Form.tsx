@@ -69,9 +69,20 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
           <Form.Item
             name="target"
             label="Target Amount"
-            rules={[{ required: true, message: "Enter a target amount" }]}
+            rules={[
+              {
+                required: true,
+                message: "Enter a target amount",
+                type: "number",
+                min: 0.01
+              }
+            ]}
           >
-            <MoneyInput size={isMobile ? "large" : "middle"} fullWidth />
+            <MoneyInput
+              size={isMobile ? "large" : "middle"}
+              fullWidth
+              min={0}
+            />
           </Form.Item>
         </Col>
         <Col xs={6} sm={8}>

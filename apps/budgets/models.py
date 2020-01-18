@@ -53,7 +53,9 @@ class Budget(models.Model):
         verbose_name=_("target amount"),
         max_digits=10,
         decimal_places=2,
-        validators=[MinMoneyValidator(0)],
+        validators=[
+            MinMoneyValidator(Decimal("0.01"), message=_("Must be more than zero"))
+        ],
     )
 
     class Meta:
