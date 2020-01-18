@@ -22,7 +22,7 @@ import { Location } from "history";
 import { FormInstance } from "rc-field-form";
 import React, { useState } from "react";
 import { setQueryData } from "react-query";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import AppHeader from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
@@ -92,7 +92,7 @@ interface EditableTableProps<T extends ModelWithLabel> {
   pagination?: boolean;
   showSearch?: boolean;
   actions?: React.ReactElement[];
-  extraActions?: boolean | React.ReactElement[];
+  extraActions?: React.ReactElement[];
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
 
@@ -118,7 +118,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   pagination = true,
   showSearch = true,
   actions = [],
-  extraActions = true,
+  extraActions,
   extraRowActions,
   tableProps = {},
   editable = false,
@@ -277,22 +277,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   }
 
   const extraActionMenu =
-    extraActions === false || bulkMode ? null : extraActions === true ? (
-      <Menu>
-        <Menu.Item>
-          <Link to="#">Import</Link>
-        </Menu.Item>
-        <Menu.Item>
-          <Link to="#">Export</Link>
-        </Menu.Item>
-      </Menu>
-    ) : (
-      <Menu>
-        {extraActions.map((action, i) => (
-          <Menu.Item key={i}>{action}</Menu.Item>
-        ))}
-      </Menu>
-    );
+    !extraActions || bulkMode ? null : <Menu>{extraActions}</Menu>;
 
   const pager = pagination ? (
     <ListPagination

@@ -9,7 +9,7 @@ import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { DndProvider } from "react-dnd";
 import DndBackend from "react-dnd-html5-backend";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import AppHeader from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import { useSettings } from "../../utils/SettingsProvider";
@@ -78,7 +78,7 @@ interface BaseTableProps<T extends ModelWithLabel> {
   pagination?: boolean;
   showSearch?: boolean;
   actions?: React.ReactElement[];
-  extraActions?: boolean | React.ReactElement[];
+  extraActions?: React.ReactElement[];
   extraRowActions?: (record: T, index: number) => React.ReactElement[];
   tableProps?: TableProps<T>;
   isSortable?: boolean;
@@ -100,7 +100,7 @@ const BaseTable = <T extends ModelWithLabel>({
   pagination = true,
   showSearch = true,
   actions = [],
-  extraActions = true,
+  extraActions,
   extraRowActions,
   tableProps = {},
   isSortable,
@@ -157,23 +157,13 @@ const BaseTable = <T extends ModelWithLabel>({
     return <h1>{error.toString()}</h1>;
   }
 
-  const extraActionMenu =
-    extraActions === false ? null : extraActions === true ? (
-      <Menu>
-        <Menu.Item>
-          <Link to="#">Import</Link>
-        </Menu.Item>
-        <Menu.Item>
-          <Link to="#">Export</Link>
-        </Menu.Item>
-      </Menu>
-    ) : (
-      <Menu>
-        {extraActions.map((action, i) => (
-          <Menu.Item key={i}>{action}</Menu.Item>
-        ))}
-      </Menu>
-    );
+  const extraActionMenu = extraActions ? (
+    <Menu>
+      {extraActions.map((action, i) => (
+        <Menu.Item key={i}>{action}</Menu.Item>
+      ))}
+    </Menu>
+  ) : null;
 
   const pager = pagination ? (
     <ListPagination

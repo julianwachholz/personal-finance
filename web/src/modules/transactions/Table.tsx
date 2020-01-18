@@ -1,6 +1,6 @@
-import { SwapOutlined } from "@ant-design/icons";
-import { Button, message, Modal } from "antd";
-import React, { useState } from "react";
+import { ImportOutlined, SwapOutlined } from "@ant-design/icons";
+import { Button, Menu, message, Modal } from "antd";
+import React, { lazy, useState } from "react";
 import { useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
 import { Payee, postPayee } from "../../dao/payees";
@@ -16,11 +16,14 @@ import {
 import { useAuth } from "../../utils/AuthProvider";
 import { default as BaseEditableTable } from "../base/BaseEditableTable";
 import getGetColumns from "./columns";
-import TransferForm from "./TransferForm";
+
+const ImportWizard = lazy(() => import("./ImportWizard"));
+const TransferForm = lazy(() => import("./TransferForm"));
 
 const TransactionsTable = () => {
   const { settings } = useAuth();
-  const [transferModalVisible, setTransferModalVisible] = useState(false);
+  const [transferVisible, setTransferVisible] = useState(false);
+  const [importVisible, setImportVisible] = useState(false);
 
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
@@ -107,11 +110,21 @@ const TransactionsTable = () => {
           key="transfer"
           icon={<SwapOutlined />}
           onClick={() => {
-            setTransferModalVisible(true);
+            setTransferVisible(true);
           }}
         >
           Transfer
         </Button>
+      ]}
+      extraActions={[
+        <Menu.Item
+          key="import"
+          onClick={() => {
+            setImportVisible(true);
+          }}
+        >
+          <ImportOutlined /> Import Transactions
+        </Menu.Item>
       ]}
       bulkActions={[
         {
@@ -125,13 +138,22 @@ const TransactionsTable = () => {
       ]}
     >
       <Modal
-        visible={transferModalVisible}
+        visible={transferVisible}
         title="Balance Transfer"
         maskClosable
-        onCancel={() => setTransferModalVisible(false)}
+        onCancel={() => setTransferVisible(false)}
         footer={false}
       >
         <TransferForm />
+      </Modal>
+      <Modal
+        visible={importVisible}
+        title="Import Transactions"
+        maskClosable
+        onCancel={() => setImportVisible(false)}
+        footer={false}
+      >
+        <ImportWizard />
       </Modal>
     </BaseEditableTable>
   );
