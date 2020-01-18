@@ -38,9 +38,9 @@ const menuItems: MenuItem[] = [
     text: "Transactions"
   },
   {
-    path: "/reports",
-    icon: <LineChartOutlined />,
-    text: "Reports"
+    path: "/budgets",
+    icon: <ProjectOutlined rotate={180} />,
+    text: "Budgets"
   },
   {
     path: "/accounts",
@@ -48,9 +48,9 @@ const menuItems: MenuItem[] = [
     text: "Accounts"
   },
   {
-    path: "/budgets",
-    icon: <ProjectOutlined rotate={180} />,
-    text: "Budgets"
+    path: "/reports",
+    icon: <LineChartOutlined />,
+    text: "Reports"
   },
   {
     path: "/settings",
