@@ -7,8 +7,6 @@ import {
   RelatedModel
 } from "./base";
 
-// export type BudgetPeriod = "weekly" | "monthly" | "quarterly" | "yearly";
-
 export enum BudgetPeriod {
   WEEKLY = "weekly",
   MONTHLY = "monthly",

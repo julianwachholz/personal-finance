@@ -1,17 +1,30 @@
 import { DeleteFilled, FormOutlined, ProjectOutlined } from "@ant-design/icons";
 import { Button, Col, List, Progress, Row } from "antd";
 import { SwipeAction } from "antd-mobile";
+import { format } from "date-fns";
 import React from "react";
 import { isMobile, MobileView } from "react-device-detect";
 import { useMutation } from "react-query";
 import { Link, useHistory } from "react-router-dom";
 import Fab from "../../components/button/Fab";
 import Money from "../../components/data/Money";
-import { Budget, deleteBudget, useBudgets } from "../../dao/budgets";
+import {
+  Budget,
+  BudgetPeriod,
+  deleteBudget,
+  useBudgets
+} from "../../dao/budgets";
 import { COLOR_DANGER, COLOR_PRIMARY } from "../../utils/constants";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import { confirmDeleteBudget } from "./delete";
+
+const periodFormat: Record<BudgetPeriod, string> = {
+  [BudgetPeriod.WEEKLY]: "'Week' w, yyyy",
+  [BudgetPeriod.MONTHLY]: "MMMM yyyy",
+  [BudgetPeriod.QUARTERLY]: "QQQ yyyy",
+  [BudgetPeriod.YEARLY]: "yyyy"
+};
 
 const renderItem = (budget: Budget) => (
   <List.Item
@@ -25,7 +38,10 @@ const renderItem = (budget: Budget) => (
           ]
     }
   >
-    <List.Item.Meta title={budget.name} />
+    <List.Item.Meta
+      title={budget.name}
+      description={format(new Date(), periodFormat[budget.period])}
+    />
     <Progress
       percent={budget.percentage}
       format={() => `${budget.percentage}%`}
@@ -82,6 +98,7 @@ const Budgets = () => {
           }}
         />
       </MobileView>
+
       <List
         loading={isLoading}
         grid={isMobile ? undefined : { gutter: 32, column: 2 }}
