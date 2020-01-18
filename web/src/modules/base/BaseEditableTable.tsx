@@ -25,6 +25,7 @@ import { setQueryData } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import AppHeader from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItems } from "../../dao/base";
+import { applyFormErrors } from "../../utils/errors";
 import { useSettings } from "../../utils/SettingsProvider";
 import useStoredState from "../../utils/useStoredState";
 import useTitle from "../../utils/useTitle";
@@ -61,23 +62,6 @@ const getDefaultValues = <T extends ModelWithLabel>(
       return [key, value];
     })
   );
-};
-
-const applyError = <T extends ModelWithLabel>(
-  form: FormInstance,
-  columns: EditableColumnsType<T>,
-  error: any
-) => {
-  if (error.non_field_errors) {
-    form.setFields([
-      {
-        name: columns![0].dataIndex as string,
-        errors: error.non_field_errors
-      }
-    ]);
-  } else {
-    console.error(`save item failed`, error);
-  }
 };
 
 interface EditableTableProps<T extends ModelWithLabel> {
@@ -260,7 +244,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
       );
       cancelEdit();
     } catch (error) {
-      applyError<T>(form, columns!, error);
+      applyFormErrors(form, error);
     }
     setEditLoading(false);
   };

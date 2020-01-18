@@ -11,6 +11,7 @@ import { Payee, postPayee, usePayees } from "../../dao/payees";
 import { useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
+import { applyFormErrors } from "../../utils/errors";
 
 interface FormProps {
   type?: "expense" | "income";
@@ -54,8 +55,9 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
 
     try {
       await onSave(tx);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
+      applyFormErrors(form, error);
     }
   };
 

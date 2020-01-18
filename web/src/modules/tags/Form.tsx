@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import ColorSelect from "../../components/form/ColorSelect";
 import { Tag } from "../../dao/tags";
+import { applyFormErrors } from "../../utils/errors";
 
 interface FormProps {
   data?: Tag;
@@ -17,8 +18,9 @@ const TagForm = ({ data, onSave }: FormProps) => {
     try {
       await form.validateFields();
       await onSave(values);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
+      applyFormErrors(form, error);
     }
   };
 

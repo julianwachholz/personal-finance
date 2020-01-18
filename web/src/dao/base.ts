@@ -7,6 +7,13 @@ import {
   useQuery
 } from "react-query";
 
+export type ErrorResponse = {
+  [index: string]: string[];
+
+  // Special errors not attached to a field
+  non_field_errors: string[];
+};
+
 const authTokenKey = "_auth_token";
 const authTokenExpiryKey = "_auth_token_expiry";
 

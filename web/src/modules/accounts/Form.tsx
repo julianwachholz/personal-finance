@@ -6,6 +6,7 @@ import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { Account } from "../../dao/accounts";
 import { useAuth } from "../../utils/AuthProvider";
+import { applyFormErrors } from "../../utils/errors";
 
 interface FormProps {
   data?: Account;
@@ -54,8 +55,9 @@ const AccountForm = ({ data, onSave }: FormProps) => {
     }
     try {
       await onSave(values);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
+      applyFormErrors(form, error);
     }
   };
 

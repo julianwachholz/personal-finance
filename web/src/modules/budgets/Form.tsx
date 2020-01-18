@@ -7,6 +7,7 @@ import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { Budget, BudgetPeriod, PERIOD_CHOICES } from "../../dao/budgets";
 import { useAuth } from "../../utils/AuthProvider";
+import { applyFormErrors } from "../../utils/errors";
 
 interface BudgetFormProps {
   data?: Budget;
@@ -22,9 +23,9 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
     try {
       await form.validateFields();
       await onSave(values);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
-      return;
+      applyFormErrors(form, error);
     }
   };
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import CategorySelect from "../../components/form/CategorySelect";
 import { Payee } from "../../dao/payees";
+import { applyFormErrors } from "../../utils/errors";
 
 interface FormProps {
   data?: Payee;
@@ -17,8 +18,9 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
     try {
       await form.validateFields();
       await onSave(values);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
+      applyFormErrors(form, error);
     }
   };
 

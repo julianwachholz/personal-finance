@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import ColorSelect from "../../components/form/ColorSelect";
 import { Category } from "../../dao/categories";
+import { applyFormErrors } from "../../utils/errors";
 
 const { Option } = Select;
 
@@ -31,8 +32,9 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
     }
     try {
       await onSave(values);
-    } catch (e) {
+    } catch (error) {
       setSubmitting(false);
+      applyFormErrors(form, error);
     }
   };
 
