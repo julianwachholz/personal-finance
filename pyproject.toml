@@ -12,15 +12,14 @@ argon2-cffi = "^19.2"
 django-environ = "^0.4.5"
 django-money = "^1.0"
 django-mptt = "^0.10.0"
-django-colorfield = "^0.1.15"
 django-countries = "^5.5"
 djangorestframework = "^3.10"
 python-dateutil = "^2.8"
-data-wizard = "^1.2"
 django-filter = "^2.2"
 django-rest-knox = "^4.1.0"
 django-rest-auth = "^0.9.5"
 uwsgi = "^2.0.18"
+tablib = {extras = ["xlsx"], version = "^1.0.0"}
 
 [tool.poetry.scripts]
 

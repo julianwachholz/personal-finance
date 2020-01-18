@@ -13,7 +13,6 @@ class UserPKField(serializers.PrimaryKeyRelatedField):
         request = self.context.get("request", None)
         queryset = super().get_queryset()
         if not request:
-            raise Exception("no request")
             return queryset.none()
         return queryset.filter(user=request.user)
 

@@ -35,7 +35,6 @@ router.register("budgets", BudgetViewSet, basename="budgets")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("datawizard/", include("data_wizard.urls")),
     path("api/auth/", include("apps.registration.urls")),
     path("api/settings/", include("apps.settings.urls")),
     path("api/", include(router.urls)),
