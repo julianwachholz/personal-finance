@@ -1,10 +1,12 @@
+import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
 import { RouteComponentProps, useHistory } from "react-router";
-import { putBudget, useBudget } from "../../dao/budgets";
+import { deleteBudget, putBudget, useBudget } from "../../dao/budgets";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
+import { confirmDeleteBudget } from "./delete";
 import { BudgetForm } from "./Form";
 
 interface DetailParams {
@@ -18,6 +20,7 @@ const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const [mutate] = useMutation(putBudget, {
     refetchQueries: ["items/budgets"]
   });
+  const [doDelete] = useMutation(deleteBudget);
   const history = useHistory();
   useTitle(budget && `Edit ${budget.label}`);
 
@@ -31,13 +34,13 @@ const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
       onLeftClick={() => {
         history.go(-1);
       }}
-      //   rightContent={
-      //     <DeleteFilled
-      //       onClick={() => {
-      //         history.push(`/budgets/${pk}/delete`);
-      //       }}
-      //     />
-      //   }
+      rightContent={
+        <DeleteFilled
+          onClick={() => {
+            confirmDeleteBudget(budget, doDelete, history);
+          }}
+        />
+      }
     >
       <BudgetForm
         data={budget}
