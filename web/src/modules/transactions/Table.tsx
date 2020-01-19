@@ -140,11 +140,10 @@ const TransactionsTable = () => {
       <Modal
         visible={transferVisible}
         title="Balance Transfer"
-        maskClosable
         onCancel={() => setTransferVisible(false)}
         footer={false}
       >
-        <TransferForm />
+        <TransferForm onFinish={() => setTransferVisible(false)} />
       </Modal>
       <Modal
         visible={importVisible}

@@ -1,5 +1,8 @@
+from django.utils.timezone import now
 from djmoney.money import Money
 from rest_framework import serializers
+
+from util.serializers import UserPKWithLabelField
 
 from .models import Account
 
@@ -44,3 +47,22 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
             account.set_initial_balance(balance, save=False)
         super().update(account, data)
         return account
+
+
+class TransferSerializer(serializers.Serializer):
+    target = UserPKWithLabelField(queryset=Account.objects)
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    conversion_rate = serializers.DecimalField(
+        max_digits=10, decimal_places=6, default=1
+    )
+    text = serializers.CharField(allow_blank=True)
+    datetime = serializers.DateTimeField(default=now)
+
+    def create(self, data):
+        return data["source"].transfer(
+            to=data["target"],
+            amount=data["amount"],
+            conversion_rate=data["conversion_rate"],
+            text=data["text"],
+            datetime=data["datetime"],
+        )

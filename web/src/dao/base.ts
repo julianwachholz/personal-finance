@@ -311,13 +311,18 @@ export const makeItemAction = <T extends Model>(
       },
       body: JSON.stringify(params)
     });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
     if (response.status === 204) {
       return;
     }
-    const responseData = await response.json();
+    let responseData;
+    try {
+      responseData = await response.json();
+    } catch (e) {
+      throw new Error(response.statusText);
+    }
+    if (!response.ok) {
+      throw responseData;
+    }
     return responseData;
   };
   return itemAction;

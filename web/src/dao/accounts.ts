@@ -4,7 +4,8 @@ import {
   makePostItem,
   makePutItem,
   makeUseItem,
-  makeUseItems
+  makeUseItems,
+  RelatedModel
 } from "./base";
 
 export interface Account {
@@ -45,11 +46,11 @@ export const moveAccount = makeItemAction<MoveAccount>("accounts", "move");
 
 export interface AccountTransfer {
   pk: number;
-  target: number;
-  amount: number;
-  conversion_rate?: number;
+  target: RelatedModel;
+  amount: string;
+  conversion_rate?: string;
   text?: string;
-  date?: Date;
+  datetime?: Date;
 }
 
 export const accountTransfer = makeItemAction<AccountTransfer>(

@@ -11,6 +11,7 @@ import {
   AccountTransfer,
   useAccounts
 } from "../../dao/accounts";
+import { applyFormErrors } from "../../utils/errors";
 
 interface TransferFormProps {
   onFinish?: () => void;
@@ -36,20 +37,24 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
     <Form
       form={form}
       layout="vertical"
-      initialValues={{ date: now, conversion_rate }}
+      initialValues={{ datetime: now, conversion_rate }}
       onValuesChange={({ amount, conversion_rate }) => {
         amount && setAmount(amount);
         conversion_rate && setRate(conversion_rate);
       }}
       onFinish={async values => {
         setLoading(true);
+        const data: AccountTransfer = {
+          pk: values.source.value,
+          ...(values as AccountTransfer)
+        };
         try {
-          await transfer(values as AccountTransfer);
+          await transfer(data);
           message.success("Transfer executed");
           onFinish?.();
-        } catch (e) {
+        } catch (error) {
           message.error("Transfer failed");
-          console.error(e);
+          applyFormErrors(form, error);
         }
         setLoading(false);
       }}
@@ -58,7 +63,7 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
       <Row gutter={8}>
         <Col span={11}>
           <Form.Item
-            name="pk"
+            name="source"
             label="From Account"
             rules={[{ required: true, message: "Select debit account" }]}
           >
@@ -87,7 +92,10 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
               },
               {
                 validator(rule, value) {
-                  if (value && value.value === form.getFieldValue("pk").value) {
+                  if (
+                    value &&
+                    value.value === form.getFieldValue("source").value
+                  ) {
                     return Promise.reject("Select a different account");
                   }
                   return Promise.resolve();
@@ -165,7 +173,7 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="date" label="Date">
+      <Form.Item name="datetime" label="Date">
         <DatePicker size="middle" />
       </Form.Item>
       <Form.Item name="text" label="Description">

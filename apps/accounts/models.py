@@ -78,21 +78,23 @@ class Account(models.Model):
             self.balance = aggregate["amount__sum"]
             self.save()
 
-    def transfer(self, *, to, amount, conversion_rate=1, text=None, date=None):
+    def transfer(self, *, to, amount, conversion_rate=1, text=None, datetime=None):
         if text is None:
             text = ""
-        if date is None:
-            date = now()
+        if datetime is None:
+            datetime = now()
 
         with transaction.atomic():
             source_tx = self.transactions.create(
-                user=self.user, amount=(amount * -1), text=text
+                user=self.user, amount=(amount * -1), text=text, datetime=datetime
             )
             target_tx = to.transactions.create(
                 user=self.user,
                 amount=amount * conversion_rate,
                 text=text,
                 related=source_tx,
+                datetime=datetime,
             )
             source_tx.related = target_tx
             source_tx.save()
+            return source_tx, target_tx

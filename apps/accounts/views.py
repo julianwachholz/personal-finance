@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 from django_filters import rest_framework as filters
 from djmoney.models.fields import CURRENCY_CHOICES
 from rest_framework import viewsets
@@ -5,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Account
-from .serializers import AccountSerializer
+from .serializers import AccountSerializer, TransferSerializer
 
 
 class AccountFilterSet(filters.FilterSet):
@@ -49,24 +50,15 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def transfer(self, request, pk, **kwargs):
-        target = request.data["target"]
-        amount = request.data["amount"]
-        conversion_rate = request.data.get("conversion_rate", 1)
-        text = request.data.get("text", "")
-        date = request.data.get("date", "")
+        source = self.get_object()
+        serializer = TransferSerializer(data=request.data, context={"request": request})
 
-        credit_account = self.get_queryset().get(pk=target)
-        debit_account = self.get_queryset().get(pk=pk)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
         try:
-            debit_account.transfer(
-                to=credit_account,
-                amount=amount,
-                conversion_rate=conversion_rate,
-                text=text,
-                date=date,
-            )
+            serializer.save(source=source)
         except Exception as e:
             return Response(
-                {"status": "error", "error": str(e)}, status=400, exception=e
+                {"status": "error", "error": str(e)}, status=500, exception=e
             )
-        return Response({"status": "ok"})
+        return Response({"status": "ok"}, status=201)
