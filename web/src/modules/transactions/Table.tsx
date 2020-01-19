@@ -1,6 +1,6 @@
 import { ImportOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Menu, message, Modal } from "antd";
-import React, { lazy, useState } from "react";
+import { Button, Menu, message } from "antd";
+import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
 import { Payee, postPayee } from "../../dao/payees";
@@ -16,9 +16,8 @@ import {
 import { useAuth } from "../../utils/AuthProvider";
 import { default as BaseEditableTable } from "../base/BaseEditableTable";
 import getGetColumns from "./columns";
-
-const ImportWizard = lazy(() => import("./ImportWizard"));
-const TransferForm = lazy(() => import("./TransferForm"));
+import ImportWizard from "./ImportWizard";
+import { TransferModal } from "./TransferForm";
 
 const TransactionsTable = () => {
   const { settings } = useAuth();
@@ -137,23 +136,8 @@ const TransactionsTable = () => {
         }
       ]}
     >
-      <Modal
-        visible={transferVisible}
-        title="Balance Transfer"
-        onCancel={() => setTransferVisible(false)}
-        footer={false}
-      >
-        <TransferForm onFinish={() => setTransferVisible(false)} />
-      </Modal>
-      <Modal
-        visible={importVisible}
-        title="Import Transactions"
-        maskClosable
-        onCancel={() => setImportVisible(false)}
-        footer={false}
-      >
-        <ImportWizard />
-      </Modal>
+      <TransferModal visible={transferVisible} onVisible={setTransferVisible} />
+      <ImportWizard visible={importVisible} onVisible={setImportVisible} />
     </BaseEditableTable>
   );
 };

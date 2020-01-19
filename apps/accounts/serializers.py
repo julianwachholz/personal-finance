@@ -1,4 +1,3 @@
-from django.utils.timezone import now
 from djmoney.money import Money
 from rest_framework import serializers
 
@@ -55,14 +54,14 @@ class TransferSerializer(serializers.Serializer):
     conversion_rate = serializers.DecimalField(
         max_digits=10, decimal_places=6, default=1
     )
-    text = serializers.CharField(allow_blank=True)
-    datetime = serializers.DateTimeField(default=now)
+    text = serializers.CharField(required=False)
+    datetime = serializers.DateTimeField(allow_null=True)
 
     def create(self, data):
         return data["source"].transfer(
             to=data["target"],
             amount=data["amount"],
             conversion_rate=data["conversion_rate"],
-            text=data["text"],
-            datetime=data["datetime"],
+            text=data.get("text", None),
+            datetime=data.get("datetime", None),
         )

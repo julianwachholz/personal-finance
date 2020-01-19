@@ -1,6 +1,7 @@
+import { SwapOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { ColumnsType } from "antd/lib/table/Table";
-import React from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import Money from "../../components/data/Money";
@@ -10,8 +11,10 @@ import BaseTable, {
   getColumnFilter,
   getColumnSort
 } from "../base/BaseTable";
+import { TransferModal } from "../transactions/TransferForm";
 
 const AccountTable = ({ match }: RouteComponentProps) => {
+  const [transferVisible, setTransferVisible] = useState(false);
   const [move] = useMutation(moveAccount, {
     refetchQueries: ["items/accounts"]
   });
@@ -67,11 +70,22 @@ const AccountTable = ({ match }: RouteComponentProps) => {
         move({ pk, pos });
       }}
       actions={[
+        <Button
+          key="transfer"
+          icon={<SwapOutlined />}
+          onClick={() => {
+            setTransferVisible(true);
+          }}
+        >
+          Transfer
+        </Button>,
         <Link key="create" to={`${match.url}/create`}>
           <Button type="primary">Create Account</Button>
         </Link>
       ]}
-    />
+    >
+      <TransferModal visible={transferVisible} onVisible={setTransferVisible} />
+    </BaseTable>
   );
 };
 

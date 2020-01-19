@@ -1,5 +1,14 @@
 import { ArrowRightOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, InputNumber, message, Row } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  message,
+  Modal,
+  Row
+} from "antd";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useMutation } from "react-query";
@@ -17,7 +26,7 @@ interface TransferFormProps {
   onFinish?: () => void;
 }
 
-const TransferForm = ({ onFinish }: TransferFormProps) => {
+export const TransferForm = ({ onFinish }: TransferFormProps) => {
   const [form] = Form.useForm();
   const [fromCurrency, setFromCurrency] = useState();
   const [toCurrency, setToCurrency] = useState();
@@ -194,4 +203,18 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
   );
 };
 
-export default TransferForm;
+interface TransferModalProps {
+  visible: boolean;
+  onVisible: (visible: boolean) => void;
+}
+
+export const TransferModal = ({ visible, onVisible }: TransferModalProps) => (
+  <Modal
+    visible={visible}
+    title="Balance Transfer"
+    onCancel={() => onVisible(false)}
+    footer={false}
+  >
+    <TransferForm onFinish={() => onVisible(false)} />
+  </Modal>
+);

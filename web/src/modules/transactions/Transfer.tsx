@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
-import TransferForm from "./TransferForm";
+import { TransferForm } from "./TransferForm";
 
 const BalanceTransfer = () => {
   const history = useHistory();

@@ -83,6 +83,8 @@ interface BaseTableProps<T extends ModelWithLabel> {
   tableProps?: TableProps<T>;
   isSortable?: boolean;
   onMove?: (pk: number, pos: number) => void;
+
+  children?: React.ReactNode;
 }
 
 export interface BaseTableLocationState {
@@ -104,7 +106,8 @@ const BaseTable = <T extends ModelWithLabel>({
   extraRowActions,
   tableProps = {},
   isSortable,
-  onMove
+  onMove,
+  children
 }: BaseTableProps<T>) => {
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
@@ -283,6 +286,7 @@ const BaseTable = <T extends ModelWithLabel>({
           {...tableProps}
         />
       </DndProvider>
+      {children}
     </div>
   );
 };
