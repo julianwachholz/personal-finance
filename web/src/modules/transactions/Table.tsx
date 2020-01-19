@@ -1,5 +1,5 @@
-import { ImportOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Menu, message } from "antd";
+import { SwapOutlined } from "@ant-design/icons";
+import { Button, message } from "antd";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
@@ -22,7 +22,7 @@ import { TransferModal } from "./TransferForm";
 const TransactionsTable = () => {
   const { settings } = useAuth();
   const [transferVisible, setTransferVisible] = useState(false);
-  const [importVisible, setImportVisible] = useState(!false);
+  const [importVisible, setImportVisible] = useState(false);
 
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
@@ -115,16 +115,16 @@ const TransactionsTable = () => {
           Transfer
         </Button>
       ]}
-      extraActions={[
-        <Menu.Item
-          key="import"
-          onClick={() => {
-            setImportVisible(true);
-          }}
-        >
-          <ImportOutlined /> Import Transactions
-        </Menu.Item>
-      ]}
+      // extraActions={[
+      //   <Menu.Item
+      //     key="import"
+      //     onClick={() => {
+      //       setImportVisible(true);
+      //     }}
+      //   >
+      //     <ImportOutlined /> Import Transactions
+      //   </Menu.Item>
+      // ]}
       bulkActions={[
         {
           key: "delete",
