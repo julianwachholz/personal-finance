@@ -87,7 +87,7 @@ const TransferForm = ({ onFinish }: TransferFormProps) => {
               },
               {
                 validator(rule, value) {
-                  if (value && value === form.getFieldValue("pk")) {
+                  if (value && value.value === form.getFieldValue("pk").value) {
                     return Promise.reject("Select a different account");
                   }
                   return Promise.resolve();
