@@ -1,5 +1,5 @@
-import { SwapOutlined } from "@ant-design/icons";
-import { Button, message } from "antd";
+import { ImportOutlined, SwapOutlined } from "@ant-design/icons";
+import { Button, Menu, message } from "antd";
 import React, { useState } from "react";
 import { useMutation } from "react-query";
 import { prefetchCategoryTree } from "../../dao/categories";
@@ -115,16 +115,16 @@ const TransactionsTable = () => {
           Transfer
         </Button>
       ]}
-      // extraActions={[
-      //   <Menu.Item
-      //     key="import"
-      //     onClick={() => {
-      //       setImportVisible(true);
-      //     }}
-      //   >
-      //     <ImportOutlined /> Import Transactions
-      //   </Menu.Item>
-      // ]}
+      extraActions={[
+        <Menu.Item
+          key="import"
+          onClick={() => {
+            // setImportVisible(true);
+          }}
+        >
+          <ImportOutlined /> Import Transactions
+        </Menu.Item>
+      ]}
       bulkActions={[
         {
           key: "delete",

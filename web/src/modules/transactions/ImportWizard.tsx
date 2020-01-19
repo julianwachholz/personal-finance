@@ -3,6 +3,7 @@ import {
   Button,
   Col,
   Form,
+  Input,
   Modal,
   Progress,
   Result,
@@ -40,6 +41,23 @@ interface UploadFileResponse {
   headers: string[];
 }
 
+type ColumnMappingTarget =
+  | "datetime"
+  | "account"
+  | "amount"
+  | "category"
+  | "text"
+  | "payee"
+  | "tags"
+  | "reference";
+
+interface ColumnMapping {
+  target: ColumnMappingTarget;
+  is_sourced: boolean;
+  source?: string;
+  options: any;
+}
+
 const deleteUploadedFile = async (file: UploadFile) => {
   await authFetch(`/api/wizard/import/${file.response.pk}/`, {
     method: "DELETE"
@@ -53,6 +71,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
   const [hasFiles, setHasFiles] = useState(false);
   const [hasError, setHasError] = useState<boolean | string>(false);
   const [headers, setHeaders] = useState<string[]>([]);
+  const [mappings, setMappings] = useState<ColumnMapping[]>([]);
 
   let cancelModal: any;
   const closeModal = async () => {
@@ -80,6 +99,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
     ["text", "Text"],
     ["reference", "Reference Number"]
   ];
+  const columnNames = Object.fromEntries(mapColumns);
 
   return (
     <Modal
@@ -103,7 +123,10 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
           className="import-wizard-content"
           layout="horizontal"
           labelCol={{ span: 6 }}
-          wrapperCol={{ span: 8 }}
+          wrapperCol={{ span: 10 }}
+          onValuesChange={(newValues, values) => {
+            console.info("new values", values);
+          }}
         >
           {step === 0 && (
             <Form.Item
@@ -136,6 +159,10 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                     }
                     if (headers) {
                       setHeaders(headers);
+                      const ignoreValues = Object.fromEntries(
+                        headers.map((h, i) => [`mapping[${i}]`, "__ignore__"])
+                      );
+                      form.setFieldsValue(ignoreValues);
                     }
                     return Promise.resolve();
                   }
@@ -183,11 +210,28 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                 <Form.Item
                   key={header}
                   label={header}
-                  name={`map_header[${i}]`}
+                  name={`mapping[${i}]`}
                   required={false}
                   rules={[{ required: true, message: "Please select a field" }]}
                 >
-                  <Select>
+                  <Select
+                    onChange={value => {
+                      if (value === "__ignore__") {
+                        return;
+                      }
+                      const newMappings = [
+                        ...mappings.filter(m => m.target !== value),
+                        {
+                          target: value,
+                          is_sourced: true,
+                          source: header,
+                          options: {}
+                        } as ColumnMapping
+                      ];
+                      setMappings(newMappings);
+                    }}
+                    defaultActiveFirstOption
+                  >
                     <Select.OptGroup label="Functions">
                       <Select.Option value="__ignore__">
                         Ignore this column
@@ -205,7 +249,20 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
               ))}
             </div>
           )}
-          {step === 2 && <Result title="Configuration" />}
+          {step === 2 && (
+            <div>
+              <h2>Configuration</h2>
+              {mappings.map(mapping => (
+                <Form.Item
+                  key={mapping.target}
+                  label={columnNames[mapping.target]}
+                  extra={`Extract from column "${mapping.source}"`}
+                >
+                  <Input />
+                </Form.Item>
+              ))}
+            </div>
+          )}
           {step === 3 && (
             <Result
               title="Importing..."
