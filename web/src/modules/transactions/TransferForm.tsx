@@ -75,6 +75,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
             name="source"
             label="From Account"
             rules={[{ required: true, message: "Select debit account" }]}
+            dependencies={["target"]}
           >
             <ModelSelect
               autoFocus
@@ -94,6 +95,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
           <Form.Item
             name="target"
             label="To Account"
+            dependencies={["source"]}
             rules={[
               {
                 required: true,
