@@ -80,6 +80,7 @@ const BaseDatePicker = generatePicker<Date>(generateConfig);
 const DatePicker = (props: PickerProps<Date>) => {
   const { tableSize } = useSettings();
   const { settings } = useAuth();
+  const now = new Date();
 
   if (isMobile) {
     const inputProps = {
@@ -89,9 +90,9 @@ const DatePicker = (props: PickerProps<Date>) => {
         : undefined,
       onChange(e: any) {
         const date = set(parseISO(e.target.value), {
-          hours: props.value?.getHours(),
-          minutes: props.value?.getMinutes(),
-          seconds: props.value?.getSeconds()
+          hours: props.value?.getHours() ?? now.getHours(),
+          minutes: props.value?.getMinutes() ?? now.getMinutes(),
+          seconds: props.value?.getSeconds() ?? now.getSeconds()
         });
         props.onChange?.(
           date,
