@@ -7,6 +7,7 @@ import {
   Progress,
   Result,
   Row,
+  Select,
   Steps,
   Upload
 } from "antd";
@@ -17,16 +18,26 @@ import "./ImportWizard.scss";
 
 const { Dragger } = Upload;
 
-const normalizeFile = (e: any) => {
+type File = UploadFile<UploadFileResponse>;
+
+const normalizeFiles = (e: File[] | { fileList: File[] }) => {
   if (Array.isArray(e)) {
-    return e;
+    return e.filter(f => f.status !== "removed");
   }
-  return e && e.fileList;
+  return e.fileList.filter(f => f.status !== "removed");
 };
 
 interface ImportWizardProps {
   visible: boolean;
   onVisible: (visible: boolean) => void;
+}
+
+interface UploadFileResponse {
+  pk: number;
+  label: string;
+  type: string;
+  datetime: string;
+  headers: string[];
 }
 
 const deleteUploadedFile = async (file: UploadFile) => {
@@ -40,6 +51,8 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasFiles, setHasFiles] = useState(false);
+  const [hasError, setHasError] = useState<boolean | string>(false);
+  const [headers, setHeaders] = useState<string[]>([]);
 
   let cancelModal: any;
   const closeModal = async () => {
@@ -50,11 +63,23 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
       });
       await Promise.all(files.map(deleteUploadedFile));
     }
-    setStep(0);
-    setHasFiles(false);
     form.resetFields();
+    setHasError(false);
+    setHasFiles(false);
+    setStep(0);
     onVisible(false);
   };
+
+  const mapColumns = [
+    ["datetime", "Date and Time"],
+    ["amount", "Amount"],
+    ["account", "Account"],
+    ["category", "Category"],
+    ["payee", "Payee"],
+    ["tags", "Tags"],
+    ["text", "Text"],
+    ["reference", "Reference Number"]
+  ];
 
   return (
     <Modal
@@ -69,28 +94,68 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
       <div className="import-wizard">
         <Steps current={step}>
           <Steps.Step title="Upload" />
+          <Steps.Step title="Map Columns" />
           <Steps.Step title="Configuration" />
-          <Steps.Step title="Mapping" />
           <Steps.Step title="Import" />
         </Steps>
-        <Form form={form} className="import-wizard-content">
+        <Form
+          form={form}
+          className="import-wizard-content"
+          layout="horizontal"
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 8 }}
+        >
           {step === 0 && (
             <Form.Item
               name="files"
               valuePropName="fileList"
-              getValueFromEvent={normalizeFile}
+              getValueFromEvent={normalizeFiles}
               noStyle
+              hasFeedback
+              rules={[
+                {
+                  validator: (
+                    rule,
+                    files: UploadFile<UploadFileResponse>[]
+                  ) => {
+                    const headers = files[0].response?.headers;
+                    if (
+                      headers &&
+                      files.filter(
+                        f =>
+                          !f.response ||
+                          f.response.headers.every(
+                            (header, i) => headers[i] === header
+                          )
+                      ).length !== files.length
+                    ) {
+                      setHasError("Uploaded files must have the same format");
+                      return Promise.reject(
+                        "Uploaded files must have the same format"
+                      );
+                    }
+                    if (headers) {
+                      setHeaders(headers);
+                    }
+                    return Promise.resolve();
+                  }
+                }
+              ]}
             >
               <Dragger
                 name="file"
                 accept=".csv"
                 multiple
-                onChange={e => {
+                onChange={async e => {
                   setLoading(
                     e.fileList.filter(f => f.status === "done").length !==
                       e.fileList.length
                   );
                   setHasFiles(e.fileList.length > 0);
+                  try {
+                    await form.validateFields();
+                    setHasError(false);
+                  } catch (e) {}
                 }}
                 onRemove={deleteUploadedFile}
                 action={`/api/wizard/import/`}
@@ -103,14 +168,44 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                   <UploadOutlined />
                 </p>
                 <p className="ant-upload-text">Click or drag to upload files</p>
-                <p className="ant-upload-hint">
-                  You may choose multiple CSV files.
+                <p className={`ant-upload-${hasError ? "error" : "hint"}`}>
+                  {hasError
+                    ? "Uploaded files must have same format."
+                    : "You may choose multiple CSV files"}
                 </p>
               </Dragger>
             </Form.Item>
           )}
-          {step === 1 && <Result title="Configuration" />}
-          {step === 2 && <Result title="Mapping" />}
+          {step === 1 && (
+            <div>
+              <h2>Map Columns</h2>
+              {headers.map((header, i) => (
+                <Form.Item
+                  key={header}
+                  label={header}
+                  name={`map_header[${i}]`}
+                  required={false}
+                  rules={[{ required: true, message: "Please select a field" }]}
+                >
+                  <Select>
+                    <Select.OptGroup label="Functions">
+                      <Select.Option value="__ignore__">
+                        Ignore this column
+                      </Select.Option>
+                    </Select.OptGroup>
+                    <Select.OptGroup label="Fields">
+                      {mapColumns.map(([value, label]) => (
+                        <Select.Option key={value} value={value}>
+                          {label}
+                        </Select.Option>
+                      ))}
+                    </Select.OptGroup>
+                  </Select>
+                </Form.Item>
+              ))}
+            </div>
+          )}
+          {step === 2 && <Result title="Configuration" />}
           {step === 3 && (
             <Result
               title="Importing..."
@@ -169,9 +264,16 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
             {step < 3 && (
               <Button
                 type="primary"
-                onClick={() => setStep(step + 1)}
+                onClick={async () => {
+                  try {
+                    await form.validateFields();
+                    setStep(step + 1);
+                  } catch (errors) {
+                    console.info(errors);
+                  }
+                }}
                 loading={loading}
-                disabled={!hasFiles}
+                disabled={!hasFiles || !!hasError}
               >
                 {step === 2 ? "Import" : "Next"}
               </Button>

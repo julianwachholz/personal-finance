@@ -9,14 +9,8 @@ class ImportFileSerializer(serializers.ModelSerializer):
     datetime = serializers.DateTimeField(read_only=True)
     type = serializers.CharField(read_only=True)
     file = serializers.FileField(write_only=True)
+    headers = serializers.ReadOnlyField()
 
     class Meta:
         model = ImportFile
-        fields = (
-            "pk",
-            "label",
-            "user",
-            "file",
-            "type",
-            "datetime",
-        )
+        fields = ("pk", "label", "user", "file", "type", "datetime", "headers")

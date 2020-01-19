@@ -22,7 +22,7 @@ import { TransferModal } from "./TransferForm";
 const TransactionsTable = () => {
   const { settings } = useAuth();
   const [transferVisible, setTransferVisible] = useState(false);
-  const [importVisible, setImportVisible] = useState(false);
+  const [importVisible, setImportVisible] = useState(!false);
 
   const [create] = useMutation(postTransaction);
   const [update] = useMutation(putTransaction);
