@@ -47,7 +47,7 @@ class AbstractTransaction(models.Model):
 
     related = models.ForeignKey(
         to="self",
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         help_text=_("Reverse transaction to a transfer."),
