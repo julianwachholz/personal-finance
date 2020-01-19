@@ -31,14 +31,21 @@ const getAuthToken = () => {
   return localStorage.getItem(authTokenKey);
 };
 
-export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
+export const getAuthHeaders = (): Record<string, string> => {
   const token = getAuthToken();
   if (token) {
-    init.headers = {
-      ...init.headers,
-      Authorization: `Token ${getAuthToken()}`
+    return {
+      Authorization: `Token ${token}`
     };
   }
+  return {};
+};
+
+export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
+  init.headers = {
+    ...getAuthHeaders(),
+    ...init.headers
+  };
   return fetch(input, init);
 };
 

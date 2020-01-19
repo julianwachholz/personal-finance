@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "apps.settings",
     "apps.payees",
     "apps.transactions",
+    "apps.transaction_wizard",
 ]
 
 if DEBUG:

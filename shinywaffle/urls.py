@@ -23,6 +23,7 @@ from apps.budgets.views import BudgetViewSet
 from apps.categories.views import CategoryViewSet
 from apps.payees.views import PayeeViewSet
 from apps.tags.views import TagViewSet
+from apps.transaction_wizard.views import ImportFileViewSet
 from apps.transactions.views import TransactionViewSet
 
 router = routers.DefaultRouter()
@@ -30,8 +31,9 @@ router.register("tags", TagViewSet, basename="tags")
 router.register("payees", PayeeViewSet, basename="payees")
 router.register("categories", CategoryViewSet, basename="categories")
 router.register("accounts", AccountViewSet, basename="accounts")
-router.register("transactions", TransactionViewSet, basename="transactions")
 router.register("budgets", BudgetViewSet, basename="budgets")
+router.register("transactions", TransactionViewSet, basename="transactions")
+router.register("wizard/import", ImportFileViewSet, basename="derps")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
