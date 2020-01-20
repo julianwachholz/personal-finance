@@ -14,6 +14,9 @@ from datetime import timedelta
 
 import environ
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR('path/...')
@@ -187,3 +190,8 @@ DEFAULT_CURRENCY = "USD"
 # DATA_WIZARD = {
 #     'BACKEND': 'data_wizard.backends.threading',
 # }
+
+
+sentry_sdk.init(
+    dsn=env("SENTRY_DSN"), integrations=[DjangoIntegration()], send_default_pii=True
+)
