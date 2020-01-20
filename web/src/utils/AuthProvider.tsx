@@ -1,4 +1,5 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
+import * as Sentry from "@sentry/browser";
 import { Modal } from "antd";
 import React, { useContext, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
@@ -16,7 +17,7 @@ interface AuthContext {
   logout: () => Promise<void>;
 }
 
-const AuthContext = React.createContext<AuthContext>({} as any);
+export const AuthContext = React.createContext<AuthContext>({} as any);
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -55,6 +56,13 @@ export const AuthProvider: React.FC = ({ children }) => {
   if (!isAuthenticated) {
     if (!isLoading && user) {
       setIsAuthenticated(true);
+      Sentry.configureScope(scope => {
+        scope.setUser({
+          id: user.pk.toString(),
+          username: user.username,
+          email: user.email
+        });
+      });
     }
   }
   if (isAuthenticated && !user) {

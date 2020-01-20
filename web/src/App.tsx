@@ -10,6 +10,7 @@ import MobileLayout from "./components/layout/MobileLayout";
 import BaseModule from "./modules/base/BaseModule";
 import NotFound from "./modules/error/NotFound";
 import { useAuth } from "./utils/AuthProvider";
+import ErrorBoundary from "./utils/ErrorBoundary";
 import { useSettings } from "./utils/SettingsProvider";
 
 // Lazy components
@@ -64,27 +65,31 @@ const App = () => {
 
   return isAuthenticated ? (
     <Layout>
-      <Suspense fallback={fallback}>
-        <Switch>
-          <Route exact path="/" component={Dashboard} />
-          <Route path="/transactions" component={Transactions} />
-          <Route path="/reports" component={Reports} />
-          <Route path="/accounts" component={Accounts} />
-          <Route path="/budgets" component={Budgets} />
-          <Route path="/settings" component={Settings} />
-          <Route component={NotFound} />
-        </Switch>
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={fallback}>
+          <Switch>
+            <Route exact path="/" component={Dashboard} />
+            <Route path="/transactions" component={Transactions} />
+            <Route path="/reports" component={Reports} />
+            <Route path="/accounts" component={Accounts} />
+            <Route path="/budgets" component={Budgets} />
+            <Route path="/settings" component={Settings} />
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </ErrorBoundary>
     </Layout>
   ) : (
-    <Suspense fallback={fallback}>
-      <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/recover" render={() => <p>Forgot password</p>} />
-        <Route path="/register" render={() => <p>Register</p>} />
-        <Route render={() => <Redirect to="/login" />} />
-      </Switch>
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={fallback}>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/recover" render={() => <p>Forgot password</p>} />
+          <Route path="/register" render={() => <p>Register</p>} />
+          <Route render={() => <Redirect to="/login" />} />
+        </Switch>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import React from "react";
 import ReactDOM from "react-dom";
 import { createProviderTreeFromList } from "react-provider-tree";
@@ -9,6 +10,8 @@ import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "./utils/AuthProvider";
 import { SettingsProvider } from "./utils/SettingsProvider";
+
+Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
 
 const ProviderTree = createProviderTreeFromList(
   [ReactQueryConfigProvider, { config: { retry: 2, staleTime: 500 } }],
