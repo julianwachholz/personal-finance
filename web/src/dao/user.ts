@@ -1,4 +1,5 @@
 import { prefetchQuery, useQuery } from "react-query";
+import { getAuthToken } from "../dao/base";
 import { authFetch, clearToken, FetchItem } from "./base";
 import { Settings } from "./settings";
 
@@ -26,12 +27,14 @@ const fetchUser: FetchItem<User, {}> = async () => {
   return data;
 };
 
+const isPossiblyAuthenticated = () => getAuthToken() !== null;
+
 export const prefetchUser = () => {
-  prefetchQuery("user", fetchUser);
+  isPossiblyAuthenticated() && prefetchQuery("user", fetchUser);
 };
 
 export const useUser = () => {
-  const query = useQuery("user", fetchUser, {
+  const query = useQuery(isPossiblyAuthenticated() && "user", fetchUser, {
     retry: false,
     refetchOnWindowFocus: false
   } as any);

@@ -27,7 +27,7 @@ export const clearToken = () => {
   localStorage.removeItem(authTokenExpiryKey);
 };
 
-const getAuthToken = () => {
+export const getAuthToken = () => {
   return localStorage.getItem(authTokenKey);
 };
 
