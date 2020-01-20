@@ -5,6 +5,7 @@ import React, { lazy, Suspense, useEffect } from "react";
 import { isMobile } from "react-device-detect";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "./App.scss";
+import GuestLayout from "./components/layout/GuestLayout";
 import AppLayout from "./components/layout/Layout";
 import MobileLayout from "./components/layout/MobileLayout";
 import BaseModule from "./modules/base/BaseModule";
@@ -33,7 +34,8 @@ const App = () => {
     document.body.className = "";
     document.body.classList.add(`app--${isMobile ? "mobile" : "web"}`);
     document.body.classList.add(`app--${theme}`);
-  }, [theme]);
+    !isAuthenticated && document.body.classList.add(`app--guest`);
+  }, [theme, isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -80,16 +82,18 @@ const App = () => {
       </ErrorBoundary>
     </Layout>
   ) : (
-    <ErrorBoundary>
-      <Suspense fallback={fallback}>
-        <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/recover" render={() => <p>Forgot password</p>} />
-          <Route path="/register" render={() => <p>Register</p>} />
-          <Route render={() => <Redirect to="/login" />} />
-        </Switch>
-      </Suspense>
-    </ErrorBoundary>
+    <GuestLayout>
+      <ErrorBoundary>
+        <Suspense fallback={fallback}>
+          <Switch>
+            <Route path="/login" component={Login} />
+            <Route path="/recover" render={() => <p>Forgot password</p>} />
+            <Route path="/register" render={() => <p>Register</p>} />
+            <Route render={() => <Redirect to="/login" />} />
+          </Switch>
+        </Suspense>
+      </ErrorBoundary>
+    </GuestLayout>
   );
 };
 

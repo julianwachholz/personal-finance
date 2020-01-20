@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { useAuth } from "../../utils/AuthProvider";
@@ -29,51 +29,59 @@ const Login = () => {
 
   useTitle(`Login`);
   return (
-    <Modal title="Login" visible footer={null} closable={false}>
-      <Form
-        form={form}
-        onFinish={onSubmit}
-        layout="horizontal"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
+    <Form form={form} onFinish={onSubmit} layout="vertical">
+      <h2>Login</h2>
+      <Form.Item
+        name="username"
+        // label="Username"
+        validateStatus={error && "error"}
       >
-        <Form.Item
-          name="username"
-          label="Username"
-          validateStatus={error && "error"}
-        >
-          <Input
-            autoFocus
-            prefix={<UserOutlined />}
-            autoComplete="username"
-            inputMode="email"
-          />
-        </Form.Item>
-        <Form.Item
-          validateStatus={error && "error"}
-          help={error}
-          name="password"
-          label="Password"
-        >
-          <Input.Password
-            prefix={<LockOutlined />}
-            autoComplete="current-password"
-          />
-        </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={validating || isLoading}
-            >
-              Login
-            </Button>
-            {/* <Link to="/">Forgot password?</Link> */}
-          </>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Input
+          autoFocus
+          prefix={<UserOutlined />}
+          placeholder="Username"
+          autoComplete="username"
+          inputMode="email"
+          size="large"
+        />
+      </Form.Item>
+      <Form.Item
+        validateStatus={error && "error"}
+        help={error}
+        name="password"
+        // label="Password"
+      >
+        <Input.Password
+          prefix={<LockOutlined />}
+          placeholder="Password"
+          autoComplete="current-password"
+          size="large"
+        />
+      </Form.Item>
+      <Row gutter={[16, 16]}>
+        <Col xs={12} sm={8}>
+          <Button
+            type="primary"
+            size="large"
+            block
+            htmlType="submit"
+            loading={validating || isLoading}
+          >
+            Login
+          </Button>
+        </Col>
+        <Col xs={12} sm={8}>
+          <Button size="large" block>
+            Sign Up
+          </Button>
+        </Col>
+        <Col xs={12} sm={8}>
+          <Button type="link" size="large" block>
+            Forgot password?
+          </Button>
+        </Col>
+      </Row>
+    </Form>
   );
 };
 

@@ -1,4 +1,3 @@
-from django.utils.timezone import now
 from django_filters import rest_framework as filters
 from djmoney.models.fields import CURRENCY_CHOICES
 from rest_framework import viewsets

@@ -1,0 +1,43 @@
+.app--guest {
+  background: #108ee9;
+
+  .ant-layout,
+  .ant-menu {
+    background: #fff;
+  }
+
+  .app-logo {
+    width: 92px;
+    height: 92px;
+  }
+
+  .brand-logo {
+    display: block;
+    color: inherit;
+    // background: #108ee9;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    margin: 12px 23px;
+    h1 {
+      margin-left: 16px;
+    }
+  }
+
+  .app-logo {
+    flex-shrink: 0;
+    height: 64px;
+    width: 64px;
+    padding: 0px;
+  }
+
+  .ant-layout {
+    max-width: 600px;
+
+    .ant-layout-content {
+      margin: 0;
+      padding: 0 32px;
+    }
+  }
+}

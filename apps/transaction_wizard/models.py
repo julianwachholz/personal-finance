@@ -1,6 +1,4 @@
 import os
-from datetime import datetime
-from decimal import Decimal
 
 import magic
 from django.contrib.postgres.fields import JSONField
