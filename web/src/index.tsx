@@ -11,7 +11,10 @@ import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "./utils/AuthProvider";
 import { SettingsProvider } from "./utils/SettingsProvider";
 
-Sentry.init({ dsn: process.env.REACT_APP_SENTRY_DSN });
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  environment: process.env.NODE_ENV
+});
 
 const ProviderTree = createProviderTreeFromList(
   [ReactQueryConfigProvider, { config: { retry: 2, staleTime: 500 } }],
