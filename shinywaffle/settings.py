@@ -173,6 +173,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+SITE_URL = env("SITE_URL")
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -208,4 +210,4 @@ sentry_sdk.init(
 # Email
 DEFAULT_FROM_EMAIL = "noreply@ju.io"
 EMAIL_BACKEND = "sparkpost.django.email_backend.SparkPostEmailBackend"
-SPARKPOST_OPTIONS = {"track_opens": True, "track_clicks": True, "transactional": True}
+SPARKPOST_OPTIONS = {"track_opens": False, "track_clicks": False, "transactional": True}

@@ -20,12 +20,13 @@ const Profile = () => {
         history.go(-1);
       }}
     >
-      <P>Logged in as: {user!.username}</P>
+      <P>Logged in as: {user?.username}</P>
       <Button
         onClick={async () => {
           setLoading(true);
           await logout();
           setLoading(false);
+          history.push(`/login`, { logout: true });
         }}
         loading={loading}
       >

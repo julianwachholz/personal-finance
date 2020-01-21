@@ -3,7 +3,7 @@ import { Spin } from "antd";
 import "antd/dist/antd.css";
 import React, { lazy, Suspense, useEffect } from "react";
 import { isMobile } from "react-device-detect";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import GuestLayout from "./components/layout/GuestLayout";
 import AppLayout from "./components/layout/Layout";
@@ -24,6 +24,7 @@ const Transactions = lazy(() => import("./modules/transactions"));
 
 // Lazy components (unauthenticated)
 const Login = lazy(() => import("./modules/auth/Login"));
+const VerifyEmail = lazy(() => import("./modules/auth/VerifyEmail"));
 
 const App = () => {
   const { theme } = useSettings();
@@ -86,10 +87,16 @@ const App = () => {
       <ErrorBoundary>
         <Suspense fallback={fallback}>
           <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => <Link to="/login">Login</Link>}
+            />
             <Route path="/login" component={Login} />
+            <Route path="/verify/:token" component={VerifyEmail} />
             <Route path="/recover" render={() => <p>Forgot password</p>} />
             <Route path="/register" render={() => <p>Register</p>} />
-            <Route render={() => <Redirect to="/login" />} />
+            <Route component={NotFound} />
           </Switch>
         </Suspense>
       </ErrorBoundary>

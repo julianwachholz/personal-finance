@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from rest_framework.validators import UniqueValidator
 
 from apps.settings.serializers import SettingsSerializer
 
@@ -33,6 +34,14 @@ class LoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(read_only=True)
+    email = serializers.EmailField(
+        required=True,
+        validators=[
+            UniqueValidator(
+                queryset=User.objects, message=_("This email is already in use.")
+            )
+        ],
+    )
     password = serializers.CharField(required=False, write_only=True)
     settings = SettingsSerializer(read_only=True)
 
@@ -49,8 +58,10 @@ class UserSerializer(serializers.ModelSerializer):
             "settings",
         )
 
+    def validate(self, data):
+        if "pk" not in data and "password" not in data:
+            raise ValidationError({"password": "Please provide a password"})
+        return super().validate(data)
+
     def create(self, validated_data):
-        user = User.objects.create_user(
-            validated_data["username"], None, validated_data["password"]
-        )
-        return user
+        return User.objects.create_user(is_active=False, **validated_data)

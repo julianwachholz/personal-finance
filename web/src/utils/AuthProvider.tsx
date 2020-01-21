@@ -1,7 +1,7 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
 import * as Sentry from "@sentry/browser";
 import { Modal } from "antd";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
 import { useHistory } from "react-router";
 import { clearToken, setAuthToken } from "../dao/base";
@@ -28,6 +28,22 @@ export const AuthProvider: React.FC = ({ children }) => {
   const [doLogin] = useMutation(postLogin);
   const [doLogout] = useMutation(postLogout);
 
+  useEffect(() => {
+    if (!isLoading && user && !isAuthenticated) {
+      setIsAuthenticated(true);
+      Sentry.configureScope(scope => {
+        scope.setUser({
+          id: user.pk.toString(),
+          username: user.username,
+          email: user.email
+        });
+      });
+    }
+    if (isAuthenticated && !user) {
+      setIsAuthenticated(false);
+    }
+  }, [isAuthenticated, isLoading, user]);
+
   if (error) {
     return (
       <Modal
@@ -53,27 +69,10 @@ export const AuthProvider: React.FC = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
-    if (!isLoading && user) {
-      setIsAuthenticated(true);
-      Sentry.configureScope(scope => {
-        scope.setUser({
-          id: user.pk.toString(),
-          username: user.username,
-          email: user.email
-        });
-      });
-    }
-  }
-  if (isAuthenticated && !user) {
-    setIsAuthenticated(false);
-  }
-
   const login = async (values: Record<string, string>) => {
     const result = await doLogin(values);
     setAuthToken(result.token, result.expiry);
     await refetchQuery("user");
-    history.push(`/`);
   };
 
   const logout = async () => {

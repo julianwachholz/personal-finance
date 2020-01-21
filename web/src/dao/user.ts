@@ -1,5 +1,5 @@
 import { prefetchQuery, useQuery } from "react-query";
-import { getAuthToken } from "../dao/base";
+import { getAuthToken, makeItemsAction, makePostItem } from "../dao/base";
 import { authFetch, clearToken, FetchItem } from "./base";
 import { Settings } from "./settings";
 
@@ -40,6 +40,16 @@ export const useUser = () => {
   } as any);
   return query;
 };
+
+export const postUser = makePostItem<User>("auth/register");
+
+interface VerifyEmail {
+  token: string;
+}
+export const postVerifyEmail = makeItemsAction<VerifyEmail>(
+  "auth/user",
+  "verify"
+);
 
 export const postLogin = async (params: Record<string, string>) => {
   const url = `/api/auth/login/`;

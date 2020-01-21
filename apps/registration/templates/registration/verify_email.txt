@@ -1,0 +1,9 @@
+Hi there!
+
+Your email address was used to create a new account on ShinyWaffle.
+To complete your signup on ShinyWaffle, follow this link:
+
+{{ verify_link }}
+
+If you did not request this, you can safely ignore this message.
+Reply to this email if you have any questions.

@@ -1,11 +1,13 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row } from "antd";
+import { Alert, Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
+import { RouteComponentProps, useHistory } from "react-router";
 import { useAuth } from "../../utils/AuthProvider";
 import useTitle from "../../utils/useTitle";
 
-const Login = () => {
+const Login = ({ location }: RouteComponentProps) => {
+  const history = useHistory();
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();
@@ -16,6 +18,7 @@ const Login = () => {
     setValidating(true);
     try {
       await login(values);
+      history.push(`/`);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -27,10 +30,31 @@ const Login = () => {
     form.resetFields();
   };
 
+  const initial = { username: location.state?.username };
+
   useTitle(`Login`);
   return (
-    <Form form={form} onFinish={onSubmit} layout="vertical">
+    <Form
+      form={form}
+      onFinish={onSubmit}
+      layout="vertical"
+      initialValues={initial}
+    >
       <h2>Login</h2>
+      {location.state?.verified && (
+        <Alert
+          type="success"
+          message="Account activated! You can now log in."
+          style={{ marginBottom: 24 }}
+        />
+      )}
+      {location.state?.logout && (
+        <Alert
+          type="info"
+          message="You have been logged out!"
+          style={{ marginBottom: 24 }}
+        />
+      )}
       <Form.Item
         name="username"
         // label="Username"
