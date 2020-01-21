@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 from datetime import timedelta
 
 import environ
-
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "knox",
+    "autocompletefilter",
     # "apps.taxdata",
     "apps.registration",
     "apps.accounts",

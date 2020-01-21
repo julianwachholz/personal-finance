@@ -3,7 +3,6 @@ import * as Sentry from "@sentry/browser";
 import { Modal } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
-import { useHistory } from "react-router";
 import { clearToken, setAuthToken } from "../dao/base";
 import { Settings } from "../dao/settings";
 import { postLogin, postLogout, User, useUser } from "../dao/user";
@@ -22,7 +21,6 @@ export const AuthContext = React.createContext<AuthContext>({} as any);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const history = useHistory();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { data: user, isLoading, error } = useUser();
   const [doLogin] = useMutation(postLogin);

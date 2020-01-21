@@ -155,6 +155,17 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 category = "main"
+description = "Django 2.0 ModelAdmin list_filter with autocomplete widget."
+name = "django-autocompletefilter"
+optional = false
+python-versions = ">=3.4"
+version = "0.0.6"
+
+[package.dependencies]
+django = ">=2.0"
+
+[[package]]
+category = "main"
 description = "Provides a country field for Django models."
 name = "django-countries"
 optional = false
@@ -619,7 +630,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "12f27ad874efd3f0f6bc61ad5faaf5fa59f143f6411a9f25a7cde1b1409a3e97"
+content-hash = "b416c3bd3077ecdec05b517edb5b67d377c2b80322eafa2f3cbc466ce836661a"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -740,6 +751,10 @@ cryptography = [
 django = [
     {file = "Django-3.0.2-py3-none-any.whl", hash = "sha256:4f2c913303be4f874015993420bf0bd8fd2097a9c88e6b49c6a92f9bdd3fb13a"},
     {file = "Django-3.0.2.tar.gz", hash = "sha256:8c3575f81e11390893860d97e1e0154c47512f180ea55bd84ce8fa69ba8051ca"},
+]
+django-autocompletefilter = [
+    {file = "django-autocompletefilter-0.0.6.tar.gz", hash = "sha256:1f10a50e405bafea67abeaed23b44aee501b5af0d331c7a3772ace6dd4b66f37"},
+    {file = "django_autocompletefilter-0.0.6-py2.py3-none-any.whl", hash = "sha256:d2d56c56f99a0f0d1c2be997e06af02270fe29b93e981451a6d79a77165b5f21"},
 ]
 django-countries = [
     {file = "django-countries-5.5.tar.gz", hash = "sha256:1cefad9ec804d6a0318b91c5394b5aef00336755928f44d0a6420507719d65c8"},
