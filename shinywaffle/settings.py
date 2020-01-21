@@ -153,7 +153,11 @@ if DEBUG:
         "rest_framework.authentication.SessionAuthentication",
     )
 
-REST_KNOX = {"TOKEN_TTL": timedelta(days=7)}
+REST_KNOX = {
+    "TOKEN_TTL": timedelta(days=7),
+    "AUTO_REFRESH": True,
+    "MIN_REFRESH_INTERVAL": timedelta(days=1).total_seconds(),
+}
 
 
 # Internationalization
@@ -202,10 +206,6 @@ sentry_sdk.init(
 )
 
 # Email
-DEFAULT_FROM_EMAIL = 'noreply@ju.io'
-EMAIL_BACKEND = 'sparkpost.django.email_backend.SparkPostEmailBackend'
-SPARKPOST_OPTIONS = {
-    'track_opens': True,
-    'track_clicks': True,
-    'transactional': True,
-}
+DEFAULT_FROM_EMAIL = "noreply@ju.io"
+EMAIL_BACKEND = "sparkpost.django.email_backend.SparkPostEmailBackend"
+SPARKPOST_OPTIONS = {"track_opens": True, "track_clicks": True, "transactional": True}
