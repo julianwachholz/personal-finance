@@ -22,6 +22,7 @@ uwsgi = "^2.0.18"
 tablib = {extras = ["xlsx"], version = "^1.0.0"}
 python-magic = "^0.4.15"
 sentry-sdk = "^0.14.0"
+sparkpost = "^1.3.6"
 
 [tool.poetry.scripts]
 

@@ -192,9 +192,20 @@ DEFAULT_CURRENCY = "USD"
 # }
 
 
+# Sentry
+
 sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
     integrations=[DjangoIntegration()],
     environment="development" if DEBUG else "production",
     send_default_pii=True,
 )
+
+# Email
+DEFAULT_FROM_EMAIL = 'noreply@ju.io'
+EMAIL_BACKEND = 'sparkpost.django.email_backend.SparkPostEmailBackend'
+SPARKPOST_OPTIONS = {
+    'track_opens': True,
+    'track_clicks': True,
+    'transactional': True,
+}
