@@ -29,7 +29,9 @@ def send_verification_email(user):
     verify_link = settings.SITE_URL + f"/verify/{verification}"
     send_mail(
         _("Complete your signup"),
-        render_to_string("registration/verify_email.txt", {"verify_link": verify_link}),
+        render_to_string(
+            "registration/verify_email.txt", {"user": user, "verify_link": verify_link}
+        ),
         settings.DEFAULT_FROM_EMAIL,
         [user.email],
     )

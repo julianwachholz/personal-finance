@@ -3,6 +3,7 @@ import { Alert, Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
 import { RouteComponentProps, useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import useTitle from "../../utils/useTitle";
 
@@ -96,7 +97,7 @@ const Login = ({ location }: RouteComponentProps) => {
         </Col>
         <Col xs={12} sm={8}>
           <Button size="large" block>
-            Sign Up
+            <Link to="/register">Register</Link>
           </Button>
         </Col>
         <Col xs={12} sm={8}>

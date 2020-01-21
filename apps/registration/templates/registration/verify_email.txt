@@ -1,4 +1,4 @@
-Hi there!
+Hi {{ user.first_name|default:"there"}}!
 
 Your email address was used to create a new account on ShinyWaffle.
 To complete your signup on ShinyWaffle, follow this link:

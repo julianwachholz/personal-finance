@@ -5,7 +5,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
 import { clearToken, setAuthToken } from "../dao/base";
 import { Settings } from "../dao/settings";
-import { postLogin, postLogout, User, useUser } from "../dao/user";
+import {
+  isPossiblyAuthenticated,
+  postLogin,
+  postLogout,
+  User,
+  useUser
+} from "../dao/user";
 
 interface AuthContext {
   isLoading: boolean;
@@ -21,24 +27,28 @@ export const AuthContext = React.createContext<AuthContext>({} as any);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const { data: user, isLoading, error } = useUser();
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    isPossiblyAuthenticated()
+  );
+  const { data: user, isLoading, error } = useUser(isAuthenticated);
   const [doLogin] = useMutation(postLogin);
   const [doLogout] = useMutation(postLogout);
 
   useEffect(() => {
-    if (!isLoading && user && !isAuthenticated) {
-      setIsAuthenticated(true);
-      Sentry.configureScope(scope => {
-        scope.setUser({
-          id: user.pk.toString(),
-          username: user.username,
-          email: user.email
+    if (isAuthenticated) {
+      if (user) {
+        Sentry.configureScope(scope => {
+          scope.setUser({
+            id: user.pk.toString(),
+            username: user.username,
+            email: user.email
+          });
         });
-      });
-    }
-    if (isAuthenticated && !user) {
-      setIsAuthenticated(false);
+      }
+    } else {
+      clearToken();
+      refetchQuery("user");
+      clearQueryCache();
     }
   }, [isAuthenticated, isLoading, user]);
 
@@ -70,14 +80,12 @@ export const AuthProvider: React.FC = ({ children }) => {
   const login = async (values: Record<string, string>) => {
     const result = await doLogin(values);
     setAuthToken(result.token, result.expiry);
-    await refetchQuery("user");
+    setIsAuthenticated(true);
   };
 
   const logout = async () => {
     await doLogout();
-    clearToken();
-    refetchQuery("user");
-    clearQueryCache();
+    setIsAuthenticated(false);
   };
 
   return (

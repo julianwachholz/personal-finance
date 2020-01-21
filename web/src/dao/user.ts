@@ -27,14 +27,17 @@ const fetchUser: FetchItem<User, {}> = async () => {
   return data;
 };
 
-const isPossiblyAuthenticated = () => getAuthToken() !== null;
+export const isPossiblyAuthenticated = () => getAuthToken() !== null;
 
 export const prefetchUser = () => {
   isPossiblyAuthenticated() && prefetchQuery("user", fetchUser);
 };
 
-export const useUser = () => {
-  const query = useQuery(isPossiblyAuthenticated() && "user", fetchUser, {
+export const useUser = (isAuthenticated?: boolean) => {
+  if (!isAuthenticated) {
+    isAuthenticated = isPossiblyAuthenticated();
+  }
+  const query = useQuery(isAuthenticated && "user", fetchUser, {
     retry: false,
     refetchOnWindowFocus: false
   } as any);

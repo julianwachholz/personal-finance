@@ -2,12 +2,12 @@ from django.contrib.auth import get_user_model
 from django.core import signing
 from django.core.signing import SignatureExpired
 from django.utils.translation import ugettext_lazy as _
+from knox.auth import TokenAuthentication
+from knox.views import LoginView as KnoxLoginView
 from rest_framework import generics, permissions
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from knox.views import LoginView as KnoxLoginView
 
 from .serializers import LoginSerializer, UserSerializer
 
@@ -49,6 +49,7 @@ class UserVerifyView(APIView):
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = (permissions.AllowAny,)
+    authentication_classes = (TokenAuthentication,)
 
 
 class JSONAuthentication(BaseAuthentication):

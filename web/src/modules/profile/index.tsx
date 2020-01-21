@@ -26,7 +26,7 @@ const Profile = () => {
           setLoading(true);
           await logout();
           setLoading(false);
-          history.push(`/login`, { logout: true });
+          history.push(`/`, { logout: true });
         }}
         loading={loading}
       >

@@ -22,7 +22,7 @@ const VerifyEmail = ({
     setTimeout(async () => {
       try {
         const { username } = await verify(match.params);
-        history.replace(`/login`, { verified: true, username });
+        history.replace(`/`, { verified: true, username });
       } catch (e) {
         setError(e.error);
       } finally {
