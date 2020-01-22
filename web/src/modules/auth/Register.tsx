@@ -52,7 +52,7 @@ export const Register = ({ location, history }: RouteComponentProps) => {
         <Input
           autoFocus
           prefix={<UserOutlined />}
-          placeholder="doglover3000"
+          placeholder="catlover3000"
           autoComplete="username"
           inputMode="email"
           size="large"
@@ -61,11 +61,13 @@ export const Register = ({ location, history }: RouteComponentProps) => {
       <Form.Item
         name="email"
         label="Email"
-        rules={[{ required: true, message: "Please enter your email" }]}
+        rules={[
+          { required: true, type: "email", message: "Please enter your email" }
+        ]}
       >
         <Input
           prefix={<MailOutlined />}
-          placeholder="ilovedogs@example.net"
+          placeholder="catlover3000@cool.website"
           type="email"
           size="large"
         />

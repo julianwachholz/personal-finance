@@ -26,6 +26,8 @@ const Transactions = lazy(() => import("./modules/transactions"));
 const Login = lazy(() => import("./modules/auth/Login"));
 const VerifyEmail = lazy(() => import("./modules/auth/VerifyEmail"));
 const Register = lazy(() => import("./modules/auth/Register"));
+const ForgotPassword = lazy(() => import("./modules/auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("./modules/auth/ResetPassword"));
 
 const App = () => {
   const { theme } = useSettings();
@@ -91,7 +93,9 @@ const App = () => {
             <Route exact path="/" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/verify/:token" component={VerifyEmail} />
-            <Route path="/recover" render={() => <p>Forgot password</p>} />
+            <Route path="/forgot-password" component={ForgotPassword} />
+            <Route path="/reset-password/:token" component={ResetPassword} />
+            <Route path="/reset-password" component={ResetPassword} />
             <Route component={NotFound} />
           </Switch>
         </Suspense>

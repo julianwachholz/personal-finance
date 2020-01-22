@@ -2,13 +2,12 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Alert, Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
-import { RouteComponentProps, useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import useTitle from "../../utils/useTitle";
 
-const Login = ({ location }: RouteComponentProps) => {
-  const history = useHistory();
+const Login = ({ location, history }: RouteComponentProps) => {
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();
@@ -46,6 +45,13 @@ const Login = ({ location }: RouteComponentProps) => {
         <Alert
           type="success"
           message="Account activated! You can now log in."
+          style={{ marginBottom: 24 }}
+        />
+      )}
+      {location.state?.resetPassword && (
+        <Alert
+          type="success"
+          message="Password has been reset. You can now log in."
           style={{ marginBottom: 24 }}
         />
       )}
@@ -102,7 +108,7 @@ const Login = ({ location }: RouteComponentProps) => {
         </Col>
         <Col xs={12} sm={8}>
           <Button type="link" size="large" block>
-            Forgot password?
+            <Link to="/forgot-password">Forgot password?</Link>
           </Button>
         </Col>
       </Row>

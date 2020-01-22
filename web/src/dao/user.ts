@@ -54,6 +54,24 @@ export const postVerifyEmail = makeItemsAction<VerifyEmail>(
   "verify"
 );
 
+interface ForgotPassword {
+  email: string;
+}
+export const postForgotPassword = makeItemsAction<ForgotPassword>(
+  "auth",
+  "forgot-password"
+);
+
+export interface ResetPasswordProps {
+  token: string;
+  new_password: string;
+}
+
+export const postResetPassword = makeItemsAction<ResetPasswordProps>(
+  "auth",
+  "reset-password"
+);
+
 export const postLogin = async (params: Record<string, string>) => {
   const url = `/api/auth/login/`;
   const response = await fetch(url, {

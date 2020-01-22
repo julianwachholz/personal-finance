@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.password_validation import validate_password
+from django.core import signing
 from django.core.exceptions import ValidationError
+from django.core.signing import BadSignature, SignatureExpired
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -43,7 +45,7 @@ class UserSerializer(serializers.ModelSerializer):
             )
         ],
     )
-    password = serializers.CharField(required=False, write_only=True, validators=[])
+    password = serializers.CharField(required=False, write_only=True)
     settings = SettingsSerializer(read_only=True)
 
     class Meta:
@@ -73,3 +75,36 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(is_active=False, **validated_data)
+
+
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        try:
+            signed_data = signing.loads(
+                data["token"], salt="reset-password", max_age=60 * 120
+            )
+        except BadSignature:
+            raise ValidationError(_("Invalid link."))
+        except SignatureExpired:
+            raise ValidationError(_("Link expired."))
+
+        user = User.objects.get(pk=signed_data["user_pk"])
+        new_password = data["new_password"]
+
+        try:
+            validate_password(password=new_password, user=user)
+        except ValidationError as e:
+            raise ValidationError({"new_password": e.messages})
+        return {"user": user, "new_password": new_password}
+
+    def save(self):
+        user = self.validated_data["user"]
+        user.set_password(self.validated_data["new_password"])
+        user.save()
