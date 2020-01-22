@@ -1,6 +1,7 @@
 version: "3"
 services:
   web:
+    image: shinywaffle:latest
     build:
       context: .
       dockerfile: ./Dockerfile
