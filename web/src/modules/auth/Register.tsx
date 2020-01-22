@@ -53,7 +53,7 @@ export const Register = ({ location, history }: RouteComponentProps) => {
           autoFocus
           prefix={<UserOutlined />}
           placeholder="catlover3000"
-          autoComplete="username"
+          autoComplete="off"
           inputMode="email"
           size="large"
         />

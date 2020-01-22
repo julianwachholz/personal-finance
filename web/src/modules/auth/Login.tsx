@@ -71,7 +71,7 @@ const Login = ({ location, history }: RouteComponentProps) => {
           autoFocus
           prefix={<UserOutlined />}
           placeholder="Username"
-          autoComplete="username"
+          autoComplete="off"
           inputMode="email"
           size="large"
         />

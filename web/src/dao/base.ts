@@ -227,13 +227,20 @@ export const makeUseItem = <T extends Model>(
 
 type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
 
+interface ItemMutationOptions {
+  noId: boolean;
+}
+
 const makeItemMutation = <T extends Model, RT = T>(
   basename: string,
-  method: string
+  method: string,
+  options?: ItemMutationOptions
 ) => {
   const mutateItem: MutateItem<T, RT> = async data => {
     const url =
-      method === "POST" ? `/api/${basename}/` : `/api/${basename}/${data.pk}/`;
+      method === "POST" || options?.noId
+        ? `/api/${basename}/`
+        : `/api/${basename}/${data.pk}/`;
     const response = await authFetch(url, {
       method,
       headers: {
@@ -262,8 +269,11 @@ export const makePostItem = <T extends Model>(basename: string) => {
   return makeItemMutation<T>(basename, "POST");
 };
 
-export const makePutItem = <T extends Model>(basename: string) => {
-  return makeItemMutation<T>(basename, "PUT");
+export const makePutItem = <T extends Model>(
+  basename: string,
+  options?: ItemMutationOptions
+) => {
+  return makeItemMutation<T>(basename, "PUT", options);
 };
 
 export const makeDeleteItem = <T extends Model>(basename: string) => {

@@ -46,6 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         ],
     )
     password = serializers.CharField(required=False, write_only=True)
+    old_password = serializers.CharField(required=False, write_only=True)
     settings = SettingsSerializer(read_only=True)
 
     class Meta:
@@ -57,15 +58,24 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "date_joined",
-            "password",
             "settings",
+            "password",
+            "old_password",
         )
 
     def validate(self, data):
-        if "pk" not in data and "password" not in data:
-            raise ValidationError({"password": "Please provide a password"})
-        if "password" in data:
-            user = User(**data)
+        user = self.context["request"].user
+        if not user and "password" not in data:
+            raise ValidationError({"password": "Please provide a new password"})
+
+        if "password" in data or "old_password" in data:
+            if not user:
+                user = User(**data)
+            else:
+                old_password = data.get("old_password")
+                if not user.check_password(old_password):
+                    raise ValidationError({"old_password": _("Invalid password")})
+
             password = data["password"]
             try:
                 validate_password(password=password, user=user)
@@ -75,6 +85,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return User.objects.create_user(is_active=False, **validated_data)
+
+    def update(self, user, validated_data):
+        new_password = validated_data.pop("password", None)
+        if new_password:
+            user.set_password(new_password)
+        return super().update(user, validated_data)
 
 
 class EmailSerializer(serializers.Serializer):

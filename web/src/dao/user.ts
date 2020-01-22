@@ -1,5 +1,10 @@
 import { prefetchQuery, useQuery } from "react-query";
-import { getAuthToken, makeItemsAction, makePostItem } from "../dao/base";
+import {
+  getAuthToken,
+  makeItemsAction,
+  makePostItem,
+  makePutItem
+} from "../dao/base";
 import { authFetch, clearToken, FetchItem } from "./base";
 import { Settings } from "./settings";
 
@@ -45,6 +50,7 @@ export const useUser = (isAuthenticated?: boolean) => {
 };
 
 export const postUser = makePostItem<User>("auth/register");
+export const putUser = makePutItem<User>("auth/user", { noId: true });
 
 interface VerifyEmail {
   token: string;
