@@ -34,3 +34,5 @@ RUN poetry config virtualenvs.create false \
     && poetry install $(test "$DJANGO_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
 
 COPY . /app
+
+CMD [ "/app/config/run.sh" ]
