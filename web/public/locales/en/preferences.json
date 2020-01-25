@@ -14,6 +14,10 @@
       "table_layout": "Table layout"
     },
     "use_colors_examples": "Examples:",
+    "error": {
+      "date_format_no_YY_or_YYYY": "YY and YYYY represent the local week-numbering year. Please use yy and yyyy instead.",
+      "date_format_no_D_or_DD": "D and DD represent the day of a year (1, 2, ..., 365, 366). Please use d and dd for days of a month."
+    },
     "date_format_examples": "Example formats:",
     "table_layout": {
       "large": "Large",

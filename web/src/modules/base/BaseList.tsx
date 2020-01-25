@@ -1,5 +1,6 @@
 import { ActivityIndicator, List, WhiteSpace } from "antd-mobile";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import AppHeader, { AppHeaderProps } from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItemsPaginated } from "../../dao/base";
 import { debounce } from "../../utils/debounce";
@@ -23,6 +24,7 @@ const BaseList = <T extends ModelWithLabel>({
   actions,
   headerProps
 }: BaseListProps<T>) => {
+  const [t] = useTranslation();
   const {
     data: pages,
     isLoading,
@@ -85,7 +87,7 @@ const BaseList = <T extends ModelWithLabel>({
         <List
           renderFooter={() =>
             isLoading || isFetchingMore ? (
-              <ActivityIndicator text="Loading..." />
+              <ActivityIndicator text={t("loading")} />
             ) : (
               <WhiteSpace style={{ height: 22 }} />
             )

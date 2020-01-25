@@ -14,6 +14,10 @@
       "table_layout": "Tabellenlayout"
     },
     "use_colors_examples": "Beispiele:",
+    "error": {
+      "date_format_no_YY_or_YYYY": "YY und YYYY stehen für das Jahr des lokalen Wochenkalenders. Bitte verwende stattdessen yy oder yyyy.",
+      "date_format_no_D_or_DD": "D und DD stehen für den Tag im Jahr (1, 2, ..., 365, 366). Bitte verwende d oder dd für die Tage im Monat."
+    },
     "date_format_examples": "Beispiel Formate:",
     "table_layout": {
       "large": "Gross",

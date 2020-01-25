@@ -3,6 +3,7 @@ import { ColumnType } from "antd/lib/table/interface";
 import { FormInstance } from "rc-field-form";
 import { Rule } from "rc-field-form/lib/interface";
 import React, { HTMLAttributes } from "react";
+import { useTranslation } from "react-i18next";
 import { Model } from "../../dao/base";
 import "./BaseModule.scss";
 
@@ -39,12 +40,22 @@ export const EditableCell: React.FC<any> = <T extends Model>({
   children,
   ...props
 }: EditableCellProps<T>) => {
+  const [t] = useTranslation();
   return (
     <td {...props}>
       {editing ? (
         <Form.Item
           name={name}
-          rules={rules ?? [{ required: true, message: `${title} is required` }]}
+          rules={
+            rules ?? [
+              {
+                required: true,
+                message: t("form.error.field_required", {
+                  field: title
+                })
+              }
+            ]
+          }
         >
           {field}
         </Form.Item>

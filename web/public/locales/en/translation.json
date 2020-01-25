@@ -2,6 +2,9 @@
   "form": {
     "select": {
       "create_model": "Create \"{{ search }}\""
+    },
+    "error": {
+      "field_required": "{{ field }} is required"
     }
   },
   "loading": "Loading...",
@@ -23,6 +26,20 @@
     "object_edit": "Edit",
     "object_delete": "Delete"
   },
+  "inline": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "create": "Create {{ name }}"
+  },
+  "bulk": {
+    "disable": "Disable bulk mode",
+    "enable": "Bulk mode",
+    "select_action": "Select bulk action...",
+    "submit": "Go"
+  },
+  "actions": "Actions",
+  "search": "Search...",
   "dashboard": {
     "title": "Dashboard",
     "todo": "This is a placeholder for the dashboard."

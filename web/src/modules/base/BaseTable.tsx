@@ -9,9 +9,11 @@ import { ColumnsType, TableProps } from "antd/lib/table/Table";
 import React, { ReactText, useState } from "react";
 import { DndProvider } from "react-dnd";
 import DndBackend from "react-dnd-html5-backend";
+import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router-dom";
 import AppHeader from "../../components/layout/AppHeader";
 import { ModelWithLabel, UseItems } from "../../dao/base";
+import { debounce } from "../../utils/debounce";
 import { useSettings } from "../../utils/SettingsProvider";
 import useStoredState from "../../utils/useStoredState";
 import useTitle from "../../utils/useTitle";
@@ -109,6 +111,7 @@ const BaseTable = <T extends ModelWithLabel>({
   onMove,
   children
 }: BaseTableProps<T>) => {
+  const [t] = useTranslation();
   const { tableSize } = useSettings();
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useStoredState(
@@ -215,7 +218,7 @@ const BaseTable = <T extends ModelWithLabel>({
         extra={[
           extraActionMenu ? (
             <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon={<DownOutlined />}>Actions</Button>
+              <Button icon={<DownOutlined />}>{t("actions")}</Button>
             </Dropdown>
           ) : null,
           ...actions
@@ -224,14 +227,15 @@ const BaseTable = <T extends ModelWithLabel>({
       {showSearch ? (
         <Input
           className="ant-input-search ant-input-search-enter-button ant-input-search-small"
+          placeholder={t("search")}
           size={tableSize}
           value={location.state?.search}
-          onChange={e => {
+          onChange={debounce((e: any) => {
             history.replace(location.pathname, {
               ...location.state,
               search: e.target.value
             });
-          }}
+          }, 250)}
           addonAfter={
             // button just for looks, search will execute instantly
             <Button type="primary" size={tableSize}>

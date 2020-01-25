@@ -21,6 +21,7 @@ import { TableProps } from "antd/lib/table/Table";
 import { Location } from "history";
 import { FormInstance } from "rc-field-form";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { setQueryData } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import AppHeader from "../../components/layout/AppHeader";
@@ -113,6 +114,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
   bulkActions,
   children
 }: EditableTableProps<T>) => {
+  const [t] = useTranslation();
   if (editable && !onSave) {
     throw new Error("editable list requires onSave callback");
   }
@@ -187,17 +189,17 @@ const BaseEditableTable = <T extends ModelWithLabel>({
                 htmlType="submit"
                 loading={editLoading}
               >
-                Save
+                {t("inline.save")}
               </Button>
               <Button type="link" onClick={() => cancelEdit()}>
-                Cancel
+                {t("inline.cancel")}
               </Button>
             </>
           ) : (
             <>
               {canEditRecord && (
                 <Button type="link" onClick={() => editItem(item)}>
-                  Edit
+                  {t("inline.edit")}
                 </Button>
               )}
               {extraRowActions &&
@@ -297,7 +299,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
           setBulkMode(!bulkMode);
         }}
       >
-        {bulkMode ? "Deactivate Bulk Mode" : "Bulk Mode"}
+        {bulkMode ? t("bulk.disable") : t("bulk.enable")}
       </Button>,
       ...(bulkMode ? [] : actions)
     ];
@@ -340,7 +342,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             editItem({ pk: 0 } as any);
           }}
         >
-          Create {itemName}
+          {t("inline.create", { name: itemName })}
         </Button>
       ];
     }
@@ -353,7 +355,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
         extra={[
           extraActionMenu ? (
             <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon={<DownOutlined />}>Actions</Button>
+              <Button icon={<DownOutlined />}>{t("actions")}</Button>
             </Dropdown>
           ) : null,
           ...actions
@@ -365,7 +367,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             <>
               <Select
                 size={tableSize}
-                placeholder="Select bulk action..."
+                placeholder={t("bulk.select_action")}
                 style={{ width: 200 }}
                 value={bulkAction}
                 onChange={(v: string) => setBulkAction(v)}
@@ -389,13 +391,14 @@ const BaseEditableTable = <T extends ModelWithLabel>({
                   setSelectedKeys([]);
                 }}
               >
-                Go
+                {t("bulk.submit")}
               </Button>
               {selectedKeys.length} of {total} selected
             </>
           ) : showSearch ? (
             <Input
               className="ant-input-search ant-input-search-enter-button ant-input-search-small"
+              placeholder={t("search")}
               size={tableSize}
               value={location.state?.search}
               onChange={e => {

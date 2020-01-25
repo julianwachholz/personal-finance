@@ -2,6 +2,9 @@
   "form": {
     "select": {
       "create_model": "Erstelle \"{{ search }}\""
+    },
+    "error": {
+      "field_required": "{{ field }} ist erforderlich"
     }
   },
   "loading": "Lädt...",
@@ -23,6 +26,20 @@
     "object_edit": "Bearbeiten",
     "object_delete": "Löschen"
   },
+  "inline": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "create": "{{ name }} erstellen"
+  },
+  "bulk": {
+    "disable": "Stapelverarbeitung deaktivieren",
+    "enable": "Stapelverarbeitung",
+    "select_action": "Aktion wählen...",
+    "submit": "Los"
+  },
+  "actions": "Aktionen",
+  "search": "Suchen...",
   "dashboard": {
     "title": "Dashboard",
     "todo": "Das ist ein Platzhalter für das Dashboard."
