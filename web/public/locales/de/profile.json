@@ -1,0 +1,28 @@
+{
+  "title": "Profil",
+  "message": {
+    "profile_updated": "Profil aktualisiert"
+  },
+  "form": {
+    "label": {
+      "username": "Benutzername",
+      "email": "E-Mail",
+      "name": "Name",
+      "old_password": "Aktuelles Passwort",
+      "new_password": "Neues Passwort"
+    },
+    "error": {
+      "username_required": "Benutzernamen eingeben",
+      "email_required": "E-Mail Adresse eingeben",
+      "old_password_required": "Gib dein aktuelles Passwort ein",
+      "new_password_required": "Gib dein neues Passwort ein"
+    },
+    "placeholder": {
+      "name_optional": "Optional: Wie sollen wir dich nennen?"
+    },
+    "submit": "Änderungen speichern",
+    "cancel_change_password": "Passwort nicht ändern",
+    "change_password": "Passwort ändern"
+  },
+  "logout": "Abmelden"
+}

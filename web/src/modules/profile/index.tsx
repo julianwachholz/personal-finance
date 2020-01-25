@@ -1,16 +1,18 @@
+import { LogoutOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { putUser, User } from "../../dao/user";
 import { useAuth } from "../../utils/AuthProvider";
 import { applyFormErrors } from "../../utils/errors";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
-const Profile = () => {
-  const history = useHistory();
+const Profile = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("profile");
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
@@ -18,10 +20,10 @@ const Profile = () => {
   const [form] = Form.useForm();
   const [updateUser] = useMutation(putUser);
 
-  useTitle(`Profile`);
+  useTitle(t("profile:title"));
   return (
     <BaseModule
-      title="Profile"
+      title={t("profile:title")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -33,7 +35,7 @@ const Profile = () => {
           setLoading(true);
           try {
             await updateUser(values as User, { updateQuery: "user" });
-            message.success(`Profile updated`);
+            message.success(t("profile:message.profile_updated"));
             setChangePassword(false);
             form.resetFields();
           } catch (error) {
@@ -47,35 +49,43 @@ const Profile = () => {
       >
         <Form.Item
           name="username"
-          label="Username"
-          rules={[{ required: true, message: "Enter a username" }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="email"
-          label="Email"
+          label={t("profile:form.label.username")}
           rules={[
             {
               required: true,
-              type: "email",
-              message: "Enter your email address"
+              message: t("profile:form.error.username_required")
             }
           ]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="first_name" label="Name">
-          <Input placeholder="Optional: What shall we call you?" />
+        <Form.Item
+          name="email"
+          label={t("profile:form.label.email")}
+          rules={[
+            {
+              required: true,
+              type: "email",
+              message: t("profile:form.error.email_required")
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="first_name" label={t("profile:form.label.name")}>
+          <Input placeholder={t("profile:form.placeholder.name_optional")} />
         </Form.Item>
         {changePassword
           ? [
               <Form.Item
                 key="old_password"
                 name="old_password"
-                label="Current Password"
+                label={t("profile:form.label.old_password")}
                 rules={[
-                  { required: true, message: "Enter your current password" }
+                  {
+                    required: true,
+                    message: t("profile:form.error.old_password_required")
+                  }
                 ]}
               >
                 <Input.Password />
@@ -83,8 +93,13 @@ const Profile = () => {
               <Form.Item
                 key="password"
                 name="password"
-                label="New Password"
-                rules={[{ required: true, message: "Enter a new password" }]}
+                label={t("profile:form.label.new_password")}
+                rules={[
+                  {
+                    required: true,
+                    message: t("profile:form.error.new_password_required")
+                  }
+                ]}
               >
                 <Input.Password />
               </Form.Item>
@@ -92,7 +107,7 @@ const Profile = () => {
           : null}
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Save Changes
+            {t("profile:form.submit")}
           </Button>
           <Button
             onClick={() => {
@@ -100,7 +115,9 @@ const Profile = () => {
               setChangePassword(!changePassword);
             }}
           >
-            {changePassword ? "Cancel Password Change" : "Change Password"}
+            {changePassword
+              ? t("profile:form.cancel_change_password")
+              : t("profile:form.change_password")}
           </Button>
         </Form.Item>
       </Form>
@@ -114,7 +131,8 @@ const Profile = () => {
         loading={logoutLoading}
         size={isMobile ? "large" : "middle"}
       >
-        Logout
+        <LogoutOutlined />
+        {t("profile:logout")}
       </Button>
     </BaseModule>
   );
