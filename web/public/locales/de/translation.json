@@ -1,4 +1,28 @@
 {
+  "form": {
+    "select": {
+      "create_model": "Erstelle \"{{ search }}\""
+    }
+  },
+  "loading": "Lädt...",
+  "menu": {
+    "transactions": "Transaktionen",
+    "reports": "Berichte",
+    "accounts": "Konten",
+    "budgets": "Budgets",
+    "settings": "Einstellungen",
+    "categories": "Kategorien",
+    "tags": "Tags",
+    "payees": "Empfänger",
+    "dashboard": "Dashboard",
+    "preferences": "Optionen",
+    "profile": "Profil"
+  },
+  "breadcrumb": {
+    "object_create": "Erstellen",
+    "object_edit": "Bearbeiten",
+    "object_delete": "Löschen"
+  },
   "dashboard": {
     "title": "Dashboard",
     "todo": "Das ist ein Platzhalter für das Dashboard."

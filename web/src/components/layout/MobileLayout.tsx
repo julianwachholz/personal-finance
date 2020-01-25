@@ -8,12 +8,14 @@ import { Layout } from "antd";
 import { TabBar } from "antd-mobile";
 import "antd-mobile/dist/antd-mobile.css";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router";
 import "./MobileLayout.scss";
 
 const { Content } = Layout;
 
 const MobileLayout: React.FC = ({ children }) => {
+  const [t] = useTranslation();
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -22,7 +24,7 @@ const MobileLayout: React.FC = ({ children }) => {
       <Content className="content-container">{children}</Content>
       <TabBar>
         <TabBar.Item
-          title="Transactions"
+          title={t("menu.transactions")}
           icon={<HistoryOutlined />}
           selectedIcon={<HistoryOutlined />}
           selected={pathname.startsWith(`/transactions`)}
@@ -31,7 +33,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title="Accounts"
+          title={t("menu.accounts")}
           icon={<BankOutlined />}
           selectedIcon={<BankOutlined />}
           selected={pathname.startsWith(`/accounts`)}
@@ -40,7 +42,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title="Dashboard"
+          title={t("menu.dashboard")}
           icon={<PieChartOutlined />}
           selectedIcon={<PieChartOutlined />}
           selected={pathname === `/`}
@@ -49,7 +51,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title="Budgets"
+          title={t("menu.budgets")}
           icon={<ProjectOutlined rotate={180} />}
           selectedIcon={<ProjectOutlined rotate={180} />}
           selected={pathname.startsWith(`/budgets`)}

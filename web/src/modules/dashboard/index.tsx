@@ -10,7 +10,7 @@ const { Paragraph: P } = Typography;
 
 const Dashboard = () => {
   const history = useHistory();
-  const [t, i18n] = useTranslation();
+  const [t] = useTranslation();
 
   useTitle();
   return (

@@ -1,6 +1,7 @@
 import { Layout } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
+import { APP_TITLE } from "../../utils/constants";
 import { useSettings } from "../../utils/SettingsProvider";
 import MainMenu from "../menu/Menu";
 import Breadcrumbs from "./Breadcrumbs";
@@ -21,7 +22,7 @@ const AppLayout: React.FC = ({ children }) => {
       >
         <Link to="/" className="app-title">
           <Logo />
-          <span>ShinyWaffle</span>
+          <span>{APP_TITLE}</span>
         </Link>
         <MainMenu />
       </Sider>

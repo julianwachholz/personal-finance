@@ -2,6 +2,7 @@ import { Select } from "antd";
 import { SelectProps, SelectValue } from "antd/lib/select";
 import { LabeledValue } from "antd/lib/tree-select";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ModelWithLabel, UseItems } from "../../dao/base";
 import useDebounce from "../../utils/debounce";
 
@@ -22,6 +23,7 @@ const ModelSelect = <T extends ModelWithLabel>({
   onItemSelect,
   ...props
 }: ModelSelectProps<T>) => {
+  const [t] = useTranslation();
   const [search, setSearch] = useState();
   const debouncedSearch = useDebounce(search, 100);
   const { data, isLoading } = useItems({ search: debouncedSearch });
@@ -39,7 +41,7 @@ const ModelSelect = <T extends ModelWithLabel>({
   if (createItem && search && options.length < 5) {
     options.push(
       <Select.Option key="0" value="0">
-        Create "{search}"
+        {t("form.select.create_model", 'Create "{{ search }}"', { search })}
       </Select.Option>
     );
   }
@@ -50,7 +52,7 @@ const ModelSelect = <T extends ModelWithLabel>({
       labelInValue
       optionFilterProp="children"
       loading={isCreating || debouncedLoading}
-      notFoundContent={debouncedLoading ? "Loading..." : undefined}
+      notFoundContent={debouncedLoading ? t("loading") : undefined}
       dropdownStyle={{ minWidth: 300 }}
       value={value}
       onSearch={setSearch}

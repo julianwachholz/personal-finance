@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useSettings } from "../../utils/SettingsProvider";
 import "./Menu.scss";
@@ -25,66 +26,6 @@ interface MenuItem {
   text: string;
   items?: MenuItem[];
 }
-
-const menuItems: MenuItem[] = [
-  {
-    path: "/",
-    icon: <PieChartOutlined />,
-    text: "Dashboard"
-  },
-  {
-    path: "/transactions",
-    icon: <HistoryOutlined />,
-    text: "Transactions"
-  },
-  {
-    path: "/budgets",
-    icon: <ProjectOutlined rotate={180} />,
-    text: "Budgets"
-  },
-  {
-    path: "/accounts",
-    icon: <BankOutlined />,
-    text: "Accounts"
-  },
-  {
-    path: "/reports",
-    icon: <LineChartOutlined />,
-    text: "Reports"
-  },
-  {
-    path: "/settings",
-    icon: <SettingOutlined />,
-    text: "Settings",
-    items: [
-      {
-        path: "/settings/categories",
-        icon: <FolderOutlined />,
-        text: "Categories"
-      },
-      {
-        path: "/settings/tags",
-        icon: <TagsOutlined />,
-        text: "Tags"
-      },
-      {
-        path: "/settings/payees",
-        icon: <ShopOutlined />,
-        text: "Payees"
-      },
-      {
-        path: "/settings/preferences",
-        icon: <ToolOutlined />,
-        text: "Preferences"
-      },
-      {
-        path: "/settings/user",
-        icon: <UserOutlined />,
-        text: "Profile"
-      }
-    ]
-  }
-];
 
 const renderItem = (item: MenuItem) =>
   item.items ? (
@@ -109,6 +50,7 @@ const renderItem = (item: MenuItem) =>
   );
 
 const MainMenu = () => {
+  const [t] = useTranslation();
   const { theme, menuCollapsed } = useSettings();
   const { pathname } = useLocation();
 
@@ -117,6 +59,66 @@ const MainMenu = () => {
     acc.push(`${acc[acc.length - 1] ?? ""}/${path}`);
     return acc;
   }, []);
+
+  const menuItems: MenuItem[] = [
+    {
+      path: "/",
+      icon: <PieChartOutlined />,
+      text: t("menu.dashboard")
+    },
+    {
+      path: "/transactions",
+      icon: <HistoryOutlined />,
+      text: t("menu.transactions")
+    },
+    {
+      path: "/budgets",
+      icon: <ProjectOutlined rotate={180} />,
+      text: t("menu.budgets")
+    },
+    {
+      path: "/accounts",
+      icon: <BankOutlined />,
+      text: t("menu.accounts")
+    },
+    {
+      path: "/reports",
+      icon: <LineChartOutlined />,
+      text: t("menu.reports")
+    },
+    {
+      path: "/settings",
+      icon: <SettingOutlined />,
+      text: t("menu.settings"),
+      items: [
+        {
+          path: "/settings/categories",
+          icon: <FolderOutlined />,
+          text: t("menu.categories")
+        },
+        {
+          path: "/settings/tags",
+          icon: <TagsOutlined />,
+          text: t("menu.tags")
+        },
+        {
+          path: "/settings/payees",
+          icon: <ShopOutlined />,
+          text: t("menu.payees")
+        },
+        {
+          path: "/settings/preferences",
+          icon: <ToolOutlined />,
+          text: t("menu.preferences")
+        },
+        {
+          path: "/settings/user",
+          icon: <UserOutlined />,
+          text: t("menu.profile")
+        }
+      ]
+    }
+  ];
 
   return (
     <Menu

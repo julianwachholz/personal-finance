@@ -1,6 +1,7 @@
 import { HomeOutlined, RightOutlined, SyncOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import React from "react";
+import React, { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { QueryResult, useIsFetching } from "react-query";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -21,25 +22,25 @@ const useLabel = ({ data }: QueryResult<any, any>): string => {
 };
 
 const breadcrumbs: BreadcrumbMatch[] = [
-  [/^\/transactions\/?$/, "Transactions"],
-  [/^\/reports\/?$/, "Reports"],
+  [/^\/transactions\/?$/, "transactions"],
+  [/^\/reports\/?$/, "reports"],
 
-  [/^\/accounts\/?$/, "Accounts"],
+  [/^\/accounts\/?$/, "accounts"],
   [/^\/accounts\/(\d+)\/?$/, pk => useLabel(useAccount(pk))],
 
-  [/^\/budgets\/?$/, "Budgets"],
+  [/^\/budgets\/?$/, "budgets"],
   [/^\/budgets\/(\d+)\/?$/, pk => useLabel(useBudget(pk))],
-  [/^\/settings\/?$/, "Settings"],
-  [/^\/settings\/categories\/?$/, "Categories"],
+  [/^\/settings\/?$/, "settings"],
+  [/^\/settings\/categories\/?$/, "categories"],
   [/^\/settings\/categories\/(\d+)\/?$/, pk => useLabel(useCategory(pk))],
-  [/^\/settings\/tags\/?$/, "Tags"],
+  [/^\/settings\/tags\/?$/, "tags"],
   [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))],
-  [/^\/settings\/payees\/?$/, "Payees"],
+  [/^\/settings\/payees\/?$/, "payees"],
   [/^\/settings\/payees\/(\d+)\/?$/, pk => useLabel(usePayee(pk))],
 
-  [/\/create\/?$/, "Create"],
-  [/\/edit\/?$/, "Edit"],
-  [/\/delete\/?$/, "Delete"]
+  [/\/create\/?$/, "object_create"],
+  [/\/edit\/?$/, "object_edit"],
+  [/\/delete\/?$/, "object_delete"]
 ];
 
 interface CrumbProps {
@@ -49,6 +50,26 @@ interface CrumbProps {
 }
 
 const Crumb = ({ url, path, isLast }: CrumbProps) => {
+  const [t, i18n] = useTranslation();
+
+  const fixedCrumbs: any = useMemo(
+    () => ({
+      transactions: t("menu.transactions"),
+      reports: t("menu.reports"),
+      accounts: t("menu.accounts"),
+      budgets: t("menu.budgets"),
+      settings: t("menu.settings"),
+      categories: t("menu.categories"),
+      tags: t("menu.tags"),
+      payees: t("menu.payees"),
+      object_create: t("breadcrumb.object_create"),
+      object_edit: t("breadcrumb.object_edit"),
+      object_delete: t("breadcrumb.object_delete")
+    }),
+    // eslint-disable-next-line
+    [i18n.language]
+  );
+
   let name: string | undefined = undefined;
   const match = breadcrumbs.find(([r]) => r.test(url));
   if (match) {
@@ -58,7 +79,7 @@ const Crumb = ({ url, path, isLast }: CrumbProps) => {
       if (typeof match[1] === "function") {
         name = match[1](...groups);
       } else {
-        name = match[1];
+        name = fixedCrumbs[match[1]];
       }
     }
   }

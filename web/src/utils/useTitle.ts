@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-
-const defaultTitle = "ShinyWaffle";
+import { APP_TITLE } from "./constants";
 
 /**
  * Set document title.
@@ -13,7 +12,7 @@ const useTitle = (title?: string | null) => {
   useEffect(() => {
     if (title !== null) {
       document.title =
-        title === undefined ? defaultTitle : `${title} - ${defaultTitle}`;
+        title === undefined ? APP_TITLE : `${title} - ${APP_TITLE}`;
     }
   }, [title]);
 };
