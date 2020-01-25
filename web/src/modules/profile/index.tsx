@@ -1,4 +1,4 @@
-import { Button, Form, Input, message, Typography } from "antd";
+import { Button, Form, Input, message } from "antd";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useMutation } from "react-query";
@@ -8,8 +8,6 @@ import { useAuth } from "../../utils/AuthProvider";
 import { applyFormErrors } from "../../utils/errors";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
-
-const { Paragraph: P } = Typography;
 
 const Profile = () => {
   const history = useHistory();
