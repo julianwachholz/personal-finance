@@ -1,6 +1,7 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Alert, Spin } from "antd";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
 import { postVerifyEmail } from "../../dao/user";
@@ -14,6 +15,7 @@ const VerifyEmail = ({
   history,
   match
 }: RouteComponentProps<VerifyEmailRouteParams>) => {
+  const [t] = useTranslation("auth");
   const [verifying, setVerifying] = useState(true);
   const [error, setError] = useState();
   const [verify] = useMutation(postVerifyEmail);
@@ -32,20 +34,25 @@ const VerifyEmail = ({
     // eslint-disable-next-line
   }, []);
 
-  useTitle(`Email Verification`);
+  useTitle(t("auth:verify.title", "Email verification"));
   return (
     <div>
-      <h2>Email Verification</h2>
+      <h2>{t("auth:verify.title", "Email verification")}</h2>
       <div style={{ textAlign: "center" }}>
         {verifying && (
           <Spin
             size="large"
-            tip="Verifying..."
+            tip={t("auth:verify.loading", "Verifying...")}
             indicator={<LoadingOutlined />}
           />
         )}
       </div>
-      {error && <Alert type="error" message={error ?? "An error occured"} />}
+      {error && (
+        <Alert
+          type="error"
+          message={error ?? t("auth:verify.error", "An error occured")}
+        />
+      )}
     </div>
   );
 };

@@ -86,21 +86,23 @@ const App = () => {
       </ErrorBoundary>
     </Layout>
   ) : (
-    <GuestLayout>
-      <ErrorBoundary>
-        <Suspense fallback={fallback}>
-          <Switch>
-            <Route exact path="/" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/verify/:token" component={VerifyEmail} />
-            <Route path="/forgot-password" component={ForgotPassword} />
-            <Route path="/reset-password/:token" component={ResetPassword} />
-            <Route path="/reset-password" component={ResetPassword} />
-            <Route component={NotFound} />
-          </Switch>
-        </Suspense>
-      </ErrorBoundary>
-    </GuestLayout>
+    <Suspense fallback={fallback}>
+      <GuestLayout>
+        <ErrorBoundary>
+          <Suspense fallback={fallback}>
+            <Switch>
+              <Route exact path="/" component={Login} />
+              <Route path="/register" component={Register} />
+              <Route path="/verify/:token" component={VerifyEmail} />
+              <Route path="/forgot-password" component={ForgotPassword} />
+              <Route path="/reset-password/:token" component={ResetPassword} />
+              <Route path="/reset-password" component={ResetPassword} />
+              <Route component={NotFound} />
+            </Switch>
+          </Suspense>
+        </ErrorBoundary>
+      </GuestLayout>
+    </Suspense>
   );
 };
 

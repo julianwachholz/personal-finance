@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Col, Form, Input, Result, Row } from "antd";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { postUser, User } from "../../dao/user";
@@ -20,6 +21,7 @@ export const Register = ({
   location,
   history
 }: RouteComponentProps<{}, {}, RegisterLocationState>) => {
+  const [t] = useTranslation("auth");
   const [form] = Form.useForm();
   const [validating, setValidating] = useState(false);
   const [register] = useMutation(postUser);
@@ -37,12 +39,15 @@ export const Register = ({
 
   const hasSubmitted = location.state?.submitted === true;
 
-  useTitle(`Register`);
+  useTitle(t("auth:register.title", "Register"));
   return hasSubmitted ? (
     <Result
       status="success"
-      title="Registration Complete"
-      subTitle="Check your email inbox for a message from us."
+      title={t("auth:register.success_title", "Registration Complete")}
+      subTitle={t(
+        "auth:register.success_message",
+        "Check your email inbox for a message from us."
+      )}
     />
   ) : (
     <Form
@@ -50,16 +55,27 @@ export const Register = ({
       onFinish={values => onSubmit(values as User)}
       layout="vertical"
     >
-      <h2>Register</h2>
+      <h2>{t("auth:register.title", "Register")}</h2>
       <Form.Item
         name="username"
-        label="Username"
-        rules={[{ required: true, message: "Please enter a username" }]}
+        label={t("auth:register.form.username", "Username")}
+        rules={[
+          {
+            required: true,
+            message: t(
+              "auth:register.form.username_required",
+              "Please enter a username"
+            )
+          }
+        ]}
       >
         <Input
           autoFocus
           prefix={<UserOutlined />}
-          placeholder="catlover3000"
+          placeholder={t(
+            "auth:register.form.username_placeholder",
+            "catlover3000"
+          )}
           autoComplete="off"
           inputMode="email"
           size="large"
@@ -67,33 +83,60 @@ export const Register = ({
       </Form.Item>
       <Form.Item
         name="email"
-        label="Email"
+        label={t("auth:register.form.email", "Email")}
         rules={[
-          { required: true, type: "email", message: "Please enter your email" }
+          {
+            required: true,
+            type: "email",
+            message: t(
+              "auth:register.form.email_required",
+              "Please enter your email"
+            )
+          }
         ]}
       >
         <Input
           prefix={<MailOutlined />}
-          placeholder="catlover3000@cool.website"
+          placeholder={t(
+            "auth:register.form.email_placeholder",
+            "catlover3000@cool.website"
+          )}
           type="email"
           size="large"
         />
       </Form.Item>
-      <Form.Item name="first_name" label="Your Name">
+      <Form.Item
+        name="first_name"
+        label={t("auth:register.form.name", "Your Name")}
+      >
         <Input
           prefix={<ContactsOutlined />}
-          placeholder="Optional: What shall we call you?"
+          placeholder={t(
+            "auth:register.form.name_placeholder",
+            "Optional: What shall we call you?"
+          )}
           size="large"
         />
       </Form.Item>
       <Form.Item
         name="password"
-        label="Password"
-        rules={[{ required: true, message: "Please choose a password" }]}
+        label={t("auth:register.form.password", "Password")}
+        rules={[
+          {
+            required: true,
+            message: t(
+              "auth:register.form.password_required",
+              "Please choose a password"
+            )
+          }
+        ]}
       >
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder="Make it strong!"
+          placeholder={t(
+            "auth:register.form.password_placeholder",
+            "Make it strong!"
+          )}
           autoComplete="new-password"
           size="large"
         />
@@ -107,12 +150,12 @@ export const Register = ({
             htmlType="submit"
             loading={validating}
           >
-            Register
+            {t("auth:register.form.submit", "Register")}
           </Button>
         </Col>
         <Col xs={12} sm={8}>
           <Button size="large" block>
-            <Link to="/">Login</Link>
+            <Link to="/">{t("auth:register.login_link", "Login")}</Link>
           </Button>
         </Col>
       </Row>

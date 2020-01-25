@@ -2,8 +2,9 @@ import { MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Result } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { postForgotPassword } from "../../dao/user";
 import { applyFormErrors } from "../../utils/errors";
 import useTitle from "../../utils/useTitle";
@@ -13,9 +14,10 @@ interface RecoverLocationState {
 }
 
 const Recover = ({
-  location
+  location,
+  history
 }: RouteComponentProps<{}, {}, RecoverLocationState>) => {
-  const history = useHistory();
+  const [t] = useTranslation("auth");
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [forgotPassword] = useMutation(postForgotPassword);
@@ -33,12 +35,15 @@ const Recover = ({
 
   const hasSubmitted = location.state?.submitted === true;
 
-  useTitle(`Forgot Password`);
+  useTitle(t("auth:forgot_password.title", "Forgot password"));
   return hasSubmitted ? (
     <Result
       status="info"
-      title="Check your inbox"
-      subTitle="We've sent an email with instructions on how to reset your password."
+      title={t("auth:forgot_password.success_title", "Check your inbox")}
+      subTitle={t(
+        "auth:forgot_password.success_message",
+        "We've sent an email with instructions on how to reset your password."
+      )}
     />
   ) : (
     <Form
@@ -46,22 +51,28 @@ const Recover = ({
       onFinish={data => onSubmit(data as any)}
       layout="vertical"
     >
-      <h2>Forgot Password</h2>
+      <h2>{t("auth:forgot_password.title", "Forgot password")}</h2>
       <Form.Item
         name="email"
-        label="Email"
+        label={t("auth:forgot_password.form.email", "Email")}
         rules={[
           {
             required: true,
             type: "email",
-            message: "Please enter your email address"
+            message: t(
+              "auth:forgot_password.form.email_required",
+              "Please enter your email address"
+            )
           }
         ]}
       >
         <Input
           autoFocus
           prefix={<MailOutlined />}
-          placeholder="catlover3000@cool.website"
+          placeholder={t(
+            "auth:forgot_password.form.email_placeholder",
+            "catlover3000@cool.website"
+          )}
           type="email"
           size="large"
         />
@@ -73,7 +84,7 @@ const Recover = ({
         htmlType="submit"
         loading={validating}
       >
-        Reset Password
+        {t("auth:forgot_password.submit", "Reset Password")}
       </Button>
     </Form>
   );

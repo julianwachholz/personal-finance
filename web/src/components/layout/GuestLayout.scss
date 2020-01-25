@@ -40,4 +40,18 @@
       padding: 0 32px;
     }
   }
+
+  .language-select {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 150px;
+  }
+
+  &.app--mobile {
+    .language-select {
+      top: auto;
+      bottom: 24px;
+    }
+  }
 }

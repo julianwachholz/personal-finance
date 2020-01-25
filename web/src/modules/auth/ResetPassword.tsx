@@ -1,6 +1,7 @@
 import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
 import { postResetPassword } from "../../dao/user";
@@ -25,6 +26,7 @@ const ResetPassword = ({
   {},
   ResetPasswordLocationState
 >) => {
+  const [t] = useTranslation("auth");
   const [form] = Form.useForm();
   const [validating, setValidating] = useState(false);
   const [resetPassword] = useMutation(postResetPassword);
@@ -49,22 +51,33 @@ const ResetPassword = ({
     setValidating(false);
   };
 
-  useTitle(`Reset Password`);
+  useTitle(t("auth:reset_password.title", "Reset password"));
   return (
     <Form
       form={form}
       onFinish={data => onSubmit(data as any)}
       layout="vertical"
     >
-      <h2>Reset Password</h2>
+      <h2>{t("auth:reset_password.title", "Reset password")}</h2>
       <Form.Item
         name="new_password"
-        label="New Password"
-        rules={[{ required: true, message: "Please choose a new password" }]}
+        label={t("auth:reset_password.form.new_password", "New password")}
+        rules={[
+          {
+            required: true,
+            message: t(
+              "auth:reset_password.form.new_password_required",
+              "Please choose a new password"
+            )
+          }
+        ]}
       >
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder="Make it extra strong!"
+          placeholder={t(
+            "auth:reset_password.form.new_password",
+            "Make it extra strong!"
+          )}
           autoComplete="new-password"
           size="large"
         />
@@ -76,7 +89,7 @@ const ResetPassword = ({
         htmlType="submit"
         loading={validating}
       >
-        Set New Password
+        {t("auth:reset_password.form.submit", "Set new password")}
       </Button>
     </Form>
   );

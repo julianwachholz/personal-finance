@@ -2,6 +2,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Alert, Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
@@ -18,6 +19,7 @@ const Login = ({
   location,
   history
 }: RouteComponentProps<{}, {}, LoginLocationState>) => {
+  const [t] = useTranslation("auth");
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();
@@ -42,7 +44,7 @@ const Login = ({
 
   const initial = { username: location.state?.username };
 
-  useTitle(`Login`);
+  useTitle(t("auth:login.title", "Login"));
   return (
     <Form
       form={form}
@@ -50,51 +52,48 @@ const Login = ({
       layout="vertical"
       initialValues={initial}
     >
-      <h2>Login</h2>
+      <h2>{t("auth:login.title", "Login")}</h2>
       {location.state?.verified && (
         <Alert
           type="success"
-          message="Account activated! You can now log in."
+          message={t(
+            "auth:login.message_verified",
+            "Account activated! You can now log in."
+          )}
           style={{ marginBottom: 24 }}
         />
       )}
       {location.state?.resetPassword && (
         <Alert
           type="success"
-          message="Password has been reset. You can now log in."
+          message={t(
+            "auth:login.message_reset_password",
+            "Password has been reset. You can now log in."
+          )}
           style={{ marginBottom: 24 }}
         />
       )}
       {location.state?.logout && (
         <Alert
           type="info"
-          message="You have been logged out!"
+          message={t("auth:login.message_logout", "You have been logged out!")}
           style={{ marginBottom: 24 }}
         />
       )}
-      <Form.Item
-        name="username"
-        // label="Username"
-        validateStatus={error && "error"}
-      >
+      <Form.Item name="username" validateStatus={error && "error"}>
         <Input
           autoFocus
           prefix={<UserOutlined />}
-          placeholder="Username"
+          placeholder={t("auth:login.form.username", "Username")}
           autoComplete="off"
           inputMode="email"
           size="large"
         />
       </Form.Item>
-      <Form.Item
-        validateStatus={error && "error"}
-        help={error}
-        name="password"
-        // label="Password"
-      >
+      <Form.Item validateStatus={error && "error"} help={error} name="password">
         <Input.Password
           prefix={<LockOutlined />}
-          placeholder="Password"
+          placeholder={t("auth:login.form.password", "Password")}
           autoComplete="current-password"
           size="large"
         />
@@ -108,17 +107,21 @@ const Login = ({
             htmlType="submit"
             loading={validating || isLoading}
           >
-            Login
+            {t("auth:login.form.submit", "Login")}
           </Button>
         </Col>
         <Col xs={12} sm={8}>
           <Button size="large" block>
-            <Link to="/register">Register</Link>
+            <Link to="/register">
+              {t("auth:login.register_link", "Register")}
+            </Link>
           </Button>
         </Col>
         <Col xs={12} sm={8}>
           <Button type="link" size="large" block>
-            <Link to="/forgot-password">Forgot password?</Link>
+            <Link to="/forgot-password">
+              {t("auth:login.forgot_password_link", "Forgot password?")}
+            </Link>
           </Button>
         </Col>
       </Row>
