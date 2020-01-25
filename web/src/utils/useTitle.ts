@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const defaultTitle = "Shinywaffle";
+const defaultTitle = "ShinyWaffle";
 
 /**
  * Set document title.
