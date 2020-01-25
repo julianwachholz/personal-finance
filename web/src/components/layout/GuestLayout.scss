@@ -45,7 +45,12 @@
     position: absolute;
     top: 24px;
     right: 24px;
-    width: 150px;
+    width: 120px;
+    text-align: center;
+  }
+
+  .language-select-menu {
+    text-align: center;
   }
 
   &.app--mobile {

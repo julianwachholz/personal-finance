@@ -1,5 +1,6 @@
 import { Button, Input, message, Popconfirm, Tag } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps, useLocation } from "react-router-dom";
 import ColorSelect from "../../components/form/ColorSelect";
@@ -17,6 +18,7 @@ import { BaseTableLocationState, getColumnSort } from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
 const TagTable = ({ match }: RouteComponentProps) => {
+  const [t] = useTranslation("tags");
   const { tableSize } = useSettings();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
@@ -30,7 +32,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
   const location = useLocation<BaseTableLocationState>();
   const columns: EditableColumnsType<TagModel> = [
     {
-      title: "Name",
+      title: t("tags:tag_name", "Name"),
       dataIndex: "name",
       editable: true,
       formField: <Input size={tableSize} autoFocus prefix="#" />,
@@ -40,7 +42,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
       ...getColumnSort("name", location.state)
     },
     {
-      title: "Color",
+      title: t("tags:tag_color", "Color"),
       dataIndex: "color",
       editable: true,
       rules: [],
@@ -62,40 +64,58 @@ const TagTable = ({ match }: RouteComponentProps) => {
             : await edit(tag, {
                 updateQuery: ["item/tags", { pk: tag.pk }]
               });
-          message.success(`Tag ${isNew ? "created" : "updated"}`);
+          if (isNew) {
+            message.success(t("tags:tag_created", "Tag created"));
+          } else {
+            message.success(t("tags:tag_updated", "Tag updated"));
+          }
           return savedTag;
         } catch (e) {
-          message.error(`Tag ${isNew ? "create" : "update"} failed`);
+          if (isNew) {
+            message.error(t("tags:tag_create_error", "Tag create failed"));
+          } else {
+            message.error(t("tags:tag_update_error", "Tag update failed"));
+          }
           throw e;
         }
       }}
-      itemName="Tag"
-      itemNamePlural="Tags"
+      itemName={t("tags:tag", "Tag")}
+      itemNamePlural={t("tags:tag_plural", "Tags")}
       useItems={useTags}
       columns={columns}
-      extraActions={[<Link to="#">Example</Link>]}
       extraRowActions={tag => [
         <Popconfirm
           key="del"
-          title={`Delete Tag "${tag.label}"?`}
-          okText="Delete"
+          title={t("tags:tag_delete", 'Delete Tag "{{ label }}"?', {
+            label: tag.label
+          })}
+          okText={t("translation:delete", "Delete")}
           okButtonProps={{ type: "danger" }}
+          cancelText={t("translation:cancel", "Cancel")}
           placement="left"
           onConfirm={async () => {
             await doDelete(tag);
-            message.info(`Tag "${tag.label}" deleted`);
+            message.info(
+              t("tags:tag_deleted", 'Tag "{{ label }}" deleted', {
+                label: tag.label
+              })
+            );
           }}
         >
-          <Button type="link">Delete</Button>
+          <Button type="link">{t("translation:delete", "Delete")}</Button>
         </Popconfirm>
       ]}
       bulkActions={[
         {
           key: "delete",
-          name: "Delete selected tags",
+          name: t("tags:table.bulk.delete", "Delete selected tags"),
           async action(pks) {
             const { deleted } = await bulkDelete({ pks });
-            message.info(`Deleted ${deleted} tags`);
+            message.info(
+              t("tags:table.bulk.deleted", "Deleted {{ count }} tags", {
+                count: deleted
+              })
+            );
           }
         }
       ]}

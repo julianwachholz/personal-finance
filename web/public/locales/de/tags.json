@@ -1,0 +1,24 @@
+{
+  "tag_create": "Tag erstellen",
+  "tag_created": "Tag erstellt",
+  "tag_create_error": "Tag erstellen fehlgeschlagen",
+  "tag_delete": "Tag \"{{ label }}\" löschen?",
+  "tag_delete_warning": "Der Tag wird gelöscht und von allen Transaktionen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "tag_deleted": "Tag \"{{ label }}\" gelöscht",
+  "tag": "Tag",
+  "tag_name": "Name",
+  "tag_color": "Farbe",
+  "tag_edit": "{{ label }} bearbeiten",
+  "tag_updated": "Tag bearbeitet",
+  "tag_update_error": "Tag bearbeiten fehlgeschlagen",
+  "tag_name_required": "Gib einen Namen an",
+  "tag_update": "Tag bearbeiten",
+  "tag_plural": "Tags",
+  "table": {
+    "bulk": {
+      "delete": "Ausgewählte Tags löschen",
+      "deleted": "{{ count }} Tag gelöscht",
+      "deleted_plural": "{{ count }} Tags gelöscht"
+    }
+  }
+}

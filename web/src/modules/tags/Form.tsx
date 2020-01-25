@@ -1,6 +1,7 @@
 import { Button, Form, Input } from "antd";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import ColorSelect from "../../components/form/ColorSelect";
 import { Tag } from "../../dao/tags";
 import { applyFormErrors } from "../../utils/errors";
@@ -11,6 +12,7 @@ interface FormProps {
 }
 
 const TagForm = ({ data, onSave }: FormProps) => {
+  const [t] = useTranslation("tags");
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
   const onSubmit = async (values: any) => {
@@ -34,13 +36,18 @@ const TagForm = ({ data, onSave }: FormProps) => {
     >
       <Form.Item
         name="name"
-        label="Name"
+        label={t("tags:tag_name", "Name")}
         wrapperCol={{ sm: 14 }}
-        rules={[{ required: true, message: "Enter a name" }]}
+        rules={[
+          {
+            required: true,
+            message: t("tags:tag_name_required", "Enter a name")
+          }
+        ]}
       >
         <Input prefix="#" autoFocus />
       </Form.Item>
-      <Form.Item name="color" label="Color">
+      <Form.Item name="color" label={t("tags:tag_color", "Color")}>
         <ColorSelect />
       </Form.Item>
       <Form.Item>
@@ -50,7 +57,9 @@ const TagForm = ({ data, onSave }: FormProps) => {
           loading={submitting}
           block={isMobile}
         >
-          Save Tag
+          {data
+            ? t("tags:tag_update", "Update Tag")
+            : t("tags:tag_create", "Create Tag")}
         </Button>
       </Form.Item>
     </Form>

@@ -1,6 +1,7 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
 import { deleteTag, putTag, useTag } from "../../dao/tags";
@@ -18,6 +19,7 @@ const TagEdit = ({
   location,
   history
 }: RouteComponentProps<DetailParams, {}, { back?: number }>) => {
+  const [t] = useTranslation("tags");
   const pk = parseInt(match.params.pk, 10);
   const { data: tag, isLoading } = useTag(pk);
 
@@ -27,7 +29,7 @@ const TagEdit = ({
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
-  useTitle(tag && `Edit ${tag.label}`);
+  useTitle(tag && t("tags:tag_edit", "Edit {{ label }}", { label: tag.label }));
 
   if (!tag || isLoading) {
     return <Spin />;
@@ -35,14 +37,14 @@ const TagEdit = ({
 
   return (
     <BaseModule
-      title={`Edit ${tag.label}`}
+      title={t("tags:tag_edit", "Edit {{ label }}", { label: tag.label })}
       onLeftClick={() => {
         history.go(location.state?.back ?? -2);
       }}
       rightContent={
         <DeleteFilled
           onClick={() => {
-            confirmDeleteTag(tag, doDelete, history);
+            confirmDeleteTag(tag, doDelete, t, history);
           }}
         />
       }
@@ -52,10 +54,10 @@ const TagEdit = ({
         onSave={async data => {
           try {
             await mutate(data, { updateQuery: ["item/tags", { pk }] });
-            message.success("Tag updated");
+            message.success(t("tags:tag_updated", "Tag updated"));
             history.push(`/settings/tags`);
           } catch (e) {
-            message.error("Tag update failed");
+            message.error(t("tags:tag_update_error", "Tag update failed"));
             throw e;
           }
         }}

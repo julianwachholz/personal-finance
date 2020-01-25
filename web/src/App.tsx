@@ -3,6 +3,7 @@ import { Spin } from "antd";
 import "antd/dist/antd.css";
 import React, { lazy, Suspense, useEffect } from "react";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";
 import "./App.scss";
 import GuestLayout from "./components/layout/GuestLayout";
@@ -30,6 +31,7 @@ const ForgotPassword = lazy(() => import("./modules/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("./modules/auth/ResetPassword"));
 
 const App = () => {
+  const { t, ready } = useTranslation("translation", { useSuspense: false });
   const { theme } = useSettings();
   const { isAuthenticated, isLoading } = useAuth();
   const Layout = isMobile ? MobileLayout : AppLayout;
@@ -48,7 +50,7 @@ const App = () => {
           delay={100}
           size="large"
           indicator={<LoadingOutlined />}
-          tip="Loading..."
+          tip={ready ? t("loading") : "Loading..."}
         />
       </div>
     );
@@ -61,12 +63,12 @@ const App = () => {
           delay={100}
           size="large"
           indicator={<LoadingOutlined />}
-          tip="Loading..."
+          tip={ready ? t("loading") : "Loading..."}
         />
       </div>
     </BaseModule>
   ) : (
-    <Spin delay={100} tip="Loading..." />
+    <Spin delay={100} tip={ready ? t("loading") : "Loading..."} />
   );
 
   return isAuthenticated ? (
@@ -86,23 +88,21 @@ const App = () => {
       </ErrorBoundary>
     </Layout>
   ) : (
-    <Suspense fallback={fallback}>
-      <GuestLayout>
-        <ErrorBoundary>
-          <Suspense fallback={fallback}>
-            <Switch>
-              <Route exact path="/" component={Login} />
-              <Route path="/register" component={Register} />
-              <Route path="/verify/:token" component={VerifyEmail} />
-              <Route path="/forgot-password" component={ForgotPassword} />
-              <Route path="/reset-password/:token" component={ResetPassword} />
-              <Route path="/reset-password" component={ResetPassword} />
-              <Route component={NotFound} />
-            </Switch>
-          </Suspense>
-        </ErrorBoundary>
-      </GuestLayout>
-    </Suspense>
+    <GuestLayout>
+      <ErrorBoundary>
+        <Suspense fallback={fallback}>
+          <Switch>
+            <Route exact path="/" component={Login} />
+            <Route path="/register" component={Register} />
+            <Route path="/verify/:token" component={VerifyEmail} />
+            <Route path="/forgot-password" component={ForgotPassword} />
+            <Route path="/reset-password/:token" component={ResetPassword} />
+            <Route path="/reset-password" component={ResetPassword} />
+            <Route component={NotFound} />
+          </Switch>
+        </Suspense>
+      </ErrorBoundary>
+    </GuestLayout>
   );
 };
 

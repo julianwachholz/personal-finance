@@ -178,7 +178,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
       }),
       {
         align: "right",
-        width: tableSize === "small" ? 136 : 165,
+        width: tableSize === "small" ? 190 : 210,
         render(_, item, i) {
           const canEditRecord = editable && canEdit(item);
           return isEditing(item) ? (

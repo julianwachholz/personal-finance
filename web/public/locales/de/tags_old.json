@@ -1,0 +1,16 @@
+{
+  "table": {
+    "row": {
+      "name": "Name",
+      "color": "Farbe"
+    },
+    "quick": {
+      "created": "Tag erstellt",
+      "updated": "Tag bearbeitet",
+      "error": {
+        "create": "Tag erstellen fehlgeschlagen",
+        "update": "Tag bearbeiten fehlgeschlagen"
+      }
+    }
+  }
+}

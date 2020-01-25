@@ -2,7 +2,9 @@ import { DeleteFilled, FormOutlined, TagOutlined } from "@ant-design/icons";
 import { Tag as TagComponent } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
+import { TFunction } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { MutateFunction, useMutation } from "react-query";
 import { useHistory } from "react-router-dom";
 import Fab from "../../components/button/Fab";
@@ -15,6 +17,7 @@ import { confirmDeleteTag } from "./delete";
 const renderTag = (
   history: History,
   doDelete: MutateFunction<void, Tag>,
+  t: TFunction,
   tag: Tag
 ) => {
   return (
@@ -26,7 +29,7 @@ const renderTag = (
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
-              confirmDeleteTag(tag, doDelete);
+              confirmDeleteTag(tag, doDelete, t);
             }
           }
         ] as any
@@ -60,6 +63,7 @@ const renderTag = (
 };
 
 const TagList = () => {
+  const [t] = useTranslation("tags");
   const history = useHistory();
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
@@ -67,10 +71,10 @@ const TagList = () => {
 
   return (
     <BaseList
-      itemName="Tag"
-      itemNamePlural="Tags"
+      itemName={t("tags:tag", "Tag")}
+      itemNamePlural={t("tags:tag_plural", "Tags")}
       useItems={useTags as UseItemsPaginated<Tag>}
-      renderRow={renderTag.bind(null, history, doDelete)}
+      renderRow={renderTag.bind(null, history, doDelete, t)}
       headerProps={{
         onLeftClick() {
           history.go(-1);
