@@ -2,7 +2,7 @@ import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory, useLocation } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { deleteTag, putTag, useTag } from "../../dao/tags";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
@@ -13,7 +13,11 @@ interface DetailParams {
   pk: string;
 }
 
-const TagEdit = ({ match }: RouteComponentProps<DetailParams>) => {
+const TagEdit = ({
+  match,
+  location,
+  history
+}: RouteComponentProps<DetailParams, {}, { back?: number }>) => {
   const pk = parseInt(match.params.pk, 10);
   const { data: tag, isLoading } = useTag(pk);
 
@@ -23,8 +27,6 @@ const TagEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const [doDelete] = useMutation(deleteTag, {
     refetchQueries: ["items/tags"]
   });
-  const history = useHistory();
-  const location = useLocation();
   useTitle(tag && `Edit ${tag.label}`);
 
   if (!tag || isLoading) {

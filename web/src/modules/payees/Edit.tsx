@@ -2,7 +2,7 @@ import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory, useLocation } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { deletePayee, putPayee, usePayee } from "../../dao/payees";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
@@ -13,7 +13,11 @@ interface DetailParams {
   pk: string;
 }
 
-const PayeeEdit = ({ match }: RouteComponentProps<DetailParams>) => {
+const PayeeEdit = ({
+  match,
+  location,
+  history
+}: RouteComponentProps<DetailParams, {}, { back?: number }>) => {
   const pk = parseInt(match.params.pk, 10);
   const { data: payee, isLoading } = usePayee(pk);
 
@@ -23,8 +27,6 @@ const PayeeEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
   });
-  const history = useHistory();
-  const location = useLocation();
   useTitle(payee && `Edit ${payee.label}`);
 
   if (!payee || isLoading) {

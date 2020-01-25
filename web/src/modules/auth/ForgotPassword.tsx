@@ -8,7 +8,13 @@ import { postForgotPassword } from "../../dao/user";
 import { applyFormErrors } from "../../utils/errors";
 import useTitle from "../../utils/useTitle";
 
-const Recover = ({ location }: RouteComponentProps) => {
+interface RecoverLocationState {
+  submitted?: boolean;
+}
+
+const Recover = ({
+  location
+}: RouteComponentProps<{}, {}, RecoverLocationState>) => {
   const history = useHistory();
   const [form] = useForm();
   const [validating, setValidating] = useState(false);

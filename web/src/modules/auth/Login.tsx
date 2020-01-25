@@ -7,7 +7,17 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../utils/AuthProvider";
 import useTitle from "../../utils/useTitle";
 
-const Login = ({ location, history }: RouteComponentProps) => {
+interface LoginLocationState {
+  username?: string;
+  verified?: true;
+  resetPassword?: true;
+  logout?: true;
+}
+
+const Login = ({
+  location,
+  history
+}: RouteComponentProps<{}, {}, LoginLocationState>) => {
   const [form] = useForm();
   const [validating, setValidating] = useState(false);
   const [error, setError] = useState<string>();

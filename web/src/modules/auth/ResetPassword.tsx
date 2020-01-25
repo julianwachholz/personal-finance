@@ -11,11 +11,20 @@ interface ResetPasswordRouteParams {
   token: string;
 }
 
+interface ResetPasswordLocationState {
+  token?: string;
+  resetPassword?: true;
+}
+
 const ResetPassword = ({
   match,
   history,
   location
-}: RouteComponentProps<ResetPasswordRouteParams>) => {
+}: RouteComponentProps<
+  ResetPasswordRouteParams,
+  {},
+  ResetPasswordLocationState
+>) => {
   const [form] = Form.useForm();
   const [validating, setValidating] = useState(false);
   const [resetPassword] = useMutation(postResetPassword);
@@ -27,6 +36,9 @@ const ResetPassword = ({
   }, []);
 
   const onSubmit = async ({ new_password }: { new_password: string }) => {
+    if (!location.state?.token) {
+      return;
+    }
     setValidating(true);
     try {
       await resetPassword({ new_password, token: location.state.token });

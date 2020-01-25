@@ -12,7 +12,14 @@ import { postUser, User } from "../../dao/user";
 import { applyFormErrors } from "../../utils/errors";
 import useTitle from "../../utils/useTitle";
 
-export const Register = ({ location, history }: RouteComponentProps) => {
+interface RegisterLocationState {
+  submitted?: true;
+}
+
+export const Register = ({
+  location,
+  history
+}: RouteComponentProps<{}, {}, RegisterLocationState>) => {
   const [form] = Form.useForm();
   const [validating, setValidating] = useState(false);
   const [register] = useMutation(postUser);
