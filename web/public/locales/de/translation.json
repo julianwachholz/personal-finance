@@ -1,3 +1,21 @@
 {
-  "dashboard": { "todo": "Das ist ein Platzhalter für das Dashboard." }
+  "dashboard": {
+    "title": "Dashboard",
+    "todo": "Das ist ein Platzhalter für das Dashboard."
+  },
+  "error": {
+    "404": {
+      "title": "Fehler 404",
+      "message": "Nicht gefunden",
+      "description": "Wir haben überall gesucht, konnten aber keine Seite für \"{{ pathname }}\" finden.",
+      "go_to_dashboard": "Zum Dashboard"
+    },
+    "500": {
+      "title": "Hoppla...",
+      "message": "Es tut uns Leid, etwas ist schief gelaufen.",
+      "description": "Wir scheinen ein technisches Problem zu haben, versuche es später erneut.",
+      "give_feedback": "Feedback geben",
+      "reload_page": "Seite neu laden"
+    }
+  }
 }

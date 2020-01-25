@@ -1,21 +1,25 @@
 import { Button, Result } from "antd";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Link, RouteComponentProps } from "react-router-dom";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
-const NotFound = () => {
-  const location = useLocation();
-  useTitle(`Error 404`);
+const NotFound = ({ location }: RouteComponentProps) => {
+  const [t] = useTranslation();
+
+  useTitle(t("error.404.title"));
   return (
-    <BaseModule title="Error 404">
+    <BaseModule title={t("error.404.title")}>
       <Result
         status="404"
-        title="Not Found"
-        subTitle={`We looked everywhere but couldn't find "${location.pathname}".`}
+        title={t("error.404.message")}
+        subTitle={t("error.404.description", {
+          pathname: location.pathname
+        })}
         extra={
           <Link to="/">
-            <Button type="primary">Go to Dashboard</Button>
+            <Button type="primary">{t("error.404.go_to_dashboard")}</Button>
           </Link>
         }
       />

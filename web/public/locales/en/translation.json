@@ -1,3 +1,21 @@
 {
-  "dashboard": { "todo": "This is a placeholder for the dashboard." }
+  "dashboard": {
+    "title": "Dashboard",
+    "todo": "This is a placeholder for the dashboard."
+  },
+  "error": {
+    "404": {
+      "title": "Error 404",
+      "message": "Not found",
+      "description": "We looked everywhere but couldn't find a page for \"{{ pathname }}\".",
+      "go_to_dashboard": "Go to Dashboard"
+    },
+    "500": {
+      "title": "Oops...",
+      "message": "We're sorry, something's gone wrong.",
+      "description": "We are experiencing some technical difficulties, please try again later.",
+      "give_feedback": "Give feedback",
+      "reload_page": "Reload page"
+    }
+  }
 }

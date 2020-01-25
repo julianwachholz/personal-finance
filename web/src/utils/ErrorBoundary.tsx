@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import { Button, Result } from "antd";
 import React, { Component } from "react";
+import { Translation } from "react-i18next";
 import { AuthContext } from "./AuthProvider";
 
 interface ErrorBoundaryState {
@@ -31,39 +32,40 @@ class ErrorBoundary extends Component<{}, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <Result
-          status="500"
-          title="Oops..."
-          subTitle="We're sorry, something's gone wrong."
-          extra={[
-            <p key="0">
-              We are experiencing some technical difficulties, please try again
-              later.
-            </p>,
-            <Button
-              key="1"
-              onClick={() =>
-                Sentry.showReportDialog({
-                  eventId: this.state.eventId,
-                  user: {
-                    email: this.context.user?.email,
-                    name: this.context.user?.username
+        <Translation>
+          {t => (
+            <Result
+              status="500"
+              title={t("error.500.title")}
+              subTitle={t("error.500.message")}
+              extra={[
+                <p key="0">{t("error.500.description")}</p>,
+                <Button
+                  key="1"
+                  onClick={() =>
+                    Sentry.showReportDialog({
+                      eventId: this.state.eventId,
+                      user: {
+                        email: this.context.user?.email,
+                        name: this.context.user?.username
+                      }
+                    })
                   }
-                })
-              }
-            >
-              Report Feedback
-            </Button>,
-            <Button
-              key="2"
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Reload Page
-            </Button>
-          ]}
-        />
+                >
+                  {t("error.500.give_feedback")}
+                </Button>,
+                <Button
+                  key="2"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  {t("error.500.reload_page")}
+                </Button>
+              ]}
+            />
+          )}
+        </Translation>
       );
     }
     return this.props.children;
