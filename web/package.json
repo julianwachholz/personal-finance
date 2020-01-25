@@ -26,7 +26,7 @@
     "react-dom": "^16.12.0",
     "react-i18next": "^11.3.1",
     "react-provider-tree": "^0.1.3",
-    "react-query": "0.3.24",
+    "react-query": "^0.3.23",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
