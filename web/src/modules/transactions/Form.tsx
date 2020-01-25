@@ -8,7 +8,7 @@ import ModelSelect from "../../components/form/ModelSelect";
 import MoneyInput from "../../components/form/MoneyInput";
 import { useAccounts } from "../../dao/accounts";
 import { Payee, postPayee, usePayees } from "../../dao/payees";
-import { useTags } from "../../dao/tags";
+import { postTag, Tag, useTags } from "../../dao/tags";
 import { Transaction } from "../../dao/transactions";
 import { useAuth } from "../../utils/AuthProvider";
 import { applyFormErrors } from "../../utils/errors";
@@ -24,6 +24,7 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
   const [createPayee] = useMutation(postPayee);
+  const [createTag] = useMutation(postTag);
 
   const quickCreatePayee = async (name: string) => {
     form?.setFieldsValue({
@@ -31,6 +32,18 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
     });
     const payee = await createPayee({ name } as Payee);
     form?.setFieldsValue({ payee: { value: payee.pk, label: payee.label } });
+  };
+  const quickCreateTag = async (name: string) => {
+    const tags = form
+      .getFieldValue("tags")
+      .filter((tag: any) => tag.value !== "0");
+
+    const loadingTags = [...tags, { value: "0", label: `Creating ${name}...` }];
+
+    form?.setFieldsValue({ tags: loadingTags });
+    const tag = await createTag({ name } as Tag);
+    tags.push({ value: tag.pk, label: tag.label });
+    form?.setFieldsValue({ tags });
   };
 
   const onSubmit = async (tx: any) => {
@@ -143,7 +156,11 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         <Input />
       </Form.Item>
       <Form.Item name="tags" label="Tags">
-        <ModelSelect useItems={useTags} mode="multiple" />
+        <ModelSelect
+          useItems={useTags}
+          mode="multiple"
+          createItem={quickCreateTag}
+        />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={submitting} block>
