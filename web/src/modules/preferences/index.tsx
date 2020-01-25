@@ -1,6 +1,7 @@
 import { Button, Col, Form, Input, Radio, Row, Select, Switch } from "antd";
 import { InputProps } from "antd/lib/input";
 import { format } from "date-fns";
+import { de, enUS } from "date-fns/locale";
 import React, { useState } from "react";
 import { BrowserView } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -57,10 +58,10 @@ interface NumberFormatSetter {
   number_format?: NumberFormatName;
 }
 
-const dateFormats: string[] = ["yyyy-MM-dd", "MM/dd", "MMM d", "eee, MMM do"];
+const dateFormats: string[] = ["yyyy-MM-dd", "MM/dd", "MMM d", "PPP"];
 
 const InputFormat = ({ value, ...props }: InputProps) => {
-  const [t] = useTranslation("preferences");
+  const [t, i18n] = useTranslation("preferences");
   const now = new Date();
   return (
     <Input
@@ -69,6 +70,7 @@ const InputFormat = ({ value, ...props }: InputProps) => {
         " " +
         (value
           ? format(now, value as string, {
+              locale: locales[i18n.language],
               useAdditionalDayOfYearTokens: true,
               useAdditionalWeekYearTokens: true
             })
@@ -92,6 +94,11 @@ const getNumberFormat = (settings: Settings): NumberFormatName => {
   return "default";
 };
 
+const locales: Record<string, Locale> = {
+  en: enUS,
+  de
+};
+
 const Preferences = () => {
   const [t, i18n] = useTranslation("preferences");
   const history = useHistory();
@@ -110,6 +117,12 @@ const Preferences = () => {
   }
 
   const onChange = async (values: Partial<Settings> & NumberFormatSetter) => {
+    try {
+      await form.validateFields();
+    } catch (e) {
+      return;
+    }
+
     const keys = Object.keys(values);
     setSavingKeys(keys);
     if (values.number_format) {
@@ -126,6 +139,8 @@ const Preferences = () => {
   };
 
   const now = new Date();
+  const locale = locales[i18n.language];
+
   const feedbackFor = (name: string) => {
     let validateStatus: "validating" | "success" | undefined;
     if (savingKeys.includes(name)) {
@@ -154,7 +169,7 @@ const Preferences = () => {
           ...settings,
           number_format: getNumberFormat(settings)
         }}
-        onValuesChange={debounce(onChange, 100, true)}
+        onValuesChange={debounce(onChange, 250)}
         wrapperCol={{ xs: 24, sm: 14 }}
       >
         <Form.Item label={t("preferences:form.label.language")}>
@@ -238,6 +253,23 @@ const Preferences = () => {
           label={t("preferences:form.label.date_format")}
           style={{ marginBottom: 6 }}
           {...feedbackFor("date_format")}
+          rules={[
+            {
+              validator(rule, value: string) {
+                if (value.includes("YY")) {
+                  return Promise.reject(
+                    t("preferences:form.error.date_format_no_YY_or_YYYY")
+                  );
+                }
+                if (value.includes("D")) {
+                  return Promise.reject(
+                    t("preferences:form.error.date_format_no_D_or_DD")
+                  );
+                }
+                return Promise.resolve();
+              }
+            }
+          ]}
         >
           <InputFormat />
         </Form.Item>
@@ -251,7 +283,7 @@ const Preferences = () => {
                 onChange({ date_format });
               }}
             >
-              {format(now, date_format)}
+              {format(now, date_format, { locale })}
             </Button>
           ))}
         </Form.Item>

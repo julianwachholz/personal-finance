@@ -1,4 +1,6 @@
 import { Input } from "antd";
+import { default as ant_de } from "antd/es/date-picker/locale/de_DE";
+import { default as ant_en } from "antd/es/date-picker/locale/en_US";
 import generatePicker, {
   PickerProps
 } from "antd/lib/date-picker/generatePicker";
@@ -20,12 +22,22 @@ import {
   setSeconds,
   setYear
 } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { de, enUS } from "date-fns/locale";
 import { GenerateConfig } from "rc-picker/lib/generate";
 import React from "react";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../../utils/AuthProvider";
 import { useSettings } from "../../utils/SettingsProvider";
+
+const antLocales: Record<string, any> = {
+  en: ant_en,
+  de: ant_de
+};
+const dateFnLocales: Record<string, Locale> = {
+  de_DE: de,
+  en_US: enUS
+};
 
 const generateConfig: GenerateConfig<Date> = {
   getNow: () => new Date(),
@@ -51,26 +63,28 @@ const generateConfig: GenerateConfig<Date> = {
   isValidate: date => isValid(date),
 
   locale: {
-    getWeekFirstDay: locale => 1,
-    getWeek: (locale, date) => getWeek(date),
+    getWeekFirstDay: locale => dateFnLocales[locale].options?.weekStartsOn ?? 1,
+    getWeek: (locale, date) => getWeek(date, { locale: dateFnLocales[locale] }),
     getShortWeekDays: locale => {
       return Array.from({ length: 7 }).map((_, day) => {
-        return enUS.localize!.day(day, { width: "abbreviated" });
+        return dateFnLocales[locale].localize!.day(day, {
+          width: "abbreviated"
+        });
       });
     },
     getShortMonths: locale => {
       return Array.from({ length: 12 }).map((_, month) =>
-        enUS.localize!.month(month, { width: "abbreviated" })
+        dateFnLocales[locale].localize!.month(month, { width: "abbreviated" })
       );
     },
     format: (locale, date, fmt) => {
       fmt = fmt.replace("YYYY", "yyyy");
       fmt = fmt.replace("DD", "dd");
-      return format(date, fmt, { locale: enUS });
+      return format(date, fmt, { locale: dateFnLocales[locale] });
     },
     parse: (locale, text, formats) => {
       const fmt = formats[0].toLowerCase();
-      return parse(text, fmt, new Date());
+      return parse(text, fmt, new Date(), { locale: dateFnLocales[locale] });
     }
   }
 };
@@ -78,6 +92,7 @@ const generateConfig: GenerateConfig<Date> = {
 const BaseDatePicker = generatePicker<Date>(generateConfig);
 
 const DatePicker = (props: PickerProps<Date>) => {
+  const { i18n } = useTranslation();
   const { tableSize } = useSettings();
   const { settings } = useAuth();
   const now = new Date();
@@ -106,6 +121,7 @@ const DatePicker = (props: PickerProps<Date>) => {
     <BaseDatePicker
       format={settings?.date_format}
       size={tableSize}
+      locale={antLocales[i18n.language]}
       {...props}
     />
   );
