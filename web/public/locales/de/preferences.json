@@ -1,0 +1,24 @@
+{
+  "date_format_preview": "Vorschau:",
+  "title": "Optionen",
+  "form": {
+    "label": {
+      "language": "Sprache",
+      "default_currency": "Standardwährung",
+      "default_debit_account": "Standardkonto für Ausgaben",
+      "default_credit_account": "Standardkonto für Einnahmen",
+      "default_credit_category": "Standardkategorie für Einnahmen",
+      "number_format": "Zahlenformatierung",
+      "use_colors": "Benutze Farben?",
+      "date_format": "Datumsformat",
+      "table_layout": "Tabellenlayout"
+    },
+    "use_colors_examples": "Beispiele:",
+    "date_format_examples": "Beispiel Formate:",
+    "table_layout": {
+      "large": "Gross",
+      "medium": "Mittel",
+      "small": "Klein"
+    }
+  }
+}

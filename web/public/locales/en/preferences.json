@@ -1,0 +1,24 @@
+{
+  "date_format_preview": "Preview:",
+  "title": "Preferences",
+  "form": {
+    "label": {
+      "language": "Language",
+      "default_currency": "Default currency",
+      "default_debit_account": "Default debit account",
+      "default_credit_account": "Default credit account",
+      "default_credit_category": "Default credit category",
+      "number_format": "Number format",
+      "use_colors": "Use colors?",
+      "date_format": "Date format",
+      "table_layout": "Table layout"
+    },
+    "use_colors_examples": "Examples:",
+    "date_format_examples": "Example formats:",
+    "table_layout": {
+      "large": "Large",
+      "medium": "Medium",
+      "small": "Small"
+    }
+  }
+}

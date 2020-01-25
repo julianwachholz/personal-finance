@@ -37,6 +37,8 @@ const breadcrumbs: BreadcrumbMatch[] = [
   [/^\/settings\/tags\/(\d+)\/?$/, pk => useLabel(useTag(pk))],
   [/^\/settings\/payees\/?$/, "payees"],
   [/^\/settings\/payees\/(\d+)\/?$/, pk => useLabel(usePayee(pk))],
+  [/^\/settings\/preferences\/?$/, "preferences"],
+  [/^\/settings\/user\/?$/, "profile"],
 
   [/\/create\/?$/, "object_create"],
   [/\/edit\/?$/, "object_edit"],
@@ -62,6 +64,8 @@ const Crumb = ({ url, path, isLast }: CrumbProps) => {
       categories: t("menu.categories"),
       tags: t("menu.tags"),
       payees: t("menu.payees"),
+      preferences: t("menu.preferences"),
+      profile: t("menu.profile"),
       object_create: t("breadcrumb.object_create"),
       object_edit: t("breadcrumb.object_edit"),
       object_delete: t("breadcrumb.object_delete")

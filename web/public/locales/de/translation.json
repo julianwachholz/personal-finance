@@ -14,9 +14,9 @@
     "categories": "Kategorien",
     "tags": "Tags",
     "payees": "Empfänger",
-    "dashboard": "Dashboard",
     "preferences": "Optionen",
-    "profile": "Profil"
+    "profile": "Profil",
+    "dashboard": "Dashboard"
   },
   "breadcrumb": {
     "object_create": "Erstellen",

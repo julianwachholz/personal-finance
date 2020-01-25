@@ -14,9 +14,9 @@
     "categories": "Categories",
     "tags": "Tags",
     "payees": "Payees",
-    "dashboard": "Dashboard",
     "preferences": "Preferences",
-    "profile": "Profile"
+    "profile": "Profile",
+    "dashboard": "Dashboard"
   },
   "breadcrumb": {
     "object_create": "Create",
