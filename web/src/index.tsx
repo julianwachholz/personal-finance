@@ -6,6 +6,7 @@ import { ReactQueryConfigProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { prefetchUser } from "./dao/user";
+import "./i18n";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "./utils/AuthProvider";
