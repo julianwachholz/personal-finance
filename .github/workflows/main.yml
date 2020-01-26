@@ -1,4 +1,4 @@
-name: Build Docker image
+name: Build Release
 
 on:
   push:
@@ -12,12 +12,11 @@ env:
   IMAGE_NAME: shinywaffle
 
 jobs:
-  build:
+  docker:
     name: Build Docker image
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: Build image
         run: docker build . --build-arg DJANGO_ENV=production --tag image
       - name: Login to registry
@@ -40,3 +39,22 @@ jobs:
 
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+  frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Install dependencies
+        working-directory: web
+        run: npm install
+      - name: Run build
+        working-directory: web
+        run: npm run build
+      - uses: actions/upload-artifact@v1.0.0
+        with:
+          name: frontend-build
+          path: web/build
