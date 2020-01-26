@@ -60,7 +60,7 @@ const AccountTable = ({
       render(_, account) {
         return (
           <Link to={`${match.url}/${account.pk}/edit`}>
-            {t("translation:edit", "Edit")}
+            {t("translation:inline.edit", "Edit")}
           </Link>
         );
       }

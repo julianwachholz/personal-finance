@@ -1,8 +1,9 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { deleteBudget, putBudget, useBudget } from "../../dao/budgets";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
@@ -13,7 +14,8 @@ interface DetailParams {
   pk: string;
 }
 
-const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
+const BudgetEdit = ({ match, history }: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("budgets");
   const pk = parseInt(match.params.pk, 10);
   const { data: budget, isLoading } = useBudget(pk);
 
@@ -21,8 +23,10 @@ const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
     refetchQueries: ["items/budgets"]
   });
   const [doDelete] = useMutation(deleteBudget);
-  const history = useHistory();
-  useTitle(budget && `Edit ${budget.label}`);
+
+  useTitle(
+    budget && t("budgets:edit", "Edit {{ label }}", { label: budget.label })
+  );
 
   if (!budget || isLoading) {
     return <Spin />;
@@ -30,14 +34,14 @@ const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
 
   return (
     <BaseModule
-      title={`Edit ${budget.label}`}
+      title={t("budgets:edit", "Edit {{ label }}", { label: budget.label })}
       onLeftClick={() => {
         history.go(-1);
       }}
       rightContent={
         <DeleteFilled
           onClick={() => {
-            confirmDeleteBudget(budget, doDelete, history);
+            confirmDeleteBudget(budget, doDelete, t, history);
           }}
         />
       }
@@ -46,14 +50,11 @@ const BudgetEdit = ({ match }: RouteComponentProps<DetailParams>) => {
         data={budget}
         onSave={async data => {
           try {
-            await mutate(
-              { pk, ...data }
-              //   { updateQuery: ["item/accounts", { pk }] }
-            );
-            message.success("Budget updated");
+            await mutate({ pk, ...data });
+            message.success(t("budgets:updated", "Budget updated"));
             history.push(`/budgets`);
           } catch (e) {
-            message.error("Budget update failed");
+            message.error(t("budgets:update_error", "Budget update failed"));
             throw e;
           }
         }}

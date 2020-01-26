@@ -6,6 +6,7 @@ import { useAuth } from "../../utils/AuthProvider";
 
 interface DateTimeProps {
   value: Date;
+  format?: string;
 }
 
 const locales: Record<string, Locale> = {
@@ -13,12 +14,14 @@ const locales: Record<string, Locale> = {
   de
 };
 
-const DateTime = ({ value }: DateTimeProps) => {
+const DateTime = ({ value, format: fmt }: DateTimeProps) => {
   const { i18n } = useTranslation();
   const { settings } = useAuth();
-  let formatString = settings?.date_format;
-  if (!formatString) {
-    formatString = "PP";
+  if (!fmt) {
+    fmt = settings?.date_format;
+    if (!fmt) {
+      fmt = "PP";
+    }
   }
 
   const locale = locales[i18n.language];
@@ -29,7 +32,7 @@ const DateTime = ({ value }: DateTimeProps) => {
   const str = format(value, "Pp", { locale });
   return (
     <time dateTime={str} title={str}>
-      {format(value, formatString, { locale })}
+      {format(value, fmt, { locale })}
     </time>
   );
 };

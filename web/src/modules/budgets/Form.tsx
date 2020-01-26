@@ -1,11 +1,12 @@
 import { Button, Col, Form, Input, Radio, Row, Select } from "antd";
 import React, { useState } from "react";
 import { BrowserView, isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
-import { Budget, BudgetPeriod, PERIOD_CHOICES } from "../../dao/budgets";
+import { Budget, BudgetPeriod } from "../../dao/budgets";
 import { useAuth } from "../../utils/AuthProvider";
 import { applyFormErrors } from "../../utils/errors";
 
@@ -15,9 +16,11 @@ interface BudgetFormProps {
 }
 
 export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
+  const [t] = useTranslation("budgets");
   const { settings } = useAuth();
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
+
   const onSubmit = async (values: any) => {
     setSubmitting(true);
     try {
@@ -45,34 +48,49 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
     >
       <Form.Item
         name="name"
-        label="Name"
-        rules={[{ required: true, message: "Enter a name" }]}
+        label={t("budgets:name", "Name")}
+        rules={[
+          {
+            required: true,
+            message: t("budgets:name_required", "Enter a name")
+          }
+        ]}
         wrapperCol={isMobile ? undefined : { span: 14 }}
       >
-        <Input placeholder="Spending" autoFocus />
+        <Input
+          placeholder={t("budgets:name_placeholder", "Spending")}
+          autoFocus
+        />
       </Form.Item>
       <Form.Item
         name="period"
-        label="Timeframe"
+        label={t("budgets:period", "Timeframe")}
         wrapperCol={isMobile ? undefined : { span: 14 }}
       >
         <Select>
-          {PERIOD_CHOICES.map(([value, label]) => (
-            <Select.Option key={value} value={value}>
-              {label}
-            </Select.Option>
-          ))}
+          <Select.Option value={BudgetPeriod.WEEKLY}>
+            {t("budgets:period_weekly", "Weekly")}
+          </Select.Option>
+          <Select.Option value={BudgetPeriod.MONTHLY}>
+            {t("budgets:period_monthly", "Monthly")}
+          </Select.Option>
+          <Select.Option value={BudgetPeriod.QUARTERLY}>
+            {t("budgets:period_quarterly", "Quarterly")}
+          </Select.Option>
+          <Select.Option value={BudgetPeriod.YEARLY}>
+            {t("budgets:period_yearly", "Yearly")}
+          </Select.Option>
         </Select>
       </Form.Item>
       <Row gutter={16}>
         <Col xs={18} sm={4}>
           <Form.Item
             name="target"
-            label="Target Amount"
+            label={t("budgets:target", "Target Amount")}
             rules={[
               {
                 required: true,
-                message: "Enter a target amount",
+                message: t("budgets:target_required", "Enter a target amount"),
                 type: "number",
                 min: 0.01
               }
@@ -88,8 +106,13 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
         <Col xs={6} sm={8}>
           <Form.Item
             name="target_currency"
-            label="Currency"
-            rules={[{ required: true, message: "Select a currency" }]}
+            label={t("budgets:currency", "Currency")}
+            rules={[
+              {
+                required: true,
+                message: t("budgets:currency_required", "Select a currency")
+              }
+            ]}
             // help="Transactions with a different currency are not included."
           >
             <CurrencySelect
@@ -101,15 +124,22 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="is_blacklist" label="Category Selection">
+      <Form.Item
+        name="is_blacklist"
+        label={t("budgets:category_selection", "Category Selection")}
+      >
         <Radio.Group>
-          <Radio.Button value={false}>Include selected</Radio.Button>
-          <Radio.Button value={true}>Exclude selected</Radio.Button>
+          <Radio.Button value={false}>
+            {t("budgets:categories_include", "Include selected")}
+          </Radio.Button>
+          <Radio.Button value={true}>
+            {t("budgets:categories_exclude", "Exclude selected")}
+          </Radio.Button>
         </Radio.Group>
       </Form.Item>
       <Form.Item
         name="categories"
-        label="Categories"
+        label={t("budgets:categories", "Categories")}
         wrapperCol={isMobile ? undefined : { span: 14 }}
       >
         <CategorySelect
@@ -125,11 +155,13 @@ export const BudgetForm = ({ data, onSave }: BudgetFormProps) => {
           loading={submitting}
           block={isMobile}
         >
-          {data?.pk ? "Save" : "Create"} Budget
+          {data
+            ? t("budgets:update", "Update Budget")
+            : t("budgets:create", "Create Budget")}
         </Button>
         <BrowserView>
           <Link to={`/budgets`}>
-            <Button>Discard</Button>
+            <Button>{t("translation:cancel", "Cancel")}</Button>
           </Link>
         </BrowserView>
       </Form.Item>

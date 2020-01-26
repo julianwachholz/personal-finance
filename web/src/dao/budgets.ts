@@ -14,13 +14,6 @@ export enum BudgetPeriod {
   YEARLY = "yearly"
 }
 
-export const PERIOD_CHOICES = [
-  [BudgetPeriod.WEEKLY, "Weekly"],
-  [BudgetPeriod.MONTHLY, "Monthly"],
-  [BudgetPeriod.QUARTERLY, "Quarterly"],
-  [BudgetPeriod.YEARLY, "Yearly"]
-];
-
 export interface Budget {
   pk: number;
   name: string;

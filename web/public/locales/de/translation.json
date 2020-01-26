@@ -42,6 +42,7 @@
   },
   "actions": "Aktionen",
   "search": "Suchen...",
+  "delete": "Löschen",
   "dashboard": {
     "title": "Dashboard",
     "todo": "Das ist ein Platzhalter für das Dashboard."
@@ -60,6 +61,5 @@
       "give_feedback": "Feedback geben",
       "reload_page": "Seite neu laden"
     }
-  },
-  "delete": "Löschen"
+  }
 }

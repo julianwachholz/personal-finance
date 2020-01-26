@@ -1,24 +1,23 @@
 import { message } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { postBudget } from "../../dao/budgets";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import BudgetForm from "./Form";
 
-interface BudgetCreateProps {}
-
-export const BudgetCreate = (props: BudgetCreateProps) => {
+export const BudgetCreate = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("budgets");
   const [mutate] = useMutation(postBudget, {
     refetchQueries: ["items/budgets"]
   });
-  const history = useHistory();
 
-  useTitle(`Create Budget`);
+  useTitle(t("budgets:create", "Create Budget"));
   return (
     <BaseModule
-      title="Create Budget"
+      title={t("budgets:create", "Create Budget")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -27,10 +26,10 @@ export const BudgetCreate = (props: BudgetCreateProps) => {
         onSave={async data => {
           try {
             await mutate(data);
-            message.success("Budget created");
+            message.success(t("budgets:created", "Budget created"));
             history.push(`/budgets`);
           } catch (e) {
-            message.error("Budget create failed");
+            message.error(t("budgets:create_error", "Budget create failed"));
             throw e;
           }
         }}
