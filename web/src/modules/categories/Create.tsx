@@ -1,22 +1,23 @@
 import { message } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { setQueryData, useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { postCategory } from "../../dao/categories";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import CategoryForm from "./Form";
 
-const CategoryCreate = () => {
+const CategoryCreate = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("categories");
   const [mutate] = useMutation(postCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
-  const history = useHistory();
 
-  useTitle(`Create Category`);
+  useTitle(t("categories:create", "Create Category"));
   return (
     <BaseModule
-      title="Create Category"
+      title={t("categories:create", "Create Category")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -26,10 +27,12 @@ const CategoryCreate = () => {
           try {
             const category = await mutate(data);
             setQueryData(["item/categories", { pk: category.pk }], category);
-            message.success("Category created");
+            message.success(t("categories:created", "Category created"));
             history.push(`/settings/categories`);
           } catch (e) {
-            message.error("Category create failed");
+            message.error(
+              t("categories:create_error", "Category create failed")
+            );
             throw e;
           }
         }}

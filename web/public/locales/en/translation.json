@@ -40,6 +40,7 @@
   },
   "actions": "Actions",
   "search": "Search...",
+  "cancel": "Cancel",
   "dashboard": {
     "title": "Dashboard",
     "todo": "This is a placeholder for the dashboard."
@@ -59,6 +60,5 @@
       "reload_page": "Reload page"
     }
   },
-  "delete": "Delete",
-  "cancel": "Cancel"
+  "delete": "Delete"
 }

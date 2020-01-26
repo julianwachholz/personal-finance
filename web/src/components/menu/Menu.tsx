@@ -50,7 +50,7 @@ const renderItem = (item: MenuItem) =>
   );
 
 const MainMenu = () => {
-  const [t] = useTranslation();
+  const { t } = useTranslation();
   const { theme, menuCollapsed } = useSettings();
   const { pathname } = useLocation();
 

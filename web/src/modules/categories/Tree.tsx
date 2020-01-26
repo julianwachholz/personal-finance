@@ -3,6 +3,7 @@ import { Button, message, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
 import React, { useMemo, useState } from "react";
 import { MobileView } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { Link, RouteComponentProps } from "react-router-dom";
 import Fab from "../../components/button/Fab";
@@ -17,6 +18,7 @@ import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 
 const CategoryTree = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("categories");
   const { data, isLoading } = useCategoryTree();
   const [move] = useMutation(moveCategory, {
     refetchQueries: ["items/categories/tree"]
@@ -74,7 +76,7 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
     return [undefined, []];
   }, [data]);
 
-  useTitle(`Categories`);
+  useTitle(t("categories:category_plural", "Categories"));
 
   if (!data || isLoading) {
     return <Spin />;
@@ -82,10 +84,10 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
 
   return (
     <BaseModule
-      title="Categories"
+      title={t("categories:category_plural", "Categories")}
       extra={[
         <Button key="expand" onClick={() => setExpandedKeys(keysWithChildren)}>
-          Expand All
+          {t("categories:expand_all", "Expand All")}
         </Button>,
         <Button
           key="collapse"
@@ -93,10 +95,12 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
             setExpandedKeys([]);
           }}
         >
-          Collapse All
+          {t("categories:collapse_all", "Collapse All")}
         </Button>,
         <Button key="create" type="primary">
-          <Link to={`/settings/categories/create`}>Create Category</Link>
+          <Link to={`/settings/categories/create`}>
+            {t("categories:create", "Create Category")}
+          </Link>
         </Button>
       ]}
       onLeftClick={() => {
@@ -123,7 +127,12 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
       />
       {!isLoading && !treeData?.length && (
         <>
-          <p>It looks like you haven't created any categories yet.</p>
+          <p>
+            {t(
+              "categories:empty",
+              "It looks like you haven't created any categories yet."
+            )}
+          </p>
           <Button
             size="large"
             type="primary"
@@ -132,14 +141,21 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
               setCreateDefaultLoading(true);
               try {
                 await createDefault();
-                message.success("Default categories created");
+                message.success(
+                  t("categories:default_created", "Default categories created")
+                );
               } catch (e) {
-                message.error("Could't create default categories");
+                message.error(
+                  t(
+                    "categories:default_create_error",
+                    "Could't create default categories"
+                  )
+                );
               }
               setCreateDefaultLoading(false);
             }}
           >
-            Create Default Categories
+            {t("categories:default_create", "Create Default Categories")}
           </Button>
         </>
       )}

@@ -1,7 +1,8 @@
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Descriptions, Spin, Tag } from "antd";
 import React from "react";
-import { RouteComponentProps, useHistory } from "react-router";
+import { useTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { useCategory } from "../../dao/categories";
 import { prefetchTransactions } from "../../dao/transactions";
@@ -15,8 +16,8 @@ interface DetailParams {
   pk: string;
 }
 
-const Category = ({ match }: RouteComponentProps<DetailParams>) => {
-  const history = useHistory();
+const Category = ({ match, history }: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("categories");
   const { data: category, isLoading, error } = useCategory(match.params.pk);
   const filters = [`category=${match.params.pk}`];
   prefetchTransactions({ filters });
@@ -27,10 +28,14 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
       title={category.label}
       extra={[
         <Link key="edit" to={`${match.url}/edit`}>
-          <Button type="primary">Edit Category</Button>
+          <Button type="primary">
+            {t("categories:edit_category", "Edit Category")}
+          </Button>
         </Link>,
         <Link key="delete" to={`${match.url}/delete`}>
-          <Button type="danger">Delete Category</Button>
+          <Button type="danger">
+            {t("categories:delete_category", "Delete Category")}
+          </Button>
         </Link>
       ]}
       onLeftClick={() => {
@@ -44,14 +49,14 @@ const Category = ({ match }: RouteComponentProps<DetailParams>) => {
         />
       }
     >
-      <Descriptions title="Category">
-        <Item label="Name">{category.name}</Item>
-        <Item label="Icon">{category.icon}</Item>
-        <Item label="Color">
+      <Descriptions title={t("categories:category", "Category")}>
+        <Item label={t("categories:name", "Name")}>{category.name}</Item>
+        <Item label={t("categories:icon", "Icon")}>{category.icon}</Item>
+        <Item label={t("categories:color", "Color")}>
           <Tag color={category.color}>{category.color}</Tag>
         </Item>
         {category.parent ? (
-          <Item label="Parent">
+          <Item label={t("categories:parent", "Parent")}>
             <Link to={`/settings/categories/${category.parent.value}`}>
               {category.parent.label}
             </Link>

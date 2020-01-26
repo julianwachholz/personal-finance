@@ -1,8 +1,9 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { putCategory, useCategory } from "../../dao/categories";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
@@ -11,16 +12,22 @@ import CategoryForm from "./Form";
 interface DetailParams {
   pk: string;
 }
-const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
+const CategoryEdit = ({
+  match,
+  history
+}: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("categories");
   const pk = parseInt(match.params.pk, 10);
   const { data: category, isLoading } = useCategory(pk);
 
   const [mutate] = useMutation(putCategory, {
     refetchQueries: ["items/categories", "items/categories/tree"]
   });
-  const history = useHistory();
 
-  useTitle(category && `Edit ${category.label}`);
+  useTitle(
+    category &&
+      t("categories:edit", "Edit {{ label }}", { label: category.label })
+  );
 
   if (!category || isLoading) {
     return <Spin />;
@@ -28,7 +35,9 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
 
   return (
     <BaseModule
-      title={`Edit ${category.label}`}
+      title={t("categories:edit", "Edit {{ label }}", {
+        label: category.label
+      })}
       onLeftClick={() => {
         history.go(-2);
       }}
@@ -45,10 +54,12 @@ const CategoryEdit = ({ match }: RouteComponentProps<DetailParams>) => {
         onSave={async data => {
           try {
             await mutate(data, { updateQuery: ["item/categories", { pk }] });
-            message.success("Category updated");
+            message.success(t("categories:updated", "Category updated"));
             history.push(`/settings/categories`);
           } catch (e) {
-            message.error("Category update failed");
+            message.error(
+              t("categories:update_error", "Category update failed")
+            );
             throw e;
           }
         }}

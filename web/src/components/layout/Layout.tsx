@@ -1,5 +1,6 @@
-import { Layout } from "antd";
-import React from "react";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Layout, Spin } from "antd";
+import React, { Suspense } from "react";
 import { Link } from "react-router-dom";
 import { APP_TITLE } from "../../utils/constants";
 import { useSettings } from "../../utils/SettingsProvider";
@@ -24,11 +25,15 @@ const AppLayout: React.FC = ({ children }) => {
           <Logo />
           <span>{APP_TITLE}</span>
         </Link>
-        <MainMenu />
+        <Suspense fallback={<Spin indicator={<LoadingOutlined />} />}>
+          <MainMenu />
+        </Suspense>
       </Sider>
       <Layout>
         <Content>
-          <Breadcrumbs />
+          <Suspense fallback={<Spin indicator={<LoadingOutlined />} />}>
+            <Breadcrumbs />
+          </Suspense>
           <div className="content-container">{children}</div>
         </Content>
         <Footer>🧇 ©{new Date().getFullYear()}</Footer>
