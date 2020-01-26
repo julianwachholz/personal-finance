@@ -14,12 +14,12 @@ export const confirmDeleteTag = (
   history?: History
 ) => {
   Modal.confirm({
-    title: t("tags:tag_delete", 'Delete Tag "{{ label }}"?', {
+    title: t("tags:delete", 'Delete Tag "{{ label }}"?', {
       label: tag.label
     }),
     icon: <DeleteTwoTone twoToneColor={COLOR_DANGER} />,
     content: t(
-      "tags:tag_delete_warning",
+      "tags:delete_warning",
       "This will delete the tag and remove it from all associated transactions."
     ),
     okText: t("translation:delete", "Delete"),
@@ -27,7 +27,7 @@ export const confirmDeleteTag = (
     onOk: async () => {
       await doDelete(tag);
       message.info(
-        t("tags:tag_deleted", 'Tag "{{ label }}" deleted', { label: tag.label })
+        t("tags:deleted", 'Tag "{{ label }}" deleted', { label: tag.label })
       );
       history?.push(`/settings/tags`);
     }

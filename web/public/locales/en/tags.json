@@ -1,24 +1,21 @@
 {
-  "tag_create": "Create Tag",
-  "tag_created": "Tag created",
-  "tag_create_error": "Tag create failed",
-  "tag_delete": "Delete Tag \"{{ label }}\"?",
-  "tag_delete_warning": "This will delete the tag and remove it from all associated transactions.",
-  "tag_deleted": "Tag \"{{ label }}\" deleted",
+  "create": "Create Tag",
+  "created": "Tag created",
+  "create_error": "Tag create failed",
+  "delete": "Delete Tag \"{{ label }}\"?",
+  "delete_warning": "This will delete the tag and remove it from all associated transactions.",
+  "deleted": "Tag \"{{ label }}\" deleted",
   "tag": "Tag",
-  "tag_name": "Name",
-  "tag_color": "Color",
-  "tag_edit": "Edit {{ label }}",
-  "tag_updated": "Tag updated",
-  "tag_update_error": "Tag update failed",
-  "tag_name_required": "Enter a name",
-  "tag_update": "Update Tag",
+  "name": "Name",
+  "color": "Color",
+  "edit": "Edit {{ label }}",
+  "updated": "Tag updated",
+  "update_error": "Tag update failed",
+  "name_required": "Enter a name",
+  "update": "Update Tag",
   "tag_plural": "Tags",
-  "table": {
-    "bulk": {
-      "delete": "Delete selected tags",
-      "deleted": "Deleted {{ count }} tag",
-      "deleted_plural": "Deleted {{ count }} tags"
-    }
+  "bulk": {
+    "delete": "Delete selected tags",
+    "deleted": "Deleted {{ count }} tags"
   }
 }

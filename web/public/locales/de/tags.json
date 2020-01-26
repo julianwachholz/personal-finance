@@ -1,24 +1,22 @@
 {
-  "tag_create": "Tag erstellen",
-  "tag_created": "Tag erstellt",
-  "tag_create_error": "Tag erstellen fehlgeschlagen",
-  "tag_delete": "Tag \"{{ label }}\" löschen?",
-  "tag_delete_warning": "Der Tag wird gelöscht und von allen Transaktionen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "tag_deleted": "Tag \"{{ label }}\" gelöscht",
+  "create": "Tag erstellen",
+  "created": "Tag erstellt",
+  "create_error": "Tag erstellen fehlgeschlagen",
+  "delete": "Tag \"{{ label }}\" löschen?",
+  "delete_warning": "Der Tag wird gelöscht und von allen Transaktionen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "deleted": "Tag \"{{ label }}\" gelöscht",
   "tag": "Tag",
-  "tag_name": "Name",
-  "tag_color": "Farbe",
-  "tag_edit": "{{ label }} bearbeiten",
-  "tag_updated": "Tag bearbeitet",
-  "tag_update_error": "Tag bearbeiten fehlgeschlagen",
-  "tag_name_required": "Gib einen Namen an",
-  "tag_update": "Tag bearbeiten",
+  "name": "Name",
+  "color": "Farbe",
+  "edit": "{{ label }} bearbeiten",
+  "updated": "Tag bearbeitet",
+  "update_error": "Tag bearbeiten fehlgeschlagen",
+  "name_required": "Gib einen Namen an",
+  "update": "Tag bearbeiten",
   "tag_plural": "Tags",
-  "table": {
-    "bulk": {
-      "delete": "Ausgewählte Tags löschen",
-      "deleted": "{{ count }} Tag gelöscht",
-      "deleted_plural": "{{ count }} Tags gelöscht"
-    }
+  "bulk": {
+    "delete": "Ausgewählte Tags löschen",
+    "deleted": "{{ count }} Tag gelöscht",
+    "deleted_plural": "{{ count }} Tags gelöscht"
   }
 }

@@ -36,18 +36,18 @@ const TagForm = ({ data, onSave }: FormProps) => {
     >
       <Form.Item
         name="name"
-        label={t("tags:tag_name", "Name")}
+        label={t("tags:name", "Name")}
         wrapperCol={{ sm: 14 }}
         rules={[
           {
             required: true,
-            message: t("tags:tag_name_required", "Enter a name")
+            message: t("tags:name_required", "Enter a name")
           }
         ]}
       >
         <Input prefix="#" autoFocus />
       </Form.Item>
-      <Form.Item name="color" label={t("tags:tag_color", "Color")}>
+      <Form.Item name="color" label={t("tags:color", "Color")}>
         <ColorSelect />
       </Form.Item>
       <Form.Item>
@@ -58,8 +58,8 @@ const TagForm = ({ data, onSave }: FormProps) => {
           block={isMobile}
         >
           {data
-            ? t("tags:tag_update", "Update Tag")
-            : t("tags:tag_create", "Create Tag")}
+            ? t("tags:update", "Update Tag")
+            : t("tags:create", "Create Tag")}
         </Button>
       </Form.Item>
     </Form>

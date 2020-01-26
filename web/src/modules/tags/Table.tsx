@@ -32,7 +32,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
   const location = useLocation<BaseTableLocationState>();
   const columns: EditableColumnsType<TagModel> = [
     {
-      title: t("tags:tag_name", "Name"),
+      title: t("tags:name", "Name"),
       dataIndex: "name",
       editable: true,
       formField: <Input size={tableSize} autoFocus prefix="#" />,
@@ -42,7 +42,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
       ...getColumnSort("name", location.state)
     },
     {
-      title: t("tags:tag_color", "Color"),
+      title: t("tags:color", "Color"),
       dataIndex: "color",
       editable: true,
       rules: [],
@@ -65,16 +65,16 @@ const TagTable = ({ match }: RouteComponentProps) => {
                 updateQuery: ["item/tags", { pk: tag.pk }]
               });
           if (isNew) {
-            message.success(t("tags:tag_created", "Tag created"));
+            message.success(t("tags:created", "Tag created"));
           } else {
-            message.success(t("tags:tag_updated", "Tag updated"));
+            message.success(t("tags:updated", "Tag updated"));
           }
           return savedTag;
         } catch (e) {
           if (isNew) {
-            message.error(t("tags:tag_create_error", "Tag create failed"));
+            message.error(t("tags:create_error", "Tag create failed"));
           } else {
-            message.error(t("tags:tag_update_error", "Tag update failed"));
+            message.error(t("tags:update_error", "Tag update failed"));
           }
           throw e;
         }
@@ -86,7 +86,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
       extraRowActions={tag => [
         <Popconfirm
           key="del"
-          title={t("tags:tag_delete", 'Delete Tag "{{ label }}"?', {
+          title={t("tags:delete", 'Delete Tag "{{ label }}"?', {
             label: tag.label
           })}
           okText={t("translation:delete", "Delete")}
@@ -96,7 +96,7 @@ const TagTable = ({ match }: RouteComponentProps) => {
           onConfirm={async () => {
             await doDelete(tag);
             message.info(
-              t("tags:tag_deleted", 'Tag "{{ label }}" deleted', {
+              t("tags:deleted", 'Tag "{{ label }}" deleted', {
                 label: tag.label
               })
             );
@@ -108,11 +108,11 @@ const TagTable = ({ match }: RouteComponentProps) => {
       bulkActions={[
         {
           key: "delete",
-          name: t("tags:table.bulk.delete", "Delete selected tags"),
+          name: t("tags:bulk.delete", "Delete selected tags"),
           async action(pks) {
             const { deleted } = await bulkDelete({ pks });
             message.info(
-              t("tags:table.bulk.deleted", "Deleted {{ count }} tags", {
+              t("tags:bulk.deleted", "Deleted {{ count }} tags", {
                 count: deleted
               })
             );

@@ -15,10 +15,10 @@ const TagCreate = () => {
   });
   const history = useHistory();
 
-  useTitle(t("tags:tag_create", "Create Tag"));
+  useTitle(t("tags:create", "Create Tag"));
   return (
     <BaseModule
-      title={t("tags:tag_create", "Create Tag")}
+      title={t("tags:create", "Create Tag")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -28,10 +28,10 @@ const TagCreate = () => {
           try {
             const tag = await mutate(data);
             setQueryData(["item/tags", { pk: tag.pk }], tag);
-            message.success(t("tags:tag_created", "Tag created"));
+            message.success(t("tags:created", "Tag created"));
             history.push(`/settings/tags`);
           } catch (e) {
-            message.error(t("tags:tag_create_error", "Tag create failed"));
+            message.error(t("tags:create_error", "Tag create failed"));
             throw e;
           }
         }}

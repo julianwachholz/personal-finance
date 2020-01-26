@@ -37,8 +37,8 @@ const Tag = ({ match, history }: RouteComponentProps<DetailParams>) => {
       }
     >
       <Descriptions title={t("tags:tag", "Tag")}>
-        <Item label={t("tags:tag_name", "Name")}>{tag.name}</Item>
-        <Item label={t("tags:tag_color", "Color")}>
+        <Item label={t("tags:name", "Name")}>{tag.name}</Item>
+        <Item label={t("tags:color", "Color")}>
           <TagComponent color={tag.color}>{tag.color}</TagComponent>
         </Item>
       </Descriptions>
