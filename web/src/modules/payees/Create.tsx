@@ -1,22 +1,23 @@
 import { message } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { setQueryData, useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { postPayee } from "../../dao/payees";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import PayeeForm from "./Form";
 
-const PayeeCreate = () => {
+const PayeeCreate = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("payees");
   const [mutate] = useMutation(postPayee, {
     refetchQueries: ["items/payees"]
   });
-  const history = useHistory();
 
-  useTitle(`Create Payee`);
+  useTitle(t("payees:create", "Create Payee"));
   return (
     <BaseModule
-      title="Create Payee"
+      title={t("payees:create", "Create Payee")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -26,10 +27,10 @@ const PayeeCreate = () => {
           try {
             const tag = await mutate(data);
             setQueryData(["item/payees", { pk: tag.pk }], tag);
-            message.success("Payee created");
+            message.success(t("payees:created", "Payee created"));
             history.push(`/settings/payees`);
           } catch (e) {
-            message.error("Payee create failed");
+            message.error(t("payees:create_error", "Payee create failed"));
             throw e;
           }
         }}

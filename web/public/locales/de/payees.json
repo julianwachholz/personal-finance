@@ -1,0 +1,24 @@
+{
+  "create": "Empfänger erstellen",
+  "created": "Empfänger erstellt",
+  "create_error": "Empfänger erstellen fehlgeschlagen",
+  "delete": "Delete Payee \"{{ label }}\"?",
+  "delete_warning": "Der Empfänger wird gelöscht und von allen Transaktionen entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "deleted": "Empfänger \"{{ label }}\" gelöscht",
+  "payee": "Empfänger",
+  "name": "Name",
+  "type": "Typ",
+  "type_business": "Geschäft",
+  "type_person": "Person",
+  "default_category": "Standardkategorie",
+  "edit": "{{ label }} bearbeiten",
+  "updated": "Empfänger bearbeitet",
+  "update_error": "Empfänger bearbeiten fehlgeschlagen",
+  "name_required": "Gib einen Namen an",
+  "update": "Empfänger bearbeiten",
+  "payee_plural": "Empfänger",
+  "bulk": {
+    "delete": "Ausgewählte Empfänger löschen",
+    "deleted": "{{ count }} Empfänger gelöscht"
+  }
+}

@@ -1,7 +1,8 @@
 import { FormOutlined } from "@ant-design/icons";
 import { Descriptions, Spin } from "antd";
 import React from "react";
-import { RouteComponentProps, useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router-dom";
 import { usePayee } from "../../dao/payees";
 import { prefetchTransactions } from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
@@ -14,8 +15,8 @@ interface DetailParams {
   pk: string;
 }
 
-const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
-  const history = useHistory();
+const Payee = ({ match, history }: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("payees");
   const { data: payee, isLoading, error } = usePayee(match.params.pk);
   const filters = [`payee=${match.params.pk}`];
   prefetchTransactions({ filters });
@@ -35,12 +36,16 @@ const Payee = ({ match }: RouteComponentProps<DetailParams>) => {
         />
       }
     >
-      <Descriptions title="Payee">
-        <Item label="Name">{payee.name}</Item>
-        <Item label="Type">
-          {payee.type === "business" ? "Business" : "Person"}
+      <Descriptions title={t("payees:payee", "Payee")}>
+        <Item label={t("payees:name", "Name")}>{payee.name}</Item>
+        <Item label={t("payees:type", "Type")}>
+          {payee.type === "business"
+            ? t("payees:type_business", "Business")
+            : t("payees:type_person", "Person")}
         </Item>
-        <Item label="Default Category">{payee.default_category?.label}</Item>
+        <Item label={t("payees:default_category", "Default Category")}>
+          {payee.default_category?.label}
+        </Item>
       </Descriptions>
       <RelatedTransactions filters={filters} excludeColumns={["payee"]} />
     </BaseModule>

@@ -1,7 +1,8 @@
 import { Button, Input, message, Popconfirm, Select } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import CategorySelect from "../../components/form/CategorySelect";
 import { RelatedModel } from "../../dao/base";
 import {
@@ -21,7 +22,11 @@ import {
 } from "../base/BaseTable";
 import { EditableColumnsType } from "../base/EditableTable";
 
-const PayeeTable = ({ match }: RouteComponentProps) => {
+const PayeeTable = ({
+  match,
+  location
+}: RouteComponentProps<{}, {}, BaseTableLocationState>) => {
+  const [t] = useTranslation("payees");
   const { tableSize } = useSettings();
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
@@ -32,11 +37,9 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
     refetchQueries: ["items/payees"]
   });
 
-  const location = useLocation<BaseTableLocationState>();
-
   const columns: EditableColumnsType<Payee> = [
     {
-      title: "Name",
+      title: t("payees:name", "Name"),
       dataIndex: "name",
       editable: true,
       formField: <Input autoFocus size={tableSize} />,
@@ -46,27 +49,36 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
       ...getColumnSort("name", location.state)
     },
     {
-      title: "Type",
+      title: t("payees:type", "Type"),
       dataIndex: "type",
       render(type) {
-        return type === "business" ? "Business" : "Person";
+        return type === "business"
+          ? t("payees:type_business", "Business")
+          : t("payees:type_person", "Person");
       },
       editable: true,
       formField: (
         <Select size={tableSize}>
-          <Select.Option value="business">Business</Select.Option>
-          <Select.Option value="private">Person</Select.Option>
+          <Select.Option value="business">
+            {t("payees:type_business", "Business")}
+          </Select.Option>
+          <Select.Option value="private">
+            {t("payees:type_person", "Person")}
+          </Select.Option>
         </Select>
       ),
       filterMultiple: false,
       filters: [
-        { text: "Business", value: "business" },
-        { text: "Private", value: "private" }
+        {
+          value: "business",
+          text: t("payees:type_business", "Business")
+        },
+        { value: "private", text: t("payees:type_person", "Person") }
       ],
       ...getColumnFilter("type", location.state)
     },
     {
-      title: "Default Category",
+      title: t("payees:default_category", "Default Category"),
       dataIndex: "default_category",
       render(category: RelatedModel) {
         return category ? (
@@ -95,40 +107,58 @@ const PayeeTable = ({ match }: RouteComponentProps) => {
             : await edit(payee, {
                 updateQuery: ["item/payees", { pk: payee.pk }]
               });
-          message.success(`Payee ${isNew ? "created" : "updated"}`);
+          if (isNew) {
+            message.success(t("payees:created", "Payee created"));
+          } else {
+            message.success(t("payees:updated", "Payee updated"));
+          }
           return savedPayee;
         } catch (e) {
-          message.error(`Payee ${isNew ? "create" : "update"} failed`);
+          if (isNew) {
+            message.error(t("payees:create_error", "Payee create failed"));
+          } else {
+            message.error(t("payees:update_error", "Payee update failed"));
+          }
           throw e;
         }
       }}
       defaultValues={{ type: "business" }}
-      itemName="Payee"
-      itemNamePlural="Payees"
+      itemName={t("payees:payee", "Payee")}
+      itemNamePlural={t("payees:payee_plural", "Payees")}
       useItems={usePayees}
       columns={columns}
       extraRowActions={payee => [
         <Popconfirm
           key="del"
-          title={`Delete Tag "${payee.name}"?`}
-          okText="Delete"
+          title={t("payees:delete", 'Delete Payee "{{ label }}"?', {
+            label: payee.label
+          })}
+          okText={t("translation:delete", "Delete")}
           okButtonProps={{ type: "danger" }}
           placement="left"
           onConfirm={async () => {
             await doDelete(payee);
-            message.info(`Payee "${payee.name}" deleted`);
+            message.info(
+              t("payees:deleted", 'Payee "{{ label }}" deleted', {
+                label: payee.label
+              })
+            );
           }}
         >
-          <Button type="link">Delete</Button>
+          <Button type="link">{t("translation:delete", "Delete")}</Button>
         </Popconfirm>
       ]}
       bulkActions={[
         {
           key: "delete",
-          name: "Delete selected tags",
+          name: t("payees:bulk.delete", "Delete selected tags"),
           async action(pks) {
             const { deleted } = await bulkDelete({ pks });
-            message.info(`Deleted ${deleted} payees`);
+            message.info(
+              t("payees:bulk.deleted", "Deleted {{ count }} payees", {
+                count: deleted
+              })
+            );
           }
         }
       ]}

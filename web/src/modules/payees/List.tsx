@@ -1,9 +1,11 @@
 import { DeleteFilled, FormOutlined, ShopOutlined } from "@ant-design/icons";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
+import { TFunction } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { MutateFunction, useMutation } from "react-query";
-import { useHistory } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import Fab from "../../components/button/Fab";
 import { UseItemsPaginated } from "../../dao/base";
 import { deletePayee, Payee, usePayees } from "../../dao/payees";
@@ -14,6 +16,7 @@ import { confirmDeletePayee } from "./delete";
 const renderPayee = (
   history: History,
   doDelete: MutateFunction<void, Payee>,
+  t: TFunction,
   payee: Payee
 ) => {
   return (
@@ -25,7 +28,7 @@ const renderPayee = (
             text: <DeleteFilled />,
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
-              confirmDeletePayee(payee, doDelete);
+              confirmDeletePayee(payee, doDelete, t);
             }
           }
         ] as any
@@ -43,7 +46,11 @@ const renderPayee = (
       }
     >
       <List.Item
-        extra={payee.type === "business" ? "Business" : "Person"}
+        extra={
+          payee.type === "business"
+            ? t("payees:type_business", "Business")
+            : t("payees:type_person", "Person")
+        }
         onClick={() => {
           history.push(`/settings/payees/${payee.pk}`);
         }}
@@ -57,18 +64,18 @@ const renderPayee = (
   );
 };
 
-const PayeeList = () => {
-  const history = useHistory();
+const PayeeList = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("payees");
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
   });
 
   return (
     <BaseList
-      itemName="Payee"
-      itemNamePlural="Payees"
+      itemName={t("payees:payee", "Payee")}
+      itemNamePlural={t("payees:payee_plural", "Payees")}
       useItems={usePayees as UseItemsPaginated<Payee>}
-      renderRow={renderPayee.bind(null, history, doDelete)}
+      renderRow={renderPayee.bind(null, history, doDelete, t)}
       headerProps={{
         onLeftClick() {
           history.go(-1);

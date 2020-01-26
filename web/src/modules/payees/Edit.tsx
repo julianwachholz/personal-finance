@@ -1,6 +1,7 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import { RouteComponentProps } from "react-router";
 import { deletePayee, putPayee, usePayee } from "../../dao/payees";
@@ -18,6 +19,7 @@ const PayeeEdit = ({
   location,
   history
 }: RouteComponentProps<DetailParams, {}, { back?: number }>) => {
+  const [t] = useTranslation("payees");
   const pk = parseInt(match.params.pk, 10);
   const { data: payee, isLoading } = usePayee(pk);
 
@@ -27,7 +29,9 @@ const PayeeEdit = ({
   const [doDelete] = useMutation(deletePayee, {
     refetchQueries: ["items/payees"]
   });
-  useTitle(payee && `Edit ${payee.label}`);
+  useTitle(
+    payee && t("payees:edit", "Edit {{ label }}", { label: payee.label })
+  );
 
   if (!payee || isLoading) {
     return <Spin />;
@@ -35,14 +39,14 @@ const PayeeEdit = ({
 
   return (
     <BaseModule
-      title={`Edit ${payee.label}`}
+      title={t("payees:edit", "Edit {{ label }}", { label: payee.label })}
       onLeftClick={() => {
         history.go(location.state?.back ?? -2);
       }}
       rightContent={
         <DeleteFilled
           onClick={() => {
-            confirmDeletePayee(payee, doDelete, history);
+            confirmDeletePayee(payee, doDelete, t, history);
           }}
         />
       }
@@ -52,10 +56,10 @@ const PayeeEdit = ({
         onSave={async data => {
           try {
             await mutate(data, { updateQuery: ["item/payees", { pk }] });
-            message.success("Payee updated");
+            message.success(t("payees:updated", "Payee updated"));
             history.push(`/settings/payees`);
           } catch (e) {
-            message.error("Payees update failed");
+            message.error(t("payees:update_error", "Payee update failed"));
             throw e;
           }
         }}
