@@ -28,6 +28,7 @@
   "target_parent": "Parent",
   "target_neighbor_placeholder": "Select Neighbor",
   "target_parent_placeholder": "Select Parent",
+  "update": "Update Category",
   "category_plural": "Categories",
   "expand_all": "Expand All",
   "collapse_all": "Collapse All",

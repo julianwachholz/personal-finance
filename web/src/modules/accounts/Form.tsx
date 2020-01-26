@@ -1,6 +1,7 @@
 import { AutoComplete, Button, Col, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import { BrowserView, isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import CurrencySelect from "../../components/form/CurrencySelect";
 import MoneyInput from "../../components/form/MoneyInput";
@@ -37,6 +38,7 @@ const suggestedIcons = ICONS.map(icon => ({
 }));
 
 const AccountForm = ({ data, onSave }: FormProps) => {
+  const [t] = useTranslation("accounts");
   const { settings } = useAuth();
   const [resetBalance, setResetBalance] = useState(false);
   const [form] = Form.useForm();
@@ -79,7 +81,7 @@ const AccountForm = ({ data, onSave }: FormProps) => {
     >
       <Row gutter={16}>
         <Col xs={4} sm={2}>
-          <Form.Item name="icon" label="Icon">
+          <Form.Item name="icon" label={t("accounts:icon", "Icon")}>
             <AutoComplete
               options={suggestedIcons}
               dropdownStyle={{ textAlign: "center" }}
@@ -91,27 +93,54 @@ const AccountForm = ({ data, onSave }: FormProps) => {
         <Col xs={20} sm={12}>
           <Form.Item
             name="name"
-            label="Name"
-            rules={[{ required: true, message: "Enter a name" }]}
+            label={t("accounts:name", "Name")}
+            rules={[
+              {
+                required: true,
+                message: t("accounts:name_required", "Enter a name")
+              }
+            ]}
           >
-            <Input placeholder="Checking" autoFocus />
+            <Input
+              placeholder={t("accounts:name_placeholder", "Checking")}
+              autoFocus
+            />
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="institution" label="Institution" wrapperCol={{ sm: 14 }}>
-        <Input placeholder="Example Credit Union" />
+      <Form.Item
+        name="institution"
+        label={t("accounts:institution", "Institution")}
+        wrapperCol={{ sm: 14 }}
+      >
+        <Input
+          placeholder={t(
+            "accounts:institution_placeholder",
+            "Example Credit Union"
+          )}
+        />
       </Form.Item>
       {data?.pk && !resetBalance ? (
         <Form.Item>
-          <Button onClick={() => setResetBalance(true)}>Reset balance?</Button>
+          <Button onClick={() => setResetBalance(true)}>
+            {t("accounts:reset_balance", "Reset balance?")}
+          </Button>
         </Form.Item>
       ) : (
         <Row gutter={16}>
           <Col xs={18} sm={4}>
             <Form.Item
               name="set_balance"
-              label="Current Balance"
-              rules={[{ required: true, message: "Enter a balance" }]}
+              label={t("accounts:current_balance", "Current Balance")}
+              rules={[
+                {
+                  required: true,
+                  message: t(
+                    "accounts:current_balance_error",
+                    "Enter a balance"
+                  )
+                }
+              ]}
             >
               <MoneyInput size={isMobile ? "large" : "middle"} fullWidth />
             </Form.Item>
@@ -119,8 +148,13 @@ const AccountForm = ({ data, onSave }: FormProps) => {
           <Col xs={6} sm={6}>
             <Form.Item
               name="set_currency"
-              label="Currency"
-              rules={[{ required: true, message: "Select a currency" }]}
+              label={t("accounts:currency", "Currency")}
+              rules={[
+                {
+                  required: true,
+                  message: t("accounts:currency_error", "Select a currency")
+                }
+              ]}
             >
               <CurrencySelect
                 disabled={!!data?.pk}
@@ -142,11 +176,13 @@ const AccountForm = ({ data, onSave }: FormProps) => {
           loading={submitting}
           block={isMobile}
         >
-          Save Account
+          {data
+            ? t("accounts:update", "Update Account")
+            : t("accounts:create", "Create Account")}
         </Button>
         <BrowserView>
           <Link to={(data && `/accounts/${data.pk}`) ?? `/accounts`}>
-            <Button>Discard</Button>
+            <Button>{t("translation:cancel", "Cancel")}</Button>
           </Link>
         </BrowserView>
       </Form.Item>

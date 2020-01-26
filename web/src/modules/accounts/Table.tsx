@@ -2,8 +2,9 @@ import { SwapOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { ColumnsType } from "antd/lib/table/Table";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { Link, RouteComponentProps, useLocation } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import Money from "../../components/data/Money";
 import { Account, moveAccount, useAccounts } from "../../dao/accounts";
 import BaseTable, {
@@ -13,16 +14,19 @@ import BaseTable, {
 } from "../base/BaseTable";
 import { TransferModal } from "../transactions/TransferForm";
 
-const AccountTable = ({ match }: RouteComponentProps) => {
+const AccountTable = ({
+  match,
+  location
+}: RouteComponentProps<{}, {}, BaseTableLocationState>) => {
+  const [t] = useTranslation("accounts");
   const [transferVisible, setTransferVisible] = useState(false);
   const [move] = useMutation(moveAccount, {
     refetchQueries: ["items/accounts"]
   });
 
-  const location = useLocation<BaseTableLocationState>();
   const columns: ColumnsType<Account> = [
     {
-      title: "Name",
+      title: t("accounts:name", "Name"),
       dataIndex: "name",
       render(_, account) {
         return <Link to={`${match.url}/${account.pk}`}>{account.label}</Link>;
@@ -30,12 +34,12 @@ const AccountTable = ({ match }: RouteComponentProps) => {
       ...getColumnSort("name", location.state)
     },
     {
-      title: "Institution",
+      title: t("accounts:institution", "Institution"),
       dataIndex: "institution",
       ...getColumnSort("institution", location.state)
     },
     {
-      title: "Balance",
+      title: t("accounts:balance", "Balance"),
       dataIndex: "balance",
       align: "right",
       filters: [
@@ -54,15 +58,19 @@ const AccountTable = ({ match }: RouteComponentProps) => {
     {
       align: "right",
       render(_, account) {
-        return <Link to={`${match.url}/${account.pk}/edit`}>Edit</Link>;
+        return (
+          <Link to={`${match.url}/${account.pk}/edit`}>
+            {t("translation:edit", "Edit")}
+          </Link>
+        );
       }
     }
   ];
 
   return (
     <BaseTable<Account>
-      itemName="Account"
-      itemNamePlural="Accounts"
+      itemName={t("accounts:account", "Account")}
+      itemNamePlural={t("accounts:account_plural", "Accounts")}
       useItems={useAccounts}
       columns={columns}
       isSortable
@@ -77,10 +85,12 @@ const AccountTable = ({ match }: RouteComponentProps) => {
             setTransferVisible(true);
           }}
         >
-          Transfer
+          {t("accounts:transfer", "Transfer")}
         </Button>,
         <Link key="create" to={`${match.url}/create`}>
-          <Button type="primary">Create Account</Button>
+          <Button type="primary">
+            {t("accounts:create", "Create Account")}
+          </Button>
         </Link>
       ]}
     >

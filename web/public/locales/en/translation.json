@@ -26,6 +26,8 @@
     "object_edit": "Edit",
     "object_delete": "Delete"
   },
+  "cancel": "Cancel",
+  "edit": "Edit",
   "inline": {
     "save": "Save",
     "cancel": "Cancel",
@@ -40,7 +42,6 @@
   },
   "actions": "Actions",
   "search": "Search...",
-  "cancel": "Cancel",
   "dashboard": {
     "title": "Dashboard",
     "todo": "This is a placeholder for the dashboard."

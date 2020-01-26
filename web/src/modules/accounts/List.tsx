@@ -2,7 +2,8 @@ import { BankOutlined } from "@ant-design/icons";
 import { List } from "antd-mobile";
 import { History } from "history";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { RouteComponentProps } from "react-router-dom";
 import Fab from "../../components/button/Fab";
 import Money from "../../components/data/Money";
 import { Account, useAccounts } from "../../dao/accounts";
@@ -31,13 +32,13 @@ const renderAccount = (history: History, account: Account) => {
   );
 };
 
-const AccountList = () => {
-  const history = useHistory();
+const AccountList = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("accounts");
 
   return (
     <BaseList
-      itemName="Account"
-      itemNamePlural="Accounts"
+      itemName={t("accounts:account", "Account")}
+      itemNamePlural={t("accounts:account_plural", "Accounts")}
       useItems={useAccounts as UseItemsPaginated<Account>}
       renderRow={renderAccount.bind(null, history)}
       fab={

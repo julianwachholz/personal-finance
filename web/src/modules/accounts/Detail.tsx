@@ -1,7 +1,8 @@
 import { FormOutlined } from "@ant-design/icons";
 import { Button, Descriptions, Spin, Statistic } from "antd";
 import React from "react";
-import { Link, RouteComponentProps, useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { CURRENCY_FORMATS } from "../../components/data/Money";
 import { useAccount } from "../../dao/accounts";
 import { prefetchTransactions } from "../../dao/transactions";
@@ -16,8 +17,8 @@ interface DetailParams {
   pk: string;
 }
 
-const Account = ({ match }: RouteComponentProps<DetailParams>) => {
-  const history = useHistory();
+const Account = ({ match, history }: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("accounts");
   const { settings } = useAuth();
   const { data: account, isLoading, error } = useAccount(match.params.pk);
   const filters = [`account=${match.params.pk}`];
@@ -32,10 +33,14 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
       title={account.label}
       extra={[
         <Link key="edit" to={`${match.url}/edit`}>
-          <Button type="primary">Edit Account</Button>
+          <Button type="primary">
+            {t("accounts:edit_account", "Edit Account")}
+          </Button>
         </Link>,
         <Link key="delete" to={`${match.url}/delete`}>
-          <Button type="danger">Delete Account</Button>
+          <Button type="danger">
+            {t("accounts:delete_account", "Delete Account")}
+          </Button>
         </Link>
       ]}
       onLeftClick={() => {
@@ -49,13 +54,15 @@ const Account = ({ match }: RouteComponentProps<DetailParams>) => {
         />
       }
     >
-      <Descriptions title="Account">
-        <Item label="Name">{account.name}</Item>
-        <Item label="Icon">{account.icon}</Item>
-        <Item label="Institution">{account.institution}</Item>
+      <Descriptions title={t("accounts:account", "Account")}>
+        <Item label={t("accounts:name", "Name")}>{account.name}</Item>
+        <Item label={t("accounts:icon", "Icon")}>{account.icon}</Item>
+        <Item label={t("accounts:institution", "Institution")}>
+          {account.institution}
+        </Item>
       </Descriptions>
       <Statistic
-        title="Balance"
+        title={t("accounts:balance", "Balance")}
         value={account.balance}
         precision={2}
         groupSeparator={settings?.group_separator}

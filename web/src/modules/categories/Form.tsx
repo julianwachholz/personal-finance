@@ -136,7 +136,9 @@ const CategoryForm = ({ data, onSave }: FormProps) => {
           loading={submitting}
           block={isMobile}
         >
-          {t("categories:create", "Create Category")}
+          {data
+            ? t("categories:update", "Update Category")
+            : t("categories:create", "Create Category")}
         </Button>
         <BrowserView>
           <Link

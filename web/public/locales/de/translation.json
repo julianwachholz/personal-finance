@@ -26,6 +26,8 @@
     "object_edit": "Bearbeiten",
     "object_delete": "Löschen"
   },
+  "cancel": "Abbrechen",
+  "edit": "Edit",
   "inline": {
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -40,7 +42,6 @@
   },
   "actions": "Aktionen",
   "search": "Suchen...",
-  "cancel": "Abbrechen",
   "dashboard": {
     "title": "Dashboard",
     "todo": "Das ist ein Platzhalter für das Dashboard."
