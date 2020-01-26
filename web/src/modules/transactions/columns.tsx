@@ -1,5 +1,6 @@
 import { Tag } from "antd";
 import { Location } from "history";
+import { TFunction } from "i18next";
 import { FormInstance } from "rc-field-form";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -22,7 +23,10 @@ interface GetGetColumnOptions {
   createTag?: (name: string) => Promise<TagModel>;
 }
 
-const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
+const getGetColumns = (
+  t: TFunction,
+  { createPayee, createTag }: GetGetColumnOptions = {}
+): ((
   location?: Location<BaseTableLocationState>,
   form?: FormInstance
 ) => EditableColumnsType<Transaction>) => {
@@ -31,7 +35,14 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
       form && createPayee
         ? async (name: string) => {
             form?.setFieldsValue({
-              payee: { value: "0", label: `Creating "${name}"...` }
+              payee: {
+                value: "0",
+                label: t(
+                  "translation:inline.quick_creating",
+                  'Creating "{{ name }}"...',
+                  { name }
+                )
+              }
             });
             const payee = await createPayee(name);
             form?.setFieldsValue({
@@ -49,7 +60,14 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
 
             const loadingTags = [
               ...tags,
-              { value: "0", label: `Creating ${name}...` }
+              {
+                value: "0",
+                label: t(
+                  "translation:inline.quick_creating",
+                  'Creating "{{ name }}"...',
+                  { name }
+                )
+              }
             ];
 
             form?.setFieldsValue({ tags: loadingTags });
@@ -61,7 +79,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
 
     return [
       {
-        title: "Date",
+        title: t("transactions:date", "Date"),
         dataIndex: "datetime",
         defaultSortOrder: "descend",
         editable: true,
@@ -73,7 +91,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         ...getColumnSort("datetime", location?.state)
       },
       {
-        title: "Account",
+        title: t("transactions:account", "Account"),
         dataIndex: "account",
         ellipsis: true,
         editable: true,
@@ -87,7 +105,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         }
       },
       {
-        title: "Amount",
+        title: t("transactions:amount", "Amount"),
         dataIndex: "amount",
         align: "right",
         editable: true,
@@ -99,7 +117,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         }
       },
       {
-        title: "Payee",
+        title: t("transactions:payee", "Payee"),
         dataIndex: "payee",
         ellipsis: true,
         editable: true,
@@ -127,7 +145,7 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         }
       },
       {
-        title: "Category",
+        title: t("transactions:category", "Category"),
         dataIndex: "category",
         editable: true,
         ellipsis: true,
@@ -135,29 +153,31 @@ const getGetColumns = ({ createPayee, createTag }: GetGetColumnOptions = {}): ((
         rules: [],
         render(category: RelatedModel, tx) {
           if (tx.is_transfer) {
-            return <em>Transfer</em>;
+            return <em>{t("transactions:transfer_label", "Transfer")}</em>;
           }
           if (tx.is_initial) {
-            return <em>Initial balance</em>;
+            return (
+              <em>{t("transactions:initial_balance", "Initial balance")}</em>
+            );
           }
           return category ? (
             <Link to={`/settings/categories/${category.value}`}>
               {category.label}
             </Link>
           ) : (
-            <em>uncategorized</em>
+            <em>{t("transactions:uncategorized", "uncategorized")}</em>
           );
         }
       },
       {
-        title: "Description",
+        title: t("transactions:description", "Description"),
         dataIndex: "text",
         ellipsis: true,
         editable: true,
         rules: []
       },
       {
-        title: "Tags",
+        title: t("transactions:tags", "Tags"),
         dataIndex: "tags",
         editable: true,
         ellipsis: true,

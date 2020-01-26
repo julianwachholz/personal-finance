@@ -1,7 +1,9 @@
 import { ImportOutlined, SwapOutlined } from "@ant-design/icons";
 import { Button, Menu, message } from "antd";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
+import { RouteComponentProps } from "react-router";
 import { prefetchCategoryTree } from "../../dao/categories";
 import { Payee, postPayee } from "../../dao/payees";
 import { postTag, Tag } from "../../dao/tags";
@@ -19,7 +21,8 @@ import getGetColumns from "./columns";
 import ImportWizard from "./ImportWizard";
 import { TransferModal } from "./TransferForm";
 
-const TransactionsTable = () => {
+const TransactionsTable = (props: RouteComponentProps) => {
+  const [t] = useTranslation("transactions");
   const { settings } = useAuth();
   const [transferVisible, setTransferVisible] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
@@ -35,7 +38,7 @@ const TransactionsTable = () => {
   const [createPayee] = useMutation(postPayee);
   const [createTag] = useMutation(postTag);
 
-  const getColumns = getGetColumns({
+  const getColumns = getGetColumns(t, {
     async createPayee(name) {
       return await createPayee({ name } as Payee);
     },
@@ -46,8 +49,8 @@ const TransactionsTable = () => {
 
   return (
     <BaseEditableTable<Transaction>
-      itemName="Transaction"
-      itemNamePlural="Transactions"
+      itemName={t("transactions:transaction", "Transaction")}
+      itemNamePlural={t("transactions:transaction_plural", "Transactions")}
       useItems={useTransactions}
       getColumns={getColumns}
       editable
@@ -55,7 +58,7 @@ const TransactionsTable = () => {
       inlineCreateButtons={[
         {
           key: "create-income",
-          label: "Add Income",
+          label: t("transactions:add_income", "Add Income"),
           buttonProps: {
             type: "primary"
           },
@@ -67,7 +70,7 @@ const TransactionsTable = () => {
         },
         {
           key: "create-expense",
-          label: "Add Expense",
+          label: t("transactions:add_expense", "Add Expense"),
           buttonProps: {
             type: "primary"
           },
@@ -94,10 +97,22 @@ const TransactionsTable = () => {
             : await update(tx, {
                 updateQuery: ["item/transactions", { pk: tx.pk }]
               });
-          message.success(`Transaction ${isNew ? "created" : "updated"}`);
+          if (isNew) {
+            message.success(t("transactions:created", "Transaction created"));
+          } else {
+            message.success(t("transactions:updated", "Transaction updated"));
+          }
           return savedTx;
         } catch (e) {
-          message.error(`Transaction ${isNew ? "create" : "update"} failed`);
+          if (isNew) {
+            message.error(
+              t("transactions:create_error", "Transaction create failed")
+            );
+          } else {
+            message.error(
+              t("transactions:update_error", "Transaction update failed")
+            );
+          }
           throw e;
         }
       }}
@@ -112,7 +127,7 @@ const TransactionsTable = () => {
             setTransferVisible(true);
           }}
         >
-          Transfer
+          {t("transactions:transfer_button", "Transfer")}
         </Button>
       ]}
       extraActions={[
@@ -122,16 +137,22 @@ const TransactionsTable = () => {
             // setImportVisible(true);
           }}
         >
-          <ImportOutlined /> Import Transactions
+          <ImportOutlined /> {t("transactions:import", "Import Transactions")}
         </Menu.Item>
       ]}
       bulkActions={[
         {
           key: "delete",
-          name: "Delete transactions",
+          name: t("transactions:bulk.delete", "Delete transactions"),
           async action(pks) {
             const { deleted } = await bulkDelete({ pks });
-            message.info(`Deleted ${deleted} transactions`);
+            message.info(
+              t(
+                "transactions:bulk.deleted",
+                "Deleted {{ count }} transactions",
+                { count: deleted }
+              )
+            );
           }
         }
       ]}

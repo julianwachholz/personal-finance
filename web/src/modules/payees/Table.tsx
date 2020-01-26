@@ -135,6 +135,7 @@ const PayeeTable = ({
           })}
           okText={t("translation:delete", "Delete")}
           okButtonProps={{ type: "danger" }}
+          cancelText={t("translation:cancel", "Cancel")}
           placement="left"
           onConfirm={async () => {
             await doDelete(payee);

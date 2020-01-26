@@ -1,6 +1,7 @@
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/lib/form/util";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import CategorySelect from "../../components/form/CategorySelect";
 import DatePicker from "../../components/form/DatePicker";
@@ -20,6 +21,7 @@ interface FormProps {
 }
 
 const TransactionForm = ({ type, data, onSave }: FormProps) => {
+  const [t] = useTranslation("transactions");
   const { settings } = useAuth();
   const [form] = useForm();
   const [submitting, setSubmitting] = useState(false);
@@ -28,7 +30,14 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
 
   const quickCreatePayee = async (name: string) => {
     form?.setFieldsValue({
-      payee: { value: "0", label: `Creating "${name}"...` }
+      payee: {
+        value: "0",
+        label: t(
+          "translation:inline.quick_creating",
+          'Creating "{{ name }}"...',
+          { name }
+        )
+      }
     });
     const payee = await createPayee({ name } as Payee);
     form?.setFieldsValue({ payee: { value: payee.pk, label: payee.label } });
@@ -38,7 +47,17 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       .getFieldValue("tags")
       .filter((tag: any) => tag.value !== "0");
 
-    const loadingTags = [...tags, { value: "0", label: `Creating ${name}...` }];
+    const loadingTags = [
+      ...tags,
+      {
+        value: "0",
+        label: t(
+          "translation:inline.quick_creating",
+          'Creating "{{ name }}"...',
+          { name }
+        )
+      }
+    ];
 
     form?.setFieldsValue({ tags: loadingTags });
     const tag = await createTag({ name } as Tag);
@@ -111,8 +130,13 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         <Col span={12}>
           <Form.Item
             name="amount"
-            label="Amount"
-            rules={[{ required: true, message: "Enter an amount" }]}
+            label={t("transactions:amount", "Amount")}
+            rules={[
+              {
+                required: true,
+                message: t("transactions:amount_required", "Enter an amount")
+              }
+            ]}
           >
             <MoneyInput autoFocus fullWidth size="large" />
           </Form.Item>
@@ -120,8 +144,13 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
         <Col span={12}>
           <Form.Item
             name="datetime"
-            label="Date"
-            rules={[{ required: true, message: "Enter a date" }]}
+            label={t("transactions:date", "Date")}
+            rules={[
+              {
+                required: true,
+                message: t("transactions:date_required", "Enter a date")
+              }
+            ]}
           >
             <DatePicker />
           </Form.Item>
@@ -129,12 +158,17 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       </Row>
       <Form.Item
         name="account"
-        label="Account"
-        rules={[{ required: true, message: "Select an account" }]}
+        label={t("transactions:account", "Account")}
+        rules={[
+          {
+            required: true,
+            message: t("transactions:account_required", "Select an account")
+          }
+        ]}
       >
         <ModelSelect useItems={useAccounts} />
       </Form.Item>
-      <Form.Item name="payee" label="Payee">
+      <Form.Item name="payee" label={t("transactions:payee", "Payee")}>
         <ModelSelect
           allowClear
           defaultActiveFirstOption
@@ -149,13 +183,16 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
           }}
         />
       </Form.Item>
-      <Form.Item name="category" label="Category">
+      <Form.Item name="category" label={t("transactions:category", "Category")}>
         <CategorySelect allowClear size="large" />
       </Form.Item>
-      <Form.Item name="text" label="Description">
+      <Form.Item
+        name="text"
+        label={t("transactions:description", "Description")}
+      >
         <Input />
       </Form.Item>
-      <Form.Item name="tags" label="Tags">
+      <Form.Item name="tags" label={t("transactions:tags", "Tags")}>
         <ModelSelect
           useItems={useTags}
           mode="multiple"
@@ -164,11 +201,11 @@ const TransactionForm = ({ type, data, onSave }: FormProps) => {
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={submitting} block>
-          {data?.pk
-            ? "Update Transaction"
+          {data
+            ? t("transactions:update", "Update Transaction")
             : type === "income"
-            ? "Save Income"
-            : "Save Expense"}
+            ? t("transactions:create_income", "Save Income")
+            : t("transactions:create_expense", "Save Expense")}
         </Button>
       </Form.Item>
     </Form>

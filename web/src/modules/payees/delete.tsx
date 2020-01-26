@@ -24,6 +24,7 @@ export const confirmDeletePayee = (
     ),
     okText: t("translation:delete", "Delete"),
     okButtonProps: { type: "danger" },
+    cancelText: t("translation:cancel", "Cancel"),
     onOk: async () => {
       await doDelete(payee);
       message.info(

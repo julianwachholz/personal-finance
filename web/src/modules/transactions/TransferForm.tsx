@@ -11,6 +11,7 @@ import {
 } from "antd";
 import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import DatePicker from "../../components/form/DatePicker";
 import ModelSelect from "../../components/form/ModelSelect";
@@ -27,6 +28,7 @@ interface TransferFormProps {
 }
 
 export const TransferForm = ({ onFinish }: TransferFormProps) => {
+  const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
   const [fromCurrency, setFromCurrency] = useState();
   const [toCurrency, setToCurrency] = useState();
@@ -59,10 +61,10 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
         };
         try {
           await transfer(data);
-          message.success("Transfer executed");
+          message.success(t("transactions:transfer.done", "Transfer executed"));
           onFinish?.();
         } catch (error) {
-          message.error("Transfer failed");
+          message.error(t("transactions:transfer.error", "Transfer failed"));
           applyFormErrors(form, error);
         }
         setLoading(false);
@@ -73,8 +75,16 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
         <Col span={11}>
           <Form.Item
             name="source"
-            label="From Account"
-            rules={[{ required: true, message: "Select debit account" }]}
+            label={t("transactions:transfer.from_account", "From Account")}
+            rules={[
+              {
+                required: true,
+                message: t(
+                  "transactions:transfer.from_account_required",
+                  "Select debit account"
+                )
+              }
+            ]}
             dependencies={["target"]}
           >
             <ModelSelect
@@ -94,12 +104,15 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
         <Col span={11}>
           <Form.Item
             name="target"
-            label="To Account"
+            label={t("transactions:transfer.to_account", "To Account")}
             dependencies={["source"]}
             rules={[
               {
                 required: true,
-                message: "Select credit account"
+                message: t(
+                  "transactions:transfer.to_account_required",
+                  "Select credit account"
+                )
               },
               {
                 validator(rule, value) {
@@ -107,7 +120,12 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
                     value &&
                     value.value === form.getFieldValue("source").value
                   ) {
-                    return Promise.reject("Select a different account");
+                    return Promise.reject(
+                      t(
+                        "transactions:transfer.select_other_account",
+                        "Select a different account"
+                      )
+                    );
                   }
                   return Promise.resolve();
                 }
@@ -128,7 +146,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
       </Row>
       <Row>
         <Col xs={24} sm={10}>
-          <Form.Item label="Amount" required>
+          <Form.Item label={t("transactions:amount", "Amount")} required>
             <Input.Group compact>
               <Form.Item
                 name="amount"
@@ -138,7 +156,10 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
                     required: true,
                     type: "number",
                     min: 0.01,
-                    message: "Must be more than 0"
+                    message: t(
+                      "transactions:amount_required",
+                      "Must be more than 0"
+                    )
                   }
                 ]}
               >
@@ -154,7 +175,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
         </Col>
         <Col xs={24} sm={14}>
           <Form.Item
-            label="Conversion Rate"
+            label={t("transactions:transfer.exchange_rate", "Exchange Rate")}
             style={{ display: needConversion ? "block" : "none" }}
             required
           >
@@ -165,7 +186,10 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
                 rules={[
                   {
                     required: needConversion,
-                    message: "Enter the conversion rate",
+                    message: t(
+                      "transactions:transfer.exchange_rate_required",
+                      "Enter the exchange rate"
+                    ),
                     type: "number",
                     min: 0.0001
                   }
@@ -184,10 +208,13 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
           </Form.Item>
         </Col>
       </Row>
-      <Form.Item name="datetime" label="Date">
+      <Form.Item name="datetime" label={t("transactions:date", "Date")}>
         <DatePicker size="middle" />
       </Form.Item>
-      <Form.Item name="text" label="Description">
+      <Form.Item
+        name="text"
+        label={t("transactions:description", "Description")}
+      >
         <Input />
       </Form.Item>
       <Form.Item>
@@ -198,7 +225,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
           loading={isLoading}
           block={isMobile}
         >
-          Transfer
+          {t("transactions:transfer.submit", "Transfer")}
         </Button>
       </Form.Item>
     </Form>
@@ -210,13 +237,16 @@ interface TransferModalProps {
   onVisible: (visible: boolean) => void;
 }
 
-export const TransferModal = ({ visible, onVisible }: TransferModalProps) => (
-  <Modal
-    visible={visible}
-    title="Balance Transfer"
-    onCancel={() => onVisible(false)}
-    footer={false}
-  >
-    <TransferForm onFinish={() => onVisible(false)} />
-  </Modal>
-);
+export const TransferModal = ({ visible, onVisible }: TransferModalProps) => {
+  const [t] = useTranslation("transactions");
+  return (
+    <Modal
+      visible={visible}
+      title={t("transactions:transfer.title", "Balance Transfer")}
+      onCancel={() => onVisible(false)}
+      footer={false}
+    >
+      <TransferForm onFinish={() => onVisible(false)} />
+    </Modal>
+  );
+};

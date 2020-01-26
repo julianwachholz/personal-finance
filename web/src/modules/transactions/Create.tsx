@@ -7,21 +7,26 @@ import {
 import { message } from "antd";
 import { Popover } from "antd-mobile";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { setQueryData, useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { postTransaction } from "../../dao/transactions";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
 import TransactionForm from "./Form";
 
-const TransactionCreate = () => {
+const TransactionCreate = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("transactions");
   const [mutate] = useMutation(postTransaction, {
     refetchQueries: ["items/transactions"]
   });
-  const history = useHistory();
   const [type, setType] = useState<"expense" | "income">("expense");
   const [visible, setVisible] = useState(false);
-  const title = type === "expense" ? "Add Expense" : "Add Income";
+
+  const title =
+    type === "expense"
+      ? t("transactions:add_expense", "Add Expense")
+      : t("transactions:add_income", "Add Income");
 
   const changeTypeItem = (
     <Popover.Item
@@ -30,7 +35,9 @@ const TransactionCreate = () => {
         type === "expense" ? <PlusCircleOutlined /> : <MinusCircleOutlined />
       }
     >
-      {type === "expense" ? "Add Income" : "Add Expense"}
+      {type === "expense"
+        ? t("transactions:add_income", "Add Income")
+        : t("transactions:add_expense", "Add Expense")}
     </Popover.Item>
   );
 
@@ -49,7 +56,7 @@ const TransactionCreate = () => {
           overlay={[
             changeTypeItem,
             <Popover.Item key="transfer" icon={<SwapOutlined />}>
-              Transfer
+              {t("transactions:transfer_label", "Transfer")}
             </Popover.Item>
           ]}
           onSelect={item => {
@@ -72,10 +79,12 @@ const TransactionCreate = () => {
           try {
             const tx = await mutate(data);
             setQueryData(["item/transactions", { pk: tx.pk }], tx);
-            message.success("Transaction created");
+            message.success(t("transactions:created", "Transaction created"));
             history.push(`/transactions`);
           } catch (e) {
-            message.error("Transaction create failed");
+            message.error(
+              t("transactions:create_error", "Transaction create failed")
+            );
             throw e;
           }
         }}

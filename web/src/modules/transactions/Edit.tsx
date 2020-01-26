@@ -1,8 +1,9 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { message, Spin } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
-import { RouteComponentProps, useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import {
   deleteTransaction,
   putTransaction,
@@ -17,7 +18,11 @@ interface DetailParams {
   pk: string;
 }
 
-const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
+const TransactionEdit = ({
+  match,
+  history
+}: RouteComponentProps<DetailParams>) => {
+  const [t] = useTranslation("transactions");
   const pk = parseInt(match.params.pk, 10);
   const { data: tx, isLoading } = useTransaction(pk, {
     refetchOnWindowFocus: false
@@ -29,12 +34,11 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
   const [doDelete] = useMutation(deleteTransaction, {
     refetchQueries: ["items/transactions"]
   });
-  const history = useHistory();
 
-  useTitle(`Edit Transaction`);
+  useTitle(t("transactions:edit", "Edit Transaction"));
   return (
     <BaseModule
-      title="Edit Transaction"
+      title={t("transactions:edit", "Edit Transaction")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -42,7 +46,7 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
         tx ? (
           <DeleteFilled
             onClick={() => {
-              confirmDeleteTransaction(tx, doDelete, history);
+              confirmDeleteTransaction(tx, doDelete, t, history);
             }}
           />
         ) : (
@@ -58,10 +62,12 @@ const TransactionEdit = ({ match }: RouteComponentProps<DetailParams>) => {
               await mutate(data, {
                 updateQuery: ["item/transactions", { pk }]
               });
-              message.success("Transaction updated");
+              message.success(t("transactions:updated", "Transaction updated"));
               history.push(`/transactions`);
             } catch (e) {
-              message.error("Transaction update failed");
+              message.error(
+                t("transactions:update_error", "Transaction update failed")
+              );
               throw e;
             }
           }}

@@ -27,12 +27,12 @@
     "object_delete": "Löschen"
   },
   "cancel": "Abbrechen",
-  "edit": "Edit",
   "inline": {
+    "edit": "Bearbeiten",
     "save": "Speichern",
     "cancel": "Abbrechen",
-    "edit": "Bearbeiten",
-    "create": "{{ name }} erstellen"
+    "create": "{{ name }} erstellen",
+    "quick_creating": "Erstelle \"{{ name }}\"..."
   },
   "bulk": {
     "disable": "Stapelverarbeitung deaktivieren",
@@ -61,5 +61,6 @@
       "give_feedback": "Feedback geben",
       "reload_page": "Seite neu laden"
     }
-  }
+  },
+  "edit": "Edit"
 }

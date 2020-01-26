@@ -27,12 +27,12 @@
     "object_delete": "Delete"
   },
   "cancel": "Cancel",
-  "edit": "Edit",
   "inline": {
+    "edit": "Edit",
     "save": "Save",
     "cancel": "Cancel",
-    "edit": "Edit",
-    "create": "Create {{ name }}"
+    "create": "Create {{ name }}",
+    "quick_creating": "Creating \"{{ name }}\"..."
   },
   "bulk": {
     "disable": "Disable bulk mode",
@@ -61,5 +61,6 @@
       "give_feedback": "Give feedback",
       "reload_page": "Reload page"
     }
-  }
+  },
+  "edit": "Edit"
 }

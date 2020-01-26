@@ -2,9 +2,11 @@ import { DeleteFilled, PlusOutlined, SwapOutlined } from "@ant-design/icons";
 import { Tag } from "antd";
 import { List, SwipeAction } from "antd-mobile";
 import { History } from "history";
+import { TFunction } from "i18next";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { MutateFunction, useMutation } from "react-query";
-import { useHistory } from "react-router";
+import { RouteComponentProps } from "react-router";
 import Fab from "../../components/button/Fab";
 import DateTime from "../../components/data/Date";
 import Money from "../../components/data/Money";
@@ -22,6 +24,7 @@ import { confirmDeleteTransaction } from "./delete";
 export const renderTransaction = (
   history: History,
   doDelete: MutateFunction<void, Transaction> | false,
+  t: TFunction,
   tx: Transaction
 ) => {
   let icon: React.ReactNode = tx.category?.icon ?? tx.account.icon;
@@ -30,7 +33,7 @@ export const renderTransaction = (
   }
 
   const title = tx.is_transfer
-    ? "Transfer"
+    ? t("transactions:transfer_label", "Transfer")
     : tx.payee?.label ?? tx.category?.name;
 
   return (
@@ -44,7 +47,7 @@ export const renderTransaction = (
             style: { width: 48, backgroundColor: COLOR_DANGER, color: "#fff" },
             onPress() {
               if (doDelete) {
-                confirmDeleteTransaction(tx, doDelete);
+                confirmDeleteTransaction(tx, doDelete, t);
               }
             }
           }
@@ -73,7 +76,11 @@ export const renderTransaction = (
           ) : (
             <>
               {tx.text || tx.category?.name || (
-                <em>{tx.is_initial ? "Initial balance" : "uncategorized"}</em>
+                <em>
+                  {tx.is_initial
+                    ? t("transactions:initial_balance", "Initial balance")
+                    : t("transactions:uncategorized", "uncategorized")}
+                </em>
               )}{" "}
               {tx.tags.map(t => (
                 <Tag key={t.value} color={t.color}>
@@ -88,8 +95,8 @@ export const renderTransaction = (
   );
 };
 
-const TransactionList = () => {
-  const history = useHistory();
+const TransactionList = ({ history }: RouteComponentProps) => {
+  const [t] = useTranslation("transactions");
   const [doDelete] = useMutation(deleteTransaction, {
     refetchQueries: ["items/transactions"]
   });
@@ -99,7 +106,7 @@ const TransactionList = () => {
       itemName="Transaction"
       itemNamePlural="Transactions"
       useItems={useTransactions as UseItemsPaginated<Transaction>}
-      renderRow={renderTransaction.bind(null, history, doDelete)}
+      renderRow={renderTransaction.bind(null, history, doDelete, t)}
       fab={
         <Fab
           icon={<PlusOutlined />}

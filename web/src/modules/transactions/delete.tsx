@@ -1,6 +1,7 @@
 import { DeleteTwoTone } from "@ant-design/icons";
 import { message, Modal } from "antd";
 import { History } from "history";
+import { TFunction } from "i18next";
 import React from "react";
 import { MutateFunction } from "react-query";
 import DateTime from "../../components/data/Date";
@@ -11,10 +12,11 @@ import { COLOR_DANGER } from "../../utils/constants";
 export const confirmDeleteTransaction = (
   tx: Transaction,
   doDelete: MutateFunction<void, Transaction>,
+  t: TFunction,
   history?: History
 ) => {
   Modal.confirm({
-    title: `Delete Transaction?`,
+    title: t("transactions:delete", "Delete Transaction?"),
     icon: <DeleteTwoTone twoToneColor={COLOR_DANGER} />,
     content: (
       <>
@@ -28,16 +30,23 @@ export const confirmDeleteTransaction = (
             .join(", ")}
         </p>
         <p>
-          This will delete the transaction and remove the balance from its
-          associated account.
+          {t(
+            "transactions:delete_warning",
+            "This will delete the transaction and remove the balance from its associated account."
+          )}
         </p>
       </>
     ),
-    okText: "Delete",
+    okText: t("translation:delete", "Delete"),
     okButtonProps: { type: "danger" },
+    cancelText: t("translation:cancel", "Cancel"),
     onOk: async () => {
       await doDelete(tx);
-      message.info(`Transaction #${tx.pk} deleted`);
+      message.info(
+        t("transactions:deleted", "Transaction #{{ id }} deleted", {
+          id: tx.pk
+        })
+      );
       history?.push(`/transactions`);
     }
   });
