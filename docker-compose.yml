@@ -1,6 +1,6 @@
 version: "3"
 services:
-  web:
+  api:
     image: docker.pkg.github.com/julianwachholz/personal-finance/shinywaffle:latest
     build:
       context: .
@@ -20,6 +20,14 @@ services:
     #   timeout: 5s
     #   retries: 2
     #   start_period: 1m
+
+  web:
+    build:
+      context: ./web
+      dockerfile: ./Dockerfile
+    ports:
+      - 9166:80
+    restart: "no"
 
 networks:
   default:
