@@ -13,8 +13,12 @@ from knox.auth import TokenAuthentication
 from knox.views import LoginView as KnoxLoginView
 
 from .emails import send_forgot_password_email
-from .serializers import (EmailSerializer, LoginSerializer,
-                          ResetPasswordSerializer, UserSerializer)
+from .serializers import (
+    EmailSerializer,
+    LoginSerializer,
+    ResetPasswordSerializer,
+    UserSerializer,
+)
 
 User = get_user_model()
 

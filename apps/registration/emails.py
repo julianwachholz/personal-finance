@@ -35,5 +35,5 @@ def send_forgot_password_email(user):
             "registration/reset_password.txt", {"user": user, "reset_link": reset_link}
         ),
         settings.DEFAULT_FROM_EMAIL,
-        [user.email]
+        [user.email],
     )
