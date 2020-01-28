@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import {
   prefetchQuery,
   QueryOptions,
@@ -29,6 +30,15 @@ export const clearToken = () => {
 
 export const getAuthToken = () => {
   return localStorage.getItem(authTokenKey);
+};
+
+export const isTokenValid = () => {
+  const expiry = localStorage.getItem(authTokenExpiryKey);
+  if (expiry) {
+    const date = parseISO(expiry);
+    return date > new Date();
+  }
+  return false;
 };
 
 export const getAuthHeaders = (): Record<string, string> => {

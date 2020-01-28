@@ -1,6 +1,7 @@
 import { prefetchQuery, useQuery } from "react-query";
 import {
   getAuthToken,
+  isTokenValid,
   makeItemsAction,
   makePostItem,
   makePutItem
@@ -32,7 +33,9 @@ const fetchUser: FetchItem<User, {}> = async () => {
   return data;
 };
 
-export const isPossiblyAuthenticated = () => getAuthToken() !== null;
+export const isPossiblyAuthenticated = () => {
+  return isTokenValid() && getAuthToken() !== null;
+};
 
 export const prefetchUser = () => {
   isPossiblyAuthenticated() && prefetchQuery("user", fetchUser);

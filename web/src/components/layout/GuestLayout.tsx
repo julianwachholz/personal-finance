@@ -10,7 +10,7 @@ import Logo from "./Logo";
 const { Content } = Layout;
 
 export const GuestLayout: React.FC = ({ children }) => {
-  const { i18n } = useTranslation(undefined, { useSuspense: false });
+  const [t, i18n] = useTranslation("translation", { useSuspense: false });
   return (
     <Layout>
       <Link className="brand-logo" to="/" style={{ color: "rgba(0,0,0,0.65)" }}>
@@ -32,7 +32,7 @@ export const GuestLayout: React.FC = ({ children }) => {
         }
       >
         <Button>
-          <GlobalOutlined /> Language
+          <GlobalOutlined /> {t("language", "Language")}
         </Button>
       </Dropdown>
     </Layout>
