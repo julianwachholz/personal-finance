@@ -1,0 +1,299 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-01-29 13:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/budgets/models.py:57
+msgid "Must be more than zero"
+msgstr ""
+
+#: apps/payees/serializers.py:25
+msgid "Payee with that name already exists"
+msgstr ""
+
+#: apps/registration/emails.py:22
+msgid "Complete your signup"
+msgstr ""
+
+#: apps/registration/emails.py:36
+msgid "Reset your password"
+msgstr ""
+
+#: apps/registration/serializers.py:27
+msgid "Invalid credentials."
+msgstr ""
+
+#: apps/registration/serializers.py:42
+msgid "This email is already in use."
+msgstr ""
+
+#: apps/registration/serializers.py:75
+msgid "Invalid password"
+msgstr ""
+
+#: apps/registration/serializers.py:110 apps/registration/views.py:57
+msgid "Invalid link."
+msgstr ""
+
+#: apps/registration/serializers.py:112 apps/registration/views.py:61
+msgid "Link expired."
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:1
+#: apps/registration/templates/registration/verify_email.txt:1
+msgid "there"
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:1
+#: apps/registration/templates/registration/verify_email.txt:1
+#, python-format
+msgid "Hi %(name)s!"
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:3
+msgid ""
+"You or someone who knows your email address\n"
+"has requested a password reset on ShinyWaffle.\n"
+"To reset your password, follow this link:"
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:9
+#: apps/registration/templates/registration/verify_email.txt:8
+msgid "This link is valid for 2 hours."
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:11
+#: apps/registration/templates/registration/verify_email.txt:10
+msgid "If you did not request this, you can safely ignore this message."
+msgstr ""
+
+#: apps/registration/templates/registration/reset_password.txt:12
+#: apps/registration/templates/registration/verify_email.txt:11
+msgid "Reply to this email if you have any questions."
+msgstr ""
+
+#: apps/registration/templates/registration/verify_email.txt:3
+msgid ""
+"Your email address was used to create a new account on ShinyWaffle.\n"
+"To complete your signup on ShinyWaffle, follow this link:"
+msgstr ""
+
+#: apps/registration/views.py:53
+msgid "Link was already used."
+msgstr ""
+
+#: apps/registration/views.py:97
+msgid "This email doesn't exist."
+msgstr ""
+
+#: apps/tags/serializers.py:19
+msgid "Tag with that name already exists"
+msgstr ""
+
+#: apps/taxdata/models.py:11
+msgid "federal"
+msgstr ""
+
+#: apps/taxdata/models.py:12
+msgid "state"
+msgstr ""
+
+#: apps/taxdata/models.py:13
+msgid "county"
+msgstr ""
+
+#: apps/taxdata/models.py:14
+msgid "municipality"
+msgstr ""
+
+#: apps/taxdata/models.py:29
+msgid "income tax"
+msgstr ""
+
+#: apps/taxdata/models.py:30
+msgid "wealth tax"
+msgstr ""
+
+#: apps/taxdata/models.py:31
+msgid "capital gains tax"
+msgstr ""
+
+#: apps/taxdata/models.py:32
+msgid "withholding tax"
+msgstr ""
+
+#: apps/taxdata/models.py:33
+msgid "other tax"
+msgstr ""
+
+#: apps/taxdata/models.py:41 apps/taxdata/models.py:97
+msgid "tax level"
+msgstr ""
+
+#: apps/taxdata/models.py:45 apps/taxdata/models.py:160
+msgid "state / region"
+msgstr ""
+
+#: apps/taxdata/models.py:47 apps/taxdata/models.py:162
+msgid "State or region this tax rate is valid in."
+msgstr ""
+
+#: apps/taxdata/models.py:51 apps/taxdata/models.py:110
+msgid "identifier"
+msgstr ""
+
+#: apps/taxdata/models.py:52 apps/taxdata/models.py:111
+#: apps/taxdata/models.py:166
+msgid "name"
+msgstr ""
+
+#: apps/taxdata/models.py:54
+msgid "tariff"
+msgstr ""
+
+#: apps/taxdata/models.py:57
+msgid "Tariff target demographic, e.g. single households."
+msgstr ""
+
+#: apps/taxdata/models.py:64
+msgid "tax type"
+msgstr ""
+
+#: apps/taxdata/models.py:68
+msgid "tax"
+msgstr ""
+
+#: apps/taxdata/models.py:69
+msgid "taxes"
+msgstr ""
+
+#: apps/taxdata/models.py:84
+msgid "bracket"
+msgstr ""
+
+#: apps/taxdata/models.py:87
+msgid "amount"
+msgstr ""
+
+#: apps/taxdata/models.py:90
+msgid "increment"
+msgstr ""
+
+#: apps/taxdata/models.py:93
+msgid "increment amount"
+msgstr ""
+
+#: apps/taxdata/models.py:98
+msgid "tax levels"
+msgstr ""
+
+#: apps/taxdata/models.py:113
+msgid "description"
+msgstr ""
+
+#: apps/taxdata/models.py:116
+msgid "min. amount"
+msgstr ""
+
+#: apps/taxdata/models.py:123
+msgid "max. amount"
+msgstr ""
+
+#: apps/taxdata/models.py:130
+msgid "fixed amount"
+msgstr ""
+
+#: apps/taxdata/models.py:137
+msgid "has multiplier?"
+msgstr ""
+
+#: apps/taxdata/models.py:139
+msgid "Multiply the fixed amount by a certain multiplier."
+msgstr ""
+
+#: apps/taxdata/models.py:143
+msgid "tax deduction"
+msgstr ""
+
+#: apps/taxdata/models.py:144
+msgid "tax deductions"
+msgstr ""
+
+#: apps/taxdata/models.py:156
+msgid "tax base level"
+msgstr ""
+
+#: apps/taxdata/models.py:167
+msgid "variant"
+msgstr ""
+
+#: apps/taxdata/models.py:168
+msgid "variant 2"
+msgstr ""
+
+#: apps/taxdata/models.py:174
+msgid "taxation base percentage"
+msgstr ""
+
+#: apps/taxdata/models.py:178
+msgid "tax base"
+msgstr ""
+
+#: apps/taxdata/models.py:179
+msgid "tax bases"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:30
+msgid "import file"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:31
+msgid "import files"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:66
+msgid "file type"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:71
+msgid "import config"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:72
+msgid "import configs"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:110
+msgid "get value from source file?"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:124
+msgid "column mapping"
+msgstr ""
+
+#: apps/transaction_wizard/models.py:125
+msgid "column mappings"
+msgstr ""
+
+#: shinywaffle/settings.py:170
+msgid "English"
+msgstr ""
+
+#: shinywaffle/settings.py:170
+msgid "German"
+msgstr ""

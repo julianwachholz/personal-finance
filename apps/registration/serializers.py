@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core import signing
 from django.core.exceptions import ValidationError
 from django.core.signing import BadSignature, SignatureExpired
+from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -81,7 +82,10 @@ class UserSerializer(serializers.ModelSerializer):
         return super().validate(data)
 
     def create(self, validated_data):
-        return User.objects.create_user(is_active=False, **validated_data)
+        user = User.objects.create_user(is_active=False, **validated_data)
+        user.settings.language = get_language()
+        user.settings.save()
+        return user
 
     def update(self, user, validated_data):
         new_password = validated_data.pop("password", None)

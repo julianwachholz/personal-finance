@@ -169,6 +169,8 @@ LANGUAGE_CODE = "en-us"
 
 LANGUAGES = [("en", _("English")), ("de", _("German"))]
 
+LOCALE_PATHS = [BASE_DIR("locale")]
+
 TIME_ZONE = "UTC"
 
 USE_I18N = True
