@@ -1,0 +1,70 @@
+[
+  [
+    { "name": "Essen", "icon": "🍽️" },
+    [
+      [{ "name": "Mittagessen" }],
+      [{ "name": "Einkauf", "icon": "🛒" }],
+      [{ "name": "Fast Food", "icon": "🍔" }],
+      [{ "name": "Restaurants", "icon": "🍷" }],
+      [{ "name": "Snacks / anderes", "icon": "🍫" }]
+    ]
+  ],
+  [
+    { "name": "Transport", "icon": "🚗" },
+    [
+      [
+        { "name": "Auto", "icon": "🚗" },
+        [
+          [{ "name": "Treibstoff", "icon": "⛽" }],
+          [{ "name": "Parken", "icon": "🅿️" }],
+          [{ "name": "Wartung & Unterhalt", "icon": "🔧" }]
+        ]
+      ],
+      [{ "name": "Öffentlicher Verkehr", "icon": "🚇" }],
+      [{ "name": "Taxi", "icon": "🚕" }]
+    ]
+  ],
+  [
+    { "name": "Haushalt", "icon": "🏠" },
+    [
+      [{ "name": "Miete / Hypothek" }],
+      [{ "name": "Möbel", "icon": "🛋" }],
+      [{ "name": "Garten", "icon": "🏡" }]
+    ]
+  ],
+  [
+    { "name": "Rechnungen", "icon": "🔌" },
+    [
+      [{ "name": "Elektrizität" }],
+      [{ "name": "Telefon & Internet", "icon": "📱" }],
+      [{ "name": "TV & Radio", "icon": "📺" }],
+      [{ "name": "Wasser & Heizung", "icon": "🚰" }]
+    ]
+  ],
+  [
+    { "name": "Privat", "icon": "💆" },
+    [
+      [{ "name": "Ausgehen", "icon": "🍻" }],
+      [{ "name": "Entertainment", "icon": "📽️" }],
+      [{ "name": "Shopping", "icon": "🛍️" }],
+      [{ "name": "Urlaub", "icon": "⛱️" }]
+    ]
+  ],
+  [
+    { "name": "Gesundheit", "icon": "🏥" },
+    [
+      [{ "name": "Krankenkasse" }],
+      [{ "name": "Medizin", "icon": "💊" }],
+      [{ "name": "Zahnarzt", "icon": "🦷" }]
+    ]
+  ],
+  [
+    { "name": "Haustier", "icon": "🐕" },
+    [[{ "name": "Tierfutter" }], [{ "name": "Tierarzt" }]]
+  ],
+  [
+    { "name": "Steuern & Gebühren", "icon": "🧾" },
+    [[{ "name": "Kreditkartengebühren", "icon": "💳" }]]
+  ],
+  [{ "name": "Einkommen", "icon": "💰" }, [[{ "name": "Salär" }]]]
+]

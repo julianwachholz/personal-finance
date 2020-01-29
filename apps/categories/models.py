@@ -57,44 +57,14 @@ class Category(MPTTModel):
 
 
 def create_default_categories(user):
-    categories = [
-        (
-            {"name": "Food", "icon": "🍽️"},
-            [
-                ({"name": "Lunch"},),
-                ({"name": "Groceries"},),
-                ({"name": "Fast Food", "icon": "🍔"},),
-                ({"name": "Restaurants", "icon": "🍷"},),
-            ],
-        ),
-        (
-            {"name": "Transportation", "icon": "🚗"},
-            [
-                ({"name": "Car", "icon": ""},),
-                ({"name": "Fuel", "icon": "⛽"},),
-                ({"name": "Parking", "icon": "🅿️"},),
-                ({"name": "Public Transport", "icon": "🚇"},),
-                ({"name": "Taxi", "icon": "🚕"},),
-            ],
-        ),
-        (
-            {"name": "Home", "icon": "🏠"},
-            [({"name": "Rent"},), ({"name": "Furniture"},)],
-        ),
-        ({"name": "Communication", "icon": "📱"},),
-        (
-            {"name": "Personal", "icon": "💆"},
-            [
-                ({"name": "Going Out", "icon": "🍻"},),
-                ({"name": "Entertainment", "icon": "📽️"},),
-                ({"name": "Shopping", "icon": "🛍️"},),
-                ({"name": "Vacation", "icon": "⛱️"},),
-            ],
-        ),
-        ({"name": "Health", "icon": "🏥"},),
-        ({"name": "Taxes", "icon": "🧾"},),
-        ({"name": "Income", "icon": "💰"},),
-    ]
+    language = get_language()
+
+    with open(
+        os.path.join(
+            os.path.dirname(__file__), f"fixtures/default_categories_{language}.json"
+        )
+    ) as f:
+        categories = json.load(f)
 
     with transaction.atomic():
         _create_category_tree(user, categories)
@@ -105,7 +75,7 @@ def _create_category_tree(user, categories, parent=None):
         category = Category(user=user, **kwargs)
         category.insert_at(parent, position="last-child", save=True)
 
-        if category.name == "Income":
+        if category.name in {"Salary", "Salär"}:
             user.settings.default_credit_category = category
             user.settings.save()
 
