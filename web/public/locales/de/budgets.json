@@ -22,7 +22,7 @@
   "currency_required": "Wähle eine Währung",
   "category_selection": "Kategorie Auswahl",
   "categories_include": "Inklusive Auswahl",
-  "categories_exclude": "Exclusive Auswahl",
+  "categories_exclude": "Exklusive Auswahl",
   "categories": "Kategorien",
   "update": "Budget bearbeiten",
   "period_format_weekly": "'Woche' w, yyyy",

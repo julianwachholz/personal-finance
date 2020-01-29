@@ -53,6 +53,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       refetchQuery("user");
       clearQueryCache();
     }
+    // eslint-disable-next-line
   }, [isAuthenticated, isLoading, user]);
 
   if (error) {
