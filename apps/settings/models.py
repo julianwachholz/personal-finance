@@ -41,22 +41,22 @@ class Settings(models.Model):
     )
 
     decimal_separator = models.CharField(
-        verbose_name=_("decimal separator"), max_length=3, default="."
+        verbose_name="decimal separator", max_length=3, default="."
     )
     group_separator = models.CharField(
-        verbose_name=_("group / thousand separator"), max_length=3, default=" "
+        verbose_name="group / thousand separator", max_length=3, default=" "
     )
     use_colors = models.BooleanField(
-        verbose_name=_("colorize currency values?"), default=True
+        verbose_name="colorize currency values?", default=True
     )
 
     date_format = models.CharField(
-        verbose_name=_("date format"), max_length=100, blank=True
+        verbose_name="date format", max_length=100, blank=True
     )
 
     class Meta:
-        verbose_name = _("settings")
-        verbose_name_plural = _("settings")
+        verbose_name = "settings"
+        verbose_name_plural = "settings"
 
     def __str__(self):
         return f"Settings for {self.user}"
@@ -67,17 +67,15 @@ class Settings(models.Model):
             self.default_credit_account
             and self.user != self.default_credit_account.user
         ):
-            errors["default_credit_account"] = _("Account doesn't belong to same user.")
+            errors["default_credit_account"] = "Account doesn't belong to same user."
         if self.default_debit_account and self.user != self.default_debit_account.user:
-            errors["default_debit_account"] = _("Account doesn't belong to same user.")
+            errors["default_debit_account"] = "Account doesn't belong to same user."
 
         if (
             self.default_credit_category
             and self.user != self.default_credit_category.user
         ):
-            errors["default_debit_category"] = _(
-                "Category doesn't belong to same user."
-            )
+            errors["default_debit_category"] = "Category doesn't belong to same user."
 
         if errors:
             raise ValidationError(errors)

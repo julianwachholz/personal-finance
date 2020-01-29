@@ -15,18 +15,18 @@ class Tag(models.Model):
 
     name = CICharField(max_length=100)
 
-    color = models.CharField(verbose_name=_("color"), max_length=100, blank=True)
+    color = models.CharField(verbose_name="color", max_length=100, blank=True)
 
-    last_used = models.DateTimeField(verbose_name=_("last used"), blank=True, null=True)
+    last_used = models.DateTimeField(verbose_name="last used", blank=True, null=True)
     use_count = models.PositiveIntegerField(
-        verbose_name=_("use count"),
+        verbose_name="use count",
         default=0,
-        help_text=_("How often this tag was used. Does not decrease."),
+        help_text="How often this tag was used. Does not decrease.",
     )
 
     class Meta:
-        verbose_name = _("tag")
-        verbose_name_plural = _("tags")
+        verbose_name = "tag"
+        verbose_name_plural = "tags"
         unique_together = ("user", "name")
 
     def __str__(self):

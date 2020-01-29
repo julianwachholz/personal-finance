@@ -52,9 +52,11 @@ export const getAuthHeaders = (): Record<string, string> => {
 };
 
 export const authFetch = (input: RequestInfo, init: RequestInit = {}) => {
+  const language = localStorage.getItem("i18nextLng");
   init.headers = {
     ...getAuthHeaders(),
-    ...init.headers
+    ...init.headers,
+    "Accept-Language": language ?? "en"
   };
   return fetch(input, init);
 };

@@ -37,20 +37,18 @@ class AbstractTransaction(models.Model):
 
     tags = models.ManyToManyField(to="tags.Tag", blank=True)
 
-    amount = MoneyField(verbose_name=_("amount"), max_digits=10, decimal_places=2)
+    amount = MoneyField(verbose_name="amount", max_digits=10, decimal_places=2)
 
-    text = models.CharField(verbose_name=_("text"), max_length=500, blank=True)
+    text = models.CharField(verbose_name="text", max_length=500, blank=True)
 
-    reference = models.CharField(
-        verbose_name=_("reference"), max_length=500, blank=True
-    )
+    reference = models.CharField(verbose_name="reference", max_length=500, blank=True)
 
     related = models.ForeignKey(
         to="self",
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        help_text=_("Reverse transaction to a transfer."),
+        help_text="Reverse transaction to a transfer.",
     )
 
     class Meta:
@@ -84,13 +82,13 @@ class Transaction(AbstractTransaction):
 
     """
 
-    datetime = models.DateTimeField(verbose_name=_("date / time"), default=now)
+    datetime = models.DateTimeField(verbose_name="date / time", default=now)
 
-    is_initial = models.BooleanField(verbose_name=_("initial balance?"), default=False)
+    is_initial = models.BooleanField(verbose_name="initial balance?", default=False)
 
     class Meta:
-        verbose_name = _("transaction")
-        verbose_name_plural = _("transactions")
+        verbose_name = "transaction"
+        verbose_name_plural = "transactions"
         ordering = ("-datetime",)
 
     def __str__(self):
@@ -103,10 +101,10 @@ class PlannedTransaction(AbstractTransaction):
 
     """
 
-    start = models.DateTimeField(verbose_name=_("start date / time"))
-    end = models.DateTimeField(verbose_name=_("end date / time"), blank=True, null=True)
+    start = models.DateTimeField(verbose_name="start date / time")
+    end = models.DateTimeField(verbose_name="end date / time", blank=True, null=True)
 
-    is_repeating = models.BooleanField(verbose_name=_("is repeating?"), default=False)
+    is_repeating = models.BooleanField(verbose_name="is repeating?", default=False)
 
 
 class Rule(models.Model):
@@ -120,17 +118,17 @@ class Rule(models.Model):
     FREQUENCY_MONTHLY = "MONTHLY"
     FREQUENCY_YEARLY = "YEARLY"
     FREQUENCY_CHOICES = (
-        (FREQUENCY_DAILY, _("daily")),
-        (FREQUENCY_WEEKLY, _("weekly")),
-        (FREQUENCY_MONTHLY, _("monthly")),
-        (FREQUENCY_YEARLY, _("yearly")),
+        (FREQUENCY_DAILY, "daily"),
+        (FREQUENCY_WEEKLY, "weekly"),
+        (FREQUENCY_MONTHLY, "monthly"),
+        (FREQUENCY_YEARLY, "yearly"),
     )
 
     frequency = models.CharField(
-        verbose_name=_("frequency"), max_length=10, choices=FREQUENCY_CHOICES
+        verbose_name="frequency", max_length=10, choices=FREQUENCY_CHOICES
     )
-    interval = models.PositiveIntegerField(verbose_name=_("interval"), default=1)
+    interval = models.PositiveIntegerField(verbose_name="interval", default=1)
 
     class Meta:
-        verbose_name = _("rule")
-        verbose_name_plural = _("rules")
+        verbose_name = "rule"
+        verbose_name_plural = "rules"

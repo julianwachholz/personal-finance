@@ -22,10 +22,10 @@ class Budget(models.Model):
     PERIOD_QUARTER = "quarterly"
     PERIOD_YEAR = "yearly"
     PERIOD_CHOICES = (
-        (PERIOD_WEEK, _("weekly")),
-        (PERIOD_MONTH, _("monthly")),
-        (PERIOD_QUARTER, _("quarterly")),
-        (PERIOD_YEAR, _("yearly")),
+        (PERIOD_WEEK, "weekly"),
+        (PERIOD_MONTH, "monthly"),
+        (PERIOD_QUARTER, "quarterly"),
+        (PERIOD_YEAR, "yearly"),
     )
 
     name = CICharField(max_length=100)
@@ -35,22 +35,22 @@ class Budget(models.Model):
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     period = models.CharField(
-        verbose_name=_("time period"),
+        verbose_name="time period",
         max_length=100,
         choices=PERIOD_CHOICES,
         default=PERIOD_MONTH,
     )
 
     is_blacklist = models.BooleanField(
-        verbose_name=_("blacklist categories?"),
+        verbose_name="blacklist categories?",
         default=False,
-        help_text=_("Exclude selected categories instead of including them."),
+        help_text="Exclude selected categories instead of including them.",
     )
 
     categories = models.ManyToManyField(to="categories.Category", blank=True)
 
     target = MoneyField(
-        verbose_name=_("target amount"),
+        verbose_name="target amount",
         max_digits=10,
         decimal_places=2,
         validators=[
@@ -59,8 +59,8 @@ class Budget(models.Model):
     )
 
     class Meta:
-        verbose_name = _("budget")
-        verbose_name_plural = _("budgets")
+        verbose_name = "budget"
+        verbose_name_plural = "budgets"
         ordering = ("user", "pos", "name")
         unique_together = (("user", "name"),)
 

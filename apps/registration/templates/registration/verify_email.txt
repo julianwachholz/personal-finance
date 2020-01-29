@@ -1,11 +1,11 @@
-Hi {{ user.first_name|default:"there"}}!
+{% load i18n %}{% blocktrans with name=user.first_name|default:_("there") %}Hi {{ name }}!{% endblocktrans %}
 
-Your email address was used to create a new account on ShinyWaffle.
-To complete your signup on ShinyWaffle, follow this link:
+{% blocktrans %}Your email address was used to create a new account on ShinyWaffle.
+To complete your signup on ShinyWaffle, follow this link:{% endblocktrans %}
 
 {{ verify_link }}
 
-This link is valid for 2 hours.
+{% trans "This link is valid for 2 hours." %}
 
-If you did not request this, you can safely ignore this message.
-Reply to this email if you have any questions.
+{% trans "If you did not request this, you can safely ignore this message." %}
+{% trans "Reply to this email if you have any questions." %}

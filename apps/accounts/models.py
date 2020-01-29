@@ -11,10 +11,10 @@ class Account(models.Model):
 
     """
 
-    name = models.CharField(verbose_name=_("name"), max_length=100)
+    name = models.CharField(verbose_name="name", max_length=100)
 
     institution = models.CharField(
-        verbose_name=_("institution"), max_length=100, blank=True
+        verbose_name="institution", max_length=100, blank=True
     )
 
     user = models.ForeignKey(
@@ -22,20 +22,20 @@ class Account(models.Model):
     )
 
     balance = MoneyField(
-        verbose_name=_("balance"), max_digits=10, decimal_places=2, default=0
+        verbose_name="balance", max_digits=10, decimal_places=2, default=0
     )
 
     initial_date = models.DateTimeField(
-        verbose_name=_("starting balance date"), default=now
+        verbose_name="starting balance date", default=now
     )
 
-    icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
+    icon = models.CharField(verbose_name="icon", max_length=100, blank=True)
 
     pos = models.PositiveSmallIntegerField(default=0, db_index=True)
 
     class Meta:
-        verbose_name = _("account")
-        verbose_name_plural = _("accounts")
+        verbose_name = "account"
+        verbose_name_plural = "accounts"
         ordering = ("user", "pos", "name")
 
     def __str__(self):

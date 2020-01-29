@@ -1,4 +1,8 @@
+import json
+import os
+
 from django.db import models, transaction
+from django.utils.translation import get_language
 from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -9,16 +13,16 @@ class Category(MPTTModel):
 
     """
 
-    name = models.CharField(verbose_name=_("name"), max_length=100)
+    name = models.CharField(verbose_name="name", max_length=100)
 
     user = models.ForeignKey(
         to="auth.User", on_delete=models.CASCADE, related_name="categories"
     )
 
-    icon = models.CharField(verbose_name=_("icon"), max_length=100, blank=True)
+    icon = models.CharField(verbose_name="icon", max_length=100, blank=True)
 
     parent = TreeForeignKey(
-        verbose_name=_("parent"),
+        verbose_name="parent",
         to="self",
         on_delete=models.CASCADE,
         null=True,
@@ -26,11 +30,11 @@ class Category(MPTTModel):
         related_name="children",
     )
 
-    color = models.CharField(verbose_name=_("color"), max_length=100, blank=True)
+    color = models.CharField(verbose_name="color", max_length=100, blank=True)
 
     class Meta:
-        verbose_name = _("category")
-        verbose_name_plural = _("categories")
+        verbose_name = "category"
+        verbose_name_plural = "categories"
 
     class MPTTMeta:
         order_insertion_by = ["name"]
@@ -100,6 +104,7 @@ def _create_category_tree(user, categories, parent=None):
     for kwargs, *children in categories:
         category = Category(user=user, **kwargs)
         category.insert_at(parent, position="last-child", save=True)
+
         if category.name == "Income":
             user.settings.default_credit_category = category
             user.settings.save()

@@ -12,15 +12,12 @@ class Payee(models.Model):
 
     TYPE_BUSINESS = "business"
     TYPE_PRIVATE = "private"
-    TYPE_CHOICES = (("business", _("business")), ("private", _("person")))
+    TYPE_CHOICES = (("business", "business"), ("private", "person"))
 
-    name = CICharField(verbose_name=_("name"), max_length=100)
+    name = CICharField(verbose_name="name", max_length=100)
 
     type = models.CharField(
-        verbose_name=_("type"),
-        max_length=100,
-        choices=TYPE_CHOICES,
-        default=TYPE_BUSINESS,
+        verbose_name="type", max_length=100, choices=TYPE_CHOICES, default=TYPE_BUSINESS
     )
 
     default_category = models.ForeignKey(
@@ -32,8 +29,8 @@ class Payee(models.Model):
     )
 
     class Meta:
-        verbose_name = _("payee")
-        verbose_name_plural = _("payees")
+        verbose_name = "payee"
+        verbose_name_plural = "payees"
         unique_together = ("user", "name")
         ordering = ("name",)
 
@@ -43,5 +40,5 @@ class Payee(models.Model):
     def clean(self):
         if self.default_category.user != self.user:
             raise ValidationError(
-                {"default_category": _("Category does not belong to same user")}
+                {"default_category": "Category does not belong to same user"}
             )
