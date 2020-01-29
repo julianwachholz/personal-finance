@@ -14,6 +14,8 @@ class Settings(models.Model):
         to="auth.User", on_delete=models.CASCADE, related_name="settings"
     )
 
+    language = models.CharField(verbose_name="language", max_length=10, default="en")
+
     default_currency = CurrencyField()
 
     default_debit_account = models.ForeignKey(

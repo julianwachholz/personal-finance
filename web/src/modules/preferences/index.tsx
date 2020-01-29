@@ -172,13 +172,12 @@ const Preferences = () => {
         onValuesChange={debounce(onChange, 250)}
         wrapperCol={{ xs: 24, sm: 14 }}
       >
-        <Form.Item label={t("preferences:form.label.language")}>
-          <Select
-            defaultValue={i18n.language}
-            onChange={language => {
-              i18n.changeLanguage(language);
-            }}
-          >
+        <Form.Item
+          name="language"
+          label={t("preferences:form.label.language")}
+          {...feedbackFor("language")}
+        >
+          <Select defaultValue={i18n.language}>
             <Select.Option value="en">English</Select.Option>
             <Select.Option value="de">Deutsch</Select.Option>
           </Select>

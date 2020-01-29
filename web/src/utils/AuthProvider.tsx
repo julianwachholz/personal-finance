@@ -2,6 +2,7 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import * as Sentry from "@sentry/browser";
 import { Modal } from "antd";
 import React, { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { clearQueryCache, refetchQuery, useMutation } from "react-query";
 import { clearToken, setAuthToken } from "../dao/base";
 import { Settings } from "../dao/settings";
@@ -27,6 +28,7 @@ export const AuthContext = React.createContext<AuthContext>({} as any);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
+  const { i18n } = useTranslation(undefined, { useSuspense: false });
   const [isAuthenticated, setIsAuthenticated] = useState(
     isPossiblyAuthenticated()
   );
@@ -37,6 +39,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated) {
       if (user) {
+        i18n.changeLanguage(user.settings.language);
         Sentry.configureScope(scope => {
           scope.setUser({
             id: user.pk.toString(),

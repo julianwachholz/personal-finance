@@ -16,6 +16,7 @@ class SettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Settings
         fields = (
+            "language",
             "default_currency",
             "default_debit_account",
             "default_credit_account",
