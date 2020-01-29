@@ -22,10 +22,7 @@ class LoginSerializer(serializers.Serializer):
         )
         del attrs["password"]
 
-        if user:
-            if not user.is_active:
-                raise ValidationError(_("User is inactive."))
-        else:
+        if not user:
             raise ValidationError(_("Invalid credentials."))
 
         attrs["user"] = user
@@ -69,7 +66,7 @@ class UserSerializer(serializers.ModelSerializer):
             raise ValidationError({"password": "Please provide a new password"})
 
         if "password" in data or "old_password" in data:
-            if not user:
+            if not user or user.is_anonymous:
                 user = User(**data)
             else:
                 old_password = data.get("old_password")
