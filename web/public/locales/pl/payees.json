@@ -1,0 +1,24 @@
+{
+  "create": "Create Payee",
+  "created": "Payee created",
+  "create_error": "Payee create failed",
+  "delete": "Delete Payee \"{{ label }}\"?",
+  "delete_warning": "This will delete the payee and remove it from all associated transactions.",
+  "deleted": "Payee \"{{ label }}\" deleted",
+  "payee": "Payee",
+  "name": "Name",
+  "type": "Type",
+  "type_business": "Business",
+  "type_person": "Person",
+  "default_category": "Default Category",
+  "edit": "Edit {{ label }}",
+  "updated": "Payee updated",
+  "update_error": "Payee update failed",
+  "name_required": "Enter a name",
+  "update": "Update Payee",
+  "payee_plural": "Payees",
+  "bulk": {
+    "delete": "Delete selected tags",
+    "deleted": "Deleted {{ count }} payees"
+  }
+}

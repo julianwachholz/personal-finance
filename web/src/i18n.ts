@@ -3,7 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import XHR from "i18next-xhr-backend";
 import { initReactI18next } from "react-i18next";
 
-export const LANGUAGES = ["en", "de"];
+export const LANGUAGES = ["en", "de", "pl"];
 
 i18n
   .use(XHR)

@@ -1,0 +1,28 @@
+{
+  "date_format_preview": "",
+  "title": "",
+  "form": {
+    "label": {
+      "language": "",
+      "default_currency": "",
+      "default_debit_account": "",
+      "default_credit_account": "",
+      "default_credit_category": "",
+      "number_format": "",
+      "use_colors": "",
+      "date_format": "",
+      "table_layout": ""
+    },
+    "use_colors_examples": "",
+    "error": {
+      "date_format_no_YY_or_YYYY": "",
+      "date_format_no_D_or_DD": ""
+    },
+    "date_format_examples": "",
+    "table_layout": {
+      "large": "",
+      "medium": "",
+      "small": ""
+    }
+  }
+}

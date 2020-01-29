@@ -1,0 +1,28 @@
+{
+  "title": "",
+  "message": {
+    "profile_updated": ""
+  },
+  "form": {
+    "label": {
+      "username": "",
+      "email": "",
+      "name": "",
+      "old_password": "",
+      "new_password": ""
+    },
+    "error": {
+      "username_required": "",
+      "email_required": "",
+      "old_password_required": "",
+      "new_password_required": ""
+    },
+    "placeholder": {
+      "name_optional": ""
+    },
+    "submit": "",
+    "cancel_change_password": "",
+    "change_password": ""
+  },
+  "logout": ""
+}

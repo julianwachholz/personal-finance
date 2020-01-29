@@ -1,0 +1,66 @@
+{
+  "loading": "Ładowanie...",
+  "form": {
+    "select": {
+      "create_model": "Stwórz \"{{ search }}\""
+    },
+    "error": {
+      "field_required": "{{ field }} jest wymagane"
+    }
+  },
+  "menu": {
+    "transactions": "Tranzakcje",
+    "reports": "Statystyki",
+    "accounts": "Konta",
+    "budgets": "Budżet",
+    "settings": "Ustawienia",
+    "categories": "Kategorie",
+    "tags": "Tags",
+    "payees": "Odbiorcy",
+    "preferences": "Preferenzje",
+    "profile": "Profil",
+    "dashboard": "Strona Główna"
+  },
+  "breadcrumb": {
+    "object_create": "Stwórz",
+    "object_edit": "Edytuj",
+    "object_delete": "Usuń"
+  },
+  "language": "Język",
+  "cancel": "Anuluj",
+  "inline": {
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "create": "Stwórz {{ name }}",
+    "quick_creating": "Tworzenie \"{{ name }}\"..."
+  },
+  "bulk": {
+    "disable": "Wyłącz tryb grupowy",
+    "enable": "Tryb grupowy",
+    "select_action": "Wybierz",
+    "submit": "Idź"
+  },
+  "actions": "Działania",
+  "search": "Szukaj...",
+  "delete": "Usuń",
+  "dashboard": {
+    "title": "Strona Główna",
+    "todo": "To jest miejsce na Stronę Główną"
+  },
+  "error": {
+    "404": {
+      "title": "Error 404",
+      "message": "Nie znaleziono",
+      "description": "Szukaliśmy wszędzie, ale tej strony nie mogliśmy znaleźć :(",
+      "go_to_dashboard": "Idź do Strony Głównej"
+    },
+    "500": {
+      "title": "Ups...",
+      "message": "Coś poszło nie tak, przepraszamy.",
+      "description": "Doświadczamy pewnych trudności technicznych, prosimy spróbować ponownie później.",
+      "give_feedback": "Opisz nam co się stało",
+      "reload_page": "Odśwież stronę"
+    }
+  }
+}

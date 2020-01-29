@@ -83,7 +83,7 @@ export const postResetPassword = makeItemsAction<ResetPasswordProps>(
 
 export const postLogin = async (params: Record<string, string>) => {
   const url = `/api/auth/login/`;
-  const response = await fetch(url, {
+  const response = await authFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

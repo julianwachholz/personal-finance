@@ -28,6 +28,9 @@ export const GuestLayout: React.FC = ({ children }) => {
             <Menu.Item key="de" onClick={() => i18n.changeLanguage("de")}>
               Deutsch
             </Menu.Item>
+            <Menu.Item key="pl" onClick={() => i18n.changeLanguage("pl")}>
+              Polski
+            </Menu.Item>
           </Menu>
         }
       >

@@ -180,6 +180,7 @@ const Preferences = () => {
           <Select defaultValue={i18n.language}>
             <Select.Option value="en">English</Select.Option>
             <Select.Option value="de">Deutsch</Select.Option>
+            <Select.Option value="pl">Polski</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item

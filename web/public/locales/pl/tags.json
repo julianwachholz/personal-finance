@@ -1,0 +1,21 @@
+{
+  "create": "Create Tag",
+  "created": "Tag created",
+  "create_error": "Tag create failed",
+  "delete": "Delete Tag \"{{ label }}\"?",
+  "delete_warning": "This will delete the tag and remove it from all associated transactions.",
+  "deleted": "Tag \"{{ label }}\" deleted",
+  "tag": "Tag",
+  "name": "Name",
+  "color": "Color",
+  "edit": "Edit {{ label }}",
+  "updated": "Tag updated",
+  "update_error": "Tag update failed",
+  "name_required": "Enter a name",
+  "update": "Update Tag",
+  "tag_plural": "Tags",
+  "bulk": {
+    "delete": "Delete selected tags",
+    "deleted": "Deleted {{ count }} tags"
+  }
+}
