@@ -14,7 +14,8 @@ import { SettingsProvider } from "./utils/SettingsProvider";
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
-  environment: process.env.NODE_ENV
+  environment: process.env.NODE_ENV,
+  release: process.env.REACT_APP_RELEASE
 });
 
 const ProviderTree = createProviderTreeFromList(

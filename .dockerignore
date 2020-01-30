@@ -1,4 +1,5 @@
 .pytest_cache
 media
+static
 web/build
 web/node_modules

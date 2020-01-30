@@ -211,6 +211,7 @@ sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
     integrations=[DjangoIntegration()],
     environment="development" if DEBUG else "production",
+    release=env("RELEASE"),
     send_default_pii=True,
 )
 

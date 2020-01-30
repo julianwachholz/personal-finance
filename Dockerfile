@@ -2,7 +2,9 @@ FROM python:3.7.5-alpine
 
 WORKDIR /app
 
-ARG DJANGO_ENV=dev
+ARG DJANGO_ENV=production
+ARG SENTRY_ORG
+ARG SENTRY_AUTH_TOKEN
 
 ENV DJANGO_ENV=${DJANGO_ENV} \
     PYTHONFAULTHANDLER=1 \
@@ -16,7 +18,7 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
 RUN apk --no-cache add \
     bash \
     build-base \
-    # curl \
+    curl \
     # gcc \
     gettext \
     # git \
@@ -29,10 +31,16 @@ RUN apk --no-cache add \
     && pip install -U "pip<19.0" \
     && pip install poetry==$POETRY_VERSION
 
+RUN curl -sL https://sentry.io/get-cli/ | bash
+
 COPY poetry.lock pyproject.toml /app/
 RUN poetry config virtualenvs.create false \
     && poetry install $(test "$DJANGO_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
 
 COPY . /app
+
+RUN RELEASE=$(sentry-cli releases propose-version) \
+    && sentry-cli releases new -p shinywaffle "$RELEASE" \
+    && sentry-cli releases set-commits --auto "$RELEASE"
 
 CMD [ "/app/config/run.sh" ]

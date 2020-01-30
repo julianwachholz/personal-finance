@@ -1,0 +1,18 @@
+FROM node:12-alpine AS build
+
+WORKDIR /app
+
+RUN apk --no-cache add git
+
+ARG REACT_APP_SENTRY_DSN
+
+COPY web/package.json web/package-lock.json /app/web/
+RUN cd /app/web && npm install
+
+COPY . /app
+RUN export REACT_APP_RELEASE=$(git rev-parse HEAD) \
+    && cd /app/web \
+    && npm run build
+
+FROM socialengine/nginx-spa:latest
+COPY --from=build /app/web/build /app

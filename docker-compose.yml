@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        DJANGO_ENV: production
+        DJANGO_ENV: development
     volumes:
       - ./static:/app/static
     env_file: .env
@@ -23,8 +23,10 @@ services:
 
   web:
     build:
-      context: ./web
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./DockerfileWeb
+      args:
+        REACT_APP_SENTRY_DSN: $SENTRY_DSN
     ports:
       - 9166:80
     restart: "no"
