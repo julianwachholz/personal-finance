@@ -32,6 +32,7 @@
   "category_plural": "Categories",
   "expand_all": "Expand All",
   "collapse_all": "Collapse All",
+  "no_data": "No categories",
   "empty": "It looks like you haven't created any categories yet.",
   "default_created": "Default categories created",
   "default_create_error": "Could't create default categories",

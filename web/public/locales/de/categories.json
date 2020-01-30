@@ -32,6 +32,7 @@
   "category_plural": "Kategorien",
   "expand_all": "Alle ausklappen",
   "collapse_all": "Alle einklappen",
+  "no_data": "Keine Kategorien",
   "empty": "Du hast noch keine Kategorien erstellt.",
   "default_created": "Standardkategorien erstellt",
   "default_create_error": "Standardkategorien konnten nicht erstellt werden",

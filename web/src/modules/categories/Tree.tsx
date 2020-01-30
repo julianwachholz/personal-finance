@@ -1,5 +1,5 @@
 import { FolderOutlined } from "@ant-design/icons";
-import { Button, message, Spin, Tree } from "antd";
+import { Button, message, Result, Spin, Tree } from "antd";
 import { AntTreeNodeDropEvent, TreeNodeNormal } from "antd/lib/tree/Tree";
 import React, { useMemo, useState } from "react";
 import { MobileView } from "react-device-detect";
@@ -126,38 +126,42 @@ const CategoryTree = ({ history }: RouteComponentProps) => {
         }}
       />
       {!isLoading && !treeData?.length && (
-        <>
-          <p>
-            {t(
-              "categories:empty",
-              "It looks like you haven't created any categories yet."
-            )}
-          </p>
-          <Button
-            size="large"
-            type="primary"
-            loading={createDefaultLoading}
-            onClick={async () => {
-              setCreateDefaultLoading(true);
-              try {
-                await createDefault();
-                message.success(
-                  t("categories:default_created", "Default categories created")
-                );
-              } catch (e) {
-                message.error(
-                  t(
-                    "categories:default_create_error",
-                    "Could't create default categories"
-                  )
-                );
-              }
-              setCreateDefaultLoading(false);
-            }}
-          >
-            {t("categories:default_create", "Create Default Categories")}
-          </Button>
-        </>
+        <Result
+          title={t("categories:no_data", "No categories")}
+          subTitle={t(
+            "categories:empty",
+            "It looks like you haven't created any categories yet."
+          )}
+          extra={
+            <Button
+              size="large"
+              type="primary"
+              loading={createDefaultLoading}
+              onClick={async () => {
+                setCreateDefaultLoading(true);
+                try {
+                  await createDefault();
+                  message.success(
+                    t(
+                      "categories:default_created",
+                      "Default categories created"
+                    )
+                  );
+                } catch (e) {
+                  message.error(
+                    t(
+                      "categories:default_create_error",
+                      "Could't create default categories"
+                    )
+                  );
+                }
+                setCreateDefaultLoading(false);
+              }}
+            >
+              {t("categories:default_create", "Create Default Categories")}
+            </Button>
+          }
+        ></Result>
       )}
     </BaseModule>
   );
