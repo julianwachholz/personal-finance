@@ -8,7 +8,11 @@ const options = Object.entries(CURRENCY_FORMATS).map(([code, currency]) => ({
   key: code,
   value: code,
   label: (
-    <span data-search={currency.name.toLowerCase()}>
+    <span
+      data-search={
+        currency.code.toLowerCase() + " " + currency.name.toLowerCase()
+      }
+    >
       <span className="currency-code">{code}</span> {currency.name}
       <span className="currency-symbol">
         {currency.prefix}
