@@ -18,7 +18,7 @@
   "update": "Update Payee",
   "payee_plural": "Payees",
   "bulk": {
-    "delete": "Delete selected tags",
+    "delete": "Delete selected payees",
     "deleted": "Deleted {{ count }} payees"
   }
 }

@@ -1,28 +1,28 @@
 {
-  "title": "Profile",
+  "title": "Profil",
   "message": {
-    "profile_updated": "Profile updated"
+    "profile_updated": "Profil zaktualizowany"
   },
   "form": {
     "label": {
-      "username": "Username",
-      "email": "Email",
-      "name": "Name",
-      "old_password": "Current password",
-      "new_password": "New password"
+      "username": "Nazwa użytkowanika",
+      "email": "E-mail",
+      "name": "Imie",
+      "old_password": "Obecne hasło",
+      "new_password": "Nowe hasło"
     },
     "error": {
-      "username_required": "Enter a username",
-      "email_required": "Enter an email address",
-      "old_password_required": "Enter your old password",
-      "new_password_required": "Enter a new password"
+      "username_required": "Wpisz nazwę użytkowanika",
+      "email_required": "Wpisz adres e-mail",
+      "old_password_required": "Wpisz swoje stare hasło",
+      "new_password_required": "Wpisz nowe hasło"
     },
     "placeholder": {
-      "name_optional": "Optional: What should we call you?"
+      "name_optional": "Opcjonalnie: Jak mamy się do Ciebie zwracać?"
     },
-    "submit": "Save changes",
-    "cancel_change_password": "Cancel password change",
-    "change_password": "Change password"
+    "submit": "Zapisz zmiany",
+    "cancel_change_password": "Anuluj zmianę hasła",
+    "change_password": "Zmień hasło"
   },
-  "logout": "Logout"
+  "logout": "Wyloguj się"
 }

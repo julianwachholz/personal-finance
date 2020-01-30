@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { de, enUS } from "date-fns/locale";
+import { de, enUS, pl } from "date-fns/locale";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../utils/AuthProvider";
@@ -11,7 +11,8 @@ interface DateTimeProps {
 
 const locales: Record<string, Locale> = {
   en: enUS,
-  de
+  de,
+  pl
 };
 
 const DateTime = ({ value, format: fmt }: DateTimeProps) => {

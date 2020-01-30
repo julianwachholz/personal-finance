@@ -1,0 +1,77 @@
+[
+  [
+    { "name": "Jedzenie", "icon": "🍽️" },
+    [
+      [{ "name": "Lunch" }],
+      [{ "name": "Zakupy", "icon": "🛒" }],
+      [{ "name": "Fast Food", "icon": "🍔" }],
+      [{ "name": "Restauracje", "icon": "🍷" }],
+      [{ "name": "Przekąski / Inne", "icon": "🍫" }]
+    ]
+  ],
+  [
+    { "name": "Transport", "icon": "🚗" },
+    [
+      [
+        { "name": "Samochód", "icon": "🚗" },
+        [
+          [{ "name": "Paliwo", "icon": "⛽" }],
+          [{ "name": "Parking", "icon": "🅿️" }],
+          [{ "name": "Reparatury / Serwis", "icon": "🔧" }]
+        ]
+      ],
+      [{ "name": "Transport publiczny", "icon": "🚌" }],
+      [{ "name": "Taxi", "icon": "🚕" }]
+    ]
+  ],
+  [
+    { "name": "Dom", "icon": "🏠" },
+    [
+      [{ "name": "Czynsz / Hipoteka" }],
+      [{ "name": "Meble", "icon": "🛋" }],
+      [{ "name": "Dekoracje", "icon": "🏡" }]
+    ]
+  ],
+  [
+    { "name": "Rachunki & Usługi komunalne", "icon": "🔌" },
+    [
+      [{ "name": "Prąd" }],
+      [{ "name": "Telefon & Internet", "icon": "📱" }],
+      [{ "name": "Telewizja & Radio", "icon": "📺" }],
+      [{ "name": "Woda & Ogrzewanie", "icon": "🚰" }]
+    ]
+  ],
+  [
+    { "name": "Osobiste", "icon": "💆" },
+    [
+      [
+        { "name": "Wyjście na miasto", "icon": "🍻" },
+        [
+          [{ "name": "Kręgle", "icon": "🎳" }],
+          [{ "name": "Drinki", "icon": "🍹" }]
+        ]
+      ],
+      [{ "name": "Rozrywka", "icon": "📽️" }],
+      [{ "name": "Shopping", "icon": "🛍️" }],
+      [{ "name": "Wakacje", "icon": "⛱️" }]
+    ]
+  ],
+  [
+    { "name": "Zdrowie", "icon": "🏥" },
+    [
+      [{ "name": "Ubezpieczenie zdrowotne" }],
+      [{ "name": "Lekarstwa", "icon": "💊" }],
+      [{ "name": "Dentysta", "icon": "🦷" }],
+      [{ "name": "Okulista", "icon": "👓" }]
+    ]
+  ],
+  [
+    { "name": "Zwierzątko domowe", "icon": "🐕" },
+    [[{ "name": "Karma" }], [{ "name": "Weterynarz" }]]
+  ],
+  [
+    { "name": "Podatki & Opłaty", "icon": "🧾" },
+    [[{ "name": "Opłata za kartę kredytową", "icon": "💳" }]]
+  ],
+  [{ "name": "Przychód", "icon": "💰" }, [[{ "name": "Wynagrodzenie" }]]]
+]

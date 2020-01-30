@@ -1,28 +1,28 @@
 {
-  "date_format_preview": "Preview:",
-  "title": "Preferences",
+  "date_format_preview": "Podgląd:",
+  "title": "Preferencje",
   "form": {
     "label": {
-      "language": "Language",
-      "default_currency": "Default currency",
-      "default_debit_account": "Default debit account",
-      "default_credit_account": "Default credit account",
-      "default_credit_category": "Default credit category",
-      "number_format": "Number format",
-      "use_colors": "Use colors?",
-      "date_format": "Date format",
-      "table_layout": "Table layout"
+      "language": "Język",
+      "default_currency": "Domyślna waluta",
+      "default_debit_account": "Domyślne konto debetowe",
+      "default_credit_account": "Domyślne konto dochodowe",
+      "default_credit_category": "Domyślna kategoria dochodowa",
+      "number_format": "Format numeryczny",
+      "use_colors": "Użyć kolorów?",
+      "date_format": "Format dany",
+      "table_layout": "Rozmiar tabeli"
     },
-    "use_colors_examples": "Examples:",
+    "use_colors_examples": "Przykłady:",
     "error": {
-      "date_format_no_YY_or_YYYY": "YY and YYYY represent the local week-numbering year. Please use yy and yyyy instead.",
-      "date_format_no_D_or_DD": "D and DD represent the day of a year (1, 2, ..., 365, 366). Please use d and dd for days of a month."
+      "date_format_no_YY_or_YYYY": "Proszę użyć yyy i yyyy zamiast YY i YYYY.",
+      "date_format_no_D_or_DD": "D i DD oznaczają dzień roku (1, 2, ..., 365, 366). Proszę używać d i dd dla dni miesiąca."
     },
-    "date_format_examples": "Example formats:",
+    "date_format_examples": "Przykładowe formaty:",
     "table_layout": {
-      "large": "Large",
-      "medium": "Medium",
-      "small": "Small"
+      "large": "Duży",
+      "medium": "Średni",
+      "small": "Mały"
     }
   }
 }

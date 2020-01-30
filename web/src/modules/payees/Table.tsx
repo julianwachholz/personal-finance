@@ -152,7 +152,7 @@ const PayeeTable = ({
       bulkActions={[
         {
           key: "delete",
-          name: t("payees:bulk.delete", "Delete selected tags"),
+          name: t("payees:bulk.delete", "Delete selected payees"),
           async action(pks) {
             const { deleted } = await bulkDelete({ pks });
             message.info(
