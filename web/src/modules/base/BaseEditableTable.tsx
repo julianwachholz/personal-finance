@@ -241,7 +241,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
       const newData = { ...data };
       newData.results[i] = savedItem;
       await setQueryData(
-        [`items/${itemNamePlural.toLowerCase()}`, useItemOptions],
+        [`items/${useItems.basename}`, useItemOptions],
         newData
       );
       cancelEdit();
