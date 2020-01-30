@@ -189,17 +189,17 @@ const BaseEditableTable = <T extends ModelWithLabel>({
                 htmlType="submit"
                 loading={editLoading}
               >
-                {t("inline.save")}
+                {t("inline.save", "Save")}
               </Button>
               <Button type="link" onClick={() => cancelEdit()}>
-                {t("inline.cancel")}
+                {t("inline.cancel", "Cancel")}
               </Button>
             </>
           ) : (
             <>
               {canEditRecord && (
                 <Button type="link" onClick={() => editItem(item)}>
-                  {t("inline.edit")}
+                  {t("inline.edit", "Edit")}
                 </Button>
               )}
               {extraRowActions &&
@@ -299,7 +299,9 @@ const BaseEditableTable = <T extends ModelWithLabel>({
           setBulkMode(!bulkMode);
         }}
       >
-        {bulkMode ? t("bulk.disable") : t("bulk.enable")}
+        {bulkMode
+          ? t("bulk.disable", "Disable bulk mode")
+          : t("bulk.enable", "Bulk mode")}
       </Button>,
       ...(bulkMode ? [] : actions)
     ];
@@ -342,7 +344,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             editItem({ pk: 0 } as any);
           }}
         >
-          {t("inline.create", { name: itemName })}
+          {t("inline.create", "Create {{ name }}", { name: itemName })}
         </Button>
       ];
     }
@@ -355,7 +357,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
         extra={[
           extraActionMenu ? (
             <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon={<DownOutlined />}>{t("actions")}</Button>
+              <Button icon={<DownOutlined />}>{t("actions", "Actions")}</Button>
             </Dropdown>
           ) : null,
           ...actions
@@ -367,7 +369,7 @@ const BaseEditableTable = <T extends ModelWithLabel>({
             <>
               <Select
                 size={tableSize}
-                placeholder={t("bulk.select_action")}
+                placeholder={t("bulk.select_action", "Select bulk action...")}
                 style={{ width: 200 }}
                 value={bulkAction}
                 onChange={(v: string) => setBulkAction(v)}
@@ -391,14 +393,14 @@ const BaseEditableTable = <T extends ModelWithLabel>({
                   setSelectedKeys([]);
                 }}
               >
-                {t("bulk.submit")}
+                {t("bulk.submit", "Go")}
               </Button>
               {selectedKeys.length} of {total} selected
             </>
           ) : showSearch ? (
             <Input
               className="ant-input-search ant-input-search-enter-button ant-input-search-small"
-              placeholder={t("search")}
+              placeholder={t("search", "Search...")}
               size={tableSize}
               value={location.state?.search}
               onChange={e => {

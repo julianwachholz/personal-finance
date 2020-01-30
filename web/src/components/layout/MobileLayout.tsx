@@ -24,7 +24,7 @@ const MobileLayout: React.FC = ({ children }) => {
       <Content className="content-container">{children}</Content>
       <TabBar>
         <TabBar.Item
-          title={t("menu.transactions")}
+          title={t("menu.transactions", "Transactions")}
           icon={<HistoryOutlined />}
           selectedIcon={<HistoryOutlined />}
           selected={pathname.startsWith(`/transactions`)}
@@ -33,7 +33,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title={t("menu.accounts")}
+          title={t("menu.accounts", "Accounts")}
           icon={<BankOutlined />}
           selectedIcon={<BankOutlined />}
           selected={pathname.startsWith(`/accounts`)}
@@ -42,7 +42,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title={t("menu.dashboard")}
+          title={t("menu.dashboard", "Dashboard")}
           icon={<PieChartOutlined />}
           selectedIcon={<PieChartOutlined />}
           selected={pathname === `/`}
@@ -51,7 +51,7 @@ const MobileLayout: React.FC = ({ children }) => {
           }}
         />
         <TabBar.Item
-          title={t("menu.budgets")}
+          title={t("menu.budgets", "Budgets")}
           icon={<ProjectOutlined rotate={180} />}
           selectedIcon={<ProjectOutlined rotate={180} />}
           selected={pathname.startsWith(`/budgets`)}

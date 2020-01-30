@@ -20,10 +20,10 @@ const Profile = ({ history }: RouteComponentProps) => {
   const [form] = Form.useForm();
   const [updateUser] = useMutation(putUser);
 
-  useTitle(t("profile:title"));
+  useTitle(t("profile:title", "Profile"));
   return (
     <BaseModule
-      title={t("profile:title")}
+      title={t("profile:title", "Profile")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -35,7 +35,9 @@ const Profile = ({ history }: RouteComponentProps) => {
           setLoading(true);
           try {
             await updateUser(values as User, { updateQuery: "user" });
-            message.success(t("profile:message.profile_updated"));
+            message.success(
+              t("profile:message.profile_updated", "Profile updated")
+            );
             setChangePassword(false);
             form.resetFields();
           } catch (error) {
@@ -49,11 +51,14 @@ const Profile = ({ history }: RouteComponentProps) => {
       >
         <Form.Item
           name="username"
-          label={t("profile:form.label.username")}
+          label={t("profile:form.label.username", "Username")}
           rules={[
             {
               required: true,
-              message: t("profile:form.error.username_required")
+              message: t(
+                "profile:form.error.username_required",
+                "Enter a username"
+              )
             }
           ]}
         >
@@ -61,30 +66,44 @@ const Profile = ({ history }: RouteComponentProps) => {
         </Form.Item>
         <Form.Item
           name="email"
-          label={t("profile:form.label.email")}
+          label={t("profile:form.label.email", "Email")}
           rules={[
             {
               required: true,
               type: "email",
-              message: t("profile:form.error.email_required")
+              message: t(
+                "profile:form.error.email_required",
+                "Enter an email address"
+              )
             }
           ]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="first_name" label={t("profile:form.label.name")}>
-          <Input placeholder={t("profile:form.placeholder.name_optional")} />
+        <Form.Item
+          name="first_name"
+          label={t("profile:form.label.name", "Name")}
+        >
+          <Input
+            placeholder={t(
+              "profile:form.placeholder.name_optional",
+              "Optional: What should we call you?"
+            )}
+          />
         </Form.Item>
         {changePassword
           ? [
               <Form.Item
                 key="old_password"
                 name="old_password"
-                label={t("profile:form.label.old_password")}
+                label={t("profile:form.label.old_password", "Current password")}
                 rules={[
                   {
                     required: true,
-                    message: t("profile:form.error.old_password_required")
+                    message: t(
+                      "profile:form.error.old_password_required",
+                      "Enter your old password"
+                    )
                   }
                 ]}
               >
@@ -93,11 +112,14 @@ const Profile = ({ history }: RouteComponentProps) => {
               <Form.Item
                 key="password"
                 name="password"
-                label={t("profile:form.label.new_password")}
+                label={t("profile:form.label.new_password", "New password")}
                 rules={[
                   {
                     required: true,
-                    message: t("profile:form.error.new_password_required")
+                    message: t(
+                      "profile:form.error.new_password_required",
+                      "Enter a new password"
+                    )
                   }
                 ]}
               >
@@ -107,7 +129,7 @@ const Profile = ({ history }: RouteComponentProps) => {
           : null}
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
-            {t("profile:form.submit")}
+            {t("profile:form.submit", "Save changes")}
           </Button>
           <Button
             onClick={() => {
@@ -116,8 +138,11 @@ const Profile = ({ history }: RouteComponentProps) => {
             }}
           >
             {changePassword
-              ? t("profile:form.cancel_change_password")
-              : t("profile:form.change_password")}
+              ? t(
+                  "profile:form.cancel_change_password",
+                  "Cancel password change"
+                )
+              : t("profile:form.change_password", "Change password")}
           </Button>
         </Form.Item>
       </Form>
@@ -131,8 +156,8 @@ const Profile = ({ history }: RouteComponentProps) => {
         loading={logoutLoading}
         size={isMobile ? "large" : "middle"}
       >
-        <LogoutOutlined />
-        {t("profile:logout")}
+        {logoutLoading ? <span /> : <LogoutOutlined />}
+        {t("profile:logout", "Logout")}
       </Button>
     </BaseModule>
   );

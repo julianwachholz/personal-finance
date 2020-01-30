@@ -1,28 +1,28 @@
 {
-  "date_format_preview": "",
-  "title": "",
+  "date_format_preview": "Preview:",
+  "title": "Preferences",
   "form": {
     "label": {
-      "language": "",
-      "default_currency": "",
-      "default_debit_account": "",
-      "default_credit_account": "",
-      "default_credit_category": "",
-      "number_format": "",
-      "use_colors": "",
-      "date_format": "",
-      "table_layout": ""
+      "language": "Language",
+      "default_currency": "Default currency",
+      "default_debit_account": "Default debit account",
+      "default_credit_account": "Default credit account",
+      "default_credit_category": "Default credit category",
+      "number_format": "Number format",
+      "use_colors": "Use colors?",
+      "date_format": "Date format",
+      "table_layout": "Table layout"
     },
-    "use_colors_examples": "",
+    "use_colors_examples": "Examples:",
     "error": {
-      "date_format_no_YY_or_YYYY": "",
-      "date_format_no_D_or_DD": ""
+      "date_format_no_YY_or_YYYY": "YY and YYYY represent the local week-numbering year. Please use yy and yyyy instead.",
+      "date_format_no_D_or_DD": "D and DD represent the day of a year (1, 2, ..., 365, 366). Please use d and dd for days of a month."
     },
-    "date_format_examples": "",
+    "date_format_examples": "Example formats:",
     "table_layout": {
-      "large": "",
-      "medium": "",
-      "small": ""
+      "large": "Large",
+      "medium": "Medium",
+      "small": "Small"
     }
   }
 }

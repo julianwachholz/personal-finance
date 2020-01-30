@@ -87,7 +87,7 @@ const BaseList = <T extends ModelWithLabel>({
         <List
           renderFooter={() =>
             isLoading || isFetchingMore ? (
-              <ActivityIndicator text={t("loading")} />
+              <ActivityIndicator text={t("loading", "Loading...")} />
             ) : (
               <WhiteSpace style={{ height: 22 }} />
             )

@@ -50,9 +50,13 @@ export const EditableCell: React.FC<any> = <T extends Model>({
             rules ?? [
               {
                 required: true,
-                message: t("form.error.field_required", {
-                  field: title
-                })
+                message: t(
+                  "form.error.field_required",
+                  "{{ name }} is required",
+                  {
+                    field: title
+                  }
+                )
               }
             ]
           }

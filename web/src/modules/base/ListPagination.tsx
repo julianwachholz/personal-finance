@@ -1,5 +1,6 @@
 import { Pagination } from "antd";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { useSettings } from "../../utils/SettingsProvider";
 
 interface ListPaginationProps {
@@ -22,6 +23,7 @@ const ListPagination = ({
   onChange,
   onShowSizeChange
 }: ListPaginationProps) => {
+  const [t] = useTranslation();
   const { tableSize } = useSettings();
   if (!itemNamePlural) {
     itemNamePlural = `${itemName}s`;
@@ -40,7 +42,11 @@ const ListPagination = ({
       showTotal={(total, range) =>
         total === 1
           ? `1 ${itemName}`
-          : `${range[0]}-${range[1]} of ${total} ${itemNamePlural}`
+          : `${range[0]}-${range[1]} ${t(
+              "pagination_total",
+              "of {{ count }} {{ name }}",
+              { count: total, name: itemNamePlural }
+            )}`
       }
     />
   );

@@ -50,7 +50,7 @@ const App = () => {
           delay={100}
           size="large"
           indicator={<LoadingOutlined />}
-          tip={ready ? t("loading") : "Loading..."}
+          tip={ready ? t("loading", "Loading...") : "Loading..."}
         />
       </div>
     );
@@ -63,12 +63,12 @@ const App = () => {
           delay={100}
           size="large"
           indicator={<LoadingOutlined />}
-          tip={ready ? t("loading") : "Loading..."}
+          tip={ready ? t("loading", "Loading...") : "Loading..."}
         />
       </div>
     </BaseModule>
   ) : (
-    <Spin delay={100} tip={ready ? t("loading") : "Loading..."} />
+    <Spin delay={100} tip={ready ? t("loading", "Loading...") : "Loading..."} />
   );
 
   return isAuthenticated ? (

@@ -43,6 +43,7 @@
   },
   "actions": "Actions",
   "search": "Search...",
+  "pagination_total": "of {{ count }} {{ name }}",
   "delete": "Delete",
   "dashboard": {
     "title": "Dashboard",
@@ -62,6 +63,5 @@
       "give_feedback": "Give feedback",
       "reload_page": "Reload page"
     }
-  },
-  "edit": "Edit"
+  }
 }

@@ -43,6 +43,7 @@
   },
   "actions": "Działania",
   "search": "Szukaj...",
+  "pagination_total": "of {{ count }} {{ name }}",
   "delete": "Usuń",
   "dashboard": {
     "title": "Strona Główna",

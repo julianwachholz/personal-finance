@@ -66,7 +66,7 @@ const InputFormat = ({ value, ...props }: InputProps) => {
   return (
     <Input
       addonAfter={
-        t("preferences:date_format_preview") +
+        t("preferences:date_format_preview", "Preview:") +
         " " +
         (value
           ? format(now, value as string, {
@@ -110,7 +110,7 @@ const Preferences = () => {
   const [savingKeys, setSavingKeys] = useState<string[]>([]);
   const [savedKeys, setSavedKeys] = useState<string[]>([]);
 
-  useTitle(t("preferences:title"));
+  useTitle(t("preferences:title", "Preferences"));
 
   if (!settings) {
     return <></>;
@@ -157,7 +157,7 @@ const Preferences = () => {
 
   return (
     <BaseModule
-      title={t("preferences:title")}
+      title={t("preferences:title", "Preferences")}
       onLeftClick={() => {
         history.go(-1);
       }}
@@ -174,7 +174,7 @@ const Preferences = () => {
       >
         <Form.Item
           name="language"
-          label={t("preferences:form.label.language")}
+          label={t("preferences:form.label.language", "Language")}
           {...feedbackFor("language")}
         >
           <Select defaultValue={i18n.language}>
@@ -185,35 +185,47 @@ const Preferences = () => {
         </Form.Item>
         <Form.Item
           name="default_currency"
-          label={t("preferences:form.label.default_currency")}
+          label={t(
+            "preferences:form.label.default_currency",
+            "Default currency"
+          )}
           {...feedbackFor("default_currency")}
         >
           <CurrencySelect />
         </Form.Item>
         <Form.Item
           name="default_debit_account"
-          label={t("preferences:form.label.default_debit_account")}
+          label={t(
+            "preferences:form.label.default_debit_account",
+            "Default debit account"
+          )}
           {...feedbackFor("default_debit_account")}
         >
           <ModelSelect useItems={useAccounts} />
         </Form.Item>
         <Form.Item
           name="default_credit_account"
-          label={t("preferences:form.label.default_credit_account")}
+          label={t(
+            "preferences:form.label.default_credit_account",
+            "Default credit account"
+          )}
           {...feedbackFor("default_credit_account")}
         >
           <ModelSelect useItems={useAccounts} />
         </Form.Item>
         <Form.Item
           name="default_credit_category"
-          label={t("preferences:form.label.default_credit_category")}
+          label={t(
+            "preferences:form.label.default_credit_category",
+            "Default credit category"
+          )}
           {...feedbackFor("default_credit_category")}
         >
           <CategorySelect size="middle" />
         </Form.Item>
         <Form.Item
           name="number_format"
-          label={t("preferences:form.label.number_format")}
+          label={t("preferences:form.label.number_format", "Number format")}
           {...feedbackFor("number_format")}
         >
           <Radio.Group>
@@ -225,7 +237,7 @@ const Preferences = () => {
           </Radio.Group>
         </Form.Item>
         <Form.Item
-          label={t("preferences:form.label.use_colors")}
+          label={t("preferences:form.label.use_colors", "Use colors?")}
           htmlFor="use_colors"
           {...feedbackFor("use_colors")}
         >
@@ -236,7 +248,7 @@ const Preferences = () => {
               </Form.Item>
             </Col>
             <Col span={20}>
-              {t("preferences:form.use_colors_examples")}{" "}
+              {t("preferences:form.use_colors_examples", "Examples:")}{" "}
               <Money
                 value={{
                   amount: "4321.00",
@@ -250,7 +262,7 @@ const Preferences = () => {
         </Form.Item>
         <Form.Item
           name="date_format"
-          label={t("preferences:form.label.date_format")}
+          label={t("preferences:form.label.date_format", "Date format")}
           style={{ marginBottom: 6 }}
           {...feedbackFor("date_format")}
           rules={[
@@ -258,12 +270,18 @@ const Preferences = () => {
               validator(rule, value: string) {
                 if (value.includes("YY")) {
                   return Promise.reject(
-                    t("preferences:form.error.date_format_no_YY_or_YYYY")
+                    t(
+                      "preferences:form.error.date_format_no_YY_or_YYYY",
+                      "YY and YYYY represent the local week-numbering year. Please use yy and yyyy instead."
+                    )
                   );
                 }
                 if (value.includes("D")) {
                   return Promise.reject(
-                    t("preferences:form.error.date_format_no_D_or_DD")
+                    t(
+                      "preferences:form.error.date_format_no_D_or_DD",
+                      "D and DD represent the day of a year (1, 2, ..., 365, 366). Please use d and dd for days of a month."
+                    )
                   );
                 }
                 return Promise.resolve();
@@ -273,7 +291,9 @@ const Preferences = () => {
         >
           <InputFormat />
         </Form.Item>
-        <Form.Item label={t("preferences:form.date_format_examples")}>
+        <Form.Item
+          label={t("preferences:form.date_format_examples", "Example formats:")}
+        >
           {dateFormats.map(date_format => (
             <Button
               key={date_format}
@@ -291,20 +311,22 @@ const Preferences = () => {
           {/* <Form.Item label="Dark Mode">
             <Switch checked={theme === "dark"} onChange={toggleTheme} />
           </Form.Item> */}
-          <Form.Item label={t("preferences:form.label.table_layout")}>
+          <Form.Item
+            label={t("preferences:form.label.table_layout", "Table layout")}
+          >
             <Radio.Group
               defaultValue={tableSize}
               buttonStyle="solid"
               onChange={e => setTableSize(e.target.value)}
             >
               <Radio.Button value="large">
-                {t("preferences:form.table_layout.large")}
+                {t("preferences:form.table_layout.large", "Large")}
               </Radio.Button>
               <Radio.Button value="middle">
-                {t("preferences:form.table_layout.medium")}
+                {t("preferences:form.table_layout.medium", "Medium")}
               </Radio.Button>
               <Radio.Button value="small">
-                {t("preferences:form.table_layout.small")}
+                {t("preferences:form.table_layout.small", "Small")}
               </Radio.Button>
             </Radio.Group>
           </Form.Item>

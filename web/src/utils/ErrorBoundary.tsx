@@ -36,10 +36,18 @@ class ErrorBoundary extends Component<{}, ErrorBoundaryState> {
           {t => (
             <Result
               status="500"
-              title={t("error.500.title")}
-              subTitle={t("error.500.message")}
+              title={t("error.500.title", "Oops...")}
+              subTitle={t(
+                "error.500.message",
+                "We're sorry, something's gone wrong."
+              )}
               extra={[
-                <p key="0">{t("error.500.description")}</p>,
+                <p key="0">
+                  {t(
+                    "error.500.description",
+                    "We are experiencing some technical difficulties, please try again later."
+                  )}
+                </p>,
                 <Button
                   key="1"
                   onClick={() =>
@@ -52,7 +60,7 @@ class ErrorBoundary extends Component<{}, ErrorBoundaryState> {
                     })
                   }
                 >
-                  {t("error.500.give_feedback")}
+                  {t("error.500.give_feedback", "Give feedback")}
                 </Button>,
                 <Button
                   key="2"
@@ -60,7 +68,7 @@ class ErrorBoundary extends Component<{}, ErrorBoundaryState> {
                     window.location.reload();
                   }}
                 >
-                  {t("error.500.reload_page")}
+                  {t("error.500.reload_page", "Reload page")}
                 </Button>
               ]}
             />

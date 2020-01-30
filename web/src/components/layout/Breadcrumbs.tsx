@@ -56,19 +56,19 @@ const Crumb = ({ url, path, isLast }: CrumbProps) => {
 
   const fixedCrumbs: any = useMemo(
     () => ({
-      transactions: t("menu.transactions"),
-      reports: t("menu.reports"),
-      accounts: t("menu.accounts"),
-      budgets: t("menu.budgets"),
-      settings: t("menu.settings"),
-      categories: t("menu.categories"),
-      tags: t("menu.tags"),
-      payees: t("menu.payees"),
-      preferences: t("menu.preferences"),
-      profile: t("menu.profile"),
-      object_create: t("breadcrumb.object_create"),
-      object_edit: t("breadcrumb.object_edit"),
-      object_delete: t("breadcrumb.object_delete")
+      transactions: t("menu.transactions", "Transactions"),
+      reports: t("menu.reports", "Reports"),
+      accounts: t("menu.accounts", "Accounts"),
+      budgets: t("menu.budgets", "Budgets"),
+      settings: t("menu.settings", "Settings"),
+      categories: t("menu.categories", "Categories"),
+      tags: t("menu.tags", "Tags"),
+      payees: t("menu.payees", "Payees"),
+      preferences: t("menu.preferences", "Preferences"),
+      profile: t("menu.profile", "Profile"),
+      object_create: t("breadcrumb.object_create", "Create"),
+      object_edit: t("breadcrumb.object_edit", "Edit"),
+      object_delete: t("breadcrumb.object_delete", "Delete")
     }),
     // eslint-disable-next-line
     [i18n.language]

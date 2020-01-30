@@ -15,7 +15,7 @@ const Dashboard = () => {
   useTitle();
   return (
     <BaseModule
-      title={t("dashboard.title")}
+      title={t("dashboard.title", "Dashboard")}
       rightContent={
         <SettingOutlined
           onClick={() => {
@@ -24,7 +24,7 @@ const Dashboard = () => {
         />
       }
     >
-      <P>{t("dashboard.todo")}</P>
+      <P>{t("dashboard.todo", "Placeholder")}</P>
     </BaseModule>
   );
 };

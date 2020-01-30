@@ -10,16 +10,22 @@ const NotFound = ({ location }: RouteComponentProps) => {
 
   useTitle(t("error.404.title"));
   return (
-    <BaseModule title={t("error.404.title")}>
+    <BaseModule title={t("error.404.title", "Error 404")}>
       <Result
         status="404"
-        title={t("error.404.message")}
-        subTitle={t("error.404.description", {
-          pathname: location.pathname
-        })}
+        title={t("error.404.message", "Not found")}
+        subTitle={t(
+          "error.404.description",
+          'We looked everywhere but couldn\'t find a page for "{{ pathname }}".',
+          {
+            pathname: location.pathname
+          }
+        )}
         extra={
           <Link to="/">
-            <Button type="primary">{t("error.404.go_to_dashboard")}</Button>
+            <Button type="primary">
+              {t("error.404.go_to_dashboard", "Go to Dashboard")}
+            </Button>
           </Link>
         }
       />

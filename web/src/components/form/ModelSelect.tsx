@@ -52,7 +52,9 @@ const ModelSelect = <T extends ModelWithLabel>({
       labelInValue
       optionFilterProp="children"
       loading={isCreating || debouncedLoading}
-      notFoundContent={debouncedLoading ? t("loading") : undefined}
+      notFoundContent={
+        debouncedLoading ? t("loading", "Loading...") : undefined
+      }
       dropdownStyle={{ minWidth: 300 }}
       value={value}
       onSearch={setSearch}

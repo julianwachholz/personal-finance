@@ -64,57 +64,57 @@ const MainMenu = () => {
     {
       path: "/",
       icon: <PieChartOutlined />,
-      text: t("menu.dashboard")
+      text: t("menu.dashboard", "Dashboard")
     },
     {
       path: "/transactions",
       icon: <HistoryOutlined />,
-      text: t("menu.transactions")
+      text: t("menu.transactions", "Transactions")
     },
     {
       path: "/budgets",
       icon: <ProjectOutlined rotate={180} />,
-      text: t("menu.budgets")
+      text: t("menu.budgets", "Budgets")
     },
     {
       path: "/accounts",
       icon: <BankOutlined />,
-      text: t("menu.accounts")
+      text: t("menu.accounts", "Accounts")
     },
     {
       path: "/reports",
       icon: <LineChartOutlined />,
-      text: t("menu.reports")
+      text: t("menu.reports", "Reports")
     },
     {
       path: "/settings",
       icon: <SettingOutlined />,
-      text: t("menu.settings"),
+      text: t("menu.settings", "Settings"),
       items: [
         {
           path: "/settings/categories",
           icon: <FolderOutlined />,
-          text: t("menu.categories")
+          text: t("menu.categories", "Categories")
         },
         {
           path: "/settings/tags",
           icon: <TagsOutlined />,
-          text: t("menu.tags")
+          text: t("menu.tags", "Tags")
         },
         {
           path: "/settings/payees",
           icon: <ShopOutlined />,
-          text: t("menu.payees")
+          text: t("menu.payees", "Payees")
         },
         {
           path: "/settings/preferences",
           icon: <ToolOutlined />,
-          text: t("menu.preferences")
+          text: t("menu.preferences", "Preferences")
         },
         {
           path: "/settings/user",
           icon: <UserOutlined />,
-          text: t("menu.profile")
+          text: t("menu.profile", "Profile")
         }
       ]
     }

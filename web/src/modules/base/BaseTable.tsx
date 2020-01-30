@@ -218,7 +218,7 @@ const BaseTable = <T extends ModelWithLabel>({
         extra={[
           extraActionMenu ? (
             <Dropdown key="more" overlay={extraActionMenu}>
-              <Button icon={<DownOutlined />}>{t("actions")}</Button>
+              <Button icon={<DownOutlined />}>{t("actions", "Actions")}</Button>
             </Dropdown>
           ) : null,
           ...actions
@@ -227,7 +227,7 @@ const BaseTable = <T extends ModelWithLabel>({
       {showSearch ? (
         <Input
           className="ant-input-search ant-input-search-enter-button ant-input-search-small"
-          placeholder={t("search")}
+          placeholder={t("search", "Search...")}
           size={tableSize}
           value={location.state?.search}
           onChange={debounce((e: any) => {

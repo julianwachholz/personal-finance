@@ -43,6 +43,7 @@
   },
   "actions": "Aktionen",
   "search": "Suchen...",
+  "pagination_total": "von {{ count }} {{ name }}",
   "delete": "Löschen",
   "dashboard": {
     "title": "Dashboard",
