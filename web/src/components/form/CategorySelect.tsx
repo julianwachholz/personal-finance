@@ -40,9 +40,8 @@ const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
       filterTreeNode={(search, node: any) =>
         node.props.searchIndex.includes(search.toLowerCase())
       }
-      // TODO: suffixIcon={isLoading ? <LoadingOutlined /> : undefined}
       treeDefaultExpandedKeys={defaultExpandedKeys}
-      disabled={isLoading}
+      disabled={isLoading || treeData?.length === 0}
       size={tableSize}
       value={value}
       {...props}
