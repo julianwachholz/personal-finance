@@ -1,5 +1,7 @@
+import { ConfigProvider, Empty } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface SettingsValues {
   theme: "light" | "dark";
@@ -29,6 +31,7 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
   children,
   ...props
 }) => {
+  const [t] = useTranslation("translation", { useSuspense: false });
   const config: SettingsValues = { ...defaultConfig, ...props };
 
   const [theme, setTheme] = useState<"light" | "dark">(config.theme);
@@ -49,18 +52,27 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
     _setTableSize(size);
   };
 
+  const renderEmpty = () => (
+    <Empty
+      image={Empty.PRESENTED_IMAGE_SIMPLE}
+      description={t("no_data", "No Data")}
+    />
+  );
+
   return (
-    <SettingsContext.Provider
-      value={{
-        theme,
-        toggleTheme,
-        menuCollapsed,
-        toggleMenu,
-        tableSize,
-        setTableSize
-      }}
-    >
-      {children}
-    </SettingsContext.Provider>
+    <ConfigProvider renderEmpty={renderEmpty}>
+      <SettingsContext.Provider
+        value={{
+          theme,
+          toggleTheme,
+          menuCollapsed,
+          toggleMenu,
+          tableSize,
+          setTableSize
+        }}
+      >
+        {children}
+      </SettingsContext.Provider>
+    </ConfigProvider>
   );
 };
