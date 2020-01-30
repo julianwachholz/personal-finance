@@ -97,22 +97,33 @@ const DatePicker = (props: PickerProps<Date>) => {
   const { settings } = useAuth();
   const now = new Date();
 
+  let value = props.value;
+
   if (isMobile) {
+    if (typeof value === "string") {
+      value = parseISO(value);
+    }
+    let valueString: string | undefined;
+    try {
+      valueString = value ? format(value, "yyyy-MM-dd") : undefined;
+    } catch (e) {}
+
     const inputProps = {
-      value: props.value ? format(props.value, "yyyy-MM-dd") : undefined,
+      value: valueString,
       defaultValue: props.defaultValue
         ? format(props.defaultValue, "yyyy-MM-dd")
         : undefined,
       onChange(e: any) {
         const date = set(parseISO(e.target.value), {
-          hours: props.value?.getHours() ?? now.getHours(),
-          minutes: props.value?.getMinutes() ?? now.getMinutes(),
-          seconds: props.value?.getSeconds() ?? now.getSeconds()
+          hours: value?.getHours() ?? now.getHours(),
+          minutes: value?.getMinutes() ?? now.getMinutes(),
+          seconds: value?.getSeconds() ?? now.getSeconds()
         });
-        props.onChange?.(
-          date,
-          format(date, settings?.date_format ?? "yyyy-MM-dd")
-        );
+        let dateString: string = "";
+        try {
+          dateString = format(date, settings?.date_format || "yyyy-MM-dd");
+        } catch (e) {}
+        props.onChange?.(date, dateString);
       }
     };
     return <Input type="date" {...inputProps} />;
