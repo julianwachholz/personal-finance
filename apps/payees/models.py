@@ -1,7 +1,6 @@
 from django.contrib.postgres.fields import CICharField
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 
 class Payee(models.Model):

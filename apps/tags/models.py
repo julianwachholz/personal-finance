@@ -1,6 +1,5 @@
 from django.contrib.postgres.fields import CICharField
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 
 class Tag(models.Model):

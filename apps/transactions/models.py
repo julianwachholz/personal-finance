@@ -2,7 +2,6 @@
 # from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 from mptt.fields import TreeForeignKey
 

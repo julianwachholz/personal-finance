@@ -3,7 +3,6 @@ import os
 
 from django.db import models, transaction
 from django.utils.translation import get_language
-from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
 

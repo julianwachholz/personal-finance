@@ -1,7 +1,6 @@
 from django.db import models, transaction
 from django.db.models import F, Sum
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
 from djmoney.models.fields import MoneyField
 
 
