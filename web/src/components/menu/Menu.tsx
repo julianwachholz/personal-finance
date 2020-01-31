@@ -1,6 +1,6 @@
 import {
   BankOutlined,
-  FolderOutlined,
+  FolderOpenOutlined,
   HistoryOutlined,
   LineChartOutlined,
   PieChartOutlined,
@@ -93,7 +93,7 @@ const MainMenu = () => {
       items: [
         {
           path: "/settings/categories",
-          icon: <FolderOutlined />,
+          icon: <FolderOpenOutlined />,
           text: t("menu.categories", "Categories")
         },
         {

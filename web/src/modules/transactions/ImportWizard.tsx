@@ -15,7 +15,6 @@ import {
 import { UploadFile } from "antd/lib/upload/interface";
 import React, { useState } from "react";
 import { authFetch, getAuthHeaders } from "../../dao/base";
-import "./ImportWizard.scss";
 
 const { Dragger } = Upload;
 
@@ -111,7 +110,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
       keyboard={false}
       footer={null}
     >
-      <div className="import-wizard">
+      <div className="modal-wizard">
         <Steps current={step}>
           <Steps.Step title="Upload" />
           <Steps.Step title="Map Columns" />
@@ -120,7 +119,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
         </Steps>
         <Form
           form={form}
-          className="import-wizard-content"
+          className="modal-wizard-content"
           layout="horizontal"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 10 }}

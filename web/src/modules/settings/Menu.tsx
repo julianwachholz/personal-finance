@@ -1,5 +1,5 @@
 import {
-  FolderOutlined,
+  FolderOpenOutlined,
   ShopOutlined,
   TagsOutlined,
   ToolOutlined,
@@ -31,7 +31,7 @@ const SettingsMenu = () => {
     >
       <List>
         <List.Item
-          thumb={<FolderOutlined />}
+          thumb={<FolderOpenOutlined />}
           arrow="horizontal"
           onClick={() => history.push("/settings/categories")}
         >

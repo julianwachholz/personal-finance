@@ -33,7 +33,7 @@ const ICONS: string[] = [
   "💸",
   "🤑"
 ];
-const suggestedIcons = ICONS.map(icon => ({
+export const suggestedIcons = ICONS.map(icon => ({
   value: icon
 }));
 

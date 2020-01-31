@@ -1,7 +1,7 @@
 import { authFetch, RelatedModel } from "./base";
 
 export interface Settings {
-  language: "en" | "de";
+  language: string;
   default_currency: string;
   default_debit_account: RelatedModel | null;
   default_credit_account: RelatedModel | null;

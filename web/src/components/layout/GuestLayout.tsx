@@ -1,9 +1,9 @@
-import { GlobalOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Menu } from "antd";
+import { Layout } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { APP_TITLE } from "../../utils/constants";
+import LanguageMenu from "../form/LanguageMenu";
 import "./GuestLayout.scss";
 import Logo from "./Logo";
 
@@ -18,26 +18,7 @@ export const GuestLayout: React.FC = ({ children }) => {
         <h1>{APP_TITLE}</h1>
       </Link>
       <Content>{children}</Content>
-      <Dropdown
-        className="language-select"
-        overlay={
-          <Menu className="language-select-menu" selectedKeys={[i18n.language]}>
-            <Menu.Item key="en" onClick={() => i18n.changeLanguage("en")}>
-              English
-            </Menu.Item>
-            <Menu.Item key="de" onClick={() => i18n.changeLanguage("de")}>
-              Deutsch
-            </Menu.Item>
-            <Menu.Item key="pl" onClick={() => i18n.changeLanguage("pl")}>
-              Polski
-            </Menu.Item>
-          </Menu>
-        }
-      >
-        <Button>
-          <GlobalOutlined /> {t("language", "Language")}
-        </Button>
-      </Dropdown>
+      <LanguageMenu />
     </Layout>
   );
 };

@@ -27,7 +27,7 @@ export const CURRENCY_FORMATS: Record<string, Currency> = {
   KRW: { code: "KRW", name: "South Korean Won", prefix: "₩" },
   MXN: { code: "MXN", name: "Mexican Peso", prefix: "Mex$" },
   NOK: { code: "NOK", name: "Norwegian Krone", suffix: " Nkr" },
-  NZD: { code: "NZD", name: "New Zealand Dollar", prefix: "NS$" },
+  NZD: { code: "NZD", name: "New Zealand Dollar", prefix: "NZ$" },
   PLN: { code: "PLN", name: "Polish Zloty", suffix: " zł" },
   RUB: { code: "RUB", name: "Russian Ruble", suffix: "₽" },
   SEK: { code: "SEK", name: "Swedish Krona", suffix: " Skr" },

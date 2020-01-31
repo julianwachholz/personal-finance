@@ -1,7 +1,4 @@
-import { Button, Col, Form, Input, Radio, Row, Select, Switch } from "antd";
-import { InputProps } from "antd/lib/input";
-import { format } from "date-fns";
-import { de, enUS } from "date-fns/locale";
+import { Col, Form, Radio, Row, Select, Switch } from "antd";
 import React, { useState } from "react";
 import { BrowserView } from "react-device-detect";
 import { useTranslation } from "react-i18next";
@@ -18,86 +15,16 @@ import { debounce } from "../../utils/debounce";
 import { useSettings } from "../../utils/SettingsProvider";
 import useTitle from "../../utils/useTitle";
 import BaseModule from "../base/BaseModule";
-
-interface NumberFormat {
-  label: string;
-  decimal_separator: string;
-  group_separator: string;
-}
-
-type NumberFormatName = "default" | "american" | "german" | "swiss";
-
-type NumberFormats = {
-  [F in NumberFormatName]: NumberFormat;
-};
-
-const numberFormats: NumberFormats = {
-  default: {
-    label: "1 000.99",
-    decimal_separator: ".",
-    group_separator: "\xa0"
-  },
-  american: {
-    label: "1,000.99",
-    decimal_separator: ".",
-    group_separator: ","
-  },
-  german: {
-    label: "1.000,99",
-    decimal_separator: ",",
-    group_separator: "."
-  },
-  swiss: {
-    label: "1'000.99",
-    decimal_separator: ".",
-    group_separator: "'"
-  }
-};
+import { DateFormatButtons, InputFormat } from "./DateFormat";
+import NumberFomat, {
+  getNumberFormat,
+  NumberFormatName,
+  numberFormats
+} from "./NumberFormat";
 
 interface NumberFormatSetter {
   number_format?: NumberFormatName;
 }
-
-const dateFormats: string[] = ["yyyy-MM-dd", "MM/dd", "MMM d", "PPP"];
-
-const InputFormat = ({ value, ...props }: InputProps) => {
-  const [t, i18n] = useTranslation("preferences");
-  const now = new Date();
-  return (
-    <Input
-      addonAfter={
-        t("preferences:date_format_preview", "Preview:") +
-        " " +
-        (value
-          ? format(now, value as string, {
-              locale: locales[i18n.language],
-              useAdditionalDayOfYearTokens: true,
-              useAdditionalWeekYearTokens: true
-            })
-          : "")
-      }
-      value={value}
-      {...props}
-    />
-  );
-};
-
-const getNumberFormat = (settings: Settings): NumberFormatName => {
-  const match = Object.entries(numberFormats).find(
-    ([k, f]) =>
-      f.group_separator === settings.group_separator &&
-      f.decimal_separator === settings.decimal_separator
-  );
-  if (match) {
-    return match[0] as NumberFormatName;
-  }
-  return "default";
-};
-
-const locales: Record<string, Locale> = {
-  en: enUS,
-  de
-};
 
 const Preferences = () => {
   const [t, i18n] = useTranslation("preferences");
@@ -138,9 +65,6 @@ const Preferences = () => {
     }, 2000);
   };
 
-  const now = new Date();
-  const locale = locales[i18n.language];
-
   const feedbackFor = (name: string) => {
     let validateStatus: "validating" | "success" | undefined;
     if (savingKeys.includes(name)) {
@@ -177,7 +101,7 @@ const Preferences = () => {
           label={t("preferences:form.label.language", "Language")}
           {...feedbackFor("language")}
         >
-          <Select defaultValue={i18n.language}>
+          <Select>
             <Select.Option value="en">English</Select.Option>
             <Select.Option value="de">Deutsch</Select.Option>
             <Select.Option value="pl">Polski</Select.Option>
@@ -228,13 +152,7 @@ const Preferences = () => {
           label={t("preferences:form.label.number_format", "Number format")}
           {...feedbackFor("number_format")}
         >
-          <Radio.Group>
-            {Object.entries(numberFormats).map(([k, v]) => (
-              <Radio.Button key={k} value={k}>
-                {v.label}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
+          <NumberFomat />
         </Form.Item>
         <Form.Item
           label={t("preferences:form.label.use_colors", "Use colors?")}
@@ -294,18 +212,7 @@ const Preferences = () => {
         <Form.Item
           label={t("preferences:form.date_format_examples", "Example formats:")}
         >
-          {dateFormats.map(date_format => (
-            <Button
-              key={date_format}
-              type="ghost"
-              onClick={() => {
-                form.setFieldsValue({ date_format });
-                onChange({ date_format });
-              }}
-            >
-              {format(now, date_format, { locale })}
-            </Button>
-          ))}
+          <DateFormatButtons onChange={onChange} form={form} />
         </Form.Item>
         <BrowserView>
           {/* <Form.Item label="Dark Mode">

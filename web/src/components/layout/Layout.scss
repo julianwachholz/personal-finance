@@ -80,3 +80,15 @@
     background: rgb(0, 21, 41);
   }
 }
+
+.modal-wizard {
+  .modal-wizard-content {
+    margin: 24px 0;
+  }
+  .modal-wizard-control {
+    text-align: right;
+  }
+  .ant-upload-error {
+    color: #ff4d4f;
+  }
+}
