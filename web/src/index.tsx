@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/browser";
+import { message } from "antd";
 import React from "react";
 import ReactDOM from "react-dom";
 import { createProviderTreeFromList } from "react-provider-tree";
@@ -6,7 +7,7 @@ import { ReactQueryConfigProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { prefetchUser } from "./dao/user";
-import "./i18n";
+import i18n from "./i18n";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { AuthProvider } from "./utils/AuthProvider";
@@ -40,4 +41,22 @@ ReactDOM.render(<AppWrapper />, rootEl);
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.register();
+serviceWorker.register({
+  onUpdate() {
+    console.log("onUpdate");
+    message.info({
+      content: i18n.t(
+        "pwa.update",
+        "Update available. Tap this message to reload."
+      ),
+      duration: 0,
+      onClose() {
+        window.location.reload();
+      }
+    });
+  },
+  onSuccess() {
+    console.log("onSuccess");
+    message.info(i18n.t("pwa.success", "App ready for offline use!"));
+  }
+});
