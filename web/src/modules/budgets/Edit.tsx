@@ -1,5 +1,5 @@
 import { DeleteFilled } from "@ant-design/icons";
-import { message, Spin } from "antd";
+import { Button, message, Spin } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
@@ -44,6 +44,14 @@ const BudgetEdit = ({ match, history }: RouteComponentProps<DetailParams>) => {
             confirmDeleteBudget(budget, doDelete, t, history);
           }}
         />
+      }
+      extra={
+        <Button
+          type="danger"
+          onClick={() => confirmDeleteBudget(budget, doDelete, t, history)}
+        >
+          {t("budgets:delete_budget", "Delete Budget")}
+        </Button>
       }
     >
       <BudgetForm
