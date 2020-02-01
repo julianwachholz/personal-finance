@@ -19,6 +19,7 @@
   "payee_plural": "Odbiorcy",
   "bulk": {
     "delete": "Usuń wybranych obiorców",
+    "deleted": "Usuń {{ count }}",
     "deleted_0": "Usunięto jednego odbiorce",
     "deleted_1": "Usunięto {{ count }}. odbiorców",
     "deleted_2": "Usunięto {{ count }}. odbiorców"

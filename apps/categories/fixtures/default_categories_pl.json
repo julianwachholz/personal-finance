@@ -5,7 +5,7 @@
       [{ "name": "Lunch" }],
       [{ "name": "Zakupy", "icon": "🛒" }],
       [{ "name": "Fast Food", "icon": "🍔" }],
-      [{ "name": "Restauracje", "icon": "🍷" }],
+
       [{ "name": "Przekąski / Inne", "icon": "🍫" }]
     ]
   ],
@@ -48,7 +48,8 @@
         { "name": "Wyjście na miasto", "icon": "🍻" },
         [
           [{ "name": "Kręgle", "icon": "🎳" }],
-          [{ "name": "Drinki", "icon": "🍹" }]
+          [{ "name": "Drinki", "icon": "🍹" }],
+          [{ "name": "Restauracje", "icon": "🍷" }]
         ]
       ],
       [{ "name": "Rozrywka", "icon": "📽️" }],

@@ -6,6 +6,7 @@
   "delete_warning": "To spowoduje nieodwracalne usunięcie budżetu.",
   "deleted": "Budżet \"{{ label }}\" usunięty",
   "edit": "Edytuj {{ label }}",
+  "delete_budget": "Usuń Budżet",
   "updated": "Budżet zaktualizowany",
   "update_error": "Aktualizacja budżetu nie powiodła się",
   "name": "Nazwa",

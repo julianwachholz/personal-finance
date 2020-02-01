@@ -1,5 +1,6 @@
 {
   "loading": "Ładowanie...",
+  "language": "Język",
   "form": {
     "select": {
       "create_model": "Stwórz \"{{ search }}\""
@@ -26,7 +27,10 @@
     "object_edit": "Edytuj",
     "object_delete": "Usuń"
   },
-  "language": "Język",
+  "pwa": {
+    "update": "Dostępna aktualizacja. Odśwież stronę.",
+    "success": "Aplikacja jest gotowa do użycia w trybie offline!"
+  },
   "cancel": "Anuluj",
   "inline": {
     "edit": "Edytuj",
@@ -48,6 +52,50 @@
   "dashboard": {
     "title": "Strona Główna",
     "todo": "To jest miejsce na Stronę Główną"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Witaj",
+      "intro": "Zaczynamy!",
+      "subtitle": "Podążaj za tą krótką instrukcją i zacznij działać w kilka minut!",
+      "language": "Wybierz język"
+    },
+    "setup": {
+      "title": "Ustawienia",
+      "change_later": "Możesz później wszystko zmienić w zakładce 'Preferenzje'.",
+      "default_currency": "Wybierz swoją walutę",
+      "number_format": "Format numeryczny",
+      "date_format": "Format daty"
+    },
+    "account": {
+      "title": "Pierwsze konto",
+      "default_account_name": "Konto indywidualne",
+      "intro": "Stwórz swoje pierwsze konto. To może być konto z którego płacisz swoje rachunki.",
+      "account_name": "Nazwa konta",
+      "account_name_required": "Nazwa konta jest wymagana",
+      "current_balance": "Bieżące Saldo",
+      "current_balance_required": "Wprowadź bieżące saldo konta"
+    },
+    "categories": {
+      "title": "Kategorie",
+      "intro": "Przykładowe kategorie",
+      "subtitle": "Możesz importować zestaw przykładowych kategorii, aby szybko zacząć kategoryzować swoje transakcje.",
+      "button": "Import"
+    },
+    "finish": {
+      "title": "Gotowe!",
+      "subtitle": "Teraz możesz przejść do dowolnych niżej wymienionych czyności:",
+      "manage_payees": "Stwórz Odbiorców",
+      "transactions": "Wprowadź Tranzakcje",
+      "add_account": "Dodaj Konta",
+      "manage_categories": "Zarządzaj Kategoriami"
+    }
+  },
+  "wizard": {
+    "close": "Zamknij",
+    "cancel": "Anuluj",
+    "skip": "Pomiń",
+    "next": "Pomiń"
   },
   "error": {
     "404": {

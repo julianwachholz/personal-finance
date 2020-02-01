@@ -20,7 +20,7 @@
   "name_placeholder": "Konto indywidualne",
   "institution_placeholder": "Nazwa banku",
   "reset_balance": "Zresetuj saldo",
-  "current_balance": "Obecne saldo",
+  "current_balance": "Bieżące saldo",
   "current_balance_error": "Wprowadź saldo",
   "currency": "Waluta",
   "currency_error": "Wybierz walutę",

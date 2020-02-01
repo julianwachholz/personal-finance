@@ -16,6 +16,7 @@
   "tag_plural": "Etykiety",
   "bulk": {
     "delete": "Usuń zaznaczone etykiety",
+    "deleted": "Usuń {{ count }}",
     "deleted_0": "Usunięto jedną etykietę",
     "deleted_1": "Usunięto {{ count }} etykiety",
     "deleted_2": "Usunięto {{ count }} etykiet"
