@@ -27,7 +27,7 @@ interface NumberFormatSetter {
 }
 
 const Preferences = () => {
-  const [t, i18n] = useTranslation("preferences");
+  const [t] = useTranslation("preferences");
   const history = useHistory();
   const [form] = Form.useForm();
   const { settings } = useAuth();

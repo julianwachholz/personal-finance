@@ -9,7 +9,9 @@ interface LanguageMenuProps {
 }
 
 export const LanguageMenu = ({ label, onChange }: LanguageMenuProps) => {
-  const [t, i18n] = useTranslation();
+  const [t, i18n] = useTranslation("translation", {
+    useSuspense: false
+  });
 
   const onClick = (language: string) => {
     i18n.changeLanguage(language);
