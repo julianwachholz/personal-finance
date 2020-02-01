@@ -1,5 +1,6 @@
 {
   "loading": "Loading...",
+  "language": "Language",
   "form": {
     "select": {
       "create_model": "Create \"{{ search }}\""
@@ -26,7 +27,10 @@
     "object_edit": "Edit",
     "object_delete": "Delete"
   },
-  "language": "Language",
+  "pwa": {
+    "update": "Update available. Tap this message to reload.",
+    "success": "App ready for offline use!"
+  },
   "cancel": "Cancel",
   "inline": {
     "edit": "Edit",
@@ -48,6 +52,49 @@
   "dashboard": {
     "title": "Dashboard",
     "todo": "This is a placeholder for the dashboard."
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome",
+      "intro": "Getting started",
+      "subtitle": "Follow these quick steps to get up and running in a minute!",
+      "language": "Select your language"
+    },
+    "setup": {
+      "title": "Setup",
+      "change_later": "You can change all of these later under 'Preferences'.",
+      "default_currency": "Select your primary currency",
+      "number_format": "Number format",
+      "date_format": "Date format"
+    },
+    "account": {
+      "title": "First Account",
+      "default_account_name": "Checking",
+      "intro": "Create your first account. This could be your primary spending account.",
+      "account_name": "Account Name",
+      "account_name_required": "An account name is required",
+      "current_balance": "Current Balance",
+      "current_balance_required": "Enter the account's current balance"
+    },
+    "categories": {
+      "title": "Categories",
+      "intro": "Example Categories",
+      "subtitle": "You can import a set of example categories to get a head start categorizing your transactions.",
+      "button": "Import"
+    },
+    "finish": {
+      "title": "Ready!",
+      "subtitle": "You can now continue with any of these actions:",
+      "manage_payees": "Create Payees",
+      "transactions": "Enter Transactions",
+      "add_account": "Manage Categories"
+    }
+  },
+  "wizard": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "skip": "Skip",
+    "next": "Next"
   },
   "error": {
     "404": {

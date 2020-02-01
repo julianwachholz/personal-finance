@@ -6,6 +6,7 @@
   "delete_warning": "This will delete the budget irrevocably.",
   "deleted": "Budget \"{{ label }}\" deleted",
   "edit": "Edit {{ label }}",
+  "delete_budget": "Delete Budget",
   "updated": "Budget updated",
   "update_error": "Budget update failed",
   "name": "Name",

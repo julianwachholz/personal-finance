@@ -303,7 +303,10 @@ export const OnboardingWizard = ({
                 </Button>,
                 <Button key="category">
                   <Link to="/settings/categories">
-                    {t("onboarding.finish.add_account", "Manage Categories")}
+                    {t(
+                      "onboarding.finish.manage_categories",
+                      "Manage Categories"
+                    )}
                   </Link>
                 </Button>
               ]}

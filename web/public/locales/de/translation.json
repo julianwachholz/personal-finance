@@ -1,5 +1,6 @@
 {
   "loading": "Lädt...",
+  "language": "Sprache",
   "form": {
     "select": {
       "create_model": "Erstelle \"{{ search }}\""
@@ -26,7 +27,10 @@
     "object_edit": "Bearbeiten",
     "object_delete": "Löschen"
   },
-  "language": "Sprache",
+  "pwa": {
+    "update": "Update verfügbar. Klick hier um neu zu laden.",
+    "success": "App ist offline verfügbar!"
+  },
   "cancel": "Abbrechen",
   "inline": {
     "edit": "Bearbeiten",
@@ -48,6 +52,50 @@
   "dashboard": {
     "title": "Dashboard",
     "todo": "Das ist ein Platzhalter für das Dashboard."
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Willkommen",
+      "intro": "Los geht's!",
+      "subtitle": "Folge diesen kurzen Schritten um in einer Minute loszulegen.",
+      "language": "Wähle deine Sprache"
+    },
+    "setup": {
+      "title": "Einstellungen",
+      "change_later": "Du kannst alles später noch anpassen unter 'Optionen'.",
+      "default_currency": "Wähle deine Währung",
+      "number_format": "Zahlenformat",
+      "date_format": "Datumsformat"
+    },
+    "account": {
+      "title": "Erstes Konto",
+      "default_account_name": "Girokonto",
+      "intro": "Erstelle dein erstes Konto. Das könnte dein primäres Zahlungskonto sein.",
+      "account_name": "Kontoname",
+      "account_name_required": "Ein Name ist erforderlich",
+      "current_balance": "Aktueller Saldo",
+      "current_balance_required": "Gib den aktuellen Saldo des Kontos an"
+    },
+    "categories": {
+      "title": "Kategorien",
+      "intro": "Beispielkategorien",
+      "subtitle": "Du kannst einige Beispielkategorien importieren um sofort deine Transaktionen zu kategorisieren.",
+      "button": "Importieren"
+    },
+    "finish": {
+      "title": "Bereit!",
+      "subtitle": "Du kannst nun mit einigen dieser Aktionen fortfahren:",
+      "manage_payees": "Zahlungsempfänger erstellen",
+      "transactions": "Transaktionen erfassen",
+      "add_account": "Konto hinzufügen",
+      "manage_categories": "Kategorien bearbeiten"
+    }
+  },
+  "wizard": {
+    "close": "Schliessen",
+    "cancel": "Abbrechen",
+    "skip": "Überspringen",
+    "next": "Weiter"
   },
   "error": {
     "404": {
