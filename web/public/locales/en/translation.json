@@ -28,7 +28,7 @@
     "object_delete": "Delete"
   },
   "pwa": {
-    "update": "Update available. Tap this message to reload.",
+    "update": "Update available. Reload the page to apply.",
     "success": "App ready for offline use!"
   },
   "cancel": "Cancel",

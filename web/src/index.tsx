@@ -47,7 +47,7 @@ serviceWorker.register({
     message.info({
       content: i18n.t(
         "pwa.update",
-        "Update available. Tap this message to reload."
+        "Update available. Reload the page to apply."
       ),
       duration: 0,
       onClose() {

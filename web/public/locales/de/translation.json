@@ -28,7 +28,7 @@
     "object_delete": "Löschen"
   },
   "pwa": {
-    "update": "Update verfügbar. Klick hier um neu zu laden.",
+    "update": "Update verfügbar. Lade die Seite neu um zu aktualisieren.",
     "success": "App ist offline verfügbar!"
   },
   "cancel": "Abbrechen",
