@@ -38,7 +38,7 @@ export const TransferForm = ({ onFinish }: TransferFormProps) => {
   const now = new Date();
 
   const [transfer] = useMutation(accountTransfer, {
-    refetchQueries: ["items/transactions"]
+    refetchQueries: ["items/transactions", "items/accounts"]
   });
 
   const needConversion =
