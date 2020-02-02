@@ -26,7 +26,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     ordering_fields = ["name"]
 
     def get_queryset(self):
-        return self.request.user.categories.all()
+        return Category.objects.filter(user=self.request.user)
 
     @action(detail=False)
     def tree(self, request, **kwargs):

@@ -1,6 +1,7 @@
 import json
 import os
 
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils.translation import get_language
 from mptt.models import MPTTModel, TreeForeignKey
@@ -44,6 +45,13 @@ class Category(MPTTModel):
     def __repr__(self):
         return f"<Category(user={self.user!r}, name={str(self)!r}, parent={self.parent!r})>"
 
+    def clean(self):
+        if self.parent:
+            if self.user != self.parent.user:
+                raise ValidationError(
+                    {"default_category": "Category parent does not belong to same user"}
+                )
+
     def get_icon(self):
         if not self.icon and self.parent:
             return self.parent.icon
@@ -74,7 +82,7 @@ def _create_category_tree(user, categories, parent=None):
         category = Category(user=user, **kwargs)
         category.insert_at(parent, position="last-child", save=True)
 
-        if category.name in {"Salary", "Salär"}:
+        if category.name in {"Salary", "Salär", "Wynagrodzenie"}:
             user.settings.default_credit_category = category
             user.settings.save()
 
