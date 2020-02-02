@@ -15,7 +15,7 @@ class Settings(models.Model):
 
     language = models.CharField(verbose_name="language", max_length=10, default="en")
 
-    default_currency = CurrencyField(blank=True)
+    default_currency = CurrencyField(blank=True, default="")
 
     default_debit_account = models.ForeignKey(
         to="accounts.Account",
