@@ -92,10 +92,11 @@
     }
   },
   "wizard": {
+    "back": "Wróć",
     "close": "Zamknij",
     "cancel": "Anuluj",
     "skip": "Pomiń",
-    "next": "Pomiń"
+    "next": "Dalej"
   },
   "error": {
     "404": {

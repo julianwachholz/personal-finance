@@ -55,10 +55,14 @@
         ]
       ],
       [{ "name": "Shopping", "icon": "🛍️" }],
-      [{ "name": "Wakacje", "icon": "⛱️" }],
-      [{ "name": "Podróż", "icon": "✈️" }],
-      [{ "name": "Nocleg", "icon": "🛌" }],
-      [{ "name": "Zakupy & Pamiątki", "icon": "🛍" }]
+      [
+        { "name": "Wakacje", "icon": "⛱️" },
+        [
+          [{ "name": "Podróż", "icon": "✈️" }],
+          [{ "name": "Nocleg", "icon": "🛌" }],
+          [{ "name": "Zakupy & Pamiątki", "icon": "🛍" }]
+        ]
+      ]
     ]
   ],
   [

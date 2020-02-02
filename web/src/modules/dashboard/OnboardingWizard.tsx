@@ -317,7 +317,7 @@ export const OnboardingWizard = ({
           <Col span={12}>
             {step > 0 && step < 4 && (
               <Button type="primary" onClick={() => setStep(step - 1)}>
-                Back
+                {t("wizard.back", "Back")}
               </Button>
             )}
 

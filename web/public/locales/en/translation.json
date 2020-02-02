@@ -87,10 +87,12 @@
       "subtitle": "You can now continue with any of these actions:",
       "manage_payees": "Create Payees",
       "transactions": "Enter Transactions",
-      "add_account": "Manage Categories"
+      "add_account": "Manage Categories",
+      "manage_categories": "Manage Categories"
     }
   },
   "wizard": {
+    "back": "Back",
     "close": "Close",
     "cancel": "Cancel",
     "skip": "Skip",

@@ -92,6 +92,7 @@
     }
   },
   "wizard": {
+    "back": "Back",
     "close": "Schliessen",
     "cancel": "Abbrechen",
     "skip": "Überspringen",
