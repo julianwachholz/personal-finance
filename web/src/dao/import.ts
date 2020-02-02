@@ -1,5 +1,11 @@
 import { UploadFile } from "antd/lib/upload/interface";
-import { authFetch, makePostItem, makePutItem, makeUseItem } from "./base";
+import {
+  authFetch,
+  makeItemAction,
+  makePostItem,
+  makePutItem,
+  makeUseItem
+} from "./base";
 
 export interface ImportFile {
   readonly pk: number;
@@ -50,3 +56,14 @@ export const deleteUploadedFile = async (file: UploadFile) => {
 export const useImportConfig = makeUseItem<ImportConfig>("import/config");
 export const postImportConfig = makePostItem<ImportConfig>("import/config");
 export const putImportConfig = makePutItem<ImportConfig>("import/config");
+
+interface GetUnmappedValues {
+  pk: number;
+  file: number;
+}
+
+export const fetchUnmappedValues = makeItemAction<GetUnmappedValues>(
+  "import/config",
+  "unmapped_values",
+  "GET"
+);

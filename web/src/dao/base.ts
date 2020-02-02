@@ -329,6 +329,12 @@ export const makeItemsAction = <P = ItemsActionParams>(
   return itemsAction;
 };
 
+const getURLParams = (params: object) => {
+  const entries = Object.entries(params);
+  const items = entries.map(([k, v]) => `${k}=${v}`);
+  return items.join("&");
+};
+
 type ItemAction<T extends Model> = (params: T) => Promise<any>;
 
 export const makeItemAction = <T extends Model>(
@@ -337,13 +343,19 @@ export const makeItemAction = <T extends Model>(
   method: string = "POST"
 ) => {
   const itemAction: ItemAction<T> = async ({ pk, ...params }) => {
-    const url = `/api/${basename}/${pk}/${action}/`;
+    let url = `/api/${basename}/${pk}/${action}/`;
+    const extra: Record<string, string> = {};
+    if (method === "GET") {
+      url += `?${getURLParams(params)}`;
+    } else {
+      extra.body = JSON.stringify(params);
+    }
     const response = await authFetch(url, {
       method,
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify(params)
+      ...extra
     });
     if (response.status === 204) {
       return;

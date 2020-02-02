@@ -91,18 +91,17 @@ const generateConfig: GenerateConfig<Date> = {
 
 const BaseDatePicker = generatePicker<Date>(generateConfig);
 
-const DatePicker = (props: PickerProps<Date>) => {
+const DatePicker = ({ value, ...props }: PickerProps<Date>) => {
   const { i18n } = useTranslation();
   const { tableSize } = useSettings();
   const { settings } = useAuth();
   const now = new Date();
 
-  let value = props.value;
+  if (typeof value === "string") {
+    value = parseISO(value);
+  }
 
   if (isMobile) {
-    if (typeof value === "string") {
-      value = parseISO(value);
-    }
     let valueString: string | undefined;
     try {
       valueString = value ? format(value, "yyyy-MM-dd") : undefined;
@@ -133,6 +132,7 @@ const DatePicker = (props: PickerProps<Date>) => {
       format={settings?.date_format}
       size={tableSize}
       locale={antLocales[i18n.language]}
+      value={value}
       {...props}
     />
   );

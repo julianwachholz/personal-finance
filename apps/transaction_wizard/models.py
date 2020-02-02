@@ -72,6 +72,10 @@ class ImportFile(models.Model):
         return configs
 
 
+def strip_record(record):
+    return {key.strip(): value for key, value in record.items()}
+
+
 class ImportConfig(models.Model):
     """
     Configuration for an import run.
@@ -102,6 +106,7 @@ class ImportConfig(models.Model):
         return self.mappings.all()
 
     def _map_record(self, record):
+        record = strip_record(record)
         return {
             mapping.target: mapping.get_value(record) for mapping in self._all_mappings
         }
@@ -121,7 +126,7 @@ class ImportConfig(models.Model):
         }
 
     def map_dataset(self, dataset):
-        return map(_map, dataset.dict)
+        return map(self._map_record, dataset.dict)
 
 
 class ColumnMapping(models.Model):
@@ -184,9 +189,14 @@ class ColumnMapping(models.Model):
     def get_unmapped_values(self, dataset):
         if not self.is_sourced or self.target not in {"account", "payee", "category"}:
             return
+
+        def stripped_records(ds):
+            for r in ds:
+                yield strip_record(r)
+
         return {
             record[self.source]
-            for record in dataset.dict
+            for record in stripped_records(dataset.dict)
             if self.get_value(record) is None
         }
 

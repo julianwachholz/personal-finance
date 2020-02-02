@@ -9,6 +9,7 @@ import {
   Col,
   Form,
   Input,
+  List,
   Modal,
   Progress,
   Radio,
@@ -31,13 +32,13 @@ import {
   ColumnMapping,
   ColumnMappingTarget,
   deleteUploadedFile,
+  fetchUnmappedValues,
   ImportFile,
   postImportConfig,
   putImportConfig,
   useImportConfig
 } from "../../dao/import";
 import { usePayees } from "../../dao/payees";
-import { useAuth } from "../../utils/AuthProvider";
 
 const { Dragger } = Upload;
 
@@ -67,15 +68,17 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
   const [error, setError] = useState<boolean | string>(false);
 
   const [importConfigId, setImportConfigId] = useState<number>();
-  const { data: importConfig, isLoading: configLoading } = useImportConfig(
-    importConfigId
-  );
+  const { data: importConfig } = useImportConfig(importConfigId, {
+    refetchOnWindowFocus: false
+  });
 
   const [headers, setHeaders] = useState<string[]>([]);
   const [mappings, setMappings] = useState<ColumnMapping[]>([]);
 
   const [createImportConfig] = useMutation(postImportConfig);
   const [updateImportConfig] = useMutation(putImportConfig);
+  const [unmappedValues, setUnmappedValues] = useState<any>();
+  const [getUnmappedValues] = useMutation(fetchUnmappedValues);
 
   useEffect(() => {
     if (importConfig?.mappings) {
@@ -101,6 +104,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
 
       form.setFieldsValue(valuesFromMappings);
     }
+    // eslint-disable-next-line
   }, [importConfig]);
 
   let cancelModal: any;
@@ -169,14 +173,17 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                 setImportConfigId(matchingConfigs[0].pk);
               }
             } else {
-              console.info(changedValues);
               Object.keys(changedValues).forEach(key => {
                 if (key.startsWith("mapping[")) {
+                  console.info(changedValues);
                   const mapping = changedValues[key];
-                  const newMappings = [
-                    ...mappings.filter(m => m.target !== mapping.target),
-                    mapping
-                  ];
+                  const newMappings = mappings.filter(
+                    m => m.target !== mapping.target
+                  );
+                  const index = mapColumns.findIndex(
+                    ([c]) => c === mapping.target
+                  );
+                  newMappings.splice(index, 0, mapping);
                   setMappings(newMappings);
                 }
               });
@@ -307,7 +314,10 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                         source: value === COLUMN_VALUE ? undefined : value,
                         options: {}
                       };
-                      newMappings.push(mapping);
+                      const index = mapColumns.findIndex(
+                        ([c]) => c === mapping.target
+                      );
+                      newMappings.splice(index, 0, mapping);
                       form.setFieldsValue({
                         [`mapping[${mapping.target}]`]: mapping
                       });
@@ -370,12 +380,13 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
           {step === 3 && (
             <div>
               <h2>{t("import.values.title", "Map Values")}</h2>
-              <ul>
-                <li>lorem</li>
-                <li>lorem</li>
-                <li>lorem</li>
-                <li>lorem</li>
-              </ul>
+              {Object.keys(unmappedValues).map(model => (
+                <List
+                  header={columnNames[model]}
+                  dataSource={unmappedValues[model]}
+                  renderItem={(item: string) => <List.Item>{item}</List.Item>}
+                />
+              ))}
             </div>
           )}
           {step === 4 && (
@@ -458,6 +469,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                     if (step === 2) {
                       // save import config
                       setLoading(true);
+                      let pk = importConfigId;
                       if (importConfig) {
                         await updateImportConfig(
                           {
@@ -477,7 +489,14 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                           file_type: "text/csv",
                           mappings
                         } as any);
+                        pk = newConfig.pk;
+                        setImportConfigId(pk);
                       }
+                      const _unmappedValues = await getUnmappedValues({
+                        pk: pk!,
+                        file: 207
+                      });
+                      setUnmappedValues(_unmappedValues);
                       setLoading(false);
                     }
                     setStep(step + 1);
@@ -596,8 +615,6 @@ const ColumnMappingOptions = ({ value, onChange }: MappingOptionsProps) => {
 };
 
 const ColumnMappingValue = ({ value, onChange }: MappingOptionsProps) => {
-  const { settings } = useAuth();
-
   switch (value?.target) {
     case "datetime":
       return (
