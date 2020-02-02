@@ -16,7 +16,7 @@
     "budgets": "Budżet",
     "settings": "Ustawienia",
     "categories": "Kategorie",
-    "tags": "Tags",
+    "tags": "Etykiety",
     "payees": "Odbiorcy",
     "preferences": "Preferenzje",
     "profile": "Profil",
@@ -43,7 +43,7 @@
     "disable": "Wyłącz tryb grupowy",
     "enable": "Tryb grupowy",
     "select_action": "Wybierz",
-    "submit": "Idź"
+    "submit": "OK"
   },
   "actions": "Działania",
   "search": "Szukaj...",

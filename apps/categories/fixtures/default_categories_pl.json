@@ -6,7 +6,7 @@
       [{ "name": "Zakupy", "icon": "🛒" }],
       [{ "name": "Fast Food", "icon": "🍔" }],
 
-      [{ "name": "Przekąski / Inne", "icon": "🍫" }]
+      [{ "name": "Przekąski & Inne", "icon": "🍫" }]
     ]
   ],
   [
@@ -17,6 +17,7 @@
         [
           [{ "name": "Paliwo", "icon": "⛽" }],
           [{ "name": "Parking", "icon": "🅿️" }],
+          [{ "name": "Ubezpieczenie & Podatek", "icon": "🧾" }],
           [{ "name": "Reparatury / Serwis", "icon": "🔧" }]
         ]
       ],
@@ -33,7 +34,7 @@
     ]
   ],
   [
-    { "name": "Rachunki & Usługi komunalne", "icon": "🔌" },
+    { "name": "Rachunki / Usługi komunalne", "icon": "🔌" },
     [
       [{ "name": "Prąd" }],
       [{ "name": "Telefon & Internet", "icon": "📱" }],
@@ -49,30 +50,56 @@
         [
           [{ "name": "Kręgle", "icon": "🎳" }],
           [{ "name": "Drinki", "icon": "🍹" }],
-          [{ "name": "Restauracje", "icon": "🍷" }]
+          [{ "name": "Restauracje", "icon": "🍷" }],
+          [{ "name": "Kino", "icon": "📽" }],
+          [{ "name": "Rozrywka", "icon": "🎠" }]
         ]
       ],
-      [{ "name": "Rozrywka", "icon": "📽️" }],
       [{ "name": "Shopping", "icon": "🛍️" }],
-      [{ "name": "Wakacje", "icon": "⛱️" }]
+      [{ "name": "Wakacje", "icon": "⛱️" }],
+      [{ "name": "Podróż", "icon": "✈️" }],
+      [{ "name": "Nocleg", "icon": "🛌" }],
+      [{ "name": "Zakupy & Pamiątki", "icon": "🛍" }]
     ]
   ],
   [
-    { "name": "Zdrowie", "icon": "🏥" },
+    { "name": "Zdrowie & Uroda", "icon": "❤️" },
     [
-      [{ "name": "Ubezpieczenie zdrowotne" }],
-      [{ "name": "Lekarstwa", "icon": "💊" }],
-      [{ "name": "Dentysta", "icon": "🦷" }],
-      [{ "name": "Okulista", "icon": "👓" }]
+      [
+        { "name": "Uroda", "icon": "💇‍♀️" },
+        [
+          [{ "name": "Fryzjer", "icon": "💇‍♀️" }],
+          [{ "name": "Kosmetyczka", "icon": "💅" }],
+          [{ "name": "Spa", "icon": "💆‍♀️" }]
+        ]
+      ],
+      [{ "name": "Sport", "icon": "💪" }],
+      [
+        { "name": "Zdrowie", "icon": "🏥" },
+        [
+          [{ "name": "Ubezpieczenie zdrowotne", "icon": "🏥" }],
+          [{ "name": "Lekarstwa", "icon": "💊" }],
+          [{ "name": "Dentysta", "icon": "🦷" }],
+          [{ "name": "Okulista", "icon": "👀" }]
+        ]
+      ]
     ]
   ],
   [
     { "name": "Zwierzątko domowe", "icon": "🐕" },
-    [[{ "name": "Karma" }], [{ "name": "Weterynarz" }]]
+    [
+      [{ "name": "Karma", "icon": "🥫" }],
+      [{ "name": "Weterynarz", "icon": "👩‍⚕️" }]
+    ]
   ],
   [
-    { "name": "Podatki & Opłaty", "icon": "🧾" },
-    [[{ "name": "Opłata za kartę kredytową", "icon": "💳" }]]
+    { "name": "Pozostałe podatki, opłaty & wydatki", "icon": "🧾" },
+    [
+      [
+        { "name": "Opłata za kartę kredytową", "icon": "💳" },
+        { "name": "Prezenty", "icon": "🎁" }
+      ]
+    ]
   ],
   [{ "name": "Przychód", "icon": "💰" }, [[{ "name": "Wynagrodzenie" }]]]
 ]

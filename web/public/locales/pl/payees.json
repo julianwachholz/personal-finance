@@ -2,7 +2,7 @@
   "create": "Stwórz odbiorcę",
   "created": "Odbiorca utworzony",
   "create_error": "Tworzenie odbiorcy nie powiodło się",
-  "delete": "Usunąc odbiorcę \"{{ label }}\"?",
+  "delete": "Usunąć odbiorcę \"{{ label }}\"?",
   "delete_warning": "To spowoduje usunięcie odbiorcy i jego usunięcie ze wszystkich powiązanych transakcji.",
   "deleted": "Odbiorca \"{{ label }}\" usunięty",
   "payee": "Odbiorca",
