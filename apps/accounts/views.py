@@ -38,7 +38,7 @@ class AccountViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"])
     def move(self, request, pk, **kwargs):
         target_pos = request.data["pos"]
-        account = self.get_queryset().get(pk=pk)
+        account = self.get_object()
         try:
             account.set_pos(target_pos)
         except Exception as e:

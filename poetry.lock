@@ -166,6 +166,14 @@ django = ">=2.0"
 
 [[package]]
 category = "main"
+description = "Better ArrayField widget for admin"
+name = "django-better-admin-arrayfield"
+optional = false
+python-versions = "*"
+version = "1.0.5"
+
+[[package]]
+category = "main"
 description = "Provides a country field for Django models."
 name = "django-countries"
 optional = false
@@ -638,7 +646,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "b4d077ce37ddb63536bebeec1ef4eef48dab2b58ff822c9048594b229926cb77"
+content-hash = "9c4213fe577aa4f1a91bb00c71154b03355a803d21b6780985a90018b11d2302"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -763,6 +771,9 @@ django = [
 django-autocompletefilter = [
     {file = "django-autocompletefilter-0.0.6.tar.gz", hash = "sha256:1f10a50e405bafea67abeaed23b44aee501b5af0d331c7a3772ace6dd4b66f37"},
     {file = "django_autocompletefilter-0.0.6-py2.py3-none-any.whl", hash = "sha256:d2d56c56f99a0f0d1c2be997e06af02270fe29b93e981451a6d79a77165b5f21"},
+]
+django-better-admin-arrayfield = [
+    {file = "django-better-admin-arrayfield-1.0.5.tar.gz", hash = "sha256:379744d28e28c3b64e624a803f83421db07dbc03bb4171a6f680aed9c6cab676"},
 ]
 django-countries = [
     {file = "django-countries-5.5.tar.gz", hash = "sha256:1cefad9ec804d6a0318b91c5394b5aef00336755928f44d0a6420507719d65c8"},

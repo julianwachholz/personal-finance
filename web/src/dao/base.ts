@@ -211,7 +211,7 @@ export const makeFetchItem = <T extends Model>(
 };
 
 type UseItem<T extends Model> = (
-  pk: number | string,
+  pk?: number | string,
   queryOptions?: QueryOptions<T>
 ) => QueryResult<T, { pk: number }>;
 
@@ -228,7 +228,7 @@ export const makeUseItem = <T extends Model>(
       pk = parseInt(pk, 10);
     }
     const query = useQuery(
-      [`item/${basename}`, { pk }],
+      !!pk && [`item/${basename}`, { pk }],
       fetchItem!,
       queryOptions
     );

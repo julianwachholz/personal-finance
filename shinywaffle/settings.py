@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "knox",
     "autocompletefilter",
+    "django_better_admin_arrayfield",
     # "apps.taxdata",
     "apps.registration",
     "apps.accounts",

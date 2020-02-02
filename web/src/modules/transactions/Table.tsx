@@ -134,7 +134,7 @@ const TransactionsTable = (props: RouteComponentProps) => {
         <Menu.Item
           key="import"
           onClick={() => {
-            // setImportVisible(true);
+            setImportVisible(true);
           }}
         >
           <ImportOutlined /> {t("transactions:import", "Import Transactions")}
@@ -158,7 +158,10 @@ const TransactionsTable = (props: RouteComponentProps) => {
       ]}
     >
       <TransferModal visible={transferVisible} onVisible={setTransferVisible} />
-      <ImportWizard visible={importVisible} onVisible={setImportVisible} />
+      <ImportWizard
+        visible={true || importVisible}
+        onVisible={setImportVisible}
+      />
     </BaseEditableTable>
   );
 };

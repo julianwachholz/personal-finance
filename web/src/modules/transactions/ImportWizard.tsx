@@ -1,11 +1,17 @@
-import { LoadingOutlined, UploadOutlined } from "@ant-design/icons";
 import {
+  CheckCircleTwoTone,
+  LoadingOutlined,
+  UploadOutlined
+} from "@ant-design/icons";
+import {
+  Alert,
   Button,
   Col,
   Form,
   Input,
   Modal,
   Progress,
+  Radio,
   Result,
   Row,
   Select,
@@ -13,12 +19,29 @@ import {
   Upload
 } from "antd";
 import { UploadFile } from "antd/lib/upload/interface";
-import React, { useState } from "react";
-import { authFetch, getAuthHeaders } from "../../dao/base";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMutation } from "react-query";
+import CategorySelect from "../../components/form/CategorySelect";
+import DatePicker from "../../components/form/DatePicker";
+import ModelSelect from "../../components/form/ModelSelect";
+import { useAccounts } from "../../dao/accounts";
+import { getAuthHeaders } from "../../dao/base";
+import {
+  ColumnMapping,
+  ColumnMappingTarget,
+  deleteUploadedFile,
+  ImportFile,
+  postImportConfig,
+  putImportConfig,
+  useImportConfig
+} from "../../dao/import";
+import { usePayees } from "../../dao/payees";
+import { useAuth } from "../../utils/AuthProvider";
 
 const { Dragger } = Upload;
 
-type File = UploadFile<UploadFileResponse>;
+type File = UploadFile<ImportFile>;
 
 const normalizeFiles = (e: File[] | { fileList: File[] }) => {
   if (Array.isArray(e)) {
@@ -32,90 +55,100 @@ interface ImportWizardProps {
   onVisible: (visible: boolean) => void;
 }
 
-interface UploadFileResponse {
-  pk: number;
-  label: string;
-  type: string;
-  datetime: string;
-  headers: string[];
-}
-
-type ColumnMappingTarget =
-  | "datetime"
-  | "account"
-  | "amount"
-  | "category"
-  | "text"
-  | "payee"
-  | "tags"
-  | "reference";
-
-interface ColumnMapping {
-  target: ColumnMappingTarget;
-  is_sourced: boolean;
-  source?: string;
-  options: any;
-}
-
-const deleteUploadedFile = async (file: UploadFile) => {
-  await authFetch(`/api/wizard/import/${file.response.pk}/`, {
-    method: "DELETE"
-  });
-};
+const COLUMN_IGNORE = "__ignore__";
+const COLUMN_VALUE = "__value__";
 
 export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
+  const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasFiles, setHasFiles] = useState(false);
-  const [hasError, setHasError] = useState<boolean | string>(false);
+  const [error, setError] = useState<boolean | string>(false);
+
+  const [importConfigId, setImportConfigId] = useState<number>();
+  const { data: importConfig, isLoading: configLoading } = useImportConfig(
+    importConfigId
+  );
+
   const [headers, setHeaders] = useState<string[]>([]);
   const [mappings, setMappings] = useState<ColumnMapping[]>([]);
+
+  const [createImportConfig] = useMutation(postImportConfig);
+  const [updateImportConfig] = useMutation(putImportConfig);
+
+  useEffect(() => {
+    if (importConfig?.mappings) {
+      setMappings(importConfig.mappings);
+
+      const valuesFromMappings: Record<string, string | ColumnMapping> = {};
+      Object.keys(columnNames).forEach(column => {
+        const mapping = importConfig.mappings.find(m => m.target === column);
+        if (mapping) {
+          if (mapping.is_sourced && mapping.source) {
+            valuesFromMappings[mapping.target] = mapping.source;
+          } else {
+            valuesFromMappings[mapping.target] = COLUMN_VALUE;
+          }
+        } else {
+          valuesFromMappings[column] = COLUMN_IGNORE;
+        }
+      });
+
+      importConfig.mappings.forEach(mapping => {
+        valuesFromMappings[`mapping[${mapping.target}]`] = mapping;
+      });
+
+      form.setFieldsValue(valuesFromMappings);
+    }
+  }, [importConfig]);
 
   let cancelModal: any;
   const closeModal = async () => {
     const files = form.getFieldValue("files");
     if (files) {
       cancelModal?.update({
-        okText: "Deleting files..."
+        okText: t("import.deleting_files", "Deleting files...")
       });
       await Promise.all(files.map(deleteUploadedFile));
     }
     form.resetFields();
-    setHasError(false);
+    setError(false);
     setHasFiles(false);
     setStep(0);
     onVisible(false);
   };
 
   const mapColumns = [
-    ["datetime", "Date and Time"],
-    ["amount", "Amount"],
-    ["account", "Account"],
-    ["category", "Category"],
-    ["payee", "Payee"],
-    ["tags", "Tags"],
-    ["text", "Text"],
-    ["reference", "Reference Number"]
+    ["datetime", t("date", "Date")],
+    ["account", t("account", "Account")],
+    ["amount", t("amount", "Amount")],
+    ["payee", t("payee", "Payee")],
+    ["category", t("category", "Category")],
+    ["text", t("description", "Description")],
+    // TODO
+    // ["tags", t("tags", "Tags")],
+    ["reference", t("reference_number", "Reference Number")]
   ];
   const columnNames = Object.fromEntries(mapColumns);
 
   return (
     <Modal
-      width={800}
+      width={960}
       maskClosable={false}
       closable={false}
       visible={visible}
-      title="Import Transactions"
+      title={t("import.title", "Import Transactions")}
       keyboard={false}
       footer={null}
     >
       <div className="modal-wizard">
         <Steps current={step}>
-          <Steps.Step title="Upload" />
-          <Steps.Step title="Map Columns" />
-          <Steps.Step title="Configuration" />
-          <Steps.Step title="Import" />
+          <Steps.Step title={t("import.upload.title", "Upload")} />
+          <Steps.Step title={t("import.columns.title", "Map Columns")} />
+          <Steps.Step title={t("import.config.title", "Configuration")} />
+          <Steps.Step title={t("import.values.title", "Map Values")} />
+          <Steps.Step title={t("import.preview.title", "Preview")} />
         </Steps>
         <Form
           form={form}
@@ -123,8 +156,31 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
           layout="horizontal"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 10 }}
-          onValuesChange={(newValues, values) => {
-            console.info("new values", values);
+          onValuesChange={changedValues => {
+            if ("files" in changedValues) {
+              const files = changedValues.files as UploadFile<ImportFile>[];
+              const headers = files[0].response?.headers;
+              if (headers) {
+                setHeaders(headers);
+              }
+              const matchingConfigs = files[0].response?.matching_configs;
+              if (matchingConfigs?.length === 1) {
+                // load existing import config
+                setImportConfigId(matchingConfigs[0].pk);
+              }
+            } else {
+              console.info(changedValues);
+              Object.keys(changedValues).forEach(key => {
+                if (key.startsWith("mapping[")) {
+                  const mapping = changedValues[key];
+                  const newMappings = [
+                    ...mappings.filter(m => m.target !== mapping.target),
+                    mapping
+                  ];
+                  setMappings(newMappings);
+                }
+              });
+            }
           }}
         >
           {step === 0 && (
@@ -136,32 +192,23 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
               hasFeedback
               rules={[
                 {
-                  validator: (
-                    rule,
-                    files: UploadFile<UploadFileResponse>[]
-                  ) => {
+                  validator: (rule, files: UploadFile<ImportFile>[]) => {
                     const headers = files[0].response?.headers;
                     if (
                       headers &&
                       files.filter(
                         f =>
                           !f.response ||
-                          f.response.headers.every(
-                            (header, i) => headers[i] === header
-                          )
+                          headers.every((header, i) => headers[i] === header)
                       ).length !== files.length
                     ) {
-                      setHasError("Uploaded files must have the same format");
-                      return Promise.reject(
-                        "Uploaded files must have the same format"
+                      setError(
+                        t(
+                          "import.upload.files_same_format_required",
+                          "Uploaded files must have the same format"
+                        ) as string
                       );
-                    }
-                    if (headers) {
-                      setHeaders(headers);
-                      const ignoreValues = Object.fromEntries(
-                        headers.map((h, i) => [`mapping[${i}]`, "__ignore__"])
-                      );
-                      form.setFieldsValue(ignoreValues);
+                      return Promise.reject("files must have same format");
                     }
                     return Promise.resolve();
                   }
@@ -180,11 +227,11 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                   setHasFiles(e.fileList.length > 0);
                   try {
                     await form.validateFields();
-                    setHasError(false);
+                    setError(false);
                   } catch (e) {}
                 }}
                 onRemove={deleteUploadedFile}
-                action={`/api/wizard/import/`}
+                action={`/api/import/file/`}
                 headers={getAuthHeaders()}
                 showUploadList={{
                   showDownloadIcon: false
@@ -193,53 +240,109 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                 <p className="ant-upload-drag-icon">
                   <UploadOutlined />
                 </p>
-                <p className="ant-upload-text">Click or drag to upload files</p>
-                <p className={`ant-upload-${hasError ? "error" : "hint"}`}>
-                  {hasError
-                    ? "Uploaded files must have same format."
-                    : "You may choose multiple CSV files"}
+                <p className="ant-upload-text">
+                  {t(
+                    "import.upload.files_upload",
+                    "Click or drag to upload files"
+                  )}
+                </p>
+                <p className={`ant-upload-${error ? "error" : "hint"}`}>
+                  {error ||
+                    t(
+                      "import.upload.files_hint",
+                      "You may choose multiple CSV files"
+                    )}
                 </p>
               </Dragger>
             </Form.Item>
           )}
           {step === 1 && (
             <div>
-              <h2>Map Columns</h2>
-              {headers.map((header, i) => (
+              <h2>{t("import.columns.title", "Map Columns")}</h2>
+              {importConfigId && (
+                <Alert
+                  type="info"
+                  showIcon
+                  message={t(
+                    "import.config_imported",
+                    "We imported a previous import configuration! Your changes will be saved for the next time."
+                  )}
+                />
+              )}
+              {mapColumns.map(([column, name]) => (
                 <Form.Item
-                  key={header}
-                  label={header}
-                  name={`mapping[${i}]`}
+                  key={column}
+                  name={column}
+                  label={name}
                   required={false}
-                  rules={[{ required: true, message: "Please select a field" }]}
+                  extra={
+                    column === "reference" &&
+                    t(
+                      "import.columns.map_reference_help",
+                      "A unqiue identifier for a transaction."
+                    )
+                  }
+                  rules={[
+                    {
+                      required: true,
+                      message: t(
+                        "import.columns.mapping_required",
+                        "Please select a mapping"
+                      )
+                    }
+                  ]}
                 >
                   <Select
-                    onChange={value => {
-                      if (value === "__ignore__") {
+                    onChange={(value: string) => {
+                      const newMappings = mappings.filter(
+                        m => m.target !== column
+                      );
+                      if (value === COLUMN_IGNORE) {
+                        setMappings(newMappings);
                         return;
                       }
-                      const newMappings = [
-                        ...mappings.filter(m => m.target !== value),
-                        {
-                          target: value,
-                          is_sourced: true,
-                          source: header,
-                          options: {}
-                        } as ColumnMapping
-                      ];
+                      const mapping: ColumnMapping = {
+                        target: column as ColumnMappingTarget,
+                        is_sourced: value !== COLUMN_VALUE,
+                        source: value === COLUMN_VALUE ? undefined : value,
+                        options: {}
+                      };
+                      newMappings.push(mapping);
+                      form.setFieldsValue({
+                        [`mapping[${mapping.target}]`]: mapping
+                      });
                       setMappings(newMappings);
                     }}
-                    defaultActiveFirstOption
                   >
-                    <Select.OptGroup label="Functions">
-                      <Select.Option value="__ignore__">
-                        Ignore this column
-                      </Select.Option>
-                    </Select.OptGroup>
-                    <Select.OptGroup label="Fields">
-                      {mapColumns.map(([value, label]) => (
-                        <Select.Option key={value} value={value}>
-                          {label}
+                    {column !== "amount" && (
+                      <Select.OptGroup
+                        label={t(
+                          "import.columns.mapping_functions",
+                          "Functions"
+                        )}
+                      >
+                        <Select.Option value={COLUMN_IGNORE}>
+                          {t(
+                            "import.columns.mapping_ignore",
+                            "Ignore this column"
+                          )}
+                        </Select.Option>
+                        {column !== "reference" && (
+                          <Select.Option value={COLUMN_VALUE}>
+                            {t(
+                              "import.columns.mapping_value",
+                              "Supply a fixed value"
+                            )}
+                          </Select.Option>
+                        )}
+                      </Select.OptGroup>
+                    )}
+                    <Select.OptGroup
+                      label={t("import.columns.mapping_fields", "Fields")}
+                    >
+                      {headers.map(header => (
+                        <Select.Option key={header} value={header}>
+                          {header}
                         </Select.Option>
                       ))}
                     </Select.OptGroup>
@@ -250,26 +353,50 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
           )}
           {step === 2 && (
             <div>
-              <h2>Configuration</h2>
+              <h2>{t("import.config.title", "Configuration")}</h2>
               {mappings.map(mapping => (
                 <Form.Item
                   key={mapping.target}
+                  name={`mapping[${mapping.target}]`}
                   label={columnNames[mapping.target]}
-                  extra={`Extract from column "${mapping.source}"`}
+                  wrapperCol={{ span: 16 }}
+                  getValueFromEvent={value => value}
                 >
-                  <Input />
+                  <MappingOptions />
                 </Form.Item>
               ))}
             </div>
           )}
           {step === 3 && (
+            <div>
+              <h2>{t("import.values.title", "Map Values")}</h2>
+              <ul>
+                <li>lorem</li>
+                <li>lorem</li>
+                <li>lorem</li>
+                <li>lorem</li>
+              </ul>
+            </div>
+          )}
+          {step === 4 && (
+            <div>
+              <h2>{t("import.preview.title", "Preview")}</h2>
+              <ul>
+                <li>Preview</li>
+                <li>Preview</li>
+                <li>Preview</li>
+                <li>Preview</li>
+              </ul>
+            </div>
+          )}
+          {step === 5 && (
             <Result
-              title="Importing..."
+              title={t("import.importing.title")}
               icon={<LoadingOutlined />}
               extra={<Progress status="active" percent={17} />}
             />
           )}
-          {step === 4 && (
+          {step === 6 && (
             <Result
               status="success"
               title="Done!"
@@ -284,27 +411,32 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
         </Form>
         <Row>
           <Col span={12}>
-            {step > 0 && step < 3 && (
+            {step > 0 && step < 5 && (
               <Button type="primary" onClick={() => setStep(step - 1)}>
-                Back
+                {t("import.wizard.back", "Back")}
               </Button>
             )}
-            {step < 3 && (
+            {step < 5 && (
               <Button
                 type="link"
                 onClick={() => {
                   if (hasFiles || step > 0) {
                     cancelModal = Modal.confirm({
-                      title: "Cancel import process?",
-                      content: `You will lose all settings and progress.${
-                        hasFiles
-                          ? " Your uploaded files will be deleted without being imported."
-                          : ""
-                      }`,
+                      title: t(
+                        "import.cancel.confirm",
+                        "Cancel import process?"
+                      ),
+                      content: t(
+                        "import.cancel.message",
+                        "Your uploaded files will be deleted without being imported."
+                      ),
                       style: { marginTop: 100 },
-                      okText: "Cancel Import",
+                      okText: t("import.cancel.button", "Cancel Import"),
                       okButtonProps: { type: "danger" },
-                      cancelText: "Continue Import",
+                      cancelText: t(
+                        "import.cancel.continue",
+                        "Continue Import"
+                      ),
                       onOk: closeModal
                     });
                   } else {
@@ -312,7 +444,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                   }
                 }}
               >
-                Cancel
+                {t("import.cancel.button", "Cancel Import")}
               </Button>
             )}
           </Col>
@@ -323,15 +455,42 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                 onClick={async () => {
                   try {
                     await form.validateFields();
+                    if (step === 2) {
+                      // save import config
+                      setLoading(true);
+                      if (importConfig) {
+                        await updateImportConfig(
+                          {
+                            pk: importConfigId,
+                            file_type: "text/csv",
+                            mappings
+                          } as any,
+                          {
+                            updateQuery: [
+                              "item/import/config",
+                              { pk: importConfigId }
+                            ]
+                          }
+                        );
+                      } else {
+                        const newConfig = await createImportConfig({
+                          file_type: "text/csv",
+                          mappings
+                        } as any);
+                      }
+                      setLoading(false);
+                    }
                     setStep(step + 1);
                   } catch (errors) {
                     console.info(errors);
                   }
                 }}
                 loading={loading}
-                disabled={!hasFiles || !!hasError}
+                disabled={!hasFiles || !!error}
               >
-                {step === 2 ? "Import" : "Next"}
+                {step === 4
+                  ? t("import.wizard.import_button", "Import now!")
+                  : t("import.wizard.next", "Next")}
               </Button>
             )}
           </Col>
@@ -339,6 +498,192 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
       </div>
     </Modal>
   );
+};
+
+interface MappingOptionsProps {
+  value?: ColumnMapping;
+  onChange?: (value: ColumnMapping) => void;
+}
+
+const MappingOptions = ({ value, ...props }: MappingOptionsProps) => {
+  if (value?.is_sourced) {
+    return <ColumnMappingOptions value={value} {...props} />;
+  } else {
+    return <ColumnMappingValue value={value} {...props} />;
+  }
+};
+
+const ColumnMappingOptions = ({ value, onChange }: MappingOptionsProps) => {
+  const [t] = useTranslation("transactions");
+
+  switch (value?.target) {
+    case "datetime":
+      return (
+        <Row gutter={8}>
+          <Col span={9}>
+            <Radio.Group
+              name="dayfirst"
+              buttonStyle="solid"
+              value={value.options?.dayfirst ?? true}
+              onChange={e => {
+                onChange?.({
+                  ...value,
+                  options: {
+                    ...value.options,
+                    dayfirst: e.target.value
+                  }
+                });
+              }}
+            >
+              <Radio.Button value={true}>Day first</Radio.Button>
+              <Radio.Button value={false}>Month first</Radio.Button>
+            </Radio.Group>
+          </Col>
+          <Col span={9}>
+            <Radio.Group
+              name="yearfirst"
+              buttonStyle="solid"
+              value={value.options?.yearfirst ?? false}
+              onChange={e => {
+                onChange?.({
+                  ...value,
+                  options: {
+                    ...value.options,
+                    yearfirst: e.target.value
+                  }
+                });
+              }}
+            >
+              <Radio.Button value={true}>Year first</Radio.Button>
+              <Radio.Button value={false}>Year last</Radio.Button>
+            </Radio.Group>
+          </Col>
+        </Row>
+      );
+    case "amount":
+      return (
+        <>
+          <label>Decimal Separator: </label>
+          <Radio.Group
+            buttonStyle="solid"
+            value={value.options?.decimal_separator ?? "."}
+            onChange={e => {
+              onChange?.({
+                ...value,
+                options: {
+                  ...value.options,
+                  decimal_separator: e.target.value
+                }
+              });
+            }}
+          >
+            <Radio.Button value=".">.</Radio.Button>
+            <Radio.Button value=",">,</Radio.Button>
+          </Radio.Group>
+        </>
+      );
+    // TODO
+    // case "tags":
+    //   return <span>Ready</span>;
+    default:
+      return (
+        <>
+          {t("import.columns.mapping_ready", "Ready")}{" "}
+          <CheckCircleTwoTone twoToneColor="#52c41a" />
+        </>
+      );
+  }
+};
+
+const ColumnMappingValue = ({ value, onChange }: MappingOptionsProps) => {
+  const { settings } = useAuth();
+
+  switch (value?.target) {
+    case "datetime":
+      return (
+        <DatePicker
+          value={value.options?.value}
+          onChange={date => {
+            onChange!({
+              ...value,
+              options: {
+                ...value.options,
+                value: date as any
+              }
+            });
+          }}
+        />
+      );
+    case "account":
+      return (
+        <ModelSelect
+          useItems={useAccounts}
+          style={{ width: 200 }}
+          value={value.options?.value && (value.options as any)}
+          onChange={(account: any) => {
+            onChange!({
+              ...value,
+              options: {
+                ...value.options,
+                ...account
+              }
+            });
+          }}
+        />
+      );
+    case "payee":
+      return (
+        <ModelSelect
+          useItems={usePayees}
+          style={{ width: 200 }}
+          value={value.options?.value && (value.options as any)}
+          onChange={(payee: any) => {
+            onChange!({
+              ...value,
+              options: {
+                ...value.options,
+                ...payee
+              }
+            });
+          }}
+        />
+      );
+    case "category":
+      return (
+        <CategorySelect
+          style={{ width: 200 }}
+          value={value.options?.value && (value.options as any)}
+          onChange={(category: any) => {
+            onChange!({
+              ...value,
+              options: {
+                ...value.options,
+                ...category
+              }
+            });
+          }}
+        />
+      );
+    case "text":
+      return (
+        <Input
+          style={{ width: 200 }}
+          value={value.options?.value}
+          onChange={e => {
+            onChange!({
+              ...value,
+              options: {
+                ...value.options,
+                value: e.target.value
+              }
+            });
+          }}
+        />
+      );
+    default:
+      // this should never happen
+      return <>error</>;
+  }
 };
 
 export default ImportWizard;
