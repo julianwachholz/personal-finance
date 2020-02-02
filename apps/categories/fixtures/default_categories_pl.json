@@ -5,7 +5,6 @@
       [{ "name": "Lunch" }],
       [{ "name": "Zakupy", "icon": "🛒" }],
       [{ "name": "Fast Food", "icon": "🍔" }],
-
       [{ "name": "Przekąski & Inne", "icon": "🍫" }]
     ]
   ],
@@ -95,10 +94,8 @@
   [
     { "name": "Pozostałe podatki, opłaty & wydatki", "icon": "🧾" },
     [
-      [
-        { "name": "Opłata za kartę kredytową", "icon": "💳" },
-        { "name": "Prezenty", "icon": "🎁" }
-      ]
+      [{ "name": "Opłata za kartę kredytową", "icon": "💳" }],
+      [{ "name": "Prezenty", "icon": "🎁" }]
     ]
   ],
   [{ "name": "Przychód", "icon": "💰" }, [[{ "name": "Wynagrodzenie" }]]]
