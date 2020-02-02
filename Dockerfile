@@ -13,7 +13,7 @@ ENV DJANGO_ENV=${DJANGO_ENV} \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.0.2
+    POETRY_VERSION=1.0.3
 
 RUN apk --no-cache add \
     bash \
