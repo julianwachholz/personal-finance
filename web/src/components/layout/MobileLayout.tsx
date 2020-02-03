@@ -15,7 +15,7 @@ import "./MobileLayout.scss";
 const { Content } = Layout;
 
 const MobileLayout: React.FC = ({ children }) => {
-  const [t] = useTranslation();
+  const [t] = useTranslation("translation", { useSuspense: false });
   const history = useHistory();
   const { pathname } = useLocation();
 
