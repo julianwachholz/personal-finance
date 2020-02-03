@@ -4,12 +4,13 @@ import {
   PieChartOutlined,
   ProjectOutlined
 } from "@ant-design/icons";
-import { Layout } from "antd";
+import { Badge, Layout } from "antd";
 import { TabBar } from "antd-mobile";
 import "antd-mobile/dist/antd-mobile.css";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation } from "react-router";
+import { useSettings } from "../../utils/SettingsProvider";
 import "./MobileLayout.scss";
 
 const { Content } = Layout;
@@ -18,6 +19,7 @@ const MobileLayout: React.FC = ({ children }) => {
   const [t] = useTranslation("translation", { useSuspense: false });
   const history = useHistory();
   const { pathname } = useLocation();
+  const { updateApp } = useSettings();
 
   return (
     <Layout>
@@ -43,8 +45,16 @@ const MobileLayout: React.FC = ({ children }) => {
         />
         <TabBar.Item
           title={t("menu.dashboard", "Dashboard")}
-          icon={<PieChartOutlined />}
-          selectedIcon={<PieChartOutlined />}
+          icon={
+            <Badge dot count={updateApp ? 1 : 0}>
+              <PieChartOutlined />
+            </Badge>
+          }
+          selectedIcon={
+            <Badge dot count={updateApp ? 1 : 0}>
+              <PieChartOutlined />
+            </Badge>
+          }
           selected={pathname === `/`}
           onPress={() => {
             history.push(`/`);

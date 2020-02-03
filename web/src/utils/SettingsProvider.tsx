@@ -7,6 +7,7 @@ interface SettingsValues {
   theme: "light" | "dark";
   menuCollapsed: boolean;
   tableSize: SizeType;
+  updateApp?: () => void;
 }
 
 interface SettingsFunctions {
@@ -68,7 +69,8 @@ export const SettingsProvider: React.FC<Partial<Settings>> = ({
           menuCollapsed,
           toggleMenu,
           tableSize,
-          setTableSize
+          setTableSize,
+          updateApp: props.updateApp
         }}
       >
         {children}

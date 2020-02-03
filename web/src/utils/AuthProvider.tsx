@@ -28,7 +28,7 @@ export const AuthContext = React.createContext<AuthContext>({} as any);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const { i18n } = useTranslation(undefined, { useSuspense: false });
+  const { i18n } = useTranslation("translation", { useSuspense: false });
   const [isAuthenticated, setIsAuthenticated] = useState(
     isPossiblyAuthenticated()
   );

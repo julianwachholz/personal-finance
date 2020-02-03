@@ -89,6 +89,7 @@ const MainMenu = () => {
     {
       path: "/settings",
       icon: <SettingOutlined />,
+
       text: t("menu.settings", "Settings"),
       items: [
         {

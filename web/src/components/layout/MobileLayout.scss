@@ -36,6 +36,10 @@
   .module-content {
     padding: 16px;
 
+    .ant-alert {
+      margin-bottom: 16px;
+    }
+
     > .am-list,
     > .ant-list {
       // make it borderless again
