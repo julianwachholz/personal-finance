@@ -62,7 +62,7 @@ const PayeeForm = ({ data, onSave }: FormProps) => {
         </Select>
       </Form.Item>
       <Form.Item
-        name="set_default_category"
+        name="default_category"
         label={t("payees:default_category", "Default Category")}
       >
         <CategorySelect size="large" />
