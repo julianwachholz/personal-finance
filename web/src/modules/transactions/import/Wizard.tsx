@@ -42,7 +42,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
   const [t] = useTranslation("transactions");
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [state, setState] = useState<ImportWizardState>({});
+  const [state, setState] = useState<UploadStepState>({});
 
   const [form] = Form.useForm();
 
@@ -109,7 +109,10 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
   ];
   const columnNames = Object.fromEntries(mapColumns);
 
-  const onUploadChange = ({ loading, ...newState }: UploadStepState) => {
+  const onUploadChange = ({
+    loading,
+    ...newState
+  }: UploadStepState & { loading: boolean }) => {
     console.log("UploadStep onChange:", loading, newState);
     setLoading(loading);
     setState({ ...state, ...newState });
@@ -155,7 +158,9 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
           //   });
           // }}
         >
-          {step === 0 && <UploadStep onChange={onUploadChange} />}
+          {step === 0 && (
+            <UploadStep files={state.files} onChange={onUploadChange} />
+          )}
           {step === 1 && (
             <MapColumns
               headers={state.headers!}

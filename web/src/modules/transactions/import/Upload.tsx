@@ -18,30 +18,29 @@ const normalizeFiles = (e: File[] | { fileList: File[] }) => {
 };
 
 interface UploadStepProps {
-  onChange: (values: UploadStepState) => void;
+  files?: File[];
+  onChange: (values: UploadStepState & { loading: boolean }) => void;
 }
 
 export interface UploadStepState {
+  files?: File[];
   fileIds?: number[];
   headers?: string[];
   importConfigId?: number;
-
-  loading: boolean;
 }
 
-const UploadStep = ({ onChange }: UploadStepProps) => {
+const UploadStep = ({ files, onChange }: UploadStepProps) => {
   const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
   const [error, setError] = useState<string>();
-  const [files, setFiles] = useState<File[]>();
 
   return (
     <Form
       form={form}
+      initialValues={{ files }}
       onValuesChange={changedValues => {
         if ("files" in changedValues) {
           const files = changedValues.files as File[];
-          setFiles(files);
 
           const loading = !files.every(f => f.status === "done");
 
@@ -49,6 +48,7 @@ const UploadStep = ({ onChange }: UploadStepProps) => {
             console.info("no more files");
             onChange({
               loading,
+              files,
               fileIds: [],
               headers: undefined,
               importConfigId: undefined
@@ -63,9 +63,10 @@ const UploadStep = ({ onChange }: UploadStepProps) => {
 
           onChange({
             loading,
+            files,
+            fileIds: files.filter(f => f.response).map(f => f.response!.pk),
             headers,
-            importConfigId,
-            fileIds: files.filter(f => f.response).map(f => f.response!.pk)
+            importConfigId
           });
         }
       }}
