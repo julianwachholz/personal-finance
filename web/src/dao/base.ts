@@ -237,7 +237,7 @@ export const makeUseItem = <T extends Model>(
   return useItem;
 };
 
-type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
+export type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
 
 interface ItemMutationOptions {
   noId: boolean;

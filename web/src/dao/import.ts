@@ -1,4 +1,3 @@
-import { UploadFile } from "antd/lib/upload/interface";
 import {
   authFetch,
   makeItemAction,
@@ -47,10 +46,13 @@ interface ColumnMappingOptions {
   yearfirst?: boolean;
 }
 
-export const deleteUploadedFile = async (file: UploadFile) => {
-  await authFetch(`/api/wizard/import/${file.response.pk}/`, {
+export const deleteUploadedFile = async (pk: number) => {
+  const response = await authFetch(`/api/import/file/${pk}/`, {
     method: "DELETE"
   });
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
 };
 
 export const useImportConfig = makeUseItem<ImportConfig>("import/config");

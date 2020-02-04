@@ -92,6 +92,13 @@
     color: #ff4d4f;
   }
 
+  .list-item-row {
+    display: block;
+  }
+  .ant-list-item .ant-select {
+    display: block;
+  }
+
   .ant-alert {
     margin-bottom: 24px;
   }
