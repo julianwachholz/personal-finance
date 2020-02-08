@@ -5,8 +5,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import MethodNotAllowed, NotFound
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
+
+from apps.transactions.serializers import TransactionSerializer
 
 from .models import ImportConfig, ImportFile, ValueMapping
 from .serializers import (ImportConfigSerializer, ImportFileSerializer,
@@ -46,7 +48,9 @@ class ImportConfigViewSet(viewsets.ModelViewSet):
         file = get_object_or_404(
             ImportFile, user=request.user, pk=request.GET.get("file")
         )
-        return Response(config.get_preview(file.dataset))
+        transactions = config.get_preview(file.dataset)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response({"results": serializer.data})
 
     @action(detail=True, methods=["get"])
     def unmapped_values(self, request, pk, **kwargs):
@@ -85,15 +89,15 @@ class ValueMappingViewSet(viewsets.ModelViewSet):
 
     def get_object(self, **kwargs):
         if not kwargs:
-            content_type_name, object_id = self.kwargs["pk"].split("-")
+            model, object_id = self.kwargs["pk"].split("-")
         else:
-            content_type_name = kwargs["content_type"]
+            model = kwargs["content_type"]
             object_id = kwargs["object_id"]
 
-        if content_type_name not in self.TYPE_MAP:
+        if model not in self.TYPE_MAP:
             raise NotFound()
 
-        content_type = ContentType.objects.get(**self.TYPE_MAP[content_type_name])
+        content_type = ContentType.objects.get(**self.TYPE_MAP[model])
         try:
             return ValueMapping.objects.get_by_natural_key(
                 content_type=content_type, object_id=object_id
@@ -119,6 +123,11 @@ class ValueMappingViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["post"])
     def bulk_create(self, request, **kwargs):
-        count = len(request.data)
-        # TODO
-        return Response({"status": "ok", "count": count})
+        for data in request.data:
+            instance = self.get_object(
+                content_type=data["content_type"], object_id=data["object_id"]
+            )
+            serializer = self.get_serializer(instance=instance, data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+        return Response({"status": "ok"}, status=201)

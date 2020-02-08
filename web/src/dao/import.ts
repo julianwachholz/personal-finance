@@ -6,6 +6,7 @@ import {
   makePutItem,
   makeUseItem
 } from "./base";
+import { Transaction } from "./transactions";
 
 export interface ImportFile {
   readonly pk: number;
@@ -77,7 +78,7 @@ export const fetchUnmappedValues = makeItemAction<
 >("import/config", "unmapped_values", "GET");
 
 export interface ValueMapping {
-  model: ValueMappingModel;
+  content_type: ValueMappingModel;
   value: string;
   object_id: number;
 }
@@ -91,3 +92,18 @@ export const bulkPostValueMapping = makeItemsAction<ValueMapping[]>(
   "import/mapping",
   "bulk_create"
 );
+
+interface GetImportConfigPreview {
+  pk: number;
+  file: number;
+}
+
+interface ImportConfigPreview {
+  count: number;
+  results: Transaction[];
+}
+
+export const getImportConfigPreview = makeItemAction<
+  GetImportConfigPreview,
+  ImportConfigPreview
+>("import/config", "preview", "GET");

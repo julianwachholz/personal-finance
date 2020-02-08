@@ -24,7 +24,7 @@ export type ImportValueMappings = {
 };
 
 interface ImportValueMapping {
-  model: ValueMappingModel;
+  content_type: ValueMappingModel;
   value: string;
   target?: RelatedModel;
   created?: boolean;
@@ -75,7 +75,7 @@ export const MapValues = ({
             return [
               model,
               values!.map(value => ({
-                model,
+                content_type: model,
                 value
               }))
             ];

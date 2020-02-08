@@ -44,16 +44,19 @@ export interface Transaction {
   readonly type: "expense" | "income";
 }
 
-const mapTx = (tx: Transaction) => {
+export const mapTransaction = (tx: Transaction) => {
   tx.datetime = new Date(tx.datetime);
   return tx;
 };
 
 export const [useTransactions, prefetchTransactions] = makeUseItems<
   Transaction
->("transactions", mapTx);
+>("transactions", mapTransaction);
 
-export const useTransaction = makeUseItem<Transaction>("transactions", mapTx);
+export const useTransaction = makeUseItem<Transaction>(
+  "transactions",
+  mapTransaction
+);
 
 export const postTransaction = makePostItem<Transaction>("transactions");
 

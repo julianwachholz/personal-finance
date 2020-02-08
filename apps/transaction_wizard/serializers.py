@@ -81,17 +81,23 @@ class ImportConfigSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ValueMappingListSerializer(serializers.ListSerializer):
+    def update(self, instance, data):
+        return self.child.update(instance, data)
+
+
 class ValueMappingSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    model = serializers.SlugRelatedField(
-        source="content_type", slug_field="model", queryset=ContentType.objects
+    content_type = serializers.SlugRelatedField(
+        slug_field="model", queryset=ContentType.objects
     )
     values = serializers.ReadOnlyField()
     value = serializers.CharField(write_only=True)
 
     class Meta:
         model = ValueMapping
-        fields = ("user", "model", "object_id", "values", "value")
+        list_serializer_class = ValueMappingListSerializer
+        fields = ("user", "content_type", "object_id", "values", "value")
 
     def update(self, instance, data):
         """Add the new value to the mapping values."""

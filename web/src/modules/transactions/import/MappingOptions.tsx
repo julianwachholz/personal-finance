@@ -8,33 +8,20 @@ import ModelSelect from "../../../components/form/ModelSelect";
 import { useAccounts } from "../../../dao/accounts";
 import { ColumnMapping, ImportConfig } from "../../../dao/import";
 import { usePayees } from "../../../dao/payees";
-import ColumnName from "./ColumnName";
+import ColumnName, { COLUMNS } from "./ColumnName";
 
 interface MappingOptionsProps {
   importConfig: ImportConfig;
+  onChange: (importConfig: ImportConfig) => void;
 }
 
 const getInitialValues = (importConfig: ImportConfig) => {
   return Object.fromEntries(
     importConfig.mappings.map(mapping => [mapping.target, mapping])
   );
-  //   Object.keys(changedValues).forEach(key => {
-  //     if (key.startsWith("mapping[")) {
-  //       console.info(changedValues);
-  //       const mapping = changedValues[key];
-  //       const newMappings = mappings.filter(
-  //         m => m.target !== mapping.target
-  //       );
-  //       const index = mapColumns.findIndex(
-  //         ([c]) => c === mapping.target
-  //       );
-  //       newMappings.splice(index, 0, mapping);
-  //       setMappings(newMappings);
-  //     }
-  //   });
 };
 
-const MappingOptions = ({ importConfig }: MappingOptionsProps) => {
+const MappingOptions = ({ importConfig, onChange }: MappingOptionsProps) => {
   const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
 
@@ -45,6 +32,17 @@ const MappingOptions = ({ importConfig }: MappingOptionsProps) => {
       wrapperCol={{ span: 10 }}
       labelCol={{ span: 6 }}
       initialValues={getInitialValues(importConfig)}
+      onValuesChange={changedValues => {
+        Object.keys(changedValues).forEach(key => {
+          const mapping = changedValues[key];
+          const newMappings = importConfig.mappings.filter(
+            m => m.target !== mapping.target
+          );
+          const index = COLUMNS.findIndex(column => column === mapping.target);
+          newMappings.splice(index, 0, mapping);
+          onChange({ ...importConfig, mappings: newMappings });
+        });
+      }}
     >
       <h2>{t("import.config.title", "Configuration")}</h2>
       {importConfig.mappings.map(mapping => (

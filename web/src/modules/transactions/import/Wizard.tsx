@@ -4,15 +4,18 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation } from "react-query";
 import {
+  bulkPostValueMapping,
   deleteUploadedFile,
   ImportConfig,
   postImportConfig,
   putImportConfig,
-  useImportConfig
+  useImportConfig,
+  ValueMapping
 } from "../../../dao/import";
 import MapColumns from "./MapColumns";
 import MappingOptions from "./MappingOptions";
 import MapValues, { ImportValueMappings } from "./MapValues";
+import Preview from "./Preview";
 import UploadFiles, { UploadFilesState } from "./Upload";
 
 interface ImportWizardProps {
@@ -89,32 +92,28 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
             <MapColumns
               headers={uploadState.headers!}
               importConfig={importConfig}
-              onChange={newImportConfig => {
-                setImportConfig(newImportConfig);
-              }}
+              onChange={setImportConfig}
             />
           )}
-          {step === 2 && <MappingOptions importConfig={importConfig!} />}
+          {step === 2 && (
+            <MappingOptions
+              importConfig={importConfig!}
+              onChange={setImportConfig}
+            />
+          )}
           {step === 3 && (
             <MapValues
               fileIds={uploadState.fileIds!}
               importConfig={importConfig!}
               valueMappings={valueMappings}
-              onChange={newValueMappings => {
-                setValueMappings(newValueMappings);
-              }}
+              onChange={setValueMappings}
             />
           )}
           {step === 4 && (
-            <div>
-              <h2>{t("import.preview.title", "Preview")}</h2>
-              <ul>
-                <li>Preview</li>
-                <li>Preview</li>
-                <li>Preview</li>
-                <li>Preview</li>
-              </ul>
-            </div>
+            <Preview
+              importConfig={importConfig!}
+              fileId={uploadState.fileIds![0]}
+            />
           )}
           {step === 5 && (
             <Result
@@ -176,7 +175,7 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
             )}
           </Col>
           <Col span={12} style={{ textAlign: "right" }}>
-            {step < 3 && (
+            {step < 5 && (
               <Button
                 type="primary"
                 onClick={async () => {
@@ -196,6 +195,27 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
                       );
                       setImportConfig(newImportConfig);
                     }
+                    setLoading(false);
+                  }
+                  if (step === 3 && valueMappings) {
+                    // save value mappings
+                    setLoading(true);
+                    await Promise.all(
+                      Object.values(valueMappings).map(mappings =>
+                        bulkPostValueMapping(
+                          mappings!
+                            .filter(m => !!m.target)
+                            .map(
+                              mapping =>
+                                ({
+                                  content_type: mapping.content_type,
+                                  value: mapping.value,
+                                  object_id: mapping.target!.value
+                                } as ValueMapping)
+                            )
+                        )
+                      )
+                    );
                     setLoading(false);
                   }
                   setStep(step + 1);

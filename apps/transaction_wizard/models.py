@@ -15,6 +15,10 @@ from django.utils.translation import ugettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
 from tablib import detect_format, import_set
 
+from apps.accounts.models import Account
+from apps.payees.models import Payee
+from apps.transactions.models import Transaction
+
 
 def upload_path(instance, filename):
     return f"import/{instance.user.id}/{filename}"
@@ -100,32 +104,51 @@ class ImportConfig(models.Model):
             if all(mapping.source in headers for mapping in mappings):
                 yield config
 
-    @cached_property
-    def _all_mappings(self):
-        return self.mappings.all()
-
     def _map_record(self, record):
         record = strip_keys(record)
-        return {
-            mapping.target: mapping.get_value(record) for mapping in self._all_mappings
+        kwargs = {
+            mapping.serializer_target: mapping.get_value(record)
+            for mapping in self.mappings.all()
         }
 
+        if "account_id" in kwargs:
+            account = _get_account_by_pk(kwargs["account_id"])
+            kwargs["amount_currency"] = account.balance_currency
+
+        if "category_id" not in kwargs and kwargs.get("payee_id"):
+            payee = _get_payee_by_pk(kwargs["payee_id"])
+            if payee.default_category:
+                kwargs["category_id"] = payee.default_category_id
+
+        return Transaction(**kwargs)
+
     def get_preview(self, dataset):
-        return {
-            "count": len(dataset),
-            "preview": map(self._map_record, dataset.dict[:10]),
-        }
+        transactions = map(self._map_record, dataset.dict[:10])
+        return transactions
 
     def get_unmapped_values(self, dataset):
         """Get a collection of unmapped values."""
+        mappings = self.mappings.all()
+        for mapping in mappings:
+            mapping._mode = 2
         return {
             mapping.target: mapping.get_unmapped_values(dataset)
-            for mapping in self._all_mappings
+            for mapping in mappings
             if mapping.is_sourced and mapping.target in {"account", "payee", "category"}
         }
 
     def map_dataset(self, dataset):
         return map(self._map_record, dataset.dict)
+
+
+@lru_cache(32)
+def _get_account_by_pk(pk):
+    return Account.objects.get(pk=pk)
+
+
+@lru_cache(128)
+def _get_payee_by_pk(pk):
+    return Payee.objects.get(pk=pk)
 
 
 class ColumnMapping(models.Model):
@@ -173,6 +196,8 @@ class ColumnMapping(models.Model):
     :value any: a fixed value to set in this column
     """
 
+    _mode = 1
+
     class Meta:
         verbose_name = _("column mapping")
         verbose_name_plural = _("column mappings")
@@ -184,6 +209,12 @@ class ColumnMapping(models.Model):
     def clean(self):
         if self.is_sourced and not self.source:
             raise ValidationError({"source": "A source is required"})
+
+    @property
+    def serializer_target(self):
+        if self.target in ("account", "payee", "category"):
+            return f"{self.target}_id"
+        return self.target
 
     def get_unmapped_values(self, dataset):
         if not self.is_sourced or self.target not in {"account", "payee", "category"}:
@@ -220,10 +251,14 @@ class ColumnMapping(models.Model):
             dayfirst=self.options.get("dayfirst", True),
         )
 
+    def find_object_id(self, model, value):
+        # Proxy with cache buster.
+        return _find_object_id(model, self.config.user, value, mode=self._mode)
+
     def _get_account_from_value(self, value):
         if type(value) == int:
             return value
-        return _find_object_id("accounts.account", self.config.user, value)
+        return self.find_object_id("accounts.account", value)
 
     def _get_amount_from_value(self, value):
         decimal_separator = self.options.get("decimal_separator", ".")
@@ -232,10 +267,10 @@ class ColumnMapping(models.Model):
         return amount
 
     def _get_payee_from_value(self, value):
-        return _find_object_id("payees.payee", self.config.user, value)
+        return self.find_object_id("payees.payee", value)
 
     def _get_category_from_value(self, value):
-        return _find_object_id("categories.category", self.config.user, value)
+        return self.find_object_id("categories.category", value)
 
     def _get_tags_from_value(self, value):
         # TODO
@@ -249,7 +284,7 @@ def _content_type_for(name):
 
 
 @lru_cache(512)
-def _find_object_id(model, user, value):
+def _find_object_id(model, user, value, mode=1):
     content_type = _content_type_for(model)
     try:
         mapping = ValueMapping.objects.get(
