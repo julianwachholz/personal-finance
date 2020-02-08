@@ -1,8 +1,9 @@
 from operator import itemgetter
 
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from .models import ColumnMapping, ImportConfig, ImportFile
+from .models import ColumnMapping, ImportConfig, ImportFile, ValueMapping
 
 
 class MatchingMappingSerializer(serializers.ModelSerializer):
@@ -77,4 +78,27 @@ class ImportConfigSerializer(serializers.ModelSerializer):
             )
             if not updated:
                 instance.mappings.create(**mapping)
+        return instance
+
+
+class ValueMappingSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    model = serializers.SlugRelatedField(
+        source="content_type", slug_field="model", queryset=ContentType.objects
+    )
+    values = serializers.ReadOnlyField()
+    value = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = ValueMapping
+        fields = ("user", "model", "object_id", "values", "value")
+
+    def update(self, instance, data):
+        """Add the new value to the mapping values."""
+        values = set(instance.values)
+        if data["value"] in values:
+            return instance
+        values.add(data["value"])
+        instance.values = list(values)
+        instance.save()
         return instance

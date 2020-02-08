@@ -1,6 +1,7 @@
 import {
   authFetch,
   makeItemAction,
+  makeItemsAction,
   makePostItem,
   makePutItem,
   makeUseItem
@@ -64,8 +65,29 @@ interface GetUnmappedValues {
   file: number;
 }
 
-export const fetchUnmappedValues = makeItemAction<GetUnmappedValues>(
-  "import/config",
-  "unmapped_values",
-  "GET"
+export type ValueMappingModel = "account" | "payee" | "category"; // TODO tags
+
+type FileUnmappedValues = {
+  [M in ValueMappingModel]?: string[];
+};
+
+export const fetchUnmappedValues = makeItemAction<
+  GetUnmappedValues,
+  FileUnmappedValues
+>("import/config", "unmapped_values", "GET");
+
+export interface ValueMapping {
+  model: ValueMappingModel;
+  value: string;
+  object_id: number;
+}
+
+export const postValueMapping = makeItemsAction<ValueMapping>(
+  "import",
+  "mapping"
+);
+
+export const bulkPostValueMapping = makeItemsAction<ValueMapping[]>(
+  "import/mapping",
+  "bulk_create"
 );

@@ -19,17 +19,19 @@ const normalizeFiles = (e: File[] | { fileList: File[] }) => {
 
 interface UploadStepProps {
   files?: File[];
-  onChange: (values: UploadStepState & { loading: boolean }) => void;
+  onChange: (values: UploadFilesState) => void;
 }
 
-export interface UploadStepState {
+export interface UploadFilesState {
   files?: File[];
   fileIds?: number[];
   headers?: string[];
   importConfigId?: number;
+  loading?: boolean;
+  isValid?: boolean;
 }
 
-const UploadStep = ({ files, onChange }: UploadStepProps) => {
+const UploadFiles = ({ files, onChange }: UploadStepProps) => {
   const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
   const [error, setError] = useState<string>();
@@ -51,7 +53,8 @@ const UploadStep = ({ files, onChange }: UploadStepProps) => {
               files,
               fileIds: [],
               headers: undefined,
-              importConfigId: undefined
+              importConfigId: undefined,
+              isValid: false
             });
             return;
           }
@@ -66,7 +69,8 @@ const UploadStep = ({ files, onChange }: UploadStepProps) => {
             files,
             fileIds: files.filter(f => f.response).map(f => f.response!.pk),
             headers,
-            importConfigId
+            importConfigId,
+            isValid: true
           });
         }
       }}
@@ -95,6 +99,12 @@ const UploadStep = ({ files, onChange }: UploadStepProps) => {
                       "Uploaded files must have the same format"
                     ) as string
                   );
+                  onChange({
+                    isValid: false,
+                    fileIds: files
+                      .filter(f => f.response)
+                      .map(f => f.response!.pk)
+                  });
                   return Promise.reject("files must have same format");
                 } else {
                   setError(undefined);
@@ -135,4 +145,4 @@ const UploadStep = ({ files, onChange }: UploadStepProps) => {
   );
 };
 
-export default UploadStep;
+export default UploadFiles;

@@ -8,7 +8,9 @@ from apps.budgets.views import BudgetViewSet
 from apps.categories.views import CategoryViewSet
 from apps.payees.views import PayeeViewSet
 from apps.tags.views import TagViewSet
-from apps.transaction_wizard.views import ImportConfigViewSet, ImportFileViewSet
+from apps.transaction_wizard.views import (ImportConfigViewSet,
+                                           ImportFileViewSet,
+                                           ValueMappingViewSet)
 from apps.transactions.views import TransactionViewSet
 
 router = routers.DefaultRouter()
@@ -20,6 +22,7 @@ router.register("budgets", BudgetViewSet, basename="budgets")
 router.register("transactions", TransactionViewSet, basename="transactions")
 router.register("import/file", ImportFileViewSet, basename="import/file")
 router.register("import/config", ImportConfigViewSet, basename="import/config")
+router.register("import/mapping", ValueMappingViewSet, basename="import/mapping")
 
 urlpatterns = [
     path("admin/", admin.site.urls),

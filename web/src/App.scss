@@ -30,3 +30,9 @@
 .ant-result-extra .ant-btn {
   margin-bottom: 16px;
 }
+
+.text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

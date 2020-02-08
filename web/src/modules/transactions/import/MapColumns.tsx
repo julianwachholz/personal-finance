@@ -1,38 +1,63 @@
 import { Alert, Form, Select } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { ColumnMapping, ColumnMappingTarget } from "../../../dao/import";
+import {
+  ColumnMapping,
+  ColumnMappingTarget,
+  ImportConfig
+} from "../../../dao/import";
+import ColumnName, { COLUMNS } from "./ColumnName";
 
 interface MapColumnsProps {
   headers: string[];
-  importConfigId?: number;
+  importConfig: ImportConfig | null;
+
+  onChange: (importConfig: ImportConfig) => void;
 }
 
 export const COLUMN_IGNORE = "__ignore__";
 export const COLUMN_VALUE = "__value__";
 
-const MapColumns = ({ headers, importConfigId }: MapColumnsProps) => {
+const getInitialValues = (importConfig: ImportConfig | null) => {
+  if (importConfig === null) {
+    return {};
+  }
+  return Object.fromEntries(
+    COLUMNS.map(column => {
+      const mapping = importConfig.mappings.find(m => m.target === column);
+      if (mapping) {
+        if (mapping.is_sourced && mapping.source) {
+          return [column, mapping.source];
+        } else {
+          return [column, COLUMN_VALUE];
+        }
+      }
+      return [column, COLUMN_IGNORE];
+    })
+  );
+};
+
+const MapColumns = ({ headers, importConfig, onChange }: MapColumnsProps) => {
   const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
 
-  const [mappings, setMappings] = useState<ColumnMapping[]>([]);
-
-  const mapColumns = [
-    ["datetime", t("date", "Date")],
-    ["account", t("account", "Account")],
-    ["amount", t("amount", "Amount")],
-    ["payee", t("payee", "Payee")],
-    ["category", t("category", "Category")],
-    ["text", t("description", "Description")],
-    // TODO
-    // ["tags", t("tags", "Tags")],
-    ["reference", t("reference_number", "Reference Number")]
-  ];
+  // if (importConfig === null) {
+  //   importConfig = {
+  //     file_type: "text/csv",
+  //     mappings: []
+  //   } as any;
+  // }
 
   return (
-    <Form form={form}>
+    <Form
+      form={form}
+      layout="horizontal"
+      wrapperCol={{ span: 10 }}
+      labelCol={{ span: 6 }}
+      initialValues={getInitialValues(importConfig)}
+    >
       <h2>{t("import.columns.title", "Map Columns")}</h2>
-      {importConfigId && (
+      {importConfig && (
         <Alert
           type="info"
           showIcon
@@ -42,11 +67,11 @@ const MapColumns = ({ headers, importConfigId }: MapColumnsProps) => {
           )}
         />
       )}
-      {mapColumns.map(([column, name]) => (
+      {COLUMNS.map(column => (
         <Form.Item
           key={column}
           name={column}
-          label={name}
+          label={<ColumnName name={column} />}
           required={false}
           extra={
             column === "reference" &&
@@ -67,23 +92,28 @@ const MapColumns = ({ headers, importConfigId }: MapColumnsProps) => {
         >
           <Select
             onChange={(value: string) => {
-              const newMappings = mappings.filter(m => m.target !== column);
+              const mappings =
+                importConfig?.mappings.filter(m => m.target !== column) ?? [];
+
               if (value === COLUMN_IGNORE) {
-                setMappings(newMappings);
+                onChange({ file_type: "text/csv", ...importConfig!, mappings });
                 return;
               }
+
               const mapping: ColumnMapping = {
                 target: column as ColumnMappingTarget,
                 is_sourced: value !== COLUMN_VALUE,
                 source: value === COLUMN_VALUE ? undefined : value,
                 options: {}
               };
-              const index = mapColumns.findIndex(([c]) => c === mapping.target);
-              newMappings.splice(index, 0, mapping);
+              const index = COLUMNS.findIndex(
+                column => column === mapping.target
+              );
+              mappings.splice(index, 0, mapping);
               form.setFieldsValue({
                 [`mapping[${mapping.target}]`]: mapping
               });
-              setMappings(newMappings);
+              onChange({ file_type: "text/csv", ...importConfig!, mappings });
             }}
           >
             {column !== "amount" && (

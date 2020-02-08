@@ -1,29 +1,80 @@
 import { CheckCircleTwoTone } from "@ant-design/icons";
-import { Col, Input, Radio, Row } from "antd";
+import { Col, Form, Input, Radio, Row } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import CategorySelect from "../../../components/form/CategorySelect";
 import DatePicker from "../../../components/form/DatePicker";
 import ModelSelect from "../../../components/form/ModelSelect";
 import { useAccounts } from "../../../dao/accounts";
-import { ColumnMapping } from "../../../dao/import";
+import { ColumnMapping, ImportConfig } from "../../../dao/import";
 import { usePayees } from "../../../dao/payees";
+import ColumnName from "./ColumnName";
 
 interface MappingOptionsProps {
+  importConfig: ImportConfig;
+}
+
+const getInitialValues = (importConfig: ImportConfig) => {
+  return Object.fromEntries(
+    importConfig.mappings.map(mapping => [mapping.target, mapping])
+  );
+  //   Object.keys(changedValues).forEach(key => {
+  //     if (key.startsWith("mapping[")) {
+  //       console.info(changedValues);
+  //       const mapping = changedValues[key];
+  //       const newMappings = mappings.filter(
+  //         m => m.target !== mapping.target
+  //       );
+  //       const index = mapColumns.findIndex(
+  //         ([c]) => c === mapping.target
+  //       );
+  //       newMappings.splice(index, 0, mapping);
+  //       setMappings(newMappings);
+  //     }
+  //   });
+};
+
+const MappingOptions = ({ importConfig }: MappingOptionsProps) => {
+  const [t] = useTranslation("transactions");
+  const [form] = Form.useForm();
+
+  return (
+    <Form
+      form={form}
+      layout="horizontal"
+      wrapperCol={{ span: 10 }}
+      labelCol={{ span: 6 }}
+      initialValues={getInitialValues(importConfig)}
+    >
+      <h2>{t("import.config.title", "Configuration")}</h2>
+      {importConfig.mappings.map(mapping => (
+        <Form.Item
+          key={mapping.target}
+          name={mapping.target}
+          label={<ColumnName name={mapping.target} />}
+          wrapperCol={{ span: 16 }}
+          getValueFromEvent={value => value}
+        >
+          <ColumnOptions />
+        </Form.Item>
+      ))}
+    </Form>
+  );
+};
+
+export default MappingOptions;
+
+interface ColumnOptionsProps {
   value?: ColumnMapping;
   onChange?: (value: ColumnMapping) => void;
 }
 
-export const MappingOptions = ({ value, ...props }: MappingOptionsProps) => {
-  if (value?.is_sourced) {
-    return <ColumnMappingOptions value={value} {...props} />;
-  } else {
-    return <ColumnMappingValue value={value} {...props} />;
-  }
+const ColumnOptions = ({ value, ...props }: ColumnOptionsProps) => {
+  const Options = value?.is_sourced ? ColumnOptionsMapping : ColumnOptionsValue;
+  return <Options value={value} {...props} />;
 };
-export default MappingOptions;
 
-const ColumnMappingOptions = ({ value, onChange }: MappingOptionsProps) => {
+const ColumnOptionsMapping = ({ value, onChange }: ColumnOptionsProps) => {
   const [t] = useTranslation("transactions");
 
   switch (value?.target) {
@@ -105,7 +156,7 @@ const ColumnMappingOptions = ({ value, onChange }: MappingOptionsProps) => {
   }
 };
 
-const ColumnMappingValue = ({ value, onChange }: MappingOptionsProps) => {
+const ColumnOptionsValue = ({ value, onChange }: ColumnOptionsProps) => {
   switch (value?.target) {
     case "datetime":
       return (

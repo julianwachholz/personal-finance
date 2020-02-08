@@ -1,6 +1,7 @@
 import {
   makeDeleteItem,
   makeItemsAction,
+  makePatchItem,
   makePostItem,
   makePutItem,
   makeUseItem,
@@ -11,7 +12,7 @@ import {
 type PayeeType = "business" | "private";
 
 export interface Payee {
-  pk: number;
+  pk: number | string;
   name: string;
   type: PayeeType;
   default_category: RelatedModel | null;
@@ -26,6 +27,8 @@ export const usePayee = makeUseItem<Payee>("payees");
 export const postPayee = makePostItem<Payee>("payees");
 
 export const putPayee = makePutItem<Payee>("payees");
+
+export const patchPayee = makePatchItem<Payee>("payees");
 
 export const deletePayee = makeDeleteItem<Payee>("payees");
 

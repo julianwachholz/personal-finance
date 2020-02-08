@@ -15,8 +15,6 @@ from django.utils.translation import ugettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
 from tablib import detect_format, import_set
 
-from apps.accounts.models import Account
-
 
 def upload_path(instance, filename):
     return f"import/{instance.user.id}/{filename}"
@@ -72,7 +70,8 @@ class ImportFile(models.Model):
         return configs
 
 
-def strip_record(record):
+def strip_keys(record):
+    """Strip the keys of whitespace in a dict."""
     return {key.strip(): value for key, value in record.items()}
 
 
@@ -106,7 +105,7 @@ class ImportConfig(models.Model):
         return self.mappings.all()
 
     def _map_record(self, record):
-        record = strip_record(record)
+        record = strip_keys(record)
         return {
             mapping.target: mapping.get_value(record) for mapping in self._all_mappings
         }
@@ -192,13 +191,14 @@ class ColumnMapping(models.Model):
 
         def stripped_records(ds):
             for r in ds:
-                yield strip_record(r)
+                yield strip_keys(r)
 
-        return {
-            record[self.source]
+        source_values = {
+            record[self.source]: None
             for record in stripped_records(dataset.dict)
             if self.get_value(record) is None
         }
+        return source_values.keys()
 
     def get_value(self, record):
         value = None
@@ -260,6 +260,11 @@ def _find_object_id(model, user, value):
         pass
 
 
+class ValueMappingManager(models.Manager):
+    def get_by_natural_key(self, content_type, object_id):
+        return self.get(content_type=content_type, object_id=object_id)
+
+
 class ValueMapping(models.Model):
 
     user = models.ForeignKey(to="auth.User", on_delete=models.CASCADE, related_name="+")
@@ -270,9 +275,12 @@ class ValueMapping(models.Model):
 
     values = ArrayField(models.CharField(max_length=200))
 
+    objects = ValueMappingManager()
+
     class Meta:
         verbose_name = "value mapping"
         verbose_name_plural = "value mappings"
+        unique_together = ("content_type", "object_id")
 
     def __str__(self):
         return str(self.content_object)
@@ -284,3 +292,6 @@ class ValueMapping(models.Model):
         # unique values
         self.values = list(set(self.values))
         return super().save(**kwargs)
+
+    def natural_key(self):
+        return (self.content_type, self.object_id)

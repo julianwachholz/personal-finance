@@ -70,16 +70,16 @@ interface FetchItemsOptions {
 }
 
 export interface Model {
-  pk: number;
+  pk: number | string;
 }
 
 export interface ModelWithLabel {
-  pk: number;
+  pk: number | string;
   label: string;
 }
 
 export interface RelatedModel {
-  value: number;
+  value: number | string;
   label: string;
 }
 
@@ -288,6 +288,17 @@ export const makePutItem = <T extends Model>(
   return makeItemMutation<T>(basename, "PUT", options);
 };
 
+export const makePatchItem = <T extends Model>(
+  basename: string,
+  options?: ItemMutationOptions
+) => {
+  return makeItemMutation<Pick<T, "pk"> & Partial<T>>(
+    basename,
+    "PATCH",
+    options
+  );
+};
+
 export const makeDeleteItem = <T extends Model>(basename: string) => {
   return makeItemMutation<T, void>(basename, "DELETE");
 };
@@ -335,14 +346,14 @@ const getURLParams = (params: object) => {
   return items.join("&");
 };
 
-type ItemAction<T extends Model> = (params: T) => Promise<any>;
+type ItemAction<T extends Model, RT = any> = (params: T) => Promise<RT>;
 
-export const makeItemAction = <T extends Model>(
+export const makeItemAction = <T extends Model, RT = any>(
   basename: string,
   action: string,
   method: string = "POST"
 ) => {
-  const itemAction: ItemAction<T> = async ({ pk, ...params }) => {
+  const itemAction: ItemAction<T, RT> = async ({ pk, ...params }) => {
     let url = `/api/${basename}/${pk}/${action}/`;
     const extra: Record<string, string> = {};
     if (method === "GET") {
