@@ -70,16 +70,16 @@ interface FetchItemsOptions {
 }
 
 export interface Model {
-  pk: number;
+  pk: number | string;
 }
 
 export interface ModelWithLabel {
-  pk: number;
+  pk: number | string;
   label: string;
 }
 
 export interface RelatedModel {
-  value: number;
+  value: number | string;
   label: string;
 }
 
@@ -211,7 +211,7 @@ export const makeFetchItem = <T extends Model>(
 };
 
 type UseItem<T extends Model> = (
-  pk: number | string,
+  pk?: number | string,
   queryOptions?: QueryOptions<T>
 ) => QueryResult<T, { pk: number }>;
 
@@ -228,7 +228,7 @@ export const makeUseItem = <T extends Model>(
       pk = parseInt(pk, 10);
     }
     const query = useQuery(
-      [`item/${basename}`, { pk }],
+      !!pk && [`item/${basename}`, { pk }],
       fetchItem!,
       queryOptions
     );
@@ -237,7 +237,7 @@ export const makeUseItem = <T extends Model>(
   return useItem;
 };
 
-type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
+export type MutateItem<T extends Model, RT> = (data: T) => Promise<RT>;
 
 interface ItemMutationOptions {
   noId: boolean;
@@ -288,6 +288,17 @@ export const makePutItem = <T extends Model>(
   return makeItemMutation<T>(basename, "PUT", options);
 };
 
+export const makePatchItem = <T extends Model>(
+  basename: string,
+  options?: ItemMutationOptions
+) => {
+  return makeItemMutation<Pick<T, "pk"> & Partial<T>>(
+    basename,
+    "PATCH",
+    options
+  );
+};
+
 export const makeDeleteItem = <T extends Model>(basename: string) => {
   return makeItemMutation<T, void>(basename, "DELETE");
 };
@@ -329,21 +340,33 @@ export const makeItemsAction = <P = ItemsActionParams>(
   return itemsAction;
 };
 
-type ItemAction<T extends Model> = (params: T) => Promise<any>;
+const getURLParams = (params: object) => {
+  const entries = Object.entries(params);
+  const items = entries.map(([k, v]) => `${k}=${v}`);
+  return items.join("&");
+};
 
-export const makeItemAction = <T extends Model>(
+type ItemAction<T extends Model, RT = any> = (params: T) => Promise<RT>;
+
+export const makeItemAction = <T extends Model, RT = any>(
   basename: string,
   action: string,
   method: string = "POST"
 ) => {
-  const itemAction: ItemAction<T> = async ({ pk, ...params }) => {
-    const url = `/api/${basename}/${pk}/${action}/`;
+  const itemAction: ItemAction<T, RT> = async ({ pk, ...params }) => {
+    let url = `/api/${basename}/${pk}/${action}/`;
+    const extra: Record<string, string> = {};
+    if (method === "GET") {
+      url += `?${getURLParams(params)}`;
+    } else {
+      extra.body = JSON.stringify(params);
+    }
     const response = await authFetch(url, {
       method,
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify(params)
+      ...extra
     });
     if (response.status === 204) {
       return;

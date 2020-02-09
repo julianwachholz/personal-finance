@@ -18,7 +18,7 @@ import {
 import { useAuth } from "../../utils/AuthProvider";
 import { default as BaseEditableTable } from "../base/BaseEditableTable";
 import getGetColumns from "./columns";
-import ImportWizard from "./ImportWizard";
+import ImportWizard from "./import/Wizard";
 import { TransferModal } from "./TransferForm";
 
 const TransactionsTable = (props: RouteComponentProps) => {
@@ -134,7 +134,7 @@ const TransactionsTable = (props: RouteComponentProps) => {
         <Menu.Item
           key="import"
           onClick={() => {
-            // setImportVisible(true);
+            setImportVisible(true);
           }}
         >
           <ImportOutlined /> {t("transactions:import", "Import Transactions")}
@@ -157,8 +157,15 @@ const TransactionsTable = (props: RouteComponentProps) => {
         }
       ]}
     >
-      <TransferModal visible={transferVisible} onVisible={setTransferVisible} />
-      <ImportWizard visible={importVisible} onVisible={setImportVisible} />
+      {transferVisible && (
+        <TransferModal
+          visible={transferVisible}
+          onVisible={setTransferVisible}
+        />
+      )}
+      {importVisible && (
+        <ImportWizard visible={importVisible} onVisible={setImportVisible} />
+      )}
     </BaseEditableTable>
   );
 };

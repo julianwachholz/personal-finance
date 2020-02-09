@@ -96,7 +96,7 @@ class Budget(models.Model):
             amount_currency=self.target_currency,
             # ignore initial balances and transfers
             is_initial=False,
-            related__isnull=True,
+            reverse_transaction__isnull=True,
         )
 
         # filter by datetime period

@@ -276,9 +276,13 @@ const BaseEditableTable = <T extends ModelWithLabel>({
         cancelEdit();
       }}
       pageSize={pageSize}
-      onShowSizeChange={(_, size) => {
-        history.push(location.pathname, { ...location.state, page: 1 });
-        setPageSize(size);
+      onShowSizeChange={(_, pageSize) => {
+        setPageSize(pageSize);
+        history.push(location.pathname, {
+          ...location.state,
+          page: 1,
+          pageSize
+        });
         cancelEdit();
       }}
     />

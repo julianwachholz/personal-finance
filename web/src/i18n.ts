@@ -12,7 +12,7 @@ i18n
   .init({
     whitelist: LANGUAGES,
     fallbackLng: "en",
-    debug: process.env.NODE_ENV === "development",
+    debug: false,
 
     interpolation: {
       escapeValue: false

@@ -1,11 +1,12 @@
 import TreeSelect, { TreeSelectProps } from "antd/lib/tree-select";
 import React, { useMemo } from "react";
+import { RelatedModel } from "../../dao/base";
 import { TreeCategory, useCategoryTree } from "../../dao/categories";
 import { useSettings } from "../../utils/SettingsProvider";
 
 const { TreeNode: Node } = TreeSelect;
 
-const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
+const CategorySelect = ({ value, ...props }: TreeSelectProps<RelatedModel>) => {
   const { tableSize } = useSettings();
   const { data: categoryTree, isLoading } = useCategoryTree();
 
@@ -33,7 +34,7 @@ const CategorySelect = ({ value, ...props }: TreeSelectProps<string>) => {
   }, [categoryTree]);
 
   return (
-    <TreeSelect<string>
+    <TreeSelect<RelatedModel>
       showSearch
       labelInValue
       dropdownStyle={{ maxHeight: 260, minWidth: 300 }}

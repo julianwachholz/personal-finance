@@ -91,6 +91,7 @@ interface BaseTableProps<T extends ModelWithLabel> {
 
 export interface BaseTableLocationState {
   page?: number;
+  pageSize?: number;
   ordering?: string;
   filters?: string[];
   search?: string;

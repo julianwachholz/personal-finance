@@ -29,7 +29,7 @@ const PayeeTable = ({
   const [t] = useTranslation("payees");
   const { tableSize } = useSettings();
   const [doDelete] = useMutation(deletePayee, {
-    refetchQueries: ["items/payees"]
+    refetchQueries: [["items/payees", { ...location.state, pageSize: 10 }]]
   });
   const [edit] = useMutation(putPayee);
   const [create] = useMutation(postPayee);

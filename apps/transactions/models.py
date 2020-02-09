@@ -40,9 +40,7 @@ class AbstractTransaction(models.Model):
 
     text = models.CharField(verbose_name="text", max_length=500, blank=True)
 
-    reference = models.CharField(verbose_name="reference", max_length=500, blank=True)
-
-    related = models.ForeignKey(
+    reverse_transaction = models.ForeignKey(
         to="self",
         on_delete=models.CASCADE,
         blank=True,
@@ -61,9 +59,12 @@ class AbstractTransaction(models.Model):
         self.amount_currency = self.account.balance_currency
         super().save(*args, **kwargs)
 
-        if self.related and self.related.related != self:
-            self.related.related = self
-            self.related.save()
+        if (
+            self.reverse_transaction
+            and self.reverse_transaction.reverse_transaction != self
+        ):
+            self.reverse_transaction.reverse_transaction = self
+            self.reverse_transaction.save()
 
     def is_credit(self):
         return self.amount > 0
@@ -72,7 +73,7 @@ class AbstractTransaction(models.Model):
         return not self.is_credit()
 
     def is_transfer(self):
-        return self.related is not None
+        return self.reverse_transaction is not None
 
 
 class Transaction(AbstractTransaction):
@@ -83,7 +84,11 @@ class Transaction(AbstractTransaction):
 
     datetime = models.DateTimeField(verbose_name="date / time", default=now)
 
+    reference = models.CharField(verbose_name="reference", max_length=500, blank=True)
+
     is_initial = models.BooleanField(verbose_name="initial balance?", default=False)
+
+    is_reconciled = models.BooleanField(verbose_name="reconciled?", default=False)
 
     class Meta:
         verbose_name = "transaction"

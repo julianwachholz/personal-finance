@@ -91,9 +91,9 @@ class Account(models.Model):
                 user=self.user,
                 amount=amount * conversion_rate,
                 text=text,
-                related=source_tx,
+                reverse_transaction=source_tx,
                 datetime=datetime,
             )
-            source_tx.related = target_tx
+            source_tx.reverse_transaction = target_tx
             source_tx.save()
             return source_tx, target_tx
