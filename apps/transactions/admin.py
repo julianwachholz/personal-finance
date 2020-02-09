@@ -33,3 +33,8 @@ class TransactionAdmin(admin.ModelAdmin):
         "user",
         "reverse_transaction",
     )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related("user", "account", "payee", "category")
+        return queryset
