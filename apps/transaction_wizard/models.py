@@ -5,12 +5,14 @@ from functools import lru_cache
 
 import magic
 from dateutil.parser import parse
+from dateutil.utils import default_tzinfo
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.functional import cached_property
+from django.utils.timezone import utc
 from django.utils.translation import ugettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
 from tablib import detect_format, import_set
@@ -90,6 +92,8 @@ class ImportConfig(models.Model):
 
     last_use = models.DateTimeField(null=True)
 
+    _auto_reconcile = False
+
     class Meta:
         verbose_name = _("import config")
         verbose_name_plural = _("import configs")
@@ -120,7 +124,26 @@ class ImportConfig(models.Model):
             if payee.default_category:
                 kwargs["category_id"] = payee.default_category_id
 
-        return Transaction(**kwargs)
+        if "reference" in kwargs:
+            # Update existing transaction with the same reference instead
+            try:
+                tx = Transaction.objects.get(
+                    user=self.user, reference=kwargs["reference"].strip()
+                )
+
+                if self._auto_reconcile and tx.amount.amount == kwargs["amount"]:
+                    # if amount matches we mark it as reconciled
+                    tx.is_reconciled = True
+
+                for key, value in kwargs.items():
+                    if getattr(tx, key, None) is None:
+                        setattr(tx, key, value)
+
+                return tx
+            except Transaction.DoesNotExist:
+                pass
+
+        return Transaction(user=self.user, **kwargs)
 
     def get_preview(self, dataset):
         transactions = map(self._map_record, dataset.dict[:10])
@@ -128,17 +151,35 @@ class ImportConfig(models.Model):
 
     def get_unmapped_values(self, dataset):
         """Get a collection of unmapped values."""
-        mappings = self.mappings.all()
-        for mapping in mappings:
-            mapping._mode = 2
         return {
             mapping.target: mapping.get_unmapped_values(dataset)
-            for mapping in mappings
+            for mapping in self.mappings.all()
             if mapping.is_sourced and mapping.target in {"account", "payee", "category"}
         }
 
-    def map_dataset(self, dataset):
-        return map(self._map_record, dataset.dict)
+    def import_dataset(self, dataset, auto_reconcile=False):
+        """
+        Import a dataset.
+
+        If auto reconciliation is active, look for matching transactions
+        and mark them as reconciled.
+
+        """
+        reference_mapping = self.mappings.filter(target=ColumnMapping.REFERENCE).first()
+
+        if not reference_mapping:
+            # import blindly
+            object_list = list(map(self._map_record, dataset.dict))
+            Transaction.objects.bulk_create(object_list)
+            return len(object_list)
+
+        self._auto_reconcile = reference_mapping.options.get("auto_reconcile", False)
+
+        count = 0
+        for tx in map(self._map_record, dataset.dict):
+            tx.save()
+            count += 1
+        return count
 
 
 @lru_cache(32)
@@ -189,14 +230,6 @@ class ColumnMapping(models.Model):
     source = models.CharField(max_length=255, blank=True)
 
     options = JSONField(default=dict, blank=True)
-    """
-    options are parameters to help the parser for this column.
-
-    :format string: to parse a datetime or decimal
-    :value any: a fixed value to set in this column
-    """
-
-    _mode = 1
 
     class Meta:
         verbose_name = _("column mapping")
@@ -245,15 +278,24 @@ class ColumnMapping(models.Model):
         return value
 
     def _get_datetime_from_value(self, value):
-        return parse(
+        date = parse(
             value,
             yearfirst=self.options.get("yearfirst", False),
             dayfirst=self.options.get("dayfirst", True),
         )
+        date = default_tzinfo(date, utc)
+        return date
+
+    @cached_property
+    def _find_object_id(self):
+        @lru_cache(512)
+        def __find_object_id(model, user, value):
+            return _find_object_id(model, user, value)
+
+        return __find_object_id
 
     def find_object_id(self, model, value):
-        # Proxy with cache buster.
-        return _find_object_id(model, self.config.user, value, mode=self._mode)
+        return self._find_object_id(model, self.config.user, value)
 
     def _get_account_from_value(self, value):
         if type(value) == int:
@@ -264,6 +306,8 @@ class ColumnMapping(models.Model):
         decimal_separator = self.options.get("decimal_separator", ".")
         cleaned = re.compile(f"[^-0-9{re.escape(decimal_separator)}]").sub("", value)
         amount = Decimal(cleaned.replace(decimal_separator, "."))
+        if self.options.get("invert_value", False):
+            amount *= -1
         return amount
 
     def _get_payee_from_value(self, value):
@@ -283,8 +327,7 @@ def _content_type_for(name):
     return ContentType.objects.get(app_label=app_label, model=model)
 
 
-@lru_cache(512)
-def _find_object_id(model, user, value, mode=1):
+def _find_object_id(model, user, value):
     content_type = _content_type_for(model)
     try:
         mapping = ValueMapping.objects.get(

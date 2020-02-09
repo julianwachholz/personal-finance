@@ -38,6 +38,8 @@ export interface Transaction {
   text: string;
   reference: string;
 
+  related_transaction: number;
+
   readonly label: string;
 
   // Only used in frontend

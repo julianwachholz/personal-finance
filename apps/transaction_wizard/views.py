@@ -11,8 +11,11 @@ from rest_framework.response import Response
 from apps.transactions.serializers import TransactionSerializer
 
 from .models import ImportConfig, ImportFile, ValueMapping
-from .serializers import (ImportConfigSerializer, ImportFileSerializer,
-                          ValueMappingSerializer)
+from .serializers import (
+    ImportConfigSerializer,
+    ImportFileSerializer,
+    ValueMappingSerializer,
+)
 
 
 class ImportFileViewSet(viewsets.ModelViewSet):
@@ -42,21 +45,21 @@ class ImportConfigViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return ImportConfig.objects.filter(user=self.request.user)
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["post"])
     def preview(self, request, pk, **kwargs):
         config = self.get_object()
         file = get_object_or_404(
-            ImportFile, user=request.user, pk=request.GET.get("file")
+            ImportFile, user=request.user, pk=request.data.get("file")
         )
         transactions = config.get_preview(file.dataset)
         serializer = TransactionSerializer(transactions, many=True)
         return Response({"results": serializer.data})
 
-    @action(detail=True, methods=["get"])
+    @action(detail=True, methods=["post"])
     def unmapped_values(self, request, pk, **kwargs):
         config = self.get_object()
         file = get_object_or_404(
-            ImportFile, user=request.user, pk=request.GET.get("file")
+            ImportFile, user=request.user, pk=request.data.get("file")
         )
         return Response(config.get_unmapped_values(file.dataset))
 
@@ -64,10 +67,16 @@ class ImportConfigViewSet(viewsets.ModelViewSet):
     def import_file(self, request, pk, **kwargs):
         config = self.get_object()
         file = get_object_or_404(
-            ImportFile, user=request.user, pk=request.GET.get("file")
+            ImportFile, user=request.user, pk=request.data.get("file")
         )
-        data = config.map_dataset(file.dataset)
-        return Response(data)
+        auto_reconcile = request.data.get("auto_reconcile", False)
+        try:
+            count = config.import_dataset(file.dataset, auto_reconcile=auto_reconcile)
+        except Exception as e:
+            return Response(
+                {"status": "error", "error": str(e)}, status=500, exception=e
+            )
+        return Response({"status": "ok", "count": count})
 
 
 class ValueMappingViewSet(viewsets.ModelViewSet):

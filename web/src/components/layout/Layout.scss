@@ -98,6 +98,17 @@
   .ant-list-item .ant-select {
     display: block;
   }
+  .ant-form-item {
+    height: 32px;
+
+    .ant-col {
+      justify-content: center;
+    }
+
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
 
   .ant-alert {
     margin-bottom: 24px;

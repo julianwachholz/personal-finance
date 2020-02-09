@@ -32,7 +32,7 @@ export const Preview = ({ importConfig, fileId }: PreviewProps) => {
         <Table<Transaction>
           showHeader={true}
           dataSource={data?.results ? data.results.map(mapTransaction) : []}
-          columns={getGetColumns(t)().filter(c => c.dataIndex != "tags")}
+          columns={getGetColumns(t)().filter(c => c.dataIndex !== "tags")}
           loading={isLoading || isFetching}
           rowKey="pk"
           pagination={false}

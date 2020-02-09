@@ -1,5 +1,5 @@
 import { CheckCircleTwoTone } from "@ant-design/icons";
-import { Col, Form, Input, Radio, Row } from "antd";
+import { Checkbox, Col, Form, Input, Radio, Row } from "antd";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import CategorySelect from "../../../components/form/CategorySelect";
@@ -121,25 +121,53 @@ const ColumnOptionsMapping = ({ value, onChange }: ColumnOptionsProps) => {
       );
     case "amount":
       return (
-        <>
-          <label>Decimal Separator: </label>
-          <Radio.Group
-            buttonStyle="solid"
-            value={value.options?.decimal_separator ?? "."}
-            onChange={e => {
-              onChange?.({
-                ...value,
-                options: {
-                  ...value.options,
-                  decimal_separator: e.target.value
-                }
-              });
-            }}
-          >
-            <Radio.Button value=".">.</Radio.Button>
-            <Radio.Button value=",">,</Radio.Button>
-          </Radio.Group>
-        </>
+        <Row gutter={8}>
+          <Col span={9}>
+            <Form.Item
+              label={t(
+                "import.columns.amount.decimal_separator",
+                "Decimal Separator"
+              )}
+            >
+              <Radio.Group
+                buttonStyle="solid"
+                value={value.options?.decimal_separator ?? "."}
+                onChange={e => {
+                  onChange?.({
+                    ...value,
+                    options: {
+                      ...value.options,
+                      decimal_separator: e.target.value
+                    }
+                  });
+                }}
+              >
+                <Radio.Button value=".">.</Radio.Button>
+                <Radio.Button value=",">,</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col span={9}>
+            <Form.Item
+              label={t("import.column.amount.invert_value", "Invert amount?")}
+              htmlFor="invert_amount"
+            >
+              <Checkbox
+                id="invert_amount"
+                checked={value.options?.invert_value}
+                onChange={e => {
+                  onChange?.({
+                    ...value,
+                    options: {
+                      ...value.options,
+                      invert_value: e.target.checked
+                    }
+                  });
+                }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       );
     // TODO
     // case "tags":

@@ -1,8 +1,7 @@
-import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Col, Modal, Progress, Result, Row, Steps } from "antd";
+import { Button, Col, Modal, Result, Row, Steps } from "antd";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useMutation } from "react-query";
+import { refetchQuery, useMutation } from "react-query";
 import {
   bulkPostValueMapping,
   deleteUploadedFile,
@@ -12,6 +11,7 @@ import {
   useImportConfig,
   ValueMapping
 } from "../../../dao/import";
+import DoImport from "./DoImport";
 import MapColumns from "./MapColumns";
 import MappingOptions from "./MappingOptions";
 import MapValues, { ImportValueMappings } from "./MapValues";
@@ -44,6 +44,9 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
 
   // Collect value mappings
   const [valueMappings, setValueMappings] = useState<ImportValueMappings>();
+
+  // Finish with total count
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     setImportConfig(loadedImportConfig);
@@ -116,19 +119,33 @@ export const ImportWizard = ({ visible, onVisible }: ImportWizardProps) => {
             />
           )}
           {step === 5 && (
-            <Result
-              title={t("import.importing.title")}
-              icon={<LoadingOutlined />}
-              extra={<Progress status="active" percent={17} />}
+            <DoImport
+              importConfig={importConfig!}
+              fileIds={uploadState.fileIds!}
+              onFinish={count => {
+                setStep(step + 1);
+                setCount(count);
+              }}
             />
           )}
           {step === 6 && (
             <Result
               status="success"
               title="Done!"
-              subTitle="Successfully imported 310 Transactions."
+              subTitle={t(
+                "import.finish.subtitle",
+                "Successfully imported {{ count }} transactions.",
+                { count }
+              )}
               extra={
-                <Button key="done" type="primary" onClick={() => setStep(0)}>
+                <Button
+                  key="done"
+                  type="primary"
+                  onClick={() => {
+                    refetchQuery("items/transactions");
+                    closeModal();
+                  }}
+                >
                   Finish
                 </Button>
               }

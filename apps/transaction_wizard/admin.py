@@ -56,4 +56,6 @@ class ImportConfigAdmin(admin.ModelAdmin):
 
 @admin.register(ValueMapping)
 class ValueMappingAdmin(admin.ModelAdmin, DynamicArrayMixin):
-    list_display = ("user", "content_type", "object_id")
+    list_display = ("user", "content_type", "object_id", "values")
+    list_filter = ("user", "content_type")
+    search_fields = ("values",)
