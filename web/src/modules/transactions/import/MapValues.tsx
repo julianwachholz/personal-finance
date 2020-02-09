@@ -201,6 +201,7 @@ export const MapValueForm = ({ mapping, onChange }: MapValueFormProps) => {
       {withCategory && mapping.created ? (
         <Col span={8}>
           <CategorySelect
+            size="middle"
             loading={loading}
             value={mapping.default_category}
             onChange={async default_category => {

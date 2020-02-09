@@ -41,13 +41,6 @@ const MapColumns = ({ headers, importConfig, onChange }: MapColumnsProps) => {
   const [t] = useTranslation("transactions");
   const [form] = Form.useForm();
 
-  // if (importConfig === null) {
-  //   importConfig = {
-  //     file_type: "text/csv",
-  //     mappings: []
-  //   } as any;
-  // }
-
   return (
     <Form
       form={form}
@@ -57,7 +50,7 @@ const MapColumns = ({ headers, importConfig, onChange }: MapColumnsProps) => {
       initialValues={getInitialValues(importConfig)}
     >
       <h2>{t("import.columns.title", "Map Columns")}</h2>
-      {importConfig && (
+      {importConfig?.pk && (
         <Alert
           type="info"
           showIcon
