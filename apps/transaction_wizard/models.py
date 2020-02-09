@@ -92,7 +92,7 @@ class ImportConfig(models.Model):
 
     last_use = models.DateTimeField(null=True)
 
-    _auto_reconcile = False
+    # auto_reconcile = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _("import config")
@@ -130,18 +130,24 @@ class ImportConfig(models.Model):
                 tx = Transaction.objects.get(
                     user=self.user, reference=kwargs["reference"].strip()
                 )
-
-                if self._auto_reconcile and tx.amount.amount == kwargs["amount"]:
-                    # if amount matches we mark it as reconciled
-                    tx.is_reconciled = True
-
                 for key, value in kwargs.items():
                     if getattr(tx, key, None) is None:
                         setattr(tx, key, value)
-
                 return tx
             except Transaction.DoesNotExist:
                 pass
+
+        # if self.auto_reconcile:
+        #     try:
+        #         tx = Transaction.objects.get(
+        #             user=self.user,
+        #             datetime__date=kwargs["datetime"].date(),
+        #             amount=kwargs["amount"],
+        #             account_id=kwargs["account_id"],
+        #         )
+        #         tx.is_reconciled = True
+        #     except Transaction.DoesNotExist:
+        #         pass
 
         return Transaction(user=self.user, **kwargs)
 
@@ -157,12 +163,9 @@ class ImportConfig(models.Model):
             if mapping.is_sourced and mapping.target in {"account", "payee", "category"}
         }
 
-    def import_dataset(self, dataset, auto_reconcile=False):
+    def import_dataset(self, dataset):
         """
         Import a dataset.
-
-        If auto reconciliation is active, look for matching transactions
-        and mark them as reconciled.
 
         """
         reference_mapping = self.mappings.filter(target=ColumnMapping.REFERENCE).first()
@@ -172,8 +175,6 @@ class ImportConfig(models.Model):
             object_list = list(map(self._map_record, dataset.dict))
             Transaction.objects.bulk_create(object_list)
             return len(object_list)
-
-        self._auto_reconcile = reference_mapping.options.get("auto_reconcile", False)
 
         count = 0
         for tx in map(self._map_record, dataset.dict):

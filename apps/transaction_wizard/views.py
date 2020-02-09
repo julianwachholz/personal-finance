@@ -69,9 +69,8 @@ class ImportConfigViewSet(viewsets.ModelViewSet):
         file = get_object_or_404(
             ImportFile, user=request.user, pk=request.data.get("file")
         )
-        auto_reconcile = request.data.get("auto_reconcile", False)
         try:
-            count = config.import_dataset(file.dataset, auto_reconcile=auto_reconcile)
+            count = config.import_dataset(file.dataset)
         except Exception as e:
             return Response(
                 {"status": "error", "error": str(e)}, status=500, exception=e

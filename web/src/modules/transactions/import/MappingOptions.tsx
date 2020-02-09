@@ -169,9 +169,6 @@ const ColumnOptionsMapping = ({ value, onChange }: ColumnOptionsProps) => {
           </Col>
         </Row>
       );
-    // TODO
-    // case "tags":
-    //   return <span>Ready</span>;
     default:
       return (
         <>
