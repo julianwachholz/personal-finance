@@ -39,8 +39,4 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /app
 
-RUN RELEASE=$(sentry-cli releases propose-version) \
-    && sentry-cli releases new -p shinywaffle "$RELEASE" \
-    && sentry-cli releases set-commits --auto "$RELEASE"
-
 CMD [ "/app/config/run.sh" ]

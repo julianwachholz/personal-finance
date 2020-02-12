@@ -1,19 +1,24 @@
-version: "3"
+version: "3.7"
 services:
+  db:
+    build:
+      context: ./docker
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: shinywaffle
+
   api:
-    image: docker.pkg.github.com/julianwachholz/personal-finance/shinywaffle:latest
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./docker/api.dockerfile
       args:
         DJANGO_ENV: development
     volumes:
-      - ./static:/app/static
+      - .:/app
     env_file: .env
-    command: /app/config/run.sh
+    command: /app/config/run-dev.sh
     ports:
-      - 9066:8000
-    restart: "no"
+      - 8000:8000
     # healthcheck:
     #   test: curl --fail http://localhost:8000/health/?format=json || exit 1
     #   interval: 1m
@@ -24,14 +29,14 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./DockerfileWeb
-      args:
-        REACT_APP_SENTRY_DSN: $SENTRY_DSN
-    ports:
-      - 9166:80
-    restart: "no"
+      dockerfile: ./docker/web.dockerfile
+      target: dev
 
-networks:
-  default:
-    external:
-      name: db
+    environment:
+      API_HOST: api
+
+    volumes:
+      - ./web:/app/web
+
+    ports:
+      - 3000:3000
