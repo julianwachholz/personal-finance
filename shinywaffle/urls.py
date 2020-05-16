@@ -13,7 +13,7 @@ from apps.transaction_wizard.views import (
     ImportFileViewSet,
     ValueMappingViewSet,
 )
-from apps.transactions.views import TransactionViewSet
+from apps.transactions.views import TransactionViewSet, export
 
 router = routers.DefaultRouter()
 router.register("tags", TagViewSet, basename="tags")
@@ -26,7 +26,9 @@ router.register("import/file", ImportFileViewSet, basename="import/file")
 router.register("import/config", ImportConfigViewSet, basename="import/config")
 router.register("import/mapping", ValueMappingViewSet, basename="import/mapping")
 
+
 urlpatterns = [
+    path("admin/export/", export),
     path("admin/", admin.site.urls),
     path("api/auth/", include("apps.registration.urls")),
     path("api/settings/", include("apps.settings.urls")),

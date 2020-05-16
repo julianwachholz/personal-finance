@@ -1,3 +1,9 @@
+import csv
+import io
+
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.utils.timezone import now
 from django_filters import rest_framework as filters
 from djmoney.models.fields import CURRENCY_CHOICES
 from rest_framework import viewsets
@@ -55,3 +61,72 @@ class TransactionViewSet(BulkDeleteViewSetMixin, viewsets.ModelViewSet):
         qs = qs.select_related("account", "category", "payee")
         qs = qs.prefetch_related("tags")
         return qs
+
+
+@login_required
+def export(request):
+
+    headers = [
+        "(1)Type",
+        "(2)Date",
+        "(3)Item or Payee",
+        "(4)Amount",
+        "(5)Currency",
+        "(6)ConversionRate",
+        "(7)Parent Category",
+        "(8)Category",
+        "(9)Account Type",
+        "(10)Account",
+        "(11)Notes",
+        "(12) Label",
+        "(13) Status",
+        "(14) Split",
+    ]
+
+    fp = io.StringIO()
+    export = csv.writer(fp, quoting=csv.QUOTE_MINIMAL)
+    export.writerow(headers)
+
+    user = request.user
+
+    qs = Transaction.objects.filter(user=user, is_initial=False)
+    qs = qs.select_related("account", "category", "payee")
+    qs = qs.prefetch_related("tags")
+
+    for tx in qs[:50]:
+        category = tx.category
+        row = [
+            # Type,
+            "T" if tx.is_transfer() else "I" if tx.is_credit() else "E",
+            # Date
+            tx.datetime.strftime("%m/%d/%Y"),
+            # Item or payee,
+            tx.payee.name if tx.payee else None,
+            # Amount,
+            tx.amount.amount if tx.is_transfer() else abs(tx.amount.amount),
+            # Currency,
+            tx.amount.currency,
+            # ConversionRate,
+            1,
+            # Parent Category
+            tx.category.parent.name
+            if category is not None and category.parent is not None
+            else None,
+            # Category
+            category.name if category else None,
+            # Account Type
+            tx.account.institution,
+            # Account
+            tx.account.name,
+            # Notes
+            tx.text,
+            # Label,
+            " ".join(tag.name for tag in tx.tags.all()),
+            # Status,
+            "R" if tx.is_reconciled else "",
+            # Split,
+            "",
+        ]
+        export.writerow(row)
+
+    return HttpResponse(fp.getvalue(), content_type="text/csv; charset=utf-8")

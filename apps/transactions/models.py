@@ -67,7 +67,7 @@ class AbstractTransaction(models.Model):
             self.reverse_transaction.save()
 
     def is_credit(self):
-        return self.amount > 0
+        return self.amount.amount > 0
 
     def is_debit(self):
         return not self.is_credit()
