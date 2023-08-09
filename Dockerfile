@@ -28,19 +28,13 @@ RUN apk --no-cache add \
     # musl-dev \
     postgresql-dev \
     # tini \
-    && pip install -U "pip<19.0" \
+    && pip install -U pip \
     && pip install poetry==$POETRY_VERSION
-
-RUN curl -sL https://sentry.io/get-cli/ | bash
 
 COPY poetry.lock pyproject.toml /app/
 RUN poetry config virtualenvs.create false \
     && poetry install $(test "$DJANGO_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
 
 COPY . /app
-
-RUN RELEASE=$(sentry-cli releases propose-version) \
-    && sentry-cli releases new -p shinywaffle "$RELEASE" \
-    && sentry-cli releases set-commits --auto "$RELEASE"
 
 CMD [ "/app/config/run.sh" ]
