@@ -14,5 +14,8 @@ RUN export REACT_APP_RELEASE=$(git rev-parse HEAD) \
     && cd /app/web \
     && npm run build
 
+FROM build as development
+CMD cd /app/web && npm run start
+
 FROM socialengine/nginx-spa:latest
 COPY --from=build /app/web/build /app

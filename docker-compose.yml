@@ -1,7 +1,6 @@
 version: "3"
 services:
   api:
-    image: docker.pkg.github.com/julianwachholz/personal-finance/shinywaffle:latest
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -25,13 +24,16 @@ services:
     build:
       context: .
       dockerfile: ./DockerfileWeb
+      target: development
       args:
         REACT_APP_SENTRY_DSN: $SENTRY_DSN
     ports:
-      - 9166:80
+      - 9166:3000
     restart: "no"
 
-networks:
-  default:
-    external:
-      name: db
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
